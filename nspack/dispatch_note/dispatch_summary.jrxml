@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
+<!-- 2019-11-17T12:46:01 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="summary" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cba47b92-bbda-40d5-b5d7-7f12c9f0b664">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack.xml"/>
+	<parameter name="load_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+ commodities.code AS commodity_code,
+ marketing_varieties.marketing_variety_code as variety_short_long,
+ grades.grade_code,
+ basic_pack_codes.basic_pack_code as old_pack_code,
+ fruit_actual_counts_for_packs.actual_count_for_pack AS actual_size_count_code,
+ SUM(pallet_sequences.carton_quantity) AS ctn_qty,
+ SUM(CAST(pallet_sequences.carton_quantity AS numeric(5,1)) / CAST(pallets.carton_quantity AS numeric(5,1))) AS plt_qty
+FROM loads
+JOIN pallets ON pallets.load_id = loads.id
+JOIN pallet_sequences ON pallet_sequences.pallet_id = pallets.id
+LEFT JOIN cultivars ON cultivars.id = pallet_sequences.cultivar_id  -- WHY LEFT JOIN????
+LEFT JOIN commodities ON commodities.id = cultivars.commodity_id
+JOIN marketing_varieties ON marketing_varieties.id = pallet_sequences.marketing_variety_id
+JOIN grades ON grades.id = pallet_sequences.grade_id
+JOIN basic_pack_codes ON basic_pack_codes.id = pallet_sequences.basic_pack_code_id
+LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = pallet_sequences.fruit_actual_counts_for_pack_id
+WHERE loads.id = $P{load_id}
+GROUP BY  commodities.code,
+ marketing_varieties.marketing_variety_code,
+ grades.grade_code,
+ basic_pack_codes.basic_pack_code,
+ fruit_actual_counts_for_packs.actual_count_for_pack
+ORDER BY  commodities.code,
+ marketing_varieties.marketing_variety_code,
+ grades.grade_code,
+ basic_pack_codes.basic_pack_code,
+ fruit_actual_counts_for_packs.actual_count_for_pack
+]]>
+	</queryString>
+	<field name="commodity_code" class="java.lang.String"/>
+	<field name="variety_short_long" class="java.lang.String"/>
+	<field name="grade_code" class="java.lang.String"/>
+	<field name="old_pack_code" class="java.lang.String"/>
+	<field name="actual_size_count_code" class="java.lang.String"/>
+	<field name="ctn_qty" class="java.lang.Long"/>
+	<field name="plt_qty" class="java.math.BigDecimal"/>
+	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{ctn_qty}]]></variableExpression>
+	</variable>
+	<variable name="plt_qty_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{plt_qty}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="31" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="10" width="100" height="20" uuid="5540cf67-45c7-4210-b9a0-39498f2ccbeb"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Summary:]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="13" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="48" height="13" uuid="0707a9c3-fefe-4166-86b9-12a8465ddb49"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Comm]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="48" y="0" width="48" height="13" uuid="5469099d-43ca-4340-8015-23ef7ee9f37b"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Variety]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="144" y="0" width="48" height="13" uuid="da5d9292-dba0-4c6e-ba22-142cff0c3eab"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Grade]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="96" y="0" width="48" height="13" uuid="8d244faf-d5bf-4150-a883-d47c7daabf4e"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Pack]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="192" y="0" width="48" height="13" uuid="728916a3-0f11-4cea-80ad-beb924f6d23f"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Count]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="240" y="0" width="40" height="13" uuid="28b0dfbb-b2d4-44fc-9df4-116b1c62f168"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Cartons]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="0" width="40" height="13" uuid="0c0fb1b7-6fdd-4fef-a427-62d036648e24"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Pallets]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="12" width="320" height="1" uuid="61532689-4367-431b-b5dd-9185f38ce957"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="11" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="48" height="11" uuid="bbc74be3-9650-43ff-9279-5351d102f771"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{commodity_code}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="48" y="0" width="48" height="11" uuid="42b6779a-1aed-4a5d-80d7-86903c188c14"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{variety_short_long}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="144" y="0" width="48" height="11" uuid="b4b41068-d50c-4edc-b706-6bb573b95427"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{grade_code}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="96" y="0" width="48" height="11" uuid="9e0b7d4a-6e69-4da7-b857-cb2921a6d4a2"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{old_pack_code}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="192" y="0" width="48" height="11" uuid="2d66686b-d513-4e1c-a03e-c38e3aa824c5"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{actual_size_count_code}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="240" y="0" width="40" height="11" uuid="7978bdc7-8d77-4658-aaf3-68b28b2871eb"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ctn_qty}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement x="280" y="0" width="40" height="11" uuid="e83b780b-4fd6-4a9a-84e7-30050b9e748f"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{plt_qty}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="16" splitType="Stretch">
+			<textField>
+				<reportElement x="240" y="0" width="40" height="15" uuid="1c32b18a-8af2-4b1c-a58f-365c8d535cf7"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{ctn_qty_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement x="280" y="0" width="40" height="15" uuid="9aae00ee-4f2d-49b3-9dd7-3f97bd178e37"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{plt_qty_1}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="0" width="320" height="1" uuid="620dd30c-e871-4498-8ff4-472e4cef0b61"/>
+			</line>
+		</band>
+	</summary>
+</jasperReport>
