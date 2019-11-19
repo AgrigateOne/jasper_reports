@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2019-11-17T16:43:01 -->
+<!-- 2019-11-19T07:02:15 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_pallet_detail" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="57a0c595-5448-465f-8162-0e6517403bd3">
 	<property name="ireport.zoom" value="2.253944402704733"/>
 	<property name="ireport.x" value="0"/>
@@ -17,7 +17,7 @@
   commodities.code AS commodity_code,
   coalesce(cvv.marketing_variety_code, marketing_varieties.marketing_variety_code) as variety_short_long,
   grades.grade_code,
-  fruit_size_references.size_reference AS size_count_code, -- is this size count code?
+  fruit_size_references.size_reference AS size_count_code,
   basic_pack_codes.basic_pack_code AS old_pack_code,
   marks.mark_code AS brand_code,
   pallet_sequences.pick_ref AS pick_reference,
@@ -27,17 +27,18 @@
   CAST(pallet_sequences.carton_quantity AS numeric(5,1)) / CAST(pallets.carton_quantity AS numeric(5,1)) AS plt_qty,
   pucs.puc_code AS puc,
   cargo_temperatures.temperature_code AS temp_tail,
-  'NOTYET' AS pt_product_characteristics, -- ToDo
+  pallet_sequences.product_chars AS pt_product_characteristics,
   fruit_actual_counts_for_packs.actual_count_for_pack AS actual_size_count_code,
   pallet_sequences.carton_quantity AS ctn_qty,
-  'NOTYET' AS sell_by_code, -- ToDo
+  pallet_sequences.sell_by_code,
   pallet_bases.pallet_base_code AS edi_out_pallet_base,
   organizations.long_description AS org_long,
   pallets.phc AS line_phc
 FROM pallets
 JOIN pallet_sequences ON pallet_sequences.pallet_id = pallets.id
-LEFT JOIN cultivars ON cultivars.id = pallet_sequences.cultivar_id  -- WHY LEFT JOIN????
-LEFT JOIN commodities ON commodities.id = cultivars.commodity_id
+LEFT JOIN cultivar_groups ON cultivar_groups.id = pallet_sequences.cultivar_group_id
+LEFT JOIN cultivars ON cultivars.id = pallet_sequences.cultivar_id
+LEFT JOIN commodities ON commodities.id = COALESCE(cultivars.commodity_id, cultivar_groups.commodity_id)
 JOIN marketing_varieties ON marketing_varieties.id = pallet_sequences.marketing_variety_id
 LEFT JOIN customer_variety_varieties ON customer_variety_varieties.id = pallet_sequences.customer_variety_variety_id
 LEFT JOIN marketing_varieties cvv ON cvv.id = customer_variety_varieties.marketing_variety_id

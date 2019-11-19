@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2019-11-17T16:32:09 -->
+<!-- 2019-11-19T06:13:10 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="packhouse_org" language="groovy" pageWidth="105" pageHeight="802" columnWidth="105" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="0a1604e6-2175-46e1-9679-a2937e8746bb">
 	<property name="ireport.zoom" value="4.0"/>
 	<property name="ireport.x" value="0"/>
@@ -24,7 +24,7 @@ FROM party_addresses
 JOIN addresses ON addresses.id = party_addresses.address_id
 JOIN address_types ON address_types.id = addresses.address_type_id
 WHERE party_addresses.party_id = $P{party_id}
-  AND address_types.address_type = COALESCE($P{address_type}, 'Delivery Address')]]>
+  AND address_types.address_type = 'Delivery Address']]>
 	</queryString>
 	<field name="city" class="java.lang.String"/>
 	<field name="postal_code" class="java.lang.String"/>

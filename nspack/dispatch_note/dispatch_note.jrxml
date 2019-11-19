@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2019-11-17T16:40:20 -->
+<!-- 2019-11-19T07:19:11 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_consignment" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
@@ -35,7 +35,7 @@
 	<parameter name="pallet_report" class="java.lang.String">
 		<defaultValueExpression><![CDATA["summary"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="packhouse_org" class="java.lang.String"/>
+	<parameter name="for_picklist" class="java.lang.Boolean"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT
 loads.customer_reference,
@@ -57,18 +57,18 @@ fn_party_role_name(loads.exporter_party_role_id) AS export_party_role_name,
 'NOTYET' AS vessel_owner_party_role_name,
 loads.id AS load_id,
 load_containers.container_code,
-'NOTYET' AS container_setting , 
+load_containers.internal_container_code AS container_setting , 
 load_containers.container_vents,
 load_containers.container_seal_code,
 load_containers.container_temperature_rhine,
 load_containers.container_temperature_rhine2,
-'NOTYET' AS cto_consec_code ,
+NULL AS cto_consec_code ,
 container_stack_types.stack_type_code,
 load_containers.internal_container_code,
 0 AS order_id,
 loads.order_number,
 'NOTYET' AS customer_memo_pad,
-'NOTYET' AS customer_contact_name,
+fn_party_role_name(loads.customer_party_role_id) AS customer_contact_name,
 loads.customer_order_number,
 loads.shipped_at AS shipped_date_time,
 loads.id AS load_number,
@@ -78,7 +78,7 @@ fn_party_role_name(loads.billing_client_party_role_id) AS billing_party,
 fn_party_role_name(loads.consignee_party_role_id) AS consignee_party,
 fn_party_role_name(loads.customer_party_role_id) AS customer_party,
 load_vehicles.dispatch_consignment_note_number,
-'MEDDESC' AS exporter_org_med,
+exp_org.medium_description AS exporter_org_med,
 load_vehicles.vehicle_number,
 load_vehicles.vehicle_weight_out,
 load_voyages.memo_pad AS remarks,
@@ -99,6 +99,8 @@ LEFT JOIN load_containers ON loads.id = load_containers.load_id
 LEFT JOIN load_voyages ON loads.id = load_voyages.load_id
 LEFT JOIN load_vehicles ON loads.id = load_vehicles.load_id
 LEFT JOIN container_stack_types ON container_stack_types.id = load_containers.stack_type_id
+LEFT JOIN party_roles exp_pr ON exp_pr.id = loads.exporter_party_role_id
+LEFT JOIN organizations exp_org ON exp_org.party_id = exp_pr.party_id
 JOiN party_roles exp_role ON exp_role.id = loads.exporter_party_role_id
 where loads.id = $P{load_id}]]>
 	</queryString>
@@ -233,7 +235,7 @@ where loads.id = $P{load_id}]]>
 				<textElement textAlignment="Center">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Unifrutti SA]]></text>
+				<text><![CDATA[HABATA]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="5" y="116" width="65" height="13" uuid="30a60c73-0a14-4f32-b50f-16ebd997c81f"/>
@@ -476,11 +478,16 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[Remark:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="182" y="167" width="57" height="13" uuid="d2e8fb7f-4f5b-48ee-aa21-1627423ac42d"/>
+				<reportElement positionType="Float" x="182" y="167" width="57" height="13" uuid="d2e8fb7f-4f5b-48ee-aa21-1627423ac42d">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[Vehicle Weight:]]></text>
+				<text><![CDATA[Vehicle Wgt:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement x="244" y="154" width="110" height="13" uuid="4b2c38e1-bd71-4e4c-bdf8-da06f9330ff5"/>
@@ -543,7 +550,7 @@ where loads.id = $P{load_id}]]>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Cto consec:]]></text>
+				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="5" y="155" width="65" height="13" uuid="5f36e453-b160-492d-8512-b8287b750dda"/>
@@ -633,6 +640,14 @@ where loads.id = $P{load_id}]]>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["packhouse_org_address.jasper"]]></subreportExpression>
 			</subreport>
+			<componentElement>
+				<reportElement x="354" y="-1" width="123" height="26" uuid="4a864b43-2183-4d30-8a03-63772df42db7">
+					<printWhenExpression><![CDATA[$P{for_picklist}]]></printWhenExpression>
+				</reportElement>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false">
+					<jr:codeExpression><![CDATA[$F{load_id}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
 		</band>
 	</title>
 	<pageHeader>

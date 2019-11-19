@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2019-11-17T16:47:28 -->
+<!-- 2019-11-19T07:03:32 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_pallet_summary" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f6691ff3-42d0-4369-9d6b-d9ca7cad6758">
 	<property name="ireport.zoom" value="3.0"/>
 	<property name="ireport.x" value="0"/>
@@ -11,8 +11,8 @@
 	<parameter name="load_id" class="java.lang.Integer"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT
-  'NOTYET' AS sell_by_code, -- ToDo
-  fruit_size_references.size_reference AS size_count_code, -- is this size count code?
+  pallet_sequences.sell_by_code,
+  fruit_size_references.size_reference AS size_count_code,
   grades.grade_code,
   fn_party_role_name(pallet_sequences.marketing_org_party_role_id) AS organization_code, -- ? OK?
   target_market_groups.target_market_group_name AS target_market_code,
@@ -28,8 +28,9 @@
 
 FROM pallets
 JOIN pallet_sequences ON pallet_sequences.pallet_id = pallets.id
-LEFT JOIN cultivars ON cultivars.id = pallet_sequences.cultivar_id  -- WHY LEFT JOIN????
-LEFT JOIN commodities ON commodities.id = cultivars.commodity_id
+LEFT JOIN cultivar_groups ON cultivar_groups.id = pallet_sequences.cultivar_group_id
+LEFT JOIN cultivars ON cultivars.id = pallet_sequences.cultivar_id
+LEFT JOIN commodities ON commodities.id = COALESCE(cultivars.commodity_id, cultivar_groups.commodity_id)
 JOIN marketing_varieties ON marketing_varieties.id = pallet_sequences.marketing_variety_id
 LEFT JOIN customer_variety_varieties ON customer_variety_varieties.id = pallet_sequences.customer_variety_variety_id
 LEFT JOIN marketing_varieties cvv ON cvv.id = customer_variety_varieties.marketing_variety_id
@@ -47,7 +48,7 @@ LEFT JOIN pallet_bases ON pallet_bases.id = pallet_formats.pallet_base_id
 WHERE pallets.load_id = $P{load_id}
 
 GROUP BY
--- '',
+  pallet_sequences.sell_by_code,
   fruit_size_references.size_reference,
   grades.grade_code,
   target_market_groups.target_market_group_name,
