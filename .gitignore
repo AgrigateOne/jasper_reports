@@ -1,3 +1,5 @@
 /test_framework/
+*.zip
+*.svn
 # Temporary:
 /pack_materials/

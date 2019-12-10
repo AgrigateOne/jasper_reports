@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2019-11-19T06:13:10 -->
+<!-- 2019-11-21T11:47:20 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="packhouse_org" language="groovy" pageWidth="105" pageHeight="802" columnWidth="105" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="0a1604e6-2175-46e1-9679-a2937e8746bb">
 	<property name="ireport.zoom" value="4.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NEW_DATAADAPTER.xml"/>
-	<parameter name="party_id" class="java.lang.Integer"/>
+	<parameter name="party_role_id" class="java.lang.Integer"/>
 	<parameter name="address_type" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 		<defaultValueExpression><![CDATA["Delivery Address"]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
-		<![CDATA[SELECT addresses.address_line_1,
+		<![CDATA[SELECT organizations.long_description,
+addresses.address_line_1,
 addresses.address_line_2,
 addresses.address_line_3,
 addresses.city,
@@ -20,11 +21,13 @@ addresses.postal_code,
 addresses.country,
 fn_party_contact_method(party_addresses.party_id, 'Tel') AS tel_no_1,
 fn_party_contact_method(party_addresses.party_id, 'Fax') AS tel_no_2
-FROM party_addresses
-JOIN addresses ON addresses.id = party_addresses.address_id
-JOIN address_types ON address_types.id = addresses.address_type_id
-WHERE party_addresses.party_id = $P{party_id}
-  AND address_types.address_type = 'Delivery Address']]>
+FROM party_roles
+LEFT JOIN organizations ON organizations.id = party_roles.organization_id
+LEFT JOIN parties ON parties.id = party_roles.party_id
+LEFT JOIN party_addresses ON party_addresses.party_id = party_roles.party_id
+LEFT JOIN addresses ON addresses.id = party_addresses.address_id
+  AND addresses.address_type_id = (SELECT id FROM address_types WHERE address_type = 'Delivery Address')
+WHERE party_roles.id = $P{party_role_id}]]>
 	</queryString>
 	<field name="city" class="java.lang.String"/>
 	<field name="postal_code" class="java.lang.String"/>
@@ -34,67 +37,106 @@ WHERE party_addresses.party_id = $P{party_id}
 	<field name="address_line_2" class="java.lang.String"/>
 	<field name="address_line_3" class="java.lang.String"/>
 	<field name="country" class="java.lang.String"/>
+	<field name="long_description" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<pageHeader>
-		<band height="80" splitType="Stretch">
-			<textField>
-				<reportElement x="0" y="2" width="100" height="13" uuid="adb6ffda-fd63-499c-ad45-6f49ce30282e"/>
+		<band height="93" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="15" width="100" height="13" uuid="adb6ffda-fd63-499c-ad45-6f49ce30282e">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{address_line_1}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="0" y="15" width="100" height="13" uuid="d04256d9-4eab-45f6-8cd5-da3802bc47c1"/>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="28" width="100" height="13" isRemoveLineWhenBlank="true" uuid="d04256d9-4eab-45f6-8cd5-da3802bc47c1">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{address_line_2}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="0" y="28" width="100" height="13" uuid="8d8d7747-6cd0-4f6e-a3e2-d950590556a7"/>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="0" y="41" width="100" height="13" uuid="8d8d7747-6cd0-4f6e-a3e2-d950590556a7">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{city}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="0" y="41" width="100" height="13" uuid="b712670c-2a30-40fc-a5af-7d9d600b72ff"/>
+				<reportElement x="0" y="54" width="100" height="13" uuid="b712670c-2a30-40fc-a5af-7d9d600b72ff">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{postal_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="18" y="54" width="82" height="13" uuid="db975c88-bbd9-44f3-bcb5-045995237046"/>
+				<reportElement x="18" y="67" width="82" height="13" uuid="db975c88-bbd9-44f3-bcb5-045995237046">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{tel_no_1}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="18" y="67" width="82" height="13" uuid="e158145e-6dd0-4de7-b25a-13bd851fa6e3"/>
+				<reportElement x="18" y="80" width="82" height="13" uuid="e158145e-6dd0-4de7-b25a-13bd851fa6e3">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{tel_no_2}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="54" width="18" height="13" uuid="2ea68445-fe84-4b79-be3a-6cde89b557fa"/>
+				<reportElement x="0" y="67" width="18" height="13" uuid="2ea68445-fe84-4b79-be3a-6cde89b557fa">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Tel:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="67" width="18" height="13" uuid="29e83749-faf5-4cf9-a87d-3d4ba0898b9e"/>
+				<reportElement x="0" y="80" width="18" height="13" uuid="29e83749-faf5-4cf9-a87d-3d4ba0898b9e">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Fax:]]></text>
 			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="2" width="100" height="13" uuid="5ed06df0-5f00-4d92-b75f-ad25b1008b8b">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{long_description}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 </jasperReport>

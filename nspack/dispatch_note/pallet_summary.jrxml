@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2019-11-19T07:03:32 -->
+<!-- 2019-11-21T11:05:47 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_pallet_summary" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f6691ff3-42d0-4369-9d6b-d9ca7cad6758">
 	<property name="ireport.zoom" value="3.0"/>
 	<property name="ireport.x" value="0"/>
@@ -14,10 +14,11 @@
   pallet_sequences.sell_by_code,
   fruit_size_references.size_reference AS size_count_code,
   grades.grade_code,
-  fn_party_role_name(pallet_sequences.marketing_org_party_role_id) AS organization_code, -- ? OK?
+  fn_party_role_name(pallet_sequences.marketing_org_party_role_id) AS organization_code,
   target_market_groups.target_market_group_name AS target_market_code,
   SUM(pallet_sequences.carton_quantity) AS ctn_qty,
   SUM(CAST(pallet_sequences.carton_quantity AS numeric(5,1)) / CAST(pallets.carton_quantity AS numeric(5,1))) AS plt_qty,
+ SUM(CAST(pallets.nett_weight AS numeric(7,2))) AS nett_weight,
   inventory_codes.inventory_code,
   pallet_bases.pallet_base_code AS edi_out_pallet_base,
   commodities.code AS commodity_code,
@@ -83,11 +84,15 @@ ORDER BY
 	<field name="brand_code" class="java.lang.String"/>
 	<field name="org_long" class="java.lang.String"/>
 	<field name="organization_code" class="java.lang.String"/>
+	<field name="nett_weight" class="java.math.BigDecimal"/>
 	<variable name="ctn_qty_1" class="java.lang.Number" calculation="Sum">
 		<variableExpression><![CDATA[$F{ctn_qty}]]></variableExpression>
 	</variable>
 	<variable name="plt_qty_1" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{plt_qty}]]></variableExpression>
+	</variable>
+	<variable name="nett_weight_1" class="java.lang.Number" calculation="Sum">
+		<variableExpression><![CDATA[$F{nett_weight}]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -96,24 +101,15 @@ ORDER BY
 		<band height="19" splitType="Stretch">
 			<staticText>
 				<reportElement x="215" y="0" width="34" height="13" uuid="244c8c2a-36bc-40bb-bd85-7f164e792fc5"/>
-				<text><![CDATA[Grade]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="177" y="0" width="34" height="13" uuid="9a009dd0-b8a8-4bcd-9076-619bffabe57b"/>
-				<text><![CDATA[SellBy]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="320" y="0" width="25" height="13" uuid="cbb4af4c-a8ec-4727-bdaa-2b052740d789"/>
 				<text><![CDATA[TM]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="345" y="0" width="30" height="13" uuid="95f92d8b-97e7-4b42-a9e8-494405e59751"/>
-				<text><![CDATA[Inv]]></text>
+				<reportElement x="177" y="0" width="34" height="13" uuid="9a009dd0-b8a8-4bcd-9076-619bffabe57b"/>
+				<text><![CDATA[Grade]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="495" y="0" width="59" height="13" uuid="c3148cc1-1374-4f24-b0fe-c6e4c025d18a"/>
-				<textElement textAlignment="Right"/>
-				<text><![CDATA[ctn_qty]]></text>
+				<reportElement x="428" y="0" width="25" height="13" uuid="cbb4af4c-a8ec-4727-bdaa-2b052740d789"/>
+				<text><![CDATA[Nett]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="460" y="0" width="35" height="13" uuid="b7799043-ebff-49fe-a1f6-2f08700dfb99"/>
@@ -121,7 +117,7 @@ ORDER BY
 				<text><![CDATA[plt_qty]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="375" y="0" width="81" height="13" uuid="e78e5113-4f7f-4580-ae0d-92ebc11e0cfb"/>
+				<reportElement x="325" y="0" width="81" height="13" uuid="e78e5113-4f7f-4580-ae0d-92ebc11e0cfb"/>
 				<text><![CDATA[remark]]></text>
 			</staticText>
 			<staticText>
@@ -146,11 +142,11 @@ ORDER BY
 			</staticText>
 			<staticText>
 				<reportElement x="249" y="0" width="34" height="13" uuid="6a540ab5-5dce-4b57-b781-2572e3053b0d"/>
-				<text><![CDATA[Sell By]]></text>
+				<text><![CDATA[Count]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="286" y="0" width="34" height="13" uuid="79b307fa-49b8-49a2-9005-e3749c9627a7"/>
-				<text><![CDATA[Count]]></text>
+				<text><![CDATA[Inv]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -158,29 +154,21 @@ ORDER BY
 		<band height="13" splitType="Stretch">
 			<textField isBlankWhenNull="true">
 				<reportElement x="177" y="0" width="34" height="13" uuid="c65eaaa8-3700-4e38-a6c3-c227fa11e65d"/>
-				<textFieldExpression><![CDATA[$F{sell_by_code}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="215" y="0" width="24" height="13" uuid="ce49baa0-3ad3-4fb8-987f-e71ec8af5cd6"/>
 				<textFieldExpression><![CDATA[$F{grade_code}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="320" y="0" width="25" height="13" uuid="e2c96f20-3798-49d5-b4a1-f6a67a555060"/>
+				<reportElement x="215" y="0" width="24" height="13" uuid="ce49baa0-3ad3-4fb8-987f-e71ec8af5cd6"/>
 				<textFieldExpression><![CDATA[$F{target_market_code}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="345" y="0" width="30" height="13" uuid="fe1509a6-4821-4b34-b102-09f9d13ee9a1"/>
-				<textFieldExpression><![CDATA[$F{inventory_code}]]></textFieldExpression>
+			<textField pattern="###0.00" isBlankWhenNull="true">
+				<reportElement x="400" y="0" width="56" height="13" uuid="fe1509a6-4821-4b34-b102-09f9d13ee9a1"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{nett_weight}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="460" y="0" width="35" height="13" uuid="454823ad-31b8-4103-8bee-01286f6afd8c"/>
+			<textField pattern="###0.00" isBlankWhenNull="true">
+				<reportElement x="458" y="0" width="35" height="13" uuid="454823ad-31b8-4103-8bee-01286f6afd8c"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{plt_qty}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="495" y="0" width="59" height="13" uuid="7ad94c89-9e30-4b1d-af91-754bfb237181"/>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{ctn_qty}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="147" y="0" width="30" height="13" uuid="a8eda34a-2baf-45d3-bdc8-6abd38b4618c"/>
@@ -204,31 +192,31 @@ ORDER BY
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="249" y="0" width="26" height="13" uuid="3f09adf3-b322-4d87-965f-fe5504f96fdb"/>
-				<textFieldExpression><![CDATA[$F{sell_by_code}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{size_count_code}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="285" y="0" width="29" height="13" uuid="11b74f3b-29af-4bfb-bc75-0aa453e34583"/>
-				<textFieldExpression><![CDATA[$F{size_count_code}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{inventory_code}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<summary>
-		<band height="29" splitType="Stretch">
-			<textField>
-				<reportElement x="495" y="13" width="59" height="13" uuid="412bbf63-3b3f-4580-a37c-c65d0b96e5fc"/>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$V{ctn_qty_1}]]></textFieldExpression>
-			</textField>
+		<band height="32" splitType="Stretch">
 			<textField pattern="###0.00">
-				<reportElement x="456" y="14" width="34" height="13" uuid="d0769945-6ec7-4642-9021-a6b5217eef50"/>
+				<reportElement x="459" y="14" width="34" height="13" uuid="d0769945-6ec7-4642-9021-a6b5217eef50"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$V{plt_qty_1}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="345" y="13" width="100" height="13" uuid="fb4d2353-ef60-4767-b7c4-f536f1a11e60"/>
+				<reportElement x="286" y="13" width="100" height="13" uuid="fb4d2353-ef60-4767-b7c4-f536f1a11e60"/>
 				<textElement textAlignment="Right"/>
 				<text><![CDATA[Total:]]></text>
 			</staticText>
+			<textField pattern="###0.00">
+				<reportElement x="393" y="14" width="63" height="13" uuid="f7217c05-0d47-469a-876a-bfc126a286f2"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{nett_weight_1}]]></textFieldExpression>
+			</textField>
 		</band>
 	</summary>
 </jasperReport>

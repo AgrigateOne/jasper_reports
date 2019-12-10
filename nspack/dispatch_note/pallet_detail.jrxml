@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2019-11-19T07:02:15 -->
+<!-- 2019-11-21T11:06:17 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_pallet_detail" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="57a0c595-5448-465f-8162-0e6517403bd3">
 	<property name="ireport.zoom" value="2.253944402704733"/>
 	<property name="ireport.x" value="0"/>
@@ -33,7 +33,8 @@
   pallet_sequences.sell_by_code,
   pallet_bases.pallet_base_code AS edi_out_pallet_base,
   organizations.long_description AS org_long,
-  pallets.phc AS line_phc
+  pallets.phc AS line_phc,
+ CAST( pallets.nett_weight AS numeric(7,2))
 FROM pallets
 JOIN pallet_sequences ON pallet_sequences.pallet_id = pallets.id
 LEFT JOIN cultivar_groups ON cultivar_groups.id = pallet_sequences.cultivar_group_id
@@ -88,11 +89,15 @@ ORDER BY
 	<field name="edi_out_pallet_base" class="java.lang.String"/>
 	<field name="org_long" class="java.lang.String"/>
 	<field name="line_phc" class="java.lang.String"/>
+	<field name="nett_weight" class="java.math.BigDecimal"/>
 	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{ctn_qty}]]></variableExpression>
 	</variable>
 	<variable name="plt_qty_1" class="java.lang.Number" calculation="Sum">
 		<variableExpression><![CDATA[$F{plt_qty}]]></variableExpression>
+	</variable>
+	<variable name="nett_weight_1" class="java.lang.Number" calculation="Sum">
+		<variableExpression><![CDATA[$F{nett_weight}]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -104,14 +109,14 @@ ORDER BY
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[Grade]]></text>
+				<text><![CDATA[Size]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="167" y="0" width="34" height="13" uuid="ea84ba02-ce39-4351-b6e8-d4146e083fa2"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[SellBy]]></text>
+				<text><![CDATA[Grade]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="288" y="0" width="18" height="13" uuid="33f7e29d-785e-4ea7-8756-82eeb686a57a"/>
@@ -128,18 +133,11 @@ ORDER BY
 				<text><![CDATA[Inv]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="408" y="0" width="38" height="13" uuid="ca753176-2107-4ee4-b0ee-c22e5ba7bd0f"/>
-				<textElement textAlignment="Right">
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[ctn_qty]]></text>
-			</staticText>
-			<staticText>
 				<reportElement x="386" y="0" width="22" height="13" uuid="82a1e86b-4de5-4bc7-801c-35bd21e31674"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[pqty]]></text>
+				<text><![CDATA[bins]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="143" y="0" width="24" height="13" uuid="c01dc3cb-fcb8-4a9d-b6d9-8bd8b8b6afd8"/>
@@ -181,7 +179,7 @@ ORDER BY
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[Size]]></text>
+				<text><![CDATA[Nett]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="234" y="0" width="24" height="13" uuid="73d20789-9244-43b0-b62c-a2fe57bde3c6"/>
@@ -213,14 +211,14 @@ ORDER BY
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{sell_by_code}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{grade_code}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="202" y="0" width="29" height="12" uuid="9c731255-1902-476b-923d-a15baf50e179"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{grade_code}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{size_count_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="288" y="0" width="18" height="12" uuid="0eae09a3-de76-406a-889b-960d0d9447e4"/>
@@ -236,19 +234,12 @@ ORDER BY
 				</textElement>
 				<textFieldExpression><![CDATA[$F{inventory_code}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0.000" isBlankWhenNull="true">
+			<textField pattern="###0.00" isBlankWhenNull="true">
 				<reportElement x="386" y="0" width="22" height="12" uuid="c40ef02a-6cbe-4349-baa2-b7b1bdef3821"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{plt_qty}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="408" y="0" width="38" height="12" uuid="447820e4-76a6-4bff-8afa-27205256dc68"/>
-				<textElement textAlignment="Right">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{ctn_qty}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="143" y="0" width="14" height="12" uuid="b7d84869-99fe-4617-98bc-a5ba07906bdb"/>
@@ -283,7 +274,7 @@ ORDER BY
 				<textElement>
 					<font size="8" isUnderline="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{size_count_code}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{actual_size_count_code}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement isPrintRepeatedValues="false" x="423" y="0" width="121" height="12" uuid="0804e167-2e0e-453b-b9d4-cb0d10a06dab"/>
@@ -299,12 +290,12 @@ ORDER BY
 				</textElement>
 				<textFieldExpression><![CDATA[$F{variety_short_long}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="###0.00" isBlankWhenNull="true">
 				<reportElement x="260" y="0" width="24" height="12" uuid="a3451f06-dded-4e0f-a608-643d24fecd15"/>
-				<textElement>
+				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{actual_size_count_code}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nett_weight}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="332" y="0" width="50" height="12" uuid="b17b0077-a9f2-4801-9fda-08d1e27a795c"/>
@@ -316,22 +307,22 @@ ORDER BY
 		</band>
 	</detail>
 	<summary>
-		<band height="16" splitType="Stretch">
-			<textField>
-				<reportElement x="407" y="3" width="38" height="13" uuid="98288db7-caf9-454d-9450-6e5182a21455"/>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$V{ctn_qty_1}]]></textFieldExpression>
-			</textField>
-			<textField pattern="###0.000">
-				<reportElement x="382" y="3" width="25" height="13" uuid="eafb0fde-cf16-4785-bf1c-2e291259339a"/>
+		<band height="21" splitType="Stretch">
+			<textField pattern="###0.00">
+				<reportElement x="383" y="3" width="25" height="13" uuid="eafb0fde-cf16-4785-bf1c-2e291259339a"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$V{plt_qty_1}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="254" y="3" width="130" height="13" uuid="e28822d1-3d1c-4e55-95b4-b155a7ee783f"/>
+				<reportElement x="85" y="3" width="130" height="13" uuid="e28822d1-3d1c-4e55-95b4-b155a7ee783f"/>
 				<textElement textAlignment="Right"/>
 				<text><![CDATA[Total:]]></text>
 			</staticText>
+			<textField pattern="###0.00">
+				<reportElement x="233" y="3" width="51" height="13" uuid="a65e424e-4a64-4109-828a-765cbc1a963c"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{nett_weight_1}]]></textFieldExpression>
+			</textField>
 		</band>
 	</summary>
 </jasperReport>
