@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2019-12-09T13:36:01 -->
+<!-- 2019-12-10T10:03:02 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pack_out" language="groovy" pageWidth="595" pageHeight="842" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" uuid="c08c8ed1-c3fa-4b77-b7f2-d6e11642b1b0">
 	<property name="ireport.zoom" value="5.0"/>
 	<property name="ireport.x" value="0"/>
@@ -29,7 +29,7 @@
     grade_code,
     packhouse,
     line,
-    std_pack,
+    basic_pack,
     std_size,
     size_ref,
     actual_count,
@@ -57,7 +57,7 @@ GROUP BY
     grade_code,
     packhouse,
     line,
-    std_pack,
+    basic_pack,
     std_size,
     size_ref,
     actual_count,
@@ -80,12 +80,12 @@ GROUP BY
 	<field name="production_run_code" class="java.lang.String"/>
 	<field name="packhouse" class="java.lang.String"/>
 	<field name="line" class="java.lang.String"/>
-	<field name="std_pack" class="java.lang.String"/>
 	<field name="std_size" class="java.lang.Integer"/>
 	<field name="size_ref" class="java.lang.String"/>
 	<field name="actual_count" class="java.lang.Integer"/>
 	<field name="carton_quantity" class="java.lang.Long"/>
 	<field name="orchards" class="java.lang.String"/>
+	<field name="basic_pack" class="java.lang.String"/>
 	<variable name="nett_weight_1" class="java.lang.Double" resetType="Group" resetGroup="grade_code" calculation="Sum">
 		<variableExpression><![CDATA[$F{nett_weight}]]></variableExpression>
 	</variable>
@@ -320,7 +320,7 @@ GROUP BY
 		<band height="13" splitType="Stretch">
 			<textField>
 				<reportElement x="57" y="0" width="38" height="13" uuid="56631ea8-ab91-4099-b63b-d474e7c3842a"/>
-				<textFieldExpression><![CDATA[$F{std_pack}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{basic_pack}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="95" y="0" width="29" height="13" uuid="403cbbe8-30ef-4775-b8a7-a76b6205cf59"/>
