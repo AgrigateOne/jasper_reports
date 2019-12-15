@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2019-11-21T11:47:20 -->
+<!-- 2019-12-15T08:56:58 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="packhouse_org" language="groovy" pageWidth="105" pageHeight="802" columnWidth="105" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="0a1604e6-2175-46e1-9679-a2937e8746bb">
 	<property name="ireport.zoom" value="4.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NEW_DATAADAPTER.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack.xml"/>
 	<parameter name="party_role_id" class="java.lang.Integer"/>
 	<parameter name="address_type" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 		<defaultValueExpression><![CDATA["Delivery Address"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="name_prefix" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT organizations.long_description,
@@ -135,7 +138,7 @@ WHERE party_roles.id = $P{party_role_id}]]>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{long_description}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($P{name_prefix}== null ? "" : $P{name_prefix} + ($F{long_description}== null ? "" : $F{long_description}))]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>

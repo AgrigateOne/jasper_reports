@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2019-11-26T12:25:26 -->
+<!-- 2019-12-15T08:55:51 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_consignment" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack.xml"/>
 	<style name="table">
@@ -673,7 +673,7 @@ where loads.id = $P{load_id}]]>
 					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["packhouse_org_address.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
 			</subreport>
 			<componentElement>
 				<reportElement x="305" y="0" width="200" height="26" uuid="4a864b43-2183-4d30-8a03-63772df42db7">
@@ -697,7 +697,7 @@ where loads.id = $P{load_id}]]>
 					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["packhouse_org_address.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
 			</subreport>
 			<staticText>
 				<reportElement x="112" y="13" width="323" height="13" uuid="359feca1-7622-4585-8aca-4105271d7040">
