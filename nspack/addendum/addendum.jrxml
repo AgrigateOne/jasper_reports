@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2019-12-14T21:44:27 -->
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
+<!-- 2019-12-16T12:48:02 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="addendum" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="22c9f520-d5e9-4af2-ac4c-ad2be98d416a">
 	<property name="ireport.zoom" value="1.7524694974069637"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/addendum"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44:80/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="local_ud"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack.xml"/>
 	<parameter name="load_id" class="java.lang.Integer"/>
 	<parameter name="user_name" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
@@ -18,10 +18,10 @@ count(*) over (partition by sq.load_id) as total_row,
 * from 
 (select  COALESCE(govt_reinspection_at, govt_first_inspection_at) as inspection_date,
     *,
-   case 	when not (govt_inspection_pallets.passed) then LPAD(govt_inspection_pallets.govt_inspection_sheet_id::text,10, '0')||'F' 
-		when (govt_inspection_pallets.passed) then LPAD(govt_inspection_pallets.govt_inspection_sheet_id::text,10, '0') 
+   case 	when not (govt_inspection_passed) then LPAD(govt_inspection_sheet_id::text,10, '0')||'F' 
+		when (govt_inspection_passed) then LPAD(govt_inspection_sheet_id::text,10, '0') 
 		else '' end as manifest
-from vw_pallet_sequence_flat  where vw_pallet_sequence_flat.load_id=$P{load_id} 
+from vw_pallet_sequence_flat  where vw_pallet_sequence_flat.load_id = $P{load_id} 
 ) as sq]]>
 	</queryString>
 	<field name="load_id" class="java.lang.Integer"/>
