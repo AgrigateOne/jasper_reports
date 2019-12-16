@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2019-12-16T06:57:16 -->
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
+<!-- 2019-12-16T14:05:02 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gov_inspection_sheet" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b276ed72-36fe-4eb1-8898-57bb00d5eee1">
 	<property name="ireport.zoom" value="1.7524694974069621"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="46"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/first_intake"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="local_ud"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack.xml"/>
 	<subDataset name="dataset1" uuid="c85ecac9-39da-4aaa-997f-4e9b10bcfb3c"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA["Users"]]></defaultValueExpression>
@@ -135,7 +135,8 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
     exporter,
     billing_client,
     p.country,
-    region,
+    destination_countries.iso_country_code,
+    destination_regions.destination_region_name,
     eta,
     ata,
     etd,
@@ -164,6 +165,8 @@ FROM
     public.vw_pallet_sequence_flat p
     LEFT JOIN govt_inspection_pallets ON govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
     LEFT JOIN govt_inspection_sheets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+LEFT JOIN destination_countries ON destination_countries.id = govt_inspection_sheets.destination_country_id
+LEFT JOIN destination_regions ON destination_regions.id = destination_countries.destination_region_id
 left join inspectors on inspectors.id= govt_inspection_sheets.inspector_id
 left join party_roles on inspectors.inspector_party_role_id= party_roles.id
 left join parties on party_roles.party_id=parties.id
@@ -284,7 +287,6 @@ WHERE $P!{QueryCondition} and govt_inspection_sheets.id= $P{govt_inspection_shee
 	<field name="exporter" class="java.lang.String"/>
 	<field name="billing_client" class="java.lang.String"/>
 	<field name="country" class="java.lang.String"/>
-	<field name="region" class="java.lang.String"/>
 	<field name="eta" class="java.sql.Date"/>
 	<field name="ata" class="java.sql.Date"/>
 	<field name="etd" class="java.sql.Date"/>
@@ -308,6 +310,8 @@ WHERE $P!{QueryCondition} and govt_inspection_sheets.id= $P{govt_inspection_shee
 	<field name="inspection_billing_party_role_id" class="java.lang.Integer"/>
 	<field name="exporter_party_role_id" class="java.lang.Integer"/>
 	<field name="fail_pallet_id" class="java.lang.Integer"/>
+	<field name="iso_country_code" class="java.lang.String"/>
+	<field name="destination_region_name" class="java.lang.String"/>
 	<sortField name="pallet_number"/>
 	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
@@ -364,7 +368,7 @@ WHERE $P!{QueryCondition} and govt_inspection_sheets.id= $P{govt_inspection_shee
 				<reportElement x="305" y="170" width="100" height="13" uuid="ce86a56c-c652-49ba-bbdb-a05c7e9d7f1f"/>
 				<textFieldExpression><![CDATA[$F{order_number}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="110" y="196" width="150" height="13" uuid="9ff87982-6993-4d32-b414-809b1f23e2b0"/>
 				<textFieldExpression><![CDATA[$F{inspection_point}]]></textFieldExpression>
 			</textField>
@@ -759,7 +763,7 @@ WHERE $P!{QueryCondition} and govt_inspection_sheets.id= $P{govt_inspection_shee
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{region}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{packed_tm_group}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="0" width="24" height="11" uuid="8972db56-64f0-42d9-b128-86f3ef137b32"/>
@@ -780,14 +784,14 @@ WHERE $P!{QueryCondition} and govt_inspection_sheets.id= $P{govt_inspection_shee
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{region}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[".."]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="223" y="0" width="27" height="11" uuid="ef571c4c-fd42-4ded-9b06-8783bfc0b415"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{region}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{destination_region_name}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
 				<reportElement x="457" y="0" width="98" height="11" uuid="9989200a-ba33-4bfd-9b9f-cddec1220328"/>
