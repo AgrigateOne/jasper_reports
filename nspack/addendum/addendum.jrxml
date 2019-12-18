@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2019-12-16T12:48:02 -->
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
+<!-- 2019-12-18T18:07:36 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="addendum" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="22c9f520-d5e9-4af2-ac4c-ad2be98d416a">
 	<property name="ireport.zoom" value="1.7524694974069637"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/addendum"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44:80/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="local_ud"/>
 	<parameter name="load_id" class="java.lang.Integer"/>
 	<parameter name="user_name" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
@@ -21,7 +21,7 @@ count(*) over (partition by sq.load_id) as total_row,
    case 	when not (govt_inspection_passed) then LPAD(govt_inspection_sheet_id::text,10, '0')||'F' 
 		when (govt_inspection_passed) then LPAD(govt_inspection_sheet_id::text,10, '0') 
 		else '' end as manifest
-from vw_pallet_sequence_flat  where vw_pallet_sequence_flat.load_id = $P{load_id} 
+from vw_pallet_sequence_flat  where vw_pallet_sequence_flat.load_id=$P{load_id} 
 ) as sq]]>
 	</queryString>
 	<field name="load_id" class="java.lang.Integer"/>
@@ -158,6 +158,7 @@ from vw_pallet_sequence_flat  where vw_pallet_sequence_flat.load_id = $P{load_id
 	<field name="fruit_sticker_pm_product_2_id" class="java.lang.Integer"/>
 	<field name="last_govt_inspection_pallet_id" class="java.lang.Integer"/>
 	<field name="manifest" class="java.lang.String"/>
+	<field name="shipped_date" class="java.sql.Date"/>
 	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
 	</variable>
@@ -447,7 +448,7 @@ from vw_pallet_sequence_flat  where vw_pallet_sequence_flat.load_id = $P{load_id
 					<textElement textAlignment="Center">
 						<font isBold="true"/>
 					</textElement>
-					<text><![CDATA[X]]></text>
+					<text><![CDATA[]]></text>
 				</staticText>
 				<rectangle>
 					<reportElement x="661" y="48" width="140" height="10" uuid="997cf102-ee2b-4ec9-a1e9-c21ae7b89195"/>
@@ -909,7 +910,7 @@ from vw_pallet_sequence_flat  where vw_pallet_sequence_flat.load_id = $P{load_id
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="SansSerif" size="5"/>
 					</textElement>
-					<text><![CDATA[]]></text>
+					<text><![CDATA[X]]></text>
 				</staticText>
 			</band>
 		</groupFooter>

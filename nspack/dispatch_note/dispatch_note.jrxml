@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2019-12-15T08:55:51 -->
+<!-- 2019-12-18T20:04:27 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_consignment" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack.xml"/>
 	<style name="table">
@@ -33,6 +33,9 @@
 	<parameter name="for_picklist" class="java.lang.Boolean"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT
+fn_party_role_name((SELECT pr.id
+FROM public.party_roles pr
+WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1)) AS implementation_owner_name,
 (SELECT pr.id
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) AS implementation_owner_party_role_id,
@@ -129,8 +132,8 @@ where loads.id = $P{load_id}]]>
 	<field name="container_setting" class="java.lang.String"/>
 	<field name="container_vents" class="java.lang.String"/>
 	<field name="container_seal_code" class="java.lang.String"/>
-	<field name="container_temperature_rhine" class="java.math.BigDecimal"/>
-	<field name="container_temperature_rhine2" class="java.math.BigDecimal"/>
+	<field name="container_temperature_rhine" class="java.lang.String"/>
+	<field name="container_temperature_rhine2" class="java.lang.String"/>
 	<field name="cto_consec_code" class="java.lang.String"/>
 	<field name="stack_type_code" class="java.lang.String"/>
 	<field name="internal_container_code" class="java.lang.String"/>
@@ -160,6 +163,7 @@ where loads.id = $P{load_id}]]>
 	<field name="implementation_owner_party_role_id" class="java.lang.Integer"/>
 	<field name="driver_name" class="java.lang.String"/>
 	<field name="driver_cell_number" class="java.lang.String"/>
+	<field name="implementation_owner_name" class="java.lang.String"/>
 	<group name="load_id">
 		<groupExpression><![CDATA[$F{load_id}]]></groupExpression>
 		<groupHeader>
@@ -240,13 +244,6 @@ where loads.id = $P{load_id}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="112" y="0" width="323" height="13" uuid="2a8990f1-0fbb-4c65-8165-67f75e724fcf"/>
-				<textElement textAlignment="Center">
-					<font size="10" isBold="true"/>
-				</textElement>
-				<text><![CDATA[HABATA]]></text>
-			</staticText>
 			<staticText>
 				<reportElement x="5" y="129" width="65" height="13" uuid="30a60c73-0a14-4f32-b50f-16ebd997c81f"/>
 				<textElement>
@@ -708,6 +705,26 @@ where loads.id = $P{load_id}]]>
 				</textElement>
 				<text><![CDATA[Picklist]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="149" y="0" width="248" height="12" uuid="6666bb96-8e1a-432e-a66f-ff1325ab3d89">
+					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{implementation_owner_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="130" y="0" width="180" height="12" uuid="6f18dbc1-2654-4f1d-849d-c66f1b421dc2">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[$P{for_picklist}]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{implementation_owner_name}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
