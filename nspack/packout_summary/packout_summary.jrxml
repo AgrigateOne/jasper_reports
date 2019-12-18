@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2019-12-15T22:34:48 -->
+<!-- 2019-12-18T11:38:25 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="packout_summary" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a11c3b0e-77bc-47a3-bfcc-ddc9763f8ca9">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="habata"/>
 	<parameter name="detail_level" class="java.lang.String">
@@ -18,7 +18,8 @@ production_runs.cultivar_id
 ,sum(production_run_stats.bins_tipped_weight)bins_tipped_weight
 ,sum(production_run_stats.bins_tipped)bins_tipped
 , cultivars.description as cultivar_description ,orchards.orchard_code,pucs.puc_code,seasons.season_code
-
+,min( production_runs.started_at)::date as fromdate
+,max( production_runs.started_at)::date as todate
 from production_runs 
 join cultivars on production_runs.cultivar_id=cultivars.id
 join orchards on production_runs.orchard_id=orchards.id
@@ -44,7 +45,8 @@ production_runs.cultivar_id
 ,vw_packout_details.inventory_code
 ,hsql.cultivar_description ,hsql.orchard_code,hsql.puc_code,hsql.season_code
 ,hsql.cultivar_description ||hsql.orchard_code||hsql.puc_code||hsql.season_code as group1
-
+,hsql.fromdate
+,hsql.todate
 from vw_packout_details 
  join production_runs on vw_packout_details.production_run_id =production_runs.id
 join hsql on 
@@ -62,14 +64,14 @@ production_runs.puc_id=hsql.puc_id
 ,vw_packout_details.grade_code
 ,vw_packout_details.inventory_code
 ,hsql.cultivar_description ,hsql.orchard_code,hsql.puc_code,hsql.season_code
-)
+,hsql.fromdate
+,hsql.todate)
 select *,
 cast(pack_nett_weight/bins_tipped_weight*100 as dec(4,1)) detail_perc
 ,sum(pack_nett_weight) OVER (PARTITION BY group1) as packout_weight_group1, 
 cast(sum(pack_nett_weight) OVER (PARTITION BY group1)/bins_tipped_weight*100 as dec(4,1))as packout_perc_group1 from packout
 
-order by season_code,cultivar_description ,orchard_code,puc_code
-]]>
+order by season_code,cultivar_description ,orchard_code,puc_code]]>
 	</queryString>
 	<field name="bins_tipped_weight" class="java.math.BigDecimal"/>
 	<field name="pack_nett_weight" class="java.math.BigDecimal"/>
@@ -91,35 +93,37 @@ order by season_code,cultivar_description ,orchard_code,puc_code
 	<field name="detail_perc" class="java.math.BigDecimal"/>
 	<field name="packout_weight_group1" class="java.math.BigDecimal"/>
 	<field name="packout_perc_group1" class="java.math.BigDecimal"/>
+	<field name="fromdate" class="java.sql.Date"/>
+	<field name="todate" class="java.sql.Date"/>
 	<variable name="pack_nett_weight_SUM" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{pack_nett_weight}]]></variableExpression>
 	</variable>
 	<variable name="Cultivar_header" class="java.lang.String" resetType="Group" resetGroup="group1" incrementType="Group" incrementGroup="group1">
-		<variableExpression><![CDATA[CONCATENATE("Cultivar: ",$F{cultivar_description})]]></variableExpression>
+		<variableExpression><![CDATA[$F{cultivar_description}]]></variableExpression>
 	</variable>
 	<variable name="PUC_header" class="java.lang.String" resetType="Group" resetGroup="group1" incrementType="Group" incrementGroup="group1">
-		<variableExpression><![CDATA[CONCATENATE("PUC: ",$F{puc_code})]]></variableExpression>
+		<variableExpression><![CDATA[$F{puc_code}]]></variableExpression>
 	</variable>
 	<variable name="Orchard_header" class="java.lang.String" resetType="Group" resetGroup="group1" incrementType="Group" incrementGroup="group1">
-		<variableExpression><![CDATA[CONCATENATE("Orchard: ",$F{orchard_code})]]></variableExpression>
+		<variableExpression><![CDATA[$F{orchard_code}]]></variableExpression>
 	</variable>
 	<variable name="Season_header" class="java.lang.String" resetType="Group" resetGroup="group1" incrementType="Group" incrementGroup="group1">
-		<variableExpression><![CDATA[CONCATENATE("Season:",$F{season_code})]]></variableExpression>
+		<variableExpression><![CDATA[$F{season_code}]]></variableExpression>
 	</variable>
 	<group name="group1">
 		<groupExpression><![CDATA[$F{group1}]]></groupExpression>
 		<groupHeader>
-			<band height="20">
+			<band height="25">
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="group1" isBlankWhenNull="true">
-					<reportElement x="100" y="0" width="114" height="20" uuid="b246b077-3b19-4f2b-af0b-8bbd8606b340"/>
+					<reportElement x="117" y="0" width="60" height="20" uuid="b246b077-3b19-4f2b-af0b-8bbd8606b340"/>
 					<textFieldExpression><![CDATA[$V{Cultivar_header}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="group1" isBlankWhenNull="true">
-					<reportElement x="214" y="0" width="82" height="20" uuid="12ae40f1-fd56-410c-a2c1-97882b75b799"/>
+					<reportElement x="214" y="0" width="46" height="20" uuid="12ae40f1-fd56-410c-a2c1-97882b75b799"/>
 					<textFieldExpression><![CDATA[$V{PUC_header}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="group1" isBlankWhenNull="true">
-					<reportElement x="296" y="0" width="84" height="20" uuid="18556890-0c9c-4873-9c95-cf8897d64c42"/>
+					<reportElement x="310" y="0" width="70" height="20" uuid="18556890-0c9c-4873-9c95-cf8897d64c42"/>
 					<textFieldExpression><![CDATA[$V{Orchard_header}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0.###">
@@ -149,8 +153,20 @@ order by season_code,cultivar_description ,orchard_code,puc_code
 					<textFieldExpression><![CDATA[$F{packout_weight_group1}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="group1" isBlankWhenNull="true">
-					<reportElement x="1" y="0" width="96" height="20" uuid="00c949ca-8fe9-4683-a8d7-c8877695daa5"/>
+					<reportElement x="1" y="0" width="64" height="20" uuid="00c949ca-8fe9-4683-a8d7-c8877695daa5"/>
 					<textFieldExpression><![CDATA[$V{Season_header}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="65" y="0" width="52" height="20" uuid="31274851-a706-4830-b292-2b06bb7c7c5e"/>
+					<textFieldExpression><![CDATA["Cultivar:"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="177" y="0" width="36" height="20" uuid="c6f896f9-4396-423a-a377-1cc571281651"/>
+					<textFieldExpression><![CDATA["PUC:"]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="260" y="0" width="50" height="20" uuid="7a3c072e-2e71-4983-bd91-127046f0c54f"/>
+					<textFieldExpression><![CDATA["Orchard:"]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -159,23 +175,7 @@ order by season_code,cultivar_description ,orchard_code,puc_code
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="75" splitType="Stretch">
-			<textField pattern="d MMM  yyyy">
-				<reportElement x="70" y="32" width="100" height="15" uuid="f60c430e-a716-4c80-a6a3-9ccd4bb71a75">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="local_mesure_unitheight" value="pixel"/>
-				</reportElement>
-				<textElement textAlignment="Left"/>
-				<textFieldExpression><![CDATA[$P{FromDate}]]></textFieldExpression>
-			</textField>
-			<textField pattern="d MMM  yyyy">
-				<reportElement x="70" y="48" width="100" height="15" uuid="f1410fe9-3294-40ee-9923-1483e75c35f5">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Left"/>
-				<textFieldExpression><![CDATA[$P{ToDate}]]></textFieldExpression>
-			</textField>
+		<band height="66" splitType="Stretch">
 			<staticText>
 				<reportElement x="1" y="0" width="552" height="30" uuid="38a0db5e-e7aa-47fb-a78e-796e8d25a4cb"/>
 				<textElement textAlignment="Center">
@@ -218,12 +218,20 @@ order by season_code,cultivar_description ,orchard_code,puc_code
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="346" y="30" width="100" height="30" uuid="34b858b5-732f-448b-be8c-9b0f3e5d8af0"/>
+				<reportElement x="370" y="30" width="76" height="30" uuid="34b858b5-732f-448b-be8c-9b0f3e5d8af0"/>
 				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<text><![CDATA[Print:]]></text>
 			</staticText>
+			<textField pattern="dd/M/yy">
+				<reportElement x="71" y="32" width="96" height="15" uuid="2a1c7ef6-45f5-4e6a-b870-325842c218eb"/>
+				<textFieldExpression><![CDATA[$F{fromdate}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/M/yy">
+				<reportElement x="71" y="48" width="96" height="15" uuid="abdb3004-cb2d-48ea-80e0-b1f4e64e83fb"/>
+				<textFieldExpression><![CDATA[$F{todate}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<columnHeader>
@@ -319,7 +327,7 @@ order by season_code,cultivar_description ,orchard_code,puc_code
 				</reportElement>
 				<textFieldExpression><![CDATA[$F{size_ref}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="138" y="0" width="27" height="15" uuid="4e3d7521-6678-4b0f-8757-9f087237c20b">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
