@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2019-12-18T18:07:36 -->
+<!-- 2019-12-19T14:27:41 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="addendum" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="22c9f520-d5e9-4af2-ac4c-ad2be98d416a">
 	<property name="ireport.zoom" value="1.7524694974069637"/>
 	<property name="ireport.x" value="0"/>
@@ -159,6 +159,7 @@ from vw_pallet_sequence_flat  where vw_pallet_sequence_flat.load_id=$P{load_id}
 	<field name="last_govt_inspection_pallet_id" class="java.lang.Integer"/>
 	<field name="manifest" class="java.lang.String"/>
 	<field name="shipped_date" class="java.sql.Date"/>
+	<field name="shipper" class="java.lang.String"/>
 	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
 	</variable>
@@ -399,7 +400,7 @@ from vw_pallet_sequence_flat  where vw_pallet_sequence_flat.load_id=$P{load_id}
 					<textElement>
 						<font fontName="SansSerif" size="5"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{exporter}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{shipper}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="572" y="38" width="89" height="10" uuid="d587537f-3858-4674-9970-12d1e0fce4c8"/>
@@ -509,7 +510,7 @@ from vw_pallet_sequence_flat  where vw_pallet_sequence_flat.load_id=$P{load_id}
 					</textElement>
 					<text><![CDATA[Port Elizabeth]]></text>
 				</staticText>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement x="387" y="58" width="136" height="10" uuid="8ca748b1-3d0c-47d1-a4ff-10601fbf4ac4">
 						<property name="local_mesure_unitheight" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
