@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2019-12-16T14:05:02 -->
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
+<!-- 2019-12-23T16:39:46 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gov_inspection_sheet" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b276ed72-36fe-4eb1-8898-57bb00d5eee1">
 	<property name="ireport.zoom" value="1.7524694974069621"/>
 	<property name="ireport.x" value="0"/>
@@ -900,23 +900,26 @@ WHERE $P!{QueryCondition} and govt_inspection_sheets.id= $P{govt_inspection_shee
 				<reportElement x="416" y="25" width="139" height="35" uuid="de793fd6-0080-4063-8793-3abca56533d8"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="4" y="25" width="100" height="35" uuid="6c7bdde1-9a5e-4ab2-b6dd-67822385974f"/>
+				<reportElement x="4" y="25" width="134" height="35" uuid="6c7bdde1-9a5e-4ab2-b6dd-67822385974f"/>
+				<textElement verticalAlignment="Middle"/>
 				<text><![CDATA[Signature]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="287" y="25" width="100" height="35" uuid="23eca3c7-030b-42d0-8621-2c3eb6e193e0"/>
+				<reportElement x="281" y="25" width="106" height="35" uuid="23eca3c7-030b-42d0-8621-2c3eb6e193e0"/>
+				<textElement verticalAlignment="Middle"/>
 				<text><![CDATA[Signature]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="4" y="0" width="100" height="20" uuid="8e0cb925-2114-4b9e-9a37-822562c20f8e"/>
+				<reportElement x="4" y="0" width="134" height="24" uuid="8e0cb925-2114-4b9e-9a37-822562c20f8e"/>
+				<textElement verticalAlignment="Middle"/>
 				<text><![CDATA[Approved by]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="286" y="0" width="100" height="20" uuid="85bca30f-d438-422b-b3c2-3fab0a490723"/>
-				<textElement>
+				<reportElement x="278" y="0" width="138" height="24" uuid="85bca30f-d438-422b-b3c2-3fab0a490723"/>
+				<textElement verticalAlignment="Middle">
 					<font isItalic="false"/>
 				</textElement>
-				<text><![CDATA[Transporter]]></text>
+				<text><![CDATA[Packhouse manager]]></text>
 			</staticText>
 		</band>
 	</lastPageFooter>
