@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2019-12-19T14:27:41 -->
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
+<!-- 2019-12-24T13:19:43 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="addendum" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="22c9f520-d5e9-4af2-ac4c-ad2be98d416a">
 	<property name="ireport.zoom" value="1.7524694974069637"/>
 	<property name="ireport.x" value="0"/>
@@ -1026,12 +1026,12 @@ from vw_pallet_sequence_flat  where vw_pallet_sequence_flat.load_id=$P{load_id}
 				</textElement>
 				<textFieldExpression><![CDATA[$F{shipped_at}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField pattern="" isBlankWhenNull="true">
 				<reportElement x="238" y="82" width="41" height="32" uuid="09c4e6e6-2f7c-4c4d-96fc-e119460c1d43"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{pol}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pod}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="0" y="81" width="802" height="1" uuid="652957ed-3920-4541-94f0-6c7f6170e190"/>
@@ -1110,7 +1110,7 @@ from vw_pallet_sequence_flat  where vw_pallet_sequence_flat.load_id=$P{load_id}
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{pod}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pol}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="102" y="98" width="84" height="1" uuid="e52b7969-1ff7-4d8d-92bb-561ac2f28f47"/>
