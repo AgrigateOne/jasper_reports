@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2019-11-21T11:05:47 -->
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
+<!-- 2019-12-26T09:14:32 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_pallet_summary" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f6691ff3-42d0-4369-9d6b-d9ca7cad6758">
 	<property name="ireport.zoom" value="3.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/dispatch_consignment"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44:80/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="habata"/>
 	<parameter name="load_id" class="java.lang.Integer"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT
@@ -26,7 +26,9 @@
   basic_pack_codes.basic_pack_code AS old_pack_code,
   marks.mark_code AS brand_code,
   organizations.long_description AS org_long
-
+,pallets.gross_weight
+,(select sum(gross_weight) from pallets p where p.load_id=pallets.load_id) load_gross_weight
+,pallets.load_id
 FROM pallets
 JOIN pallet_sequences ON pallet_sequences.pallet_id = pallets.id
 LEFT JOIN cultivar_groups ON cultivar_groups.id = pallet_sequences.cultivar_group_id
@@ -61,6 +63,8 @@ GROUP BY
   marks.mark_code,
   pallet_sequences.marketing_org_party_role_id,
   organizations.long_description
+,pallets.gross_weight
+,pallets.load_id
 ORDER BY
   commodities.code,
   COALESCE(cvv.marketing_variety_code, marketing_varieties.marketing_variety_code),
@@ -85,6 +89,9 @@ ORDER BY
 	<field name="org_long" class="java.lang.String"/>
 	<field name="organization_code" class="java.lang.String"/>
 	<field name="nett_weight" class="java.math.BigDecimal"/>
+	<field name="gross_weight" class="java.math.BigDecimal"/>
+	<field name="load_gross_weight" class="java.math.BigDecimal"/>
+	<field name="load_id" class="java.lang.Integer"/>
 	<variable name="ctn_qty_1" class="java.lang.Number" calculation="Sum">
 		<variableExpression><![CDATA[$F{ctn_qty}]]></variableExpression>
 	</variable>
@@ -108,11 +115,11 @@ ORDER BY
 				<text><![CDATA[Grade]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="428" y="0" width="25" height="13" uuid="cbb4af4c-a8ec-4727-bdaa-2b052740d789"/>
+				<reportElement x="431" y="0" width="25" height="13" uuid="cbb4af4c-a8ec-4727-bdaa-2b052740d789"/>
 				<text><![CDATA[Nett]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="460" y="0" width="35" height="13" uuid="b7799043-ebff-49fe-a1f6-2f08700dfb99"/>
+				<reportElement x="513" y="0" width="35" height="13" uuid="b7799043-ebff-49fe-a1f6-2f08700dfb99"/>
 				<textElement textAlignment="Right"/>
 				<text><![CDATA[plt_qty]]></text>
 			</staticText>
@@ -148,6 +155,10 @@ ORDER BY
 				<reportElement x="286" y="0" width="34" height="13" uuid="79b307fa-49b8-49a2-9005-e3749c9627a7"/>
 				<text><![CDATA[Inv]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="470" y="0" width="43" height="13" uuid="777f68a0-4c9f-46db-a5cf-ce0620582047"/>
+				<text><![CDATA[Gross]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
@@ -166,7 +177,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{nett_weight}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00" isBlankWhenNull="true">
-				<reportElement x="458" y="0" width="35" height="13" uuid="454823ad-31b8-4103-8bee-01286f6afd8c"/>
+				<reportElement x="513" y="0" width="35" height="13" uuid="454823ad-31b8-4103-8bee-01286f6afd8c"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{plt_qty}]]></textFieldExpression>
 			</textField>
@@ -198,17 +209,22 @@ ORDER BY
 				<reportElement x="285" y="0" width="29" height="13" uuid="11b74f3b-29af-4bfb-bc75-0aa453e34583"/>
 				<textFieldExpression><![CDATA[$F{inventory_code}]]></textFieldExpression>
 			</textField>
+			<textField pattern="###0.00" isBlankWhenNull="true">
+				<reportElement x="457" y="0" width="56" height="13" uuid="c7668a75-d5a1-4dd7-abb6-1bb83bbfa669"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{gross_weight}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<summary>
 		<band height="32" splitType="Stretch">
 			<textField pattern="###0.00">
-				<reportElement x="459" y="14" width="34" height="13" uuid="d0769945-6ec7-4642-9021-a6b5217eef50"/>
+				<reportElement x="514" y="14" width="34" height="13" uuid="d0769945-6ec7-4642-9021-a6b5217eef50"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$V{plt_qty_1}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="286" y="13" width="100" height="13" uuid="fb4d2353-ef60-4767-b7c4-f536f1a11e60"/>
+				<reportElement x="286" y="14" width="100" height="13" uuid="fb4d2353-ef60-4767-b7c4-f536f1a11e60"/>
 				<textElement textAlignment="Right"/>
 				<text><![CDATA[Total:]]></text>
 			</staticText>
@@ -216,6 +232,11 @@ ORDER BY
 				<reportElement x="393" y="14" width="63" height="13" uuid="f7217c05-0d47-469a-876a-bfc126a286f2"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$V{nett_weight_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement x="456" y="14" width="58" height="13" uuid="f1f79bf6-aaf9-4e0f-8075-03d6f57d941b"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{load_gross_weight}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>

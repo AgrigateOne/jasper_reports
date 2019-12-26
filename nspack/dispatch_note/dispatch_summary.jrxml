@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2019-11-21T11:01:19 -->
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
+<!-- 2019-12-26T09:20:28 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="summary" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cba47b92-bbda-40d5-b5d7-7f12c9f0b664">
 	<property name="ireport.zoom" value="3.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="habata"/>
 	<parameter name="load_id" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
 	</parameter>
@@ -20,6 +20,7 @@
  SUM(pallets.nett_weight) AS nett_weight,
  SUM(fruit_actual_counts_for_packs.actual_count_for_pack * pallet_sequences.carton_quantity) AS fruit,
  SUM(CAST(pallet_sequences.carton_quantity AS numeric(5,1)) / CAST(pallets.carton_quantity AS numeric(5,1))) AS plt_qty
+,(select sum(gross_weight) from pallets p where p.load_id=pallets.load_id) load_gross_weight
 FROM loads
 JOIN pallets ON pallets.load_id = loads.id
 JOIN pallet_sequences ON pallet_sequences.pallet_id = pallets.id
@@ -35,7 +36,7 @@ GROUP BY  commodities.code,
  marketing_varieties.marketing_variety_code,
  grades.grade_code,
  basic_pack_codes.basic_pack_code,
- fruit_actual_counts_for_packs.actual_count_for_pack
+ fruit_actual_counts_for_packs.actual_count_for_pack,pallets.load_id
 ORDER BY  commodities.code,
  marketing_varieties.marketing_variety_code,
  grades.grade_code,
@@ -51,6 +52,7 @@ ORDER BY  commodities.code,
 	<field name="plt_qty" class="java.math.BigDecimal"/>
 	<field name="nett_weight" class="java.math.BigDecimal"/>
 	<field name="fruit" class="java.lang.Long"/>
+	<field name="load_gross_weight" class="java.math.BigDecimal"/>
 	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{ctn_qty}]]></variableExpression>
 	</variable>
@@ -78,7 +80,7 @@ ORDER BY  commodities.code,
 		</band>
 	</title>
 	<columnHeader>
-		<band height="14" splitType="Stretch">
+		<band height="18" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
@@ -124,7 +126,7 @@ ORDER BY  commodities.code,
 				<text><![CDATA[Bins]]></text>
 			</staticText>
 			<line>
-				<reportElement x="0" y="12" width="393" height="1" uuid="61532689-4367-431b-b5dd-9185f38ce957">
+				<reportElement x="0" y="12" width="460" height="1" uuid="61532689-4367-431b-b5dd-9185f38ce957">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -142,7 +144,7 @@ ORDER BY  commodities.code,
 				<text><![CDATA[Nett]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="353" y="0" width="40" height="13" uuid="6bcf34b0-d72a-4d0b-a657-ce14a3964e53">
+				<reportElement x="411" y="0" width="40" height="13" uuid="6bcf34b0-d72a-4d0b-a657-ce14a3964e53">
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -153,10 +155,22 @@ ORDER BY  commodities.code,
 				</textElement>
 				<text><![CDATA[Fruit]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="347" y="0" width="40" height="13" uuid="98682009-64b1-44d2-b5f6-8fb3abe4eedb">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Gross]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="14" splitType="Stretch">
+		<band height="16" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField>
@@ -214,7 +228,7 @@ ORDER BY  commodities.code,
 				<textFieldExpression><![CDATA[$F{nett_weight}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="345" y="0" width="48" height="11" uuid="1622dac6-2c8f-4529-bc16-0603eab6bcbf">
+				<reportElement x="403" y="0" width="48" height="11" uuid="1622dac6-2c8f-4529-bc16-0603eab6bcbf">
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -237,7 +251,7 @@ ORDER BY  commodities.code,
 				<textFieldExpression><![CDATA[$V{plt_qty_1}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="0" y="0" width="393" height="1" uuid="620dd30c-e871-4498-8ff4-472e4cef0b61">
+				<reportElement x="0" y="0" width="460" height="1" uuid="620dd30c-e871-4498-8ff4-472e4cef0b61">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -250,11 +264,18 @@ ORDER BY  commodities.code,
 				<textFieldExpression><![CDATA[$V{nett_1}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;-###0.00">
-				<reportElement x="353" y="0" width="40" height="15" uuid="da3a05e1-2475-496e-b390-34b56dee134c"/>
+				<reportElement x="411" y="0" width="40" height="15" uuid="da3a05e1-2475-496e-b390-34b56dee134c"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{fruit_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement x="347" y="0" width="40" height="15" uuid="0730bed5-22ec-4339-90bb-f6d61def91ee"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{load_gross_weight}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>
