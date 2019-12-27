@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2019-12-26T09:20:28 -->
+<!-- 2019-12-27T09:16:58 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="summary" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cba47b92-bbda-40d5-b5d7-7f12c9f0b664">
 	<property name="ireport.zoom" value="3.0"/>
 	<property name="ireport.x" value="0"/>
@@ -9,9 +9,11 @@
 	<parameter name="load_id" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
 	</parameter>
+	<parameter name="scartons_equals_pallets" class="java.lang.Boolean"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT
  commodities.code AS commodity_code,
+   fruit_size_references.size_reference AS size_count_code,
  marketing_varieties.marketing_variety_code as variety_short_long,
  grades.grade_code,
  basic_pack_codes.basic_pack_code as old_pack_code,
@@ -24,6 +26,8 @@
 FROM loads
 JOIN pallets ON pallets.load_id = loads.id
 JOIN pallet_sequences ON pallet_sequences.pallet_id = pallets.id
+LEFT JOIN fruit_size_references ON fruit_size_references.id = pallet_sequences.fruit_size_reference_id
+
 LEFT JOIN cultivar_groups ON cultivar_groups.id = pallet_sequences.cultivar_group_id
 LEFT JOIN cultivars ON cultivars.id = pallet_sequences.cultivar_id
 LEFT JOIN commodities ON commodities.id = COALESCE(cultivars.commodity_id, cultivar_groups.commodity_id)
@@ -34,7 +38,7 @@ LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = pa
 WHERE loads.id = $P{load_id}
 GROUP BY  commodities.code,
  marketing_varieties.marketing_variety_code,
- grades.grade_code,
+ grades.grade_code,  fruit_size_references.size_reference,
  basic_pack_codes.basic_pack_code,
  fruit_actual_counts_for_packs.actual_count_for_pack,pallets.load_id
 ORDER BY  commodities.code,
@@ -53,6 +57,7 @@ ORDER BY  commodities.code,
 	<field name="nett_weight" class="java.math.BigDecimal"/>
 	<field name="fruit" class="java.lang.Long"/>
 	<field name="load_gross_weight" class="java.math.BigDecimal"/>
+	<field name="size_count_code" class="java.lang.String"/>
 	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{ctn_qty}]]></variableExpression>
 	</variable>
@@ -64,6 +69,9 @@ ORDER BY  commodities.code,
 	</variable>
 	<variable name="fruit_1" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{fruit}]]></variableExpression>
+	</variable>
+	<variable name="ctn_qty1" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{ctn_qty}]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -80,7 +88,7 @@ ORDER BY  commodities.code,
 		</band>
 	</title>
 	<columnHeader>
-		<band height="18" splitType="Stretch">
+		<band height="13" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
@@ -112,27 +120,20 @@ ORDER BY  commodities.code,
 				<text><![CDATA[Pack]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="192" y="0" width="48" height="13" uuid="728916a3-0f11-4cea-80ad-beb924f6d23f"/>
-				<textElement>
+				<reportElement x="231" y="0" width="26" height="13" uuid="728916a3-0f11-4cea-80ad-beb924f6d23f"/>
+				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Count]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="245" y="0" width="40" height="13" uuid="0c0fb1b7-6fdd-4fef-a427-62d036648e24"/>
-				<textElement textAlignment="Right">
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[Bins]]></text>
-			</staticText>
 			<line>
-				<reportElement x="0" y="12" width="460" height="1" uuid="61532689-4367-431b-b5dd-9185f38ce957">
+				<reportElement x="0" y="12" width="488" height="1" uuid="61532689-4367-431b-b5dd-9185f38ce957">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 			</line>
 			<staticText>
-				<reportElement x="299" y="0" width="40" height="13" uuid="d88ef14d-4b61-4dfe-a569-48d6da5c48c1">
+				<reportElement x="343" y="0" width="48" height="13" uuid="d88ef14d-4b61-4dfe-a569-48d6da5c48c1">
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -144,7 +145,7 @@ ORDER BY  commodities.code,
 				<text><![CDATA[Nett]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="411" y="0" width="40" height="13" uuid="6bcf34b0-d72a-4d0b-a657-ce14a3964e53">
+				<reportElement x="436" y="0" width="48" height="13" uuid="6bcf34b0-d72a-4d0b-a657-ce14a3964e53">
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -156,7 +157,7 @@ ORDER BY  commodities.code,
 				<text><![CDATA[Fruit]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="347" y="0" width="40" height="13" uuid="98682009-64b1-44d2-b5f6-8fb3abe4eedb">
+				<reportElement x="394" y="0" width="40" height="13" uuid="98682009-64b1-44d2-b5f6-8fb3abe4eedb">
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -167,10 +168,33 @@ ORDER BY  commodities.code,
 				</textElement>
 				<text><![CDATA[Gross]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="200" y="0" width="26" height="13" uuid="f8cc392f-f97c-4e92-b84f-f295958eec9f"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Size]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="260" y="0" width="40" height="13" uuid="4e1a6260-75f0-4611-8625-029ea50730af">
+					<printWhenExpression><![CDATA[$P{scartons_equals_pallets}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Ctn]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="301" y="0" width="40" height="13" uuid="e0b9a12a-2bcb-460d-b294-78fa443080df"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($P{scartons_equals_pallets} == true ? "Bins" : "Plts")]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="16" splitType="Stretch">
+		<band height="12" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField>
@@ -201,22 +225,22 @@ ORDER BY  commodities.code,
 				</textElement>
 				<textFieldExpression><![CDATA[$F{old_pack_code}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="192" y="0" width="48" height="11" uuid="2d66686b-d513-4e1c-a03e-c38e3aa824c5"/>
+			<textField isBlankWhenNull="true">
+				<reportElement x="200" y="0" width="26" height="11" uuid="2d66686b-d513-4e1c-a03e-c38e3aa824c5"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{actual_size_count_code}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{size_count_code}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;-###0.00">
-				<reportElement x="245" y="0" width="40" height="11" uuid="e83b780b-4fd6-4a9a-84e7-30050b9e748f"/>
+				<reportElement x="301" y="0" width="40" height="11" uuid="e83b780b-4fd6-4a9a-84e7-30050b9e748f"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{plt_qty}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="291" y="0" width="48" height="11" uuid="620a1348-318a-4336-9eca-d4d2a1234296">
+				<reportElement x="343" y="0" width="48" height="11" uuid="620a1348-318a-4336-9eca-d4d2a1234296">
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -227,8 +251,8 @@ ORDER BY  commodities.code,
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nett_weight}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.00">
-				<reportElement x="403" y="0" width="48" height="11" uuid="1622dac6-2c8f-4529-bc16-0603eab6bcbf">
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="436" y="0" width="48" height="11" uuid="1622dac6-2c8f-4529-bc16-0603eab6bcbf">
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -239,43 +263,70 @@ ORDER BY  commodities.code,
 				</textElement>
 				<textFieldExpression><![CDATA[$F{fruit}]]></textFieldExpression>
 			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="231" y="0" width="26" height="12" uuid="d059d582-b982-4b73-bb25-b808f75cf068">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{actual_size_count_code}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.##">
+				<reportElement x="260" y="0" width="40" height="11" uuid="814e04ec-4f8f-4c9f-8cdb-c2da9656d625">
+					<printWhenExpression><![CDATA[$P{scartons_equals_pallets}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ctn_qty}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<summary>
-		<band height="20" splitType="Stretch">
+		<band height="36" splitType="Stretch">
 			<textField pattern="###0.00;-###0.00">
-				<reportElement x="245" y="0" width="40" height="15" uuid="9aae00ee-4f2d-49b3-9dd7-3f97bd178e37"/>
+				<reportElement x="301" y="0" width="40" height="15" uuid="9aae00ee-4f2d-49b3-9dd7-3f97bd178e37"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{plt_qty_1}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="0" y="0" width="460" height="1" uuid="620dd30c-e871-4498-8ff4-472e4cef0b61">
+				<reportElement x="0" y="0" width="488" height="1" uuid="620dd30c-e871-4498-8ff4-472e4cef0b61">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 			</line>
 			<textField pattern="###0.00;-###0.00">
-				<reportElement x="299" y="0" width="40" height="15" uuid="e09dc5b0-92a7-43d5-8c37-9430a596293e"/>
+				<reportElement x="343" y="0" width="48" height="15" uuid="e09dc5b0-92a7-43d5-8c37-9430a596293e"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{nett_1}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0.00;-###0.00">
-				<reportElement x="411" y="0" width="40" height="15" uuid="da3a05e1-2475-496e-b390-34b56dee134c"/>
+			<textField pattern="###0.00;-###0.00" isBlankWhenNull="true">
+				<reportElement x="436" y="0" width="48" height="15" uuid="da3a05e1-2475-496e-b390-34b56dee134c"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{fruit_1}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;-###0.00">
-				<reportElement x="347" y="0" width="40" height="15" uuid="0730bed5-22ec-4339-90bb-f6d61def91ee"/>
+				<reportElement x="394" y="0" width="40" height="15" uuid="0730bed5-22ec-4339-90bb-f6d61def91ee"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{load_gross_weight}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.##" isBlankWhenNull="true">
+				<reportElement x="260" y="1" width="40" height="14" uuid="473d10d1-a46b-4106-ad00-9d9b5077481e">
+					<printWhenExpression><![CDATA[$P{scartons_equals_pallets}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{ctn_qty1}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>

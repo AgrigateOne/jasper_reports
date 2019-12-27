@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2019-12-18T20:04:27 -->
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
+<!-- 2019-12-27T09:14:37 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_consignment" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="habata"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -31,6 +31,7 @@
 		<defaultValueExpression><![CDATA["summary"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="for_picklist" class="java.lang.Boolean"/>
+	<parameter name="cartons_equals_pallets" class="java.lang.Boolean"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT
 fn_party_role_name((SELECT pr.id
@@ -58,7 +59,7 @@ fn_party_role_name(loads.exporter_party_role_id) AS export_party_role_name,
 'NOTYET' AS vessel_owner_party_role_name,
 loads.id AS load_id,
 load_containers.container_code,
-load_containers.internal_container_code AS container_setting , 
+load_containers.internal_container_code AS container_setting ,
 load_containers.container_vents,
 load_containers.container_seal_code,
 load_containers.container_temperature_rhine,
@@ -175,6 +176,9 @@ where loads.id = $P{load_id}]]>
 					<subreportParameter name="load_id">
 						<subreportParameterExpression><![CDATA[$F{load_id}]]></subreportParameterExpression>
 					</subreportParameter>
+					<subreportParameter name="$P{scartons_equals_pallets}">
+						<subreportParameterExpression><![CDATA[$P{cartons_equals_pallets}]]></subreportParameterExpression>
+					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression><![CDATA["pallet_summary.jasper"]]></subreportExpression>
 				</subreport>
@@ -184,6 +188,9 @@ where loads.id = $P{load_id}]]>
 					</reportElement>
 					<subreportParameter name="load_id">
 						<subreportParameterExpression><![CDATA[$F{load_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="$P{scartons_equals_pallets}">
+						<subreportParameterExpression><![CDATA[$P{cartons_equals_pallets}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression><![CDATA["pallet_detail.jasper"]]></subreportExpression>
@@ -195,6 +202,9 @@ where loads.id = $P{load_id}]]>
 					<reportElement x="4" y="0" width="326" height="13" uuid="cb5d1f42-dc7d-4f62-ae21-23440f19315e"/>
 					<subreportParameter name="load_id">
 						<subreportParameterExpression><![CDATA[$P{load_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="$P{scartons_equals_pallets}">
+						<subreportParameterExpression><![CDATA[$P{cartons_equals_pallets}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression><![CDATA["dispatch_summary.jasper"]]></subreportExpression>
