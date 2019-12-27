@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2019-12-27T09:17:15 -->
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
+<!-- 2019-12-27T18:37:16 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_pallet_detail" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="57a0c595-5448-465f-8162-0e6517403bd3">
 	<property name="ireport.zoom" value="2.253944402704733"/>
 	<property name="ireport.x" value="0"/>
@@ -218,7 +218,7 @@ ORDER BY
 			</staticText>
 			<staticText>
 				<reportElement x="390" y="0" width="25" height="13" uuid="8849a077-2613-4c31-8a90-deedac2d3589">
-					<printWhenExpression><![CDATA[$P{scartons_equals_pallets}]]></printWhenExpression>
+					<printWhenExpression><![CDATA[!$P{scartons_equals_pallets}]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right">
 					<font size="8"/>
@@ -230,7 +230,7 @@ ORDER BY
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[($P{scartons_equals_pallets} == true ? "Bins" : "Plts")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{scartons_equals_pallets} ? "Bins" : "Plts"]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>
@@ -347,7 +347,7 @@ ORDER BY
 			</textField>
 			<textField pattern="#0.##" isBlankWhenNull="true">
 				<reportElement x="390" y="0" width="25" height="12" uuid="da421630-6238-4bec-bda3-daad0f2aa138">
-					<printWhenExpression><![CDATA[$P{scartons_equals_pallets}]]></printWhenExpression>
+					<printWhenExpression><![CDATA[!$P{scartons_equals_pallets}]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right">
 					<font size="8"/>
@@ -386,7 +386,7 @@ ORDER BY
 			</textField>
 			<textField pattern="#0.##">
 				<reportElement x="390" y="3" width="25" height="13" uuid="d68028be-4c92-425b-a17f-ac1cd26250bf">
-					<printWhenExpression><![CDATA[$P{scartons_equals_pallets}]]></printWhenExpression>
+					<printWhenExpression><![CDATA[!$P{scartons_equals_pallets}]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right">
 					<font size="8"/>

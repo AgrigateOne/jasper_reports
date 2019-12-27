@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2019-12-26T09:14:32 -->
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
+<!-- 2019-12-27T18:51:54 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_pallet_summary" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f6691ff3-42d0-4369-9d6b-d9ca7cad6758">
 	<property name="ireport.zoom" value="3.0"/>
 	<property name="ireport.x" value="0"/>
@@ -9,6 +9,7 @@
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44:80/jasperserver/services/repository"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="habata"/>
 	<parameter name="load_id" class="java.lang.Integer"/>
+	<parameter name="scartons_equals_pallets" class="java.lang.Boolean"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT
   pallet_sequences.sell_by_code,
@@ -105,7 +106,9 @@ ORDER BY
 		<band splitType="Stretch"/>
 	</background>
 	<columnHeader>
-		<band height="19" splitType="Stretch">
+		<band height="13" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
 				<reportElement x="215" y="0" width="34" height="13" uuid="244c8c2a-36bc-40bb-bd85-7f164e792fc5"/>
 				<text><![CDATA[TM]]></text>
@@ -119,13 +122,11 @@ ORDER BY
 				<text><![CDATA[Nett]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="513" y="0" width="35" height="13" uuid="b7799043-ebff-49fe-a1f6-2f08700dfb99"/>
+				<reportElement x="349" y="0" width="46" height="13" uuid="e78e5113-4f7f-4580-ae0d-92ebc11e0cfb">
+					<printWhenExpression><![CDATA[!$P{scartons_equals_pallets}]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Right"/>
-				<text><![CDATA[plt_qty]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="325" y="0" width="81" height="13" uuid="e78e5113-4f7f-4580-ae0d-92ebc11e0cfb"/>
-				<text><![CDATA[remark]]></text>
+				<text><![CDATA[Ctn]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="147" y="0" width="30" height="13" uuid="50a69642-51d4-43ad-b24e-66338478841e"/>
@@ -159,10 +160,26 @@ ORDER BY
 				<reportElement x="470" y="0" width="43" height="13" uuid="777f68a0-4c9f-46db-a5cf-ce0620582047"/>
 				<text><![CDATA[Gross]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="513" y="0" width="35" height="13" uuid="d2bc8543-f637-4f43-a436-3e320bea7b4b">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$P{scartons_equals_pallets} ? "Bins" : "Plts"]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="13" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isBlankWhenNull="true">
 				<reportElement x="177" y="0" width="34" height="13" uuid="c65eaaa8-3700-4e38-a6c3-c227fa11e65d"/>
 				<textFieldExpression><![CDATA[$F{grade_code}]]></textFieldExpression>
@@ -214,6 +231,13 @@ ORDER BY
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{gross_weight}]]></textFieldExpression>
 			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="340" y="0" width="56" height="13" uuid="e925fdc1-37d9-4205-bfe1-3734cec5c80e">
+					<printWhenExpression><![CDATA[!$P{scartons_equals_pallets}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{ctn_qty}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<summary>
@@ -224,7 +248,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$V{plt_qty_1}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="286" y="14" width="100" height="13" uuid="fb4d2353-ef60-4767-b7c4-f536f1a11e60"/>
+				<reportElement x="255" y="14" width="100" height="13" uuid="fb4d2353-ef60-4767-b7c4-f536f1a11e60"/>
 				<textElement textAlignment="Right"/>
 				<text><![CDATA[Total:]]></text>
 			</staticText>
@@ -237,6 +261,13 @@ ORDER BY
 				<reportElement x="456" y="14" width="58" height="13" uuid="f1f79bf6-aaf9-4e0f-8075-03d6f57d941b"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{load_gross_weight}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0">
+				<reportElement x="360" y="14" width="36" height="13" uuid="caa11ebc-d5b8-4576-9728-a33492065b10">
+					<printWhenExpression><![CDATA[!$P{scartons_equals_pallets}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{ctn_qty_1}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>

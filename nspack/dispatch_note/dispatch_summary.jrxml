@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2019-12-27T09:16:58 -->
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
+<!-- 2019-12-27T18:34:12 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="summary" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cba47b92-bbda-40d5-b5d7-7f12c9f0b664">
 	<property name="ireport.zoom" value="3.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="habata"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack.xml"/>
 	<parameter name="load_id" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
 	</parameter>
@@ -177,7 +177,7 @@ ORDER BY  commodities.code,
 			</staticText>
 			<staticText>
 				<reportElement x="260" y="0" width="40" height="13" uuid="4e1a6260-75f0-4611-8625-029ea50730af">
-					<printWhenExpression><![CDATA[$P{scartons_equals_pallets}]]></printWhenExpression>
+					<printWhenExpression><![CDATA[!$P{scartons_equals_pallets}]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right">
 					<font size="8"/>
@@ -189,7 +189,7 @@ ORDER BY  commodities.code,
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[($P{scartons_equals_pallets} == true ? "Bins" : "Plts")]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{scartons_equals_pallets} ? "Bins" : "Plts"]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>
@@ -274,7 +274,7 @@ ORDER BY  commodities.code,
 			</textField>
 			<textField pattern="#0.##">
 				<reportElement x="260" y="0" width="40" height="11" uuid="814e04ec-4f8f-4c9f-8cdb-c2da9656d625">
-					<printWhenExpression><![CDATA[$P{scartons_equals_pallets}]]></printWhenExpression>
+					<printWhenExpression><![CDATA[!$P{scartons_equals_pallets}]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right">
 					<font size="8"/>
@@ -321,7 +321,7 @@ ORDER BY  commodities.code,
 			</textField>
 			<textField pattern="#0.##" isBlankWhenNull="true">
 				<reportElement x="260" y="1" width="40" height="14" uuid="473d10d1-a46b-4106-ad00-9d9b5077481e">
-					<printWhenExpression><![CDATA[$P{scartons_equals_pallets}]]></printWhenExpression>
+					<printWhenExpression><![CDATA[!$P{scartons_equals_pallets}]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right">
 					<font size="8"/>

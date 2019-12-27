@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2019-12-27T09:14:37 -->
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
+<!-- 2019-12-27T18:32:51 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_consignment" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="habata"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack.xml"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -176,7 +176,7 @@ where loads.id = $P{load_id}]]>
 					<subreportParameter name="load_id">
 						<subreportParameterExpression><![CDATA[$F{load_id}]]></subreportParameterExpression>
 					</subreportParameter>
-					<subreportParameter name="$P{scartons_equals_pallets}">
+					<subreportParameter name="scartons_equals_pallets">
 						<subreportParameterExpression><![CDATA[$P{cartons_equals_pallets}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
@@ -189,7 +189,7 @@ where loads.id = $P{load_id}]]>
 					<subreportParameter name="load_id">
 						<subreportParameterExpression><![CDATA[$F{load_id}]]></subreportParameterExpression>
 					</subreportParameter>
-					<subreportParameter name="$P{scartons_equals_pallets}">
+					<subreportParameter name="scartons_equals_pallets">
 						<subreportParameterExpression><![CDATA[$P{cartons_equals_pallets}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
@@ -203,7 +203,7 @@ where loads.id = $P{load_id}]]>
 					<subreportParameter name="load_id">
 						<subreportParameterExpression><![CDATA[$P{load_id}]]></subreportParameterExpression>
 					</subreportParameter>
-					<subreportParameter name="$P{scartons_equals_pallets}">
+					<subreportParameter name="scartons_equals_pallets">
 						<subreportParameterExpression><![CDATA[$P{cartons_equals_pallets}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
