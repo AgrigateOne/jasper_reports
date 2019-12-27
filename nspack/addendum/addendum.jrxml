@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2019-12-24T13:19:43 -->
+<!-- 2019-12-27T09:00:21 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="addendum" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="22c9f520-d5e9-4af2-ac4c-ad2be98d416a">
 	<property name="ireport.zoom" value="1.7524694974069637"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/addendum"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44:80/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="local_ud"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack.xml"/>
 	<parameter name="load_id" class="java.lang.Integer"/>
 	<parameter name="user_name" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
@@ -154,12 +154,15 @@ from vw_pallet_sequence_flat  where vw_pallet_sequence_flat.load_id=$P{load_id}
 	<field name="inspection_date" class="java.sql.Timestamp"/>
 	<field name="fruit_sticker_2" class="java.lang.String"/>
 	<field name="pallet_carton_quantity" class="java.lang.Integer"/>
-	<field name="COLUMN_98" class="java.lang.Integer"/>
 	<field name="fruit_sticker_pm_product_2_id" class="java.lang.Integer"/>
 	<field name="last_govt_inspection_pallet_id" class="java.lang.Integer"/>
 	<field name="manifest" class="java.lang.String"/>
 	<field name="shipped_date" class="java.sql.Date"/>
 	<field name="shipper" class="java.lang.String"/>
+	<field name="production_region" class="java.lang.String"/>
+	<field name="COLUMN_99" class="java.lang.Integer"/>
+	<field name="pallet_format_id" class="java.lang.Integer"/>
+	<field name="temp_tail" class="java.lang.String"/>
 	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
 	</variable>
@@ -762,7 +765,7 @@ from vw_pallet_sequence_flat  where vw_pallet_sequence_flat.load_id=$P{load_id}
 					<textElement textAlignment="Center">
 						<font size="7"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{region}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{production_region}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="238" y="0" width="41" height="10" uuid="35ea5ab4-d0b2-45e8-8f9d-f0fed1b04a1e"/>
@@ -1619,7 +1622,7 @@ from vw_pallet_sequence_flat  where vw_pallet_sequence_flat.load_id=$P{load_id}
 				<textElement textAlignment="Center">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{region}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{production_region}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
