@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2019-12-27T09:00:21 -->
+<!-- 2019-12-30T11:12:08 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="addendum" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="22c9f520-d5e9-4af2-ac4c-ad2be98d416a">
 	<property name="ireport.zoom" value="1.7524694974069637"/>
 	<property name="ireport.x" value="0"/>
@@ -11,6 +11,10 @@
 	<parameter name="load_id" class="java.lang.Integer"/>
 	<parameter name="user_name" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="place_of_issue" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA["CPT"]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[select sq.load_id ,
@@ -239,7 +243,7 @@ from vw_pallet_sequence_flat  where vw_pallet_sequence_flat.load_id=$P{load_id}
 						<font fontName="SansSerif" size="5"/>
 						<paragraph leftIndent="5"/>
 					</textElement>
-					<text><![CDATA[Placed of issue of export certificate:]]></text>
+					<text><![CDATA[Place of issue of export certificate:]]></text>
 				</staticText>
 				<line>
 					<reportElement x="622" y="91" width="1" height="84" uuid="675555aa-f58d-47c0-8b26-c476acc4dbcb"/>
@@ -440,19 +444,6 @@ from vw_pallet_sequence_flat  where vw_pallet_sequence_flat.load_id=$P{load_id}
 						<paragraph leftIndent="5"/>
 					</textElement>
 					<text><![CDATA[Date:]]></text>
-				</staticText>
-				<staticText>
-					<reportElement x="549" y="71" width="50" height="15" uuid="64713671-ca76-4982-aaf9-df438715f50c"/>
-					<box>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement textAlignment="Center">
-						<font isBold="true"/>
-					</textElement>
-					<text><![CDATA[]]></text>
 				</staticText>
 				<rectangle>
 					<reportElement x="661" y="48" width="140" height="10" uuid="997cf102-ee2b-4ec9-a1e9-c21ae7b89195"/>
@@ -864,8 +855,66 @@ from vw_pallet_sequence_flat  where vw_pallet_sequence_flat.load_id=$P{load_id}
 						<pen lineWidth="0.5"/>
 					</graphicElement>
 				</rectangle>
+				<rectangle>
+					<reportElement x="247" y="71" width="43" height="15" uuid="97db3338-b024-4c4e-b4ae-d7fc6eba40a4">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</rectangle>
+				<rectangle>
+					<reportElement x="329" y="71" width="53" height="15" uuid="27dd2b91-e9d4-4196-bb0a-6eb9cde4bf18">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</rectangle>
+				<rectangle>
+					<reportElement x="652" y="71" width="53" height="15" uuid="8959d93f-fc3a-4a23-bc44-2dfedd77d710">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</rectangle>
+				<rectangle>
+					<reportElement x="422" y="71" width="49" height="15" uuid="95f66cb8-e9d0-4952-939d-7d8967e72f28">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</rectangle>
+				<rectangle>
+					<reportElement x="549" y="71" width="50" height="15" uuid="8ecf9715-6b17-49d4-83c9-ddf4b13b57d6">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</rectangle>
 				<staticText>
-					<reportElement x="652" y="71" width="53" height="15" uuid="3580e8ca-26ed-4381-b50d-f8f32cedd94a"/>
+					<reportElement x="652" y="71" width="53" height="15" uuid="3580e8ca-26ed-4381-b50d-f8f32cedd94a">
+						<printWhenExpression><![CDATA[!$P{place_of_issue}.equalsIgnoreCase( "CPT" ) && !$P{place_of_issue}.equalsIgnoreCase( "DBN" ) && !$P{place_of_issue}.equalsIgnoreCase( "MPM" ) && !$P{place_of_issue}.equalsIgnoreCase( "PLZ" )
+]]></printWhenExpression>
+					</reportElement>
 					<box>
 						<topPen lineWidth="0.5"/>
 						<leftPen lineWidth="0.5"/>
@@ -875,10 +924,12 @@ from vw_pallet_sequence_flat  where vw_pallet_sequence_flat.load_id=$P{load_id}
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="SansSerif" size="5"/>
 					</textElement>
-					<text><![CDATA[]]></text>
+					<text><![CDATA[X]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="422" y="71" width="49" height="15" uuid="458472d5-6dcc-4296-a413-06feed742592"/>
+					<reportElement key="" x="422" y="71" width="49" height="15" uuid="458472d5-6dcc-4296-a413-06feed742592">
+						<printWhenExpression><![CDATA[$P{place_of_issue}.equalsIgnoreCase( "MPM" )]]></printWhenExpression>
+					</reportElement>
 					<box>
 						<topPen lineWidth="0.5"/>
 						<leftPen lineWidth="0.5"/>
@@ -888,10 +939,12 @@ from vw_pallet_sequence_flat  where vw_pallet_sequence_flat.load_id=$P{load_id}
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="SansSerif" size="5"/>
 					</textElement>
-					<text><![CDATA[]]></text>
+					<text><![CDATA[X]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="329" y="71" width="53" height="15" uuid="078b87ed-2f5c-469b-a0f2-8d1daa601960"/>
+					<reportElement x="329" y="71" width="53" height="15" uuid="078b87ed-2f5c-469b-a0f2-8d1daa601960">
+						<printWhenExpression><![CDATA[$P{place_of_issue}.equalsIgnoreCase( "DBN" )]]></printWhenExpression>
+					</reportElement>
 					<box>
 						<topPen lineWidth="0.5"/>
 						<leftPen lineWidth="0.5"/>
@@ -901,10 +954,12 @@ from vw_pallet_sequence_flat  where vw_pallet_sequence_flat.load_id=$P{load_id}
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="SansSerif" size="5"/>
 					</textElement>
-					<text><![CDATA[]]></text>
+					<text><![CDATA[X]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="247" y="71" width="43" height="15" uuid="2a5273a5-72d1-4259-b858-2737d3afe6ad"/>
+					<reportElement x="247" y="71" width="43" height="15" uuid="2a5273a5-72d1-4259-b858-2737d3afe6ad">
+						<printWhenExpression><![CDATA[$P{place_of_issue}.equalsIgnoreCase( "CPT" )]]></printWhenExpression>
+					</reportElement>
 					<box>
 						<topPen lineWidth="0.5"/>
 						<leftPen lineWidth="0.5"/>
@@ -913,6 +968,21 @@ from vw_pallet_sequence_flat  where vw_pallet_sequence_flat.load_id=$P{load_id}
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="SansSerif" size="5"/>
+					</textElement>
+					<text><![CDATA[X]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="549" y="71" width="50" height="15" uuid="64713671-ca76-4982-aaf9-df438715f50c">
+						<printWhenExpression><![CDATA[$P{place_of_issue}.equalsIgnoreCase( "PLZ" )]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="5" isBold="false"/>
 					</textElement>
 					<text><![CDATA[X]]></text>
 				</staticText>
