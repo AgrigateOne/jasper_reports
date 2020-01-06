@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
+<!-- 2020-01-06T16:20:13 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="container_mass_declaration" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="073de135-c25b-477c-8344-6e93c431bb70">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NSPACK"/>
+	<parameter name="load_container_id" class="java.lang.Integer"/>
+	<parameter name="user_name" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT 
+fn_party_role_name((SELECT pr.id
+FROM public.party_roles pr
+WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1)) AS implementation_owner_name
+,(SELECT pr.id
+FROM public.party_roles pr
+WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) AS implementation_owner_party_role_id
+,
+  public.load_containers.container_code
+  , cast(public.load_containers.verified_gross_weight::int as text)||' KG' verified_gross_mass
+  ,  public.load_containers.verified_gross_weight_date as verified_gross_mass_date 
+  ,  cast(public.load_containers.actual_payload::int as text)||' KG' actual_payload
+  ,cast(public.load_containers.max_payload::int as text)||' KG' max_payload
+  ,cast(public.load_containers.tare_weight::int as text)||' KG' tare_weight
+  ,cast(public.load_containers.max_gross_weight::int as text)||' KG' max_gross_mass
+  ,public.load_containers.id,
+
+load_containers.container_seal_code,
+   pol_ports.port_code AS pol,
+    pod_ports.port_code AS pod,
+        vessels.vessel_code AS vessel,
+    voyages.voyage_code AS voyage,
+    voyages.voyage_number
+    
+FROM
+ public.load_containers 
+ 
+      LEFT JOIN loads ON loads.id = load_containers.load_id
+     
+     LEFT JOIN voyage_ports pol_voyage_ports ON pol_voyage_ports.id = loads.pol_voyage_port_id
+     LEFT JOIN voyage_ports pod_voyage_ports ON pod_voyage_ports.id = loads.pod_voyage_port_id
+     
+     LEFT JOIN ports pol_ports ON pol_ports.id = pol_voyage_ports.port_id
+     LEFT JOIN ports pod_ports ON pod_ports.id = pod_voyage_ports.port_id
+     
+      LEFT JOIN load_voyages ON loads.id = load_voyages.load_id
+     LEFT JOIN voyages ON voyages.id = pol_voyage_ports.voyage_id
+     LEFT JOIN vessels ON vessels.id = voyages.vessel_id
+ 
+     where public.load_containers.id=$P{load_container_id}]]>
+	</queryString>
+	<field name="container_code" class="java.lang.String"/>
+	<field name="verified_gross_mass" class="java.lang.String"/>
+	<field name="actual_payload" class="java.lang.String"/>
+	<field name="max_payload" class="java.lang.String"/>
+	<field name="tare_weight" class="java.lang.String"/>
+	<field name="max_gross_mass" class="java.lang.String"/>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="container_seal_code" class="java.lang.String"/>
+	<field name="implementation_owner_name" class="java.lang.String"/>
+	<field name="implementation_owner_party_role_id" class="java.lang.Integer"/>
+	<field name="verified_gross_mass_date" class="java.sql.Timestamp"/>
+	<field name="pol" class="java.lang.String"/>
+	<field name="pod" class="java.lang.String"/>
+	<field name="vessel" class="java.lang.String"/>
+	<field name="voyage" class="java.lang.String"/>
+	<field name="voyage_number" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="34" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="250" height="30" uuid="89c036ad-e23e-4804-9f8c-cde47d4852f3"/>
+				<textElement>
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[Container Mass declaration]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="721" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="6" width="230" height="30" uuid="4eaa8ca9-3e13-4e2e-a20f-f143ae84a11a"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Name of Shipper:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="98" width="230" height="20" uuid="c34afeed-93d8-4528-b190-4e4e2e7f493e">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Weight Calculation:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="152" width="230" height="30" uuid="2594aa4e-8989-4a54-939d-1e753f94886d"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SAMSA No:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="212" width="230" height="30" uuid="350a7cf1-e2c1-45c3-94b0-6420217cdba7"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Container Number:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-10" y="430" width="230" height="30" uuid="b29fbb25-ae15-4fc4-a7d3-18c84c671eb3"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Verified Gross Mass:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-10" y="490" width="230" height="30" uuid="23b6b360-4ae4-4c1c-a8a0-6d5b16eb5db0"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Actual Payload]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-10" y="550" width="230" height="30" uuid="a1814026-6d3b-43f0-9ebc-e76ff12e0612"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tare Weight]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="250" y="430" width="200" height="30" uuid="ccb9b3c1-0179-4fa2-b729-fc0c3d489ea4"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Max Gross Mass:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="250" y="490" width="200" height="30" uuid="2a0e8ff0-2d51-45b0-8a20-ca6739535539"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Max Payload]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="250" y="550" width="200" height="30" uuid="92f5935c-fba1-4494-9827-26112e428ba2"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Verified Gross Mass Date]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="122" width="230" height="30" uuid="91b17307-60d0-422f-af0e-ecf3cf10c1e0"/>
+				<text><![CDATA[Method 2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="182" width="230" height="30" uuid="71979c94-941e-4e80-a6e7-c793eb0c3723"/>
+				<text><![CDATA[WC00008]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="242" width="230" height="30" uuid="0d946f15-a976-411c-9a64-dfb1b3ca39c3"/>
+				<textFieldExpression><![CDATA[$F{container_code}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="-10" y="460" width="230" height="30" uuid="c1faee7c-81f8-4610-80a6-2121f7335794"/>
+				<textFieldExpression><![CDATA[$F{verified_gross_mass}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="-10" y="520" width="230" height="30" uuid="b642de22-eb4e-48b0-b6d9-72dbad60b18b"/>
+				<textFieldExpression><![CDATA[$F{actual_payload}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="-10" y="580" width="230" height="30" uuid="e02305a2-8f99-4359-be9f-7d606be642ac"/>
+				<textFieldExpression><![CDATA[$F{tare_weight}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-10" y="625" width="230" height="30" uuid="d73e4ba0-b556-41da-b76d-a9dbdefb4f0a"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Name of Declarant:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="-10" y="655" width="230" height="30" uuid="41f548d5-7599-48b1-9aff-f6289ea6e0dc"/>
+				<textFieldExpression><![CDATA[$P{user_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="250" y="625" width="200" height="30" uuid="8e511b1b-1850-4809-be14-f7d290fc31e5"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Signature:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="250" y="460" width="200" height="30" uuid="981f4d46-05e3-40af-ab81-ec6fc0ab90de"/>
+				<textFieldExpression><![CDATA[$F{max_gross_mass}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="250" y="520" width="200" height="30" uuid="2eff713b-a865-4299-a9e8-6417855d53a9"/>
+				<textFieldExpression><![CDATA[$F{max_payload}]]></textFieldExpression>
+			</textField>
+			<textField pattern="yyyy-MM-dd, h:mm:ss a" isBlankWhenNull="true">
+				<reportElement x="250" y="580" width="200" height="30" uuid="8f0d0a2f-bf43-4da2-bcc9-9b93c7c57c4a"/>
+				<textFieldExpression><![CDATA[$F{verified_gross_mass_date}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="-10" y="615" width="550" height="1" uuid="730a38e1-2f3a-4565-b1c7-3d2bf04a0a7c">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="-10" y="427" width="550" height="1" uuid="651a6f1c-6309-418e-855b-0e0e15e6dac7">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="0" y="97" width="550" height="1" uuid="860024c2-ddd8-4a43-b135-fe7a430de068">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<image>
+				<reportElement x="400" y="2" width="146" height="80" uuid="e872553f-fa99-4ffc-afc4-92fd0ad01a6d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="local_mesure_unity" value="pixel"/>
+				</reportElement>
+				<imageExpression><![CDATA["../logos/unifrutti.png"]]></imageExpression>
+			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement x="255" y="241" width="230" height="30" uuid="2bb72eac-9e84-4494-914f-0561fa462219"/>
+				<textFieldExpression><![CDATA[$F{vessel}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="255" y="211" width="230" height="30" uuid="23b136d9-0188-4380-a84d-308cedea1ed2"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vessel Code:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="40" width="230" height="30" uuid="9caeb34a-b7fc-44c3-b55a-9b34aed552c5"/>
+				<textFieldExpression><![CDATA[$F{implementation_owner_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="302" width="100" height="30" uuid="ef07840b-9259-4b53-ad7b-ab2e73a8a978"/>
+				<textFieldExpression><![CDATA[$F{container_seal_code}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="272" width="100" height="30" uuid="9dd1c887-22e1-4a6a-acbc-873255377c81"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Seal Number]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="362" width="100" height="30" uuid="2e1b88ff-900f-4d1e-8bec-0febd8956868"/>
+				<textFieldExpression><![CDATA[$F{pol}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="332" width="100" height="30" uuid="4941737c-dc1d-4eb3-bebd-f8fa6626aa51"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[POL]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="255" y="361" width="100" height="30" uuid="2bcc1720-4ea4-454a-b3aa-32ebf6ce8096"/>
+				<textFieldExpression><![CDATA[$F{pod}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="255" y="331" width="100" height="30" uuid="3420b686-23ef-4671-a031-9b3a27bcf9eb"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[POD]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="255" y="301" width="100" height="30" uuid="2f3db906-26ee-450b-b327-0cf73f25c582"/>
+				<textFieldExpression><![CDATA[$F{voyage_number}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="255" y="271" width="100" height="30" uuid="26297c05-4bfa-44f7-a005-99054e143e0c"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Voyage Number]]></text>
+			</staticText>
+			<subreport>
+				<reportElement x="260" y="0" width="100" height="95" uuid="37011662-6b79-4436-85d8-ac4f7965f33f">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="party_role_id">
+					<subreportParameterExpression><![CDATA[$F{implementation_owner_party_role_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="address_type">
+					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+</jasperReport>
