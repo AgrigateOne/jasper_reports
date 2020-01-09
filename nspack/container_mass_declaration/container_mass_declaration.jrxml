@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-01-09T07:51:28 -->
+<!-- 2020-01-09T19:05:20 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="container_mass_declaration" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="073de135-c25b-477c-8344-6e93c431bb70">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NSPACK"/>
 	<parameter name="load_container_id" class="java.lang.Integer"/>
@@ -17,7 +17,7 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
   public.load_containers.container_code
   , cast(public.load_containers.verified_gross_weight::int as text)||' KG' verified_gross_mass
   ,  public.load_containers.verified_gross_weight_date as verified_gross_mass_date 
-  ,  cast(public.load_containers.actual_payload::int as text)||' KG' actual_payload
+ ,cast((coalesce(load_containers.verified_gross_weight,0) - coalesce(load_containers.tare_weight,0))::int as text) ||' KG' as actual_payload
   ,cast(public.load_containers.max_payload::int as text)||' KG' max_payload
   ,cast(public.load_containers.tare_weight::int as text)||' KG' tare_weight
   ,cast(public.load_containers.max_gross_weight::int as text)||' KG' max_gross_mass
