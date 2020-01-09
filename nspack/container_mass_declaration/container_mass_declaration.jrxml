@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-01-07T10:45:30 -->
+<!-- 2020-01-09T07:51:28 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="container_mass_declaration" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="073de135-c25b-477c-8344-6e93c431bb70">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NSPACK"/>
 	<parameter name="load_container_id" class="java.lang.Integer"/>
@@ -111,21 +111,21 @@ FROM
 				<text><![CDATA[Container Number:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="-10" y="430" width="230" height="30" uuid="b29fbb25-ae15-4fc4-a7d3-18c84c671eb3"/>
+				<reportElement x="3" y="430" width="230" height="30" uuid="b29fbb25-ae15-4fc4-a7d3-18c84c671eb3"/>
 				<textElement>
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Verified Gross Mass:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="-10" y="490" width="230" height="30" uuid="23b6b360-4ae4-4c1c-a8a0-6d5b16eb5db0"/>
+				<reportElement x="3" y="490" width="230" height="30" uuid="23b6b360-4ae4-4c1c-a8a0-6d5b16eb5db0"/>
 				<textElement>
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Actual Payload]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="-10" y="550" width="230" height="30" uuid="a1814026-6d3b-43f0-9ebc-e76ff12e0612"/>
+				<reportElement x="3" y="550" width="230" height="30" uuid="a1814026-6d3b-43f0-9ebc-e76ff12e0612"/>
 				<textElement>
 					<font size="12" isBold="true"/>
 				</textElement>
@@ -165,26 +165,26 @@ FROM
 				<textFieldExpression><![CDATA[$F{container_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="-10" y="460" width="230" height="30" uuid="c1faee7c-81f8-4610-80a6-2121f7335794"/>
+				<reportElement x="3" y="460" width="230" height="30" uuid="c1faee7c-81f8-4610-80a6-2121f7335794"/>
 				<textFieldExpression><![CDATA[$F{verified_gross_mass}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="-10" y="520" width="230" height="30" uuid="b642de22-eb4e-48b0-b6d9-72dbad60b18b"/>
+				<reportElement x="3" y="520" width="230" height="30" uuid="b642de22-eb4e-48b0-b6d9-72dbad60b18b"/>
 				<textFieldExpression><![CDATA[$F{actual_payload}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="-10" y="580" width="230" height="30" uuid="e02305a2-8f99-4359-be9f-7d606be642ac"/>
+				<reportElement x="3" y="580" width="230" height="30" uuid="e02305a2-8f99-4359-be9f-7d606be642ac"/>
 				<textFieldExpression><![CDATA[$F{tare_weight}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="-10" y="625" width="230" height="30" uuid="d73e4ba0-b556-41da-b76d-a9dbdefb4f0a"/>
+				<reportElement x="3" y="625" width="230" height="30" uuid="d73e4ba0-b556-41da-b76d-a9dbdefb4f0a"/>
 				<textElement>
 					<font size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Name of Declarant:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="-10" y="655" width="230" height="30" uuid="41f548d5-7599-48b1-9aff-f6289ea6e0dc"/>
+				<reportElement x="3" y="655" width="230" height="30" uuid="41f548d5-7599-48b1-9aff-f6289ea6e0dc"/>
 				<textFieldExpression><![CDATA[$P{user_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
@@ -207,7 +207,7 @@ FROM
 				<textFieldExpression><![CDATA[$F{verified_gross_mass_date}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="-10" y="615" width="550" height="1" uuid="730a38e1-2f3a-4565-b1c7-3d2bf04a0a7c">
+				<reportElement x="3" y="615" width="550" height="1" uuid="730a38e1-2f3a-4565-b1c7-3d2bf04a0a7c">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unity" value="pixel"/>
@@ -217,7 +217,7 @@ FROM
 				</reportElement>
 			</line>
 			<line>
-				<reportElement x="-10" y="427" width="550" height="1" uuid="651a6f1c-6309-418e-855b-0e0e15e6dac7">
+				<reportElement x="4" y="427" width="550" height="1" uuid="651a6f1c-6309-418e-855b-0e0e15e6dac7">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unity" value="pixel"/>
