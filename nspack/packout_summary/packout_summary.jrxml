@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-01-03T06:39:49 -->
+<!-- 2020-01-16T19:05:21 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="packout_summary" pageWidth="595" pageHeight="842" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="20" bottomMargin="20" uuid="a11c3b0e-77bc-47a3-bfcc-ddc9763f8ca9">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -18,8 +18,7 @@
 	<parameter name="FromDate" class="java.sql.Date"/>
 	<parameter name="ToDate" class="java.sql.Date"/>
 	<queryString language="SQL">
-		<![CDATA[
-with hsql as(
+		<![CDATA[with hsql as(
 select 
 production_runs.cultivar_id
 ,production_runs.orchard_id
@@ -59,7 +58,7 @@ production_runs.cultivar_id
 ,hsql.cultivar_description ,hsql.orchard_code,hsql.puc_code,hsql.season_code
 ,hsql.cultivar_description ||hsql.orchard_code||hsql.puc_code||hsql.season_code as group1
 ,hsql.fromdate
-,hsql.todate
+,hsql.todate,hsql.bins_tipped
 from vw_pallet_sequence_flat 
  join production_runs on vw_pallet_sequence_flat.production_run_id =production_runs.id
 join hsql on 
@@ -79,7 +78,7 @@ production_runs.puc_id=hsql.puc_id
 ,vw_pallet_sequence_flat.inventory_code
 ,hsql.cultivar_description ,hsql.orchard_code,hsql.puc_code,hsql.season_code
 ,hsql.fromdate
-,hsql.todate)
+,hsql.todate,hsql.bins_tipped)
 select *,
 cast(pack_nett_weight/bins_tipped_weight*100 as dec(4,1)) detail_perc
 ,sum(pack_nett_weight) OVER (PARTITION BY group1) as packout_weight_group1
@@ -113,6 +112,7 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 	<field name="packed_tm_group" class="java.lang.String"/>
 	<field name="grade" class="java.lang.String"/>
 	<field name="carton_quantity_group1" class="java.math.BigDecimal"/>
+	<field name="bins_tipped" class="java.lang.Long"/>
 	<variable name="pack_nett_weight_SUM" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{pack_nett_weight}]]></variableExpression>
 	</variable>
@@ -160,9 +160,10 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 					<textFieldExpression><![CDATA[$V{Orchard_header}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0.###">
-					<reportElement x="530" y="0" width="34" height="20" uuid="1bb2d8b9-7d9e-4f42-8846-38ee1b7b0ce3">
+					<reportElement x="534" y="0" width="30" height="20" uuid="1bb2d8b9-7d9e-4f42-8846-38ee1b7b0ce3">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Right">
 						<font size="8"/>
@@ -170,7 +171,7 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 					<textFieldExpression><![CDATA[$F{packout_perc_group1}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0.###">
-					<reportElement x="412" y="0" width="58" height="20" uuid="88fc868a-3ca8-498a-a8e4-337e9642bde6">
+					<reportElement x="428" y="0" width="53" height="20" uuid="88fc868a-3ca8-498a-a8e4-337e9642bde6">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
@@ -180,7 +181,7 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 					<textFieldExpression><![CDATA[$F{bins_tipped_weight}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0.###;(#,##0.###-)">
-					<reportElement x="471" y="0" width="58" height="20" uuid="10dd23ae-a06d-4c01-82d6-62382b0bc8a7">
+					<reportElement x="481" y="0" width="53" height="20" uuid="10dd23ae-a06d-4c01-82d6-62382b0bc8a7">
 						<property name="local_mesure_unitheight" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="local_mesure_unitwidth" value="pixel"/>
@@ -226,7 +227,7 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 					<textFieldExpression><![CDATA["Orchard:"]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0.###">
-					<reportElement x="353" y="0" width="58" height="20" uuid="26cdee77-6136-4623-8793-7b3e54ec232f">
+					<reportElement x="383" y="0" width="45" height="20" uuid="26cdee77-6136-4623-8793-7b3e54ec232f">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
@@ -234,6 +235,13 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{carton_quantity_group1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.###">
+					<reportElement x="350" y="0" width="33" height="20" uuid="7354981e-5041-4d36-8684-3a67cd9e6907"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{bins_tipped}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -321,7 +329,7 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 				<textFieldExpression><![CDATA[$F{todate}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="412" y="34" width="58" height="30" uuid="324d92b7-b3b6-4be3-93fd-4a1c6a7142b9">
+				<reportElement x="428" y="34" width="53" height="30" uuid="324d92b7-b3b6-4be3-93fd-4a1c6a7142b9">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<printWhenExpression><![CDATA[$P{detail_level}.equals("Summary")]]></printWhenExpression>
@@ -332,7 +340,7 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 				<text><![CDATA[tipped weight]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="471" y="34" width="58" height="30" uuid="e75652ad-7cc6-4f15-b5f5-b999e1134838">
+				<reportElement x="481" y="34" width="53" height="30" uuid="e75652ad-7cc6-4f15-b5f5-b999e1134838">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<printWhenExpression><![CDATA[$P{detail_level}.equals("Summary")]]></printWhenExpression>
@@ -343,7 +351,9 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 				<text><![CDATA[pack nett weight]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="530" y="34" width="34" height="30" uuid="d65b6106-e9bd-4bf7-a0f1-29cc99608a15">
+				<reportElement x="534" y="34" width="30" height="30" uuid="d65b6106-e9bd-4bf7-a0f1-29cc99608a15">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<printWhenExpression><![CDATA[$P{detail_level}.equals("Summary")]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right">
@@ -352,7 +362,7 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 				<text><![CDATA[Pack Out %]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="353" y="34" width="58" height="30" uuid="e0e0b0f5-d724-43c5-97e6-14d89b753010">
+				<reportElement x="383" y="34" width="45" height="30" uuid="e0e0b0f5-d724-43c5-97e6-14d89b753010">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<printWhenExpression><![CDATA[$P{detail_level}.equals("Summary")]]></printWhenExpression>
@@ -362,13 +372,24 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 				</textElement>
 				<text><![CDATA[carton qty]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="330" y="34" width="53" height="30" uuid="f1d8ac66-13d1-481b-a6c5-3a1e865f8a2a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<printWhenExpression><![CDATA[$P{detail_level}.equals("Summary")]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[tipped qty]]></text>
+			</staticText>
 		</band>
 	</title>
 	<columnHeader>
 		<band height="30" splitType="Stretch">
 			<printWhenExpression><![CDATA[$P{detail_level}.equals("Detail")]]></printWhenExpression>
 			<staticText>
-				<reportElement x="471" y="0" width="58" height="30" uuid="ffb541cc-3da1-4e4d-a780-29b69be9de31">
+				<reportElement x="481" y="0" width="53" height="30" uuid="ffb541cc-3da1-4e4d-a780-29b69be9de31">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -430,14 +451,17 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 				<text><![CDATA[inv code]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="530" y="0" width="34" height="30" uuid="0f26ad13-56b8-4d4f-87ad-2ee0b9114101"/>
+				<reportElement x="534" y="0" width="30" height="30" uuid="0f26ad13-56b8-4d4f-87ad-2ee0b9114101">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Pack Out %]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="412" y="0" width="58" height="30" uuid="7c1c77f8-0b01-4260-b3a0-7abc64b15501">
+				<reportElement x="428" y="0" width="53" height="30" uuid="7c1c77f8-0b01-4260-b3a0-7abc64b15501">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -467,7 +491,7 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 				<text><![CDATA[tm]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="353" y="0" width="58" height="30" uuid="2b96f002-e04b-4a4d-941d-7dd0409a2670">
+				<reportElement x="383" y="0" width="45" height="30" uuid="2b96f002-e04b-4a4d-941d-7dd0409a2670">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -476,15 +500,27 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 				</textElement>
 				<text><![CDATA[carton qty]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="330" y="0" width="53" height="30" uuid="478e7213-2509-4105-9d04-690f2b06375f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[tipped qty]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="15" splitType="Stretch">
 			<printWhenExpression><![CDATA[$P{detail_level}.equals("Detail")]]></printWhenExpression>
 			<textField pattern="#,##0.###;(#,##0.###-)">
-				<reportElement x="471" y="0" width="58" height="15" uuid="545803f9-5516-4ef1-885a-544c1c9de1bb">
+				<reportElement x="481" y="0" width="53" height="15" uuid="545803f9-5516-4ef1-885a-544c1c9de1bb">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right">
 					<font size="8"/>
@@ -546,9 +582,10 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 				<textFieldExpression><![CDATA[$F{inventory_code}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.###">
-				<reportElement x="412" y="0" width="58" height="15" uuid="77fc544d-ab7b-4519-862c-c9a42f41f515">
+				<reportElement x="428" y="0" width="53" height="15" uuid="77fc544d-ab7b-4519-862c-c9a42f41f515">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right">
 					<font size="8"/>
@@ -556,14 +593,19 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 				<textFieldExpression><![CDATA[$F{bins_tipped_weight}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.###">
-				<reportElement x="530" y="0" width="34" height="15" uuid="413abc07-146d-4d08-8a17-eef4f7ec5cd2"/>
+				<reportElement x="534" y="0" width="30" height="15" uuid="413abc07-146d-4d08-8a17-eef4f7ec5cd2">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{detail_perc}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.###">
-				<reportElement x="353" y="0" width="58" height="15" uuid="2c06b798-42fe-4677-99b4-c96dcce12958">
+				<reportElement x="383" y="0" width="45" height="15" uuid="2c06b798-42fe-4677-99b4-c96dcce12958">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -580,6 +622,17 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{packed_tm_group}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.###">
+				<reportElement x="350" y="0" width="33" height="15" uuid="10798da0-d0ef-4998-a4c2-3545880f47ba">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bins_tipped}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
