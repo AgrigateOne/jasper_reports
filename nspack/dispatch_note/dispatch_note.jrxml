@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2019-12-27T18:32:51 -->
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
+<!-- 2020-01-20T05:56:47 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_consignment" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="habata"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -32,6 +32,7 @@
 	</parameter>
 	<parameter name="for_picklist" class="java.lang.Boolean"/>
 	<parameter name="cartons_equals_pallets" class="java.lang.Boolean"/>
+	<parameter name="hide_dispatch_summary_gross" class="java.lang.Boolean"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT
 fn_party_role_name((SELECT pr.id
@@ -168,7 +169,7 @@ where loads.id = $P{load_id}]]>
 	<group name="load_id">
 		<groupExpression><![CDATA[$F{load_id}]]></groupExpression>
 		<groupHeader>
-			<band height="20">
+			<band height="14">
 				<subreport>
 					<reportElement x="0" y="6" width="200" height="8" uuid="1db20b28-31d8-4b1e-8bfe-47bb7b30e6fe">
 						<printWhenExpression><![CDATA[$P{pallet_report} == "summary"]]></printWhenExpression>
@@ -197,7 +198,7 @@ where loads.id = $P{load_id}]]>
 				</subreport>
 			</band>
 			<band height="13"/>
-			<band height="16">
+			<band height="13">
 				<subreport>
 					<reportElement x="4" y="0" width="326" height="13" uuid="cb5d1f42-dc7d-4f62-ae21-23440f19315e"/>
 					<subreportParameter name="load_id">
@@ -205,6 +206,9 @@ where loads.id = $P{load_id}]]>
 					</subreportParameter>
 					<subreportParameter name="scartons_equals_pallets">
 						<subreportParameterExpression><![CDATA[$P{cartons_equals_pallets}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="sshow_summary_gross">
+						<subreportParameterExpression><![CDATA[$P{hide_dispatch_summary_gross}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression><![CDATA["dispatch_summary.jasper"]]></subreportExpression>
@@ -662,7 +666,7 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[Dispatch Note]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="5" y="13" width="96" height="13" uuid="f2eced94-a786-4686-8ff7-bc9eeb64043e"/>
+				<reportElement key="" x="5" y="13" width="96" height="13" uuid="f2eced94-a786-4686-8ff7-bc9eeb64043e"/>
 				<textElement>
 					<font size="10" isBold="true"/>
 				</textElement>
@@ -807,7 +811,7 @@ where loads.id = $P{load_id}]]>
 		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="79">
+		<band height="74">
 			<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 			<textField pattern="d MMM yyyy h:MM a" isBlankWhenNull="true">
 				<reportElement x="267" y="0" width="165" height="13" uuid="f61083f7-321d-4725-a6d6-feebc27c95ec"/>
@@ -817,7 +821,7 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{shipped_date_time}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="169" y="0" width="100" height="13" uuid="177c6f13-4a20-463d-b8f4-e63eae6bd8cb"/>
+				<reportElement x="169" y="0" width="98" height="13" uuid="177c6f13-4a20-463d-b8f4-e63eae6bd8cb"/>
 				<textElement>
 					<font size="8" isBold="false" isItalic="false"/>
 				</textElement>

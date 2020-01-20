@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2019-12-28T09:24:18 -->
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
+<!-- 2020-01-20T05:51:47 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="summary" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cba47b92-bbda-40d5-b5d7-7f12c9f0b664">
 	<property name="ireport.zoom" value="3.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="habata"/>
 	<parameter name="load_id" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
 	</parameter>
 	<parameter name="scartons_equals_pallets" class="java.lang.Boolean"/>
+	<parameter name="sshow_summary_gross" class="java.lang.Boolean"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT
  commodities.code AS commodity_code,
@@ -23,6 +24,7 @@
  SUM(fruit_actual_counts_for_packs.actual_count_for_pack * pallet_sequences.carton_quantity) AS fruit,
  SUM(CAST(pallet_sequences.carton_quantity AS numeric(5,1)) / CAST(pallets.carton_quantity AS numeric(5,1))) AS plt_qty
 ,(select sum(gross_weight) from pallets p where p.load_id=pallets.load_id) load_gross_weight
+,sum(gross_weight)gross_weight 
 FROM loads
 JOIN pallets ON pallets.load_id = loads.id
 JOIN pallet_sequences ON pallet_sequences.pallet_id = pallets.id
@@ -58,6 +60,7 @@ ORDER BY  commodities.code,
 	<field name="fruit" class="java.lang.Long"/>
 	<field name="load_gross_weight" class="java.math.BigDecimal"/>
 	<field name="size_count_code" class="java.lang.String"/>
+	<field name="gross_weight" class="java.math.BigDecimal"/>
 	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{ctn_qty}]]></variableExpression>
 	</variable>
@@ -157,7 +160,7 @@ ORDER BY  commodities.code,
 				<text><![CDATA[Fruit]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="394" y="0" width="40" height="13" uuid="98682009-64b1-44d2-b5f6-8fb3abe4eedb">
+				<reportElement x="391" y="0" width="44" height="13" uuid="98682009-64b1-44d2-b5f6-8fb3abe4eedb">
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -281,6 +284,19 @@ ORDER BY  commodities.code,
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ctn_qty}]]></textFieldExpression>
 			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="391" y="0" width="44" height="11" uuid="fefb58c3-977c-46bc-bf27-2372ecdf27c8">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<printWhenExpression><![CDATA[!$P{sshow_summary_gross}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{gross_weight}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<summary>
@@ -313,7 +329,7 @@ ORDER BY  commodities.code,
 				<textFieldExpression><![CDATA[$V{fruit_1}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="394" y="0" width="40" height="15" uuid="0730bed5-22ec-4339-90bb-f6d61def91ee"/>
+				<reportElement x="391" y="0" width="44" height="15" uuid="0730bed5-22ec-4339-90bb-f6d61def91ee"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
