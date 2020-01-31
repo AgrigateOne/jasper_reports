@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2019-12-30T14:03:29 -->
+<!-- 2020-01-31T13:03:08 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="addendum" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="22c9f520-d5e9-4af2-ac4c-ad2be98d416a">
 	<property name="ireport.zoom" value="1.7524694974069637"/>
 	<property name="ireport.x" value="0"/>
@@ -18,15 +18,13 @@
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[select sq.load_id ,
-count(*) over (partition by sq.load_id) as total_row,
-* from 
-(select  COALESCE(govt_reinspection_at, govt_first_inspection_at) as inspection_date,
-    *,
-   case 	when not (govt_inspection_passed) then LPAD(govt_inspection_sheet_id::text,10, '0')||'F' 
-		when (govt_inspection_passed) then LPAD(govt_inspection_sheet_id::text,10, '0') 
-		else '' end as manifest
-from vw_pallet_sequence_flat  where vw_pallet_sequence_flat.load_id=$P{load_id} 
-) as sq]]>
+  count(*) OVER (PARTITION BY sq.load_id) AS total_row,
+* 
+FROM 
+(SELECT *
+  FROM vw_pallet_sequence_flat
+  WHERE vw_pallet_sequence_flat.load_id=$P{load_id} 
+)  AS sq]]>
 	</queryString>
 	<field name="load_id" class="java.lang.Integer"/>
 	<field name="puc" class="java.lang.String"/>
@@ -160,13 +158,17 @@ from vw_pallet_sequence_flat  where vw_pallet_sequence_flat.load_id=$P{load_id}
 	<field name="pallet_carton_quantity" class="java.lang.Integer"/>
 	<field name="fruit_sticker_pm_product_2_id" class="java.lang.Integer"/>
 	<field name="last_govt_inspection_pallet_id" class="java.lang.Integer"/>
-	<field name="manifest" class="java.lang.String"/>
 	<field name="shipped_date" class="java.sql.Date"/>
 	<field name="shipper" class="java.lang.String"/>
 	<field name="production_region" class="java.lang.String"/>
-	<field name="COLUMN_99" class="java.lang.Integer"/>
 	<field name="pallet_format_id" class="java.lang.Integer"/>
 	<field name="temp_tail" class="java.lang.String"/>
+	<field name="COLUMN_98" class="java.lang.Integer"/>
+	<field name="inspected_dest_country" class="java.lang.String"/>
+	<field name="depot_pallet" class="java.lang.Boolean"/>
+	<field name="edi_in_file" class="java.lang.String"/>
+	<field name="edi_in_consignment_note_number" class="java.lang.String"/>
+	<field name="addendum_manifest" class="java.lang.String"/>
 	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
 	</variable>
@@ -828,7 +830,7 @@ from vw_pallet_sequence_flat  where vw_pallet_sequence_flat.load_id=$P{load_id}
 					<textElement textAlignment="Center">
 						<font size="7"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{manifest}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{addendum_manifest}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
 					<reportElement x="757" y="0" width="43" height="10" uuid="e96bf3ef-213c-4aa5-86b2-93acb19cf076"/>
@@ -1556,7 +1558,7 @@ from vw_pallet_sequence_flat  where vw_pallet_sequence_flat.load_id=$P{load_id}
 				<textElement textAlignment="Center">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{manifest}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{addendum_manifest}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="279" y="0" width="1" height="11" uuid="3cd4f1b8-43c5-4e7b-b48e-2931a010e335"/>
