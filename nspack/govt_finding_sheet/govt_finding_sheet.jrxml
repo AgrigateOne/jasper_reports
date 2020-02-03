@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2020-02-03T13:42:52 -->
+<!-- 2020-02-03T16:46:13 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="finding_sheet" language="groovy" printOrder="Horizontal" pageWidth="595" pageHeight="842" columnWidth="579" leftMargin="8" rightMargin="8" topMargin="8" bottomMargin="8" uuid="3e015a3f-e95b-45af-822d-5984fdad92cf">
 	<property name="ireport.zoom" value="1.7715610000000015"/>
 	<property name="ireport.x" value="0"/>
@@ -14,170 +14,46 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NSPACK"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NEW_DATAADAPTER.xml"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<parameter name="govt_inspection_sheet_id" class="java.lang.Integer"/>
 	<parameter name="empty_rows" class="java.lang.Integer"/>
 	<queryString language="SQL">
-		<![CDATA[SELECT 
-dense_rank() over (order by pallet_number desc) as row_number , row_number() over (partition by pallet_number order by pallet_number desc) as seq_no
+		<![CDATA[SELECT
+    dense_rank() over (order by p.pallet_number desc) AS row_number,
+    row_number() over (partition by p.pallet_number order by p.pallet_number desc) AS seq_no,
+    p.pallet_number,
+    pucs.puc_code                                                           AS puc,
+    orchards.orchard_code                                                   AS orchard,
+    commodities.code                                                        AS commodity,
+    cultivars.cultivar_name                                                 AS cultivar,
+    target_market_groups.target_market_group_name                           AS packed_tm_group,
+    fruit_size_references.size_reference                                    AS size_ref,
+    p.phc,
+    grades.grade_code                                                       AS grade,
+    fn_party_role_name(govt_inspection_sheets.exporter_party_role_id) AS exporter,
+    destination_regions.destination_region_name
 
- ,case 	when not (govt_inspection_pallets.passed) then    p.pallet_id else null end fail_pallet_id,
-(SELECT pr.id
-FROM public.party_roles pr
-WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) AS implementation_owner_party_role_id,
-    p.id,
-    p.pallet_id,
-    pallet_number,
-    pallet_sequence_number,
-    plt_packhouse,
-    plt_line,
-    packhouse,
-    line,
-    LOCATION,
-    shipped,
-    in_stock,
-    p.inspected,
-    reinspected,
-    palletized,
-    partially_palletized,
-    allocated,
-    pallet_age,
-    inspection_age,
-    stock_age,
-    cold_age,
-    first_cold_storage_at,
-    ambient_age,
-    internal_inspection_passed,
-    govt_inspection_passed,
-    govt_first_inspection_at,
-    govt_reinspection_at,
-    reinspection_age,
-    shipped_at,
-    p.created_at,
-    scrapped,
-    scrapped_at,
-    production_run_id,
-    farm,
-    puc,
-    orchard,
-    commodity,
-    cultivar_group,
-    cultivar,
-    marketing_variety,
-    marketing_org,
-    packed_tm_group,
-    mark,
-    inventory_code,
-    customer_variety,
-    std_size,
-    size_ref,
-    actual_count,
-    basic_pack,
-    std_pack,
-    resource_allocation_id,
-    treatments,
-    client_size_ref,
-    client_product_code,
-    order_number,
-    season,
-    pm_subtype,
-    pm_type,
-    cpp,
-    fruit_sticker,
-    fruit_sticker_2,
-    gross_weight,
-    gross_weight_measured_at,
-    nett_weight,
-    sequence_nett_weight,
-    exit_ref,
-    phc,
-    stock_created_at,
-    intake_created_at,
-    palletized_at,
-    partially_palletized_at,
-    allocated_at,
-    internal_inspection_at,
-    internal_reinspection_at,
-    pallet_base,
-    stack_type,
-    pallet_verification_failed,
-    verified,
-    verification_passed,
-    verification_failure_reason,
-    verification_result,
-    verified_at,
-    "bom",
-    extended_columns,
-    carton_quantity,
-    scanned_carton,
-    seq_scrapped_at,
-    seq_exit_ref,
-    pick_ref,
-    pallet_carton_quantity,
-    pallet_size,
-    build_status,
-    status,
-    sequence_status,
-    p.active,
-    load_id,
-    vessel,
-    voyage,
-    voyage_number,
-    container,
-    internal_container,
-    temp_code,
-    vehicle_number,
-    cooled,
-    pol,
-    pod,
-    final_destination,
-    customer,
-    consignee,
-    final_receiver,
-    exporter,
-    billing_client,
-    p.country,
-    destination_countries.iso_country_code,
-    destination_regions.destination_region_name,
-    eta,
-    ata,
-    etd,
-    atd,
-    zero_load_id,
-    fruit_sticker_pm_product_id,
-    fruit_sticker_pm_product_2_id,
-    pallet_verification_failure_reason_id,
-    grade,
-    sell_by_code,
-    product_chars,
-    colour_rule,
-    exporter_certificate_code,
-    p.booking_reference,
-    p.inspection_point,
-    p.govt_inspection_sheet_id,
-    govt_inspection_sheets.created_at inspection_date_time,
- fn_party_role_name(govt_inspection_sheets.inspection_billing_party_role_id) AS billing_party,
- fn_party_role_name(inspectors.inspector_party_role_id) AS inspector,
- case 	when not (govt_inspection_pallets.passed) then LPAD(govt_inspection_pallets.govt_inspection_sheet_id::text,10, '0')||'F' 
-		when (govt_inspection_pallets.passed) then LPAD(govt_inspection_pallets.govt_inspection_sheet_id::text,10, '0') 
-		else '' end consignment_note_number
-,govt_inspection_sheets.inspection_billing_party_role_id
-,govt_inspection_sheets.exporter_party_role_id
 FROM
-    public.vw_pallet_sequence_flat p
-    LEFT JOIN govt_inspection_pallets ON govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
-    LEFT JOIN govt_inspection_sheets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+govt_inspection_sheets
+LEFT JOIN govt_inspection_pallets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
 LEFT JOIN destination_countries ON destination_countries.id = govt_inspection_sheets.destination_country_id
 LEFT JOIN destination_regions ON destination_regions.id = destination_countries.destination_region_id
-left join inspectors on inspectors.id= govt_inspection_sheets.inspector_id
-left join party_roles on inspectors.inspector_party_role_id= party_roles.id
-left join parties on party_roles.party_id=parties.id
 
+JOIN pallets p ON govt_inspection_pallets.pallet_id = p.id
+JOIN pallet_sequences ps ON p.id = ps.pallet_id
+JOIN pucs ON pucs.id = ps.puc_id
+JOIN orchards ON orchards.id = ps.orchard_id
+JOIN cultivar_groups ON cultivar_groups.id = ps.cultivar_group_id
+LEFT JOIN cultivars ON cultivars.id = ps.cultivar_id
+LEFT JOIN commodities ON commodities.id = COALESCE(cultivars.commodity_id, cultivar_groups.commodity_id)
+JOIN target_market_groups ON target_market_groups.id = ps.packed_tm_group_id
+JOIN grades ON grades.id = ps.grade_id
+LEFT JOIN fruit_size_references ON fruit_size_references.id = ps.fruit_size_reference_id
 
-WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}]]>
+WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 	</queryString>
 	<field name="pallet_number" class="java.lang.String"/>
 	<field name="packed_tm_group" class="java.lang.String"/>
@@ -185,138 +61,11 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}]]>
 	<field name="phc" class="java.lang.String"/>
 	<field name="puc" class="java.lang.String"/>
 	<field name="cultivar" class="java.lang.String"/>
-	<field name="fail_pallet_id" class="java.lang.Integer"/>
-	<field name="implementation_owner_party_role_id" class="java.lang.Integer"/>
-	<field name="id" class="java.lang.Integer"/>
-	<field name="pallet_id" class="java.lang.Integer"/>
-	<field name="pallet_sequence_number" class="java.lang.Integer"/>
-	<field name="plt_packhouse" class="java.lang.String"/>
-	<field name="plt_line" class="java.lang.String"/>
-	<field name="packhouse" class="java.lang.String"/>
-	<field name="line" class="java.lang.String"/>
-	<field name="location" class="java.lang.String"/>
-	<field name="shipped" class="java.lang.Boolean"/>
-	<field name="in_stock" class="java.lang.Boolean"/>
-	<field name="inspected" class="java.lang.Boolean"/>
-	<field name="reinspected" class="java.lang.Boolean"/>
-	<field name="palletized" class="java.lang.Boolean"/>
-	<field name="partially_palletized" class="java.lang.Boolean"/>
-	<field name="allocated" class="java.lang.Boolean"/>
-	<field name="pallet_age" class="java.lang.Double"/>
-	<field name="inspection_age" class="java.lang.Double"/>
-	<field name="stock_age" class="java.lang.Double"/>
-	<field name="cold_age" class="java.lang.Double"/>
-	<field name="first_cold_storage_at" class="java.sql.Timestamp"/>
-	<field name="ambient_age" class="java.lang.Double"/>
-	<field name="internal_inspection_passed" class="java.lang.Boolean"/>
-	<field name="govt_inspection_passed" class="java.lang.Boolean"/>
-	<field name="govt_first_inspection_at" class="java.sql.Timestamp"/>
-	<field name="govt_reinspection_at" class="java.sql.Timestamp"/>
-	<field name="reinspection_age" class="java.lang.Double"/>
-	<field name="shipped_at" class="java.sql.Timestamp"/>
-	<field name="created_at" class="java.sql.Timestamp"/>
-	<field name="scrapped" class="java.lang.Boolean"/>
-	<field name="scrapped_at" class="java.sql.Timestamp"/>
-	<field name="production_run_id" class="java.lang.Integer"/>
-	<field name="farm" class="java.lang.String"/>
 	<field name="orchard" class="java.lang.String"/>
 	<field name="commodity" class="java.lang.String"/>
-	<field name="cultivar_group" class="java.lang.String"/>
-	<field name="marketing_variety" class="java.lang.String"/>
-	<field name="marketing_org" class="java.lang.String"/>
-	<field name="mark" class="java.lang.String"/>
-	<field name="inventory_code" class="java.lang.String"/>
-	<field name="customer_variety" class="java.lang.String"/>
-	<field name="std_size" class="java.lang.Integer"/>
 	<field name="size_ref" class="java.lang.String"/>
-	<field name="actual_count" class="java.lang.Integer"/>
-	<field name="basic_pack" class="java.lang.String"/>
-	<field name="std_pack" class="java.lang.String"/>
-	<field name="resource_allocation_id" class="java.lang.Integer"/>
-	<field name="treatments" class="java.sql.Array"/>
-	<field name="client_size_ref" class="java.lang.String"/>
-	<field name="client_product_code" class="java.lang.String"/>
-	<field name="order_number" class="java.lang.String"/>
-	<field name="season" class="java.lang.String"/>
-	<field name="pm_subtype" class="java.lang.String"/>
-	<field name="pm_type" class="java.lang.String"/>
-	<field name="cpp" class="java.lang.Integer"/>
-	<field name="fruit_sticker" class="java.lang.String"/>
-	<field name="fruit_sticker_2" class="java.lang.String"/>
-	<field name="gross_weight" class="java.math.BigDecimal"/>
-	<field name="gross_weight_measured_at" class="java.sql.Timestamp"/>
-	<field name="nett_weight" class="java.math.BigDecimal"/>
-	<field name="sequence_nett_weight" class="java.math.BigDecimal"/>
-	<field name="exit_ref" class="java.lang.String"/>
-	<field name="stock_created_at" class="java.sql.Timestamp"/>
-	<field name="intake_created_at" class="java.sql.Timestamp"/>
-	<field name="palletized_at" class="java.sql.Timestamp"/>
-	<field name="partially_palletized_at" class="java.sql.Timestamp"/>
-	<field name="allocated_at" class="java.sql.Timestamp"/>
-	<field name="internal_inspection_at" class="java.sql.Timestamp"/>
-	<field name="internal_reinspection_at" class="java.sql.Timestamp"/>
-	<field name="pallet_base" class="java.lang.String"/>
-	<field name="stack_type" class="java.lang.String"/>
-	<field name="pallet_verification_failed" class="java.lang.Boolean"/>
-	<field name="verified" class="java.lang.Boolean"/>
-	<field name="verification_passed" class="java.lang.Boolean"/>
-	<field name="verification_failure_reason" class="java.lang.String"/>
-	<field name="verification_result" class="java.lang.String"/>
-	<field name="verified_at" class="java.sql.Timestamp"/>
-	<field name="bom" class="java.lang.String"/>
-	<field name="extended_columns" class="java.lang.Object"/>
-	<field name="carton_quantity" class="java.lang.Integer"/>
-	<field name="scanned_carton" class="java.lang.Integer"/>
-	<field name="seq_scrapped_at" class="java.sql.Timestamp"/>
-	<field name="seq_exit_ref" class="java.lang.String"/>
-	<field name="pick_ref" class="java.lang.String"/>
-	<field name="pallet_carton_quantity" class="java.lang.Integer"/>
-	<field name="pallet_size" class="java.math.BigDecimal"/>
-	<field name="build_status" class="java.lang.String"/>
-	<field name="status" class="java.lang.String"/>
-	<field name="sequence_status" class="java.lang.String"/>
-	<field name="active" class="java.lang.Boolean"/>
-	<field name="load_id" class="java.lang.Integer"/>
-	<field name="vessel" class="java.lang.String"/>
-	<field name="voyage" class="java.lang.String"/>
-	<field name="voyage_number" class="java.lang.String"/>
-	<field name="container" class="java.lang.String"/>
-	<field name="internal_container" class="java.lang.String"/>
-	<field name="temp_code" class="java.lang.String"/>
-	<field name="vehicle_number" class="java.lang.String"/>
-	<field name="cooled" class="java.lang.Boolean"/>
-	<field name="pol" class="java.lang.String"/>
-	<field name="pod" class="java.lang.String"/>
-	<field name="final_destination" class="java.lang.String"/>
-	<field name="customer" class="java.lang.String"/>
-	<field name="consignee" class="java.lang.String"/>
-	<field name="final_receiver" class="java.lang.String"/>
-	<field name="billing_client" class="java.lang.String"/>
-	<field name="country" class="java.lang.String"/>
-	<field name="iso_country_code" class="java.lang.String"/>
 	<field name="destination_region_name" class="java.lang.String"/>
-	<field name="eta" class="java.sql.Date"/>
-	<field name="ata" class="java.sql.Date"/>
-	<field name="etd" class="java.sql.Date"/>
-	<field name="atd" class="java.sql.Date"/>
-	<field name="zero_load_id" class="java.lang.Integer"/>
-	<field name="fruit_sticker_pm_product_id" class="java.lang.Integer"/>
-	<field name="fruit_sticker_pm_product_2_id" class="java.lang.Integer"/>
-	<field name="pallet_verification_failure_reason_id" class="java.lang.Integer"/>
 	<field name="grade" class="java.lang.String"/>
-	<field name="sell_by_code" class="java.lang.String"/>
-	<field name="product_chars" class="java.lang.String"/>
-	<field name="colour_rule" class="java.lang.String"/>
-	<field name="exporter_certificate_code" class="java.lang.String"/>
-	<field name="booking_reference" class="java.lang.String"/>
-	<field name="inspection_point" class="java.lang.String"/>
-	<field name="govt_inspection_sheet_id" class="java.lang.Integer"/>
-	<field name="inspection_date_time" class="java.sql.Timestamp"/>
-	<field name="billing_party" class="java.lang.String"/>
-	<field name="inspector" class="java.lang.String"/>
-	<field name="consignment_note_number" class="java.lang.String"/>
-	<field name="inspection_billing_party_role_id" class="java.lang.Integer"/>
-	<field name="exporter_party_role_id" class="java.lang.Integer"/>
 	<field name="row_number" class="java.lang.Long"/>
 	<field name="seq_no" class="java.lang.Long"/>
 	<variable name="puc_var" class="java.lang.String" resetType="Page" incrementType="Page"/>
