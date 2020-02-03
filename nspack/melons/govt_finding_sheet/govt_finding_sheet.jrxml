@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2020-01-27T12:23:20 -->
+<!-- 2020-02-03T13:45:40 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="finding_sheet" language="groovy" printOrder="Horizontal" pageWidth="595" pageHeight="842" columnWidth="579" leftMargin="8" rightMargin="8" topMargin="8" bottomMargin="8" uuid="3e015a3f-e95b-45af-822d-5984fdad92cf">
 	<property name="ireport.zoom" value="1.7715610000000015"/>
 	<property name="ireport.x" value="0"/>
@@ -177,7 +177,7 @@ left join party_roles on inspectors.inspector_party_role_id= party_roles.id
 left join parties on party_roles.party_id=parties.id
 
 
-WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
+WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}]]>
 	</queryString>
 	<field name="pallet_number" class="java.lang.String"/>
 	<field name="packed_tm_group" class="java.lang.String"/>
