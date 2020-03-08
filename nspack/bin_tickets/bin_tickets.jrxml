@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
+<!-- 2020-03-08T09:21:47 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="bin_tickets" language="groovy" columnCount="2" printOrder="Horizontal" pageWidth="595" pageHeight="842" columnWidth="277" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c03660f7-c9f2-4f8e-b829-5211b31e0e7e">
+	<property name="ireport.zoom" value="4.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="134"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_Dunbrody_NSPACK"/>
+	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<parameter name="delivery_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[2]]></defaultValueExpression>
+	</parameter>
+	<parameter name="paramuser" class="java.lang.String">
+		<defaultValueExpression><![CDATA[gerrit]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+    a.date_delivered,
+    a.date_picked,
+    rmt_delivery_id,
+    f.farm_code,
+    o.orchard_code,
+    p.puc_code,
+    count(*) OVER (PARTITION BY a.id) total_bins,
+    j.bin_fullness,
+    a.truck_registration_number,
+    c.container_material_type_code pack_material_product_code,
+    j.bin_asset_number,
+    i.cultivar_name,
+    d.delivery_destination_code,j.id as rmt_bin_id
+FROM
+    rmt_deliveries a
+    LEFT JOIN public.rmt_bins j ON (a.id = j.rmt_delivery_id)
+    LEFT JOIN farms f ON f.id = j.farm_id
+    LEFT JOIN orchards o ON o.id = j.orchard_id
+    LEFT JOIN pucs p ON p.id = j.puc_id
+    LEFT JOIN rmt_container_material_types c ON (c.id = j.rmt_container_material_type_id)
+    LEFT JOIN public.cultivars i ON (i.id = j.cultivar_id)
+    LEFT JOIN rmt_delivery_destinations d ON d.id = a.rmt_delivery_destination_id
+WHERE
+    a.id = $P{delivery_id} and j.bin_asset_number is not null]]>
+	</queryString>
+	<field name="date_delivered" class="java.sql.Timestamp"/>
+	<field name="date_picked" class="java.sql.Date"/>
+	<field name="delivery_destination_code" class="java.lang.String"/>
+	<field name="farm_code" class="java.lang.String"/>
+	<field name="orchard_code" class="java.lang.String"/>
+	<field name="puc_code" class="java.lang.String"/>
+	<field name="total_bins" class="java.lang.Long"/>
+	<field name="truck_registration_number" class="java.lang.String"/>
+	<field name="pack_material_product_code" class="java.lang.String"/>
+	<field name="rmt_delivery_id" class="java.lang.Integer"/>
+	<field name="bin_fullness" class="java.lang.String"/>
+	<field name="bin_asset_number" class="java.lang.String"/>
+	<field name="cultivar_name" class="java.lang.String"/>
+	<field name="rmt_bin_id" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<detail>
+		<band height="147" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="271" height="147" uuid="e81e9459-9515-4f24-afed-8288cf27bb60"/>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="64" y="15" width="100" height="15" uuid="6fc2645a-5d9d-480e-b7ce-b427820c9910"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{rmt_delivery_id}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="206" y="15" width="59" height="15" uuid="da53e87b-3fdc-48af-9a05-614b884082e0"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cultivar_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="64" y="30" width="100" height="15" uuid="a5f38cbd-7680-4819-8d79-1a06a5e51a34"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date_picked}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="223" y="0" width="42" height="15" uuid="2265cc4a-3be4-4bbc-8fce-6cd57a6591bc"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{orchard_code}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="164" y="0" width="59" height="15" uuid="598c0fdf-ccb3-4541-93ee-47a11de16fd4"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Orchard:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="30" width="53" height="15" uuid="e5533993-4549-4628-a3f0-deeb812a73a4"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Picked Date:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="164" y="15" width="42" height="15" uuid="3bc3047b-b536-42f9-bcdb-d49f1f28b7a7"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Variety:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="15" width="53" height="15" uuid="69006578-704f-4420-8969-a1728ec5786f"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Intake Doc:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="0" width="48" height="15" uuid="49231e1f-7397-4156-8544-a604ef316b1c"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Producer:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="64" y="0" width="100" height="15" uuid="4a80e7e5-bdec-4972-98f6-3578128fa3cf"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{farm_code}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="64" y="45" width="25" height="15" uuid="986a6b75-9b9f-4328-8adc-b99f00d18fad"/>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="114" y="45" width="24" height="15" uuid="c72abfd5-bbb4-489d-8caf-21dd32b7fdf8"/>
+				<textFieldExpression><![CDATA[$F{total_bins}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="11" y="45" width="53" height="15" uuid="ba4cb969-e050-4baa-a18a-94b4f1eaf00d"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Bins:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="89" y="45" width="25" height="15" uuid="04feda2e-0f40-46b9-b8e7-d5347f4e01ef"/>
+				<text><![CDATA[of]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="206" y="30" width="59" height="15" uuid="f4a34c6a-cc10-4d92-8026-5b2d82de6c8d"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bin_fullness}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="164" y="30" width="42" height="15" uuid="a80ae035-aa5c-42a2-ae61-1d0e904af97f"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Bin Level:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="190" y="45" width="75" height="15" uuid="9c64ee9b-5283-44c4-9ecd-14f73e677503"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{delivery_destination_code}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="138" y="45" width="52" height="15" uuid="0d9d42cd-0431-45f7-95c2-15d2103b86e8"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Destination:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="138" y="60" width="52" height="15" uuid="f134525b-4e43-47c8-a497-7c3e00c06f1c"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Bin Type:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="190" y="60" width="75" height="15" uuid="fee525a3-8b30-4b64-a3b4-3de07aa36ab9"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pack_material_product_code}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="138" y="75" width="52" height="15" uuid="6d689d38-80b4-439e-8d1b-998da4a20b40"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Bin ID:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="190" y="75" width="75" height="15" uuid="d57fae9f-4ed9-44a1-99a8-49a9c9eac34b"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{rmt_bin_id}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="14" y="60" width="100" height="87" uuid="d9576caa-2003-4861-9ebd-41509a97b278"/>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="true" checksumRequired="false" barHeight="200">
+					<jr:codeExpression><![CDATA[$F{bin_asset_number}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+		</band>
+	</detail>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
