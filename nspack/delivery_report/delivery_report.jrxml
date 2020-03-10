@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
+<!-- 2020-03-10T05:36:57 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="delivery_report" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d109052e-9b0f-425e-bdc4-875aca838363">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_Dunbrody_NSPACK"/>
+	<parameter name="delivery_id" class="java.lang.Integer"/>
+	<parameter name="user_name" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+    a.id,j.rmt_delivery_id,
+    fn_party_role_name (f.owner_party_role_id) AS farm_owner,
+    f.farm_code,
+    o.orchard_code,
+    p.puc_code,
+    a.qty_damaged_bins,
+    s.season_code,
+    a.date_delivered,
+    a.date_picked,
+    to_char(a.date_picked, 'WW') AS week,
+    a.truck_registration_number,
+    '' AS rmt_product_code,
+    d.delivery_destination_code,
+    '' AS status,
+    '' AS color_code,
+    '' AS ripeness_code,
+    i.description AS variety_description,
+    m.code AS commodity_code,
+    '' AS bin_groups,
+    '' AS gap
+FROM
+    rmt_deliveries a
+    LEFT JOIN public.rmt_bins j ON (a.id = j.rmt_delivery_id)
+    LEFT JOIN farms f ON f.id = j.farm_id
+    LEFT JOIN orchards o ON o.id = j.orchard_id
+    LEFT JOIN pucs p ON p.id = j.puc_id
+    LEFT JOIN rmt_container_material_types c ON (c.id = j.rmt_container_material_type_id)
+    LEFT JOIN public.cultivars i ON (i.id = j.cultivar_id)
+    LEFT JOIN public.commodities m ON m.id = i.commodity_id
+    LEFT JOIN rmt_delivery_destinations d ON d.id = a.rmt_delivery_destination_id
+    LEFT JOIN seasons s ON a.season_id = s.id
+where a.id=$P{delivery_id}]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="farm_owner" class="java.lang.String"/>
+	<field name="farm_code" class="java.lang.String"/>
+	<field name="orchard_code" class="java.lang.String"/>
+	<field name="puc_code" class="java.lang.String"/>
+	<field name="qty_damaged_bins" class="java.lang.Integer"/>
+	<field name="date_delivered" class="java.sql.Timestamp"/>
+	<field name="date_picked" class="java.sql.Date"/>
+	<field name="week" class="java.lang.String"/>
+	<field name="truck_registration_number" class="java.lang.String"/>
+	<field name="rmt_product_code" class="java.lang.String"/>
+	<field name="delivery_destination_code" class="java.lang.String"/>
+	<field name="status" class="java.lang.String"/>
+	<field name="color_code" class="java.lang.String"/>
+	<field name="ripeness_code" class="java.lang.String"/>
+	<field name="variety_description" class="java.lang.String"/>
+	<field name="bin_groups" class="java.lang.String"/>
+	<field name="gap" class="java.lang.String"/>
+	<field name="season_code" class="java.lang.String"/>
+	<field name="commodity_code" class="java.lang.String"/>
+	<field name="rmt_delivery_id" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="120" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Transparent" x="0" y="6" width="555" height="28" uuid="e2616111-bb31-43e0-9cb0-1ba51dcae159"/>
+				<textElement textAlignment="Center">
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[Intake Document]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="412" y="33" width="100" height="20" uuid="0cf9ebb0-ae14-4a21-86b3-e1a3844b05fa"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Tel:042 2300498]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="412" y="53" width="100" height="20" uuid="f8a21bb5-6006-4f61-a40f-32e0440eab0a"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Fax:042 2300702]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="412" y="73" width="143" height="20" uuid="6df176e3-083c-43c5-9d0a-3247d5523241"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Email:jp@unifruttiph.co.za]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="412" y="93" width="100" height="20" uuid="45487f16-4080-4011-872b-5f7f1109d713"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Cell:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="34" width="229" height="20" uuid="796a97ab-37f6-4f49-b875-38dbbd07e156"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Company: UNIFRUTTI SOUTH AFRICA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="54" width="205" height="20" uuid="10765093-6ef2-4bbb-9b2e-6c0920a63569"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Address: PO BOX 62]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="42" y="74" width="100" height="20" uuid="c0a5fbab-cd11-469f-9574-0f1248b96fbc"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[SUNLAND]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="42" y="94" width="100" height="20" uuid="ee059808-4c78-4467-83bb-313d072650cd"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[6115]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="114" width="555" height="1" uuid="d976bc39-4d83-4011-9f58-cbf7af691d7b"/>
+			</line>
+			<line>
+				<reportElement x="1" y="32" width="555" height="1" uuid="5a9ae2e9-3185-4034-bd02-b316d4ba62a5"/>
+			</line>
+			<line>
+				<reportElement x="1" y="0" width="555" height="1" uuid="69c10a66-7d49-452e-860a-adca56bf55bf"/>
+			</line>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="148" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="23" height="20" uuid="a5498d95-8dbc-45e5-8eb2-86388e90e5f8"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[TO:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="23" y="0" width="100" height="20" uuid="9df3b4fb-745a-48e2-91c6-3dafb6b01dbe"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{farm_owner}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="309" y="0" width="128" height="20" uuid="a0902d26-cf9e-41ad-8eb8-215856c41a10"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INTAKE DOCUMENT:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="309" y="40" width="128" height="20" uuid="5ff9afb7-d205-4018-ac51-3aeb1580abfe"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DATE PICKED:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="309" y="20" width="128" height="20" uuid="51990c77-9623-42cd-a346-4f6a93dc9ead"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DATE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="309" y="60" width="128" height="20" uuid="58d6fe1e-f208-4ec2-b0c3-5395238aa77a"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[WEEK:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="309" y="80" width="128" height="20" uuid="7f14c67e-0f40-4ba8-9779-bb1cc5f18b08"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[WASTE:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="309" y="100" width="128" height="20" uuid="e8417567-9ab4-4ad4-bca6-bb4add4a2e84"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DEGREENED:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="309" y="120" width="128" height="20" uuid="318d95ff-0dc9-4071-b6d3-55c294e30535"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DRENCED:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="455" y="120" width="27" height="20" uuid="3e0424aa-46b7-4245-b231-f5b1cd3f4faf"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="455" y="80" width="27" height="20" uuid="0c9348b4-a711-43a8-946e-83d592978726"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="455" y="100" width="27" height="20" uuid="4e16b449-00d8-46a5-9322-68ecfb837cc6"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="466" y="122" width="16" height="18" uuid="d5c7712a-9589-496e-b5cf-082521aa9e3f">
+					<printWhenExpression><![CDATA[$F{delivery_destination_code}=="DRENCHING"]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[X]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="466" y="102" width="16" height="18" uuid="6cf716a7-a6cc-475b-b437-a1df59a64b0b">
+					<printWhenExpression><![CDATA[$F{delivery_destination_code}=="DEGREENING"]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[X]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="455" y="60" width="100" height="20" uuid="49a400b3-d93d-4639-a2fc-238e1308249c"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{week}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="455" y="40" width="100" height="20" uuid="a1f6096a-e81f-4511-a0a6-fe33b4399c55"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date_picked}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="455" y="20" width="100" height="20" uuid="ceb0da33-e5f3-4d29-9d1e-ec08b7ef3921"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date_delivered}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="456" y="0" width="100" height="20" uuid="c7b8e29f-d5c8-4765-af7b-73543d1db9ea"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="143" width="555" height="1" uuid="d139e47c-65a2-4f33-b2d1-cc9ae7c5185c"/>
+			</line>
+			<textField>
+				<reportElement x="23" y="20" width="100" height="30" uuid="6a4ab5cd-057d-4f9a-a54b-354591dad900"/>
+				<textFieldExpression><![CDATA[$F{farm_code}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="159" y="0" width="100" height="87" uuid="235ef1fa-4080-4c3f-837c-e78e8b76ecff"/>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="true" checksumRequired="false" barHeight="200">
+					<jr:codeExpression><![CDATA[$F{id}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="167" splitType="Stretch">
+			<textField>
+				<reportElement x="128" y="0" width="162" height="20" uuid="a056721a-87b7-441d-a56e-6f611839e4c3"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{commodity_code}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="40" width="110" height="20" uuid="d12f1fc6-b051-4843-8712-28bffad34030"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ORCHARD:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="20" width="110" height="20" uuid="b760d9eb-dd76-4395-8bf2-4a7d2668ad71"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VARIETY:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="110" height="20" uuid="afe6f3a5-7332-4acd-8a03-b6188ec1bd88"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COMMODITY:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="128" y="40" width="162" height="20" uuid="e418b375-b836-4cd8-9904-cdef19cea945"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{orchard_code}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="128" y="20" width="162" height="20" uuid="84029d21-f27c-4b83-9759-905b3dc4bba3"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{variety_description}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="455" y="100" width="100" height="20" uuid="6ecaaa39-850c-4c6a-a6de-9b820b1eedc2"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty_damaged_bins}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="319" y="100" width="128" height="20" uuid="360657a0-5875-4d86-99e3-4cdeb9175d64"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DAMAGED BINS:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="166" width="555" height="1" uuid="a3cdeb25-9fe8-491c-8104-498b1f306337"/>
+			</line>
+			<textField>
+				<reportElement x="290" y="0" width="265" height="100" uuid="5dbb1bf4-51a8-42f0-8f21-b2ee740df5f7"/>
+				<textFieldExpression><![CDATA[$F{bin_groups}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="128" y="60" width="162" height="20" uuid="6da48217-164b-4f82-a250-70a09aa37019">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{puc_code}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="128" y="80" width="162" height="20" uuid="72802dcd-4dd0-4ecb-92ad-5e4bac87890d">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{gap}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="131" width="289" height="20" uuid="a4d06086-3809-4208-a9e9-2d239066fdd6">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Global GAP Certified]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="60" width="110" height="20" uuid="f77c8e0b-ad8a-48f5-b93c-9752c7fe025e"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PUC:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="80" width="110" height="20" uuid="656d3a52-1c86-4710-92a3-722a1e62b5ee"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[GGN:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="128" y="100" width="162" height="20" uuid="4f881e93-9d26-4a05-869e-ab56ebdd5dce">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{farm_code}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="41" splitType="Stretch">
+			<staticText>
+				<reportElement x="1" y="16" width="554" height="20" uuid="ba75f3d1-f090-48f3-b365-a6af957053df"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DEFECTS:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="36" width="555" height="1" uuid="4b4ff177-8244-46da-a008-4a2649bd6e21"/>
+			</line>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="81" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="60" width="242" height="20" uuid="12286eeb-7e3b-4239-afc9-4b2d9acbff67"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PRODUCER:________________________]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="242" y="60" width="313" height="20" uuid="7ef31515-f5d1-4b7e-b5ef-d50a72da9738"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UNIFRUTTI SOUTH AFRICA:_____________________]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" uuid="02b5ae41-9015-4b72-90ad-0db66e37d893">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="0" y="33" width="555" height="1" uuid="71504718-5e71-4a85-94f9-00474d2a2c11">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="1" y="1" width="100" height="30" uuid="0972bd89-384a-44ca-99d3-0dcaf07bc120"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[COMMENTS]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>
