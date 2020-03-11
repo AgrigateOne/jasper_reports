@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-03-10T05:36:57 -->
+<!-- 2020-03-11T10:14:39 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="delivery_report" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d109052e-9b0f-425e-bdc4-875aca838363">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
@@ -21,15 +21,15 @@
     a.date_picked,
     to_char(a.date_picked, 'WW') AS week,
     a.truck_registration_number,
-    '' AS rmt_product_code,
+    i.description AS variety_description,
+    m.code AS commodity_code,
     d.delivery_destination_code,
     '' AS status,
     '' AS color_code,
     '' AS ripeness_code,
-    i.description AS variety_description,
-    m.code AS commodity_code,
     '' AS bin_groups,
     '' AS gap
+      ,'' AS rmt_product_code
 FROM
     rmt_deliveries a
     LEFT JOIN public.rmt_bins j ON (a.id = j.rmt_delivery_id)
@@ -41,7 +41,21 @@ FROM
     LEFT JOIN public.commodities m ON m.id = i.commodity_id
     LEFT JOIN rmt_delivery_destinations d ON d.id = a.rmt_delivery_destination_id
     LEFT JOIN seasons s ON a.season_id = s.id
-where a.id=$P{delivery_id}]]>
+where a.id=$P{delivery_id}
+group by     a.id,j.rmt_delivery_id,
+    fn_party_role_name (f.owner_party_role_id) ,
+    f.farm_code,
+    o.orchard_code,
+    p.puc_code,
+    a.qty_damaged_bins,
+    s.season_code,
+    a.date_delivered,
+    a.date_picked,
+    to_char(a.date_picked, 'WW'),
+    a.truck_registration_number,
+    i.description ,
+    m.code ,
+    d.delivery_destination_code]]>
 	</queryString>
 	<field name="id" class="java.lang.Integer"/>
 	<field name="farm_owner" class="java.lang.String"/>
