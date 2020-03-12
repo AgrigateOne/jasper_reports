@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2020-01-31T13:03:08 -->
+<!-- 2020-03-12T20:51:37 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="addendum" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="22c9f520-d5e9-4af2-ac4c-ad2be98d416a">
 	<property name="ireport.zoom" value="1.7524694974069637"/>
 	<property name="ireport.x" value="0"/>
@@ -163,12 +163,24 @@ FROM
 	<field name="production_region" class="java.lang.String"/>
 	<field name="pallet_format_id" class="java.lang.Integer"/>
 	<field name="temp_tail" class="java.lang.String"/>
-	<field name="COLUMN_98" class="java.lang.Integer"/>
 	<field name="inspected_dest_country" class="java.lang.String"/>
 	<field name="depot_pallet" class="java.lang.Boolean"/>
 	<field name="edi_in_file" class="java.lang.String"/>
 	<field name="edi_in_consignment_note_number" class="java.lang.String"/>
 	<field name="addendum_manifest" class="java.lang.String"/>
+	<field name="packed_at" class="java.sql.Timestamp"/>
+	<field name="packed_date" class="java.sql.Date"/>
+	<field name="updated_at" class="java.sql.Timestamp"/>
+	<field name="std_ctns" class="java.math.BigDecimal"/>
+	<field name="palletized_date" class="java.sql.Date"/>
+	<field name="COLUMN_103" class="java.lang.Integer"/>
+	<field name="repacked" class="java.lang.Boolean"/>
+	<field name="repacked_at" class="java.sql.Timestamp"/>
+	<field name="repacked_date" class="java.sql.Date"/>
+	<field name="repacked_from_pallet_id" class="java.lang.Integer"/>
+	<field name="failed_otmc_results" class="java.sql.Array"/>
+	<field name="failed_otmc" class="java.lang.Boolean"/>
+	<field name="phyto_data" class="java.lang.String"/>
 	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
 	</variable>
@@ -745,6 +757,7 @@ FROM
 					<textElement textAlignment="Center">
 						<font size="6"/>
 					</textElement>
+					<textFieldExpression><![CDATA[$F{phyto_data}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="152" y="0" width="33" height="10" uuid="296df374-b335-4f6d-b7e1-35660b24f799"/>
@@ -1681,6 +1694,7 @@ FROM
 				<textElement textAlignment="Center">
 					<font size="6"/>
 				</textElement>
+				<textFieldExpression><![CDATA[$F{phyto_data}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="70" y="0" width="1" height="11" uuid="f3cdf958-b03f-47f7-bc80-05deaa250510"/>

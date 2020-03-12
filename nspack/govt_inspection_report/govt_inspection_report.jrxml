@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2020-02-03T13:44:34 -->
+<!-- 2020-03-12T20:50:32 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gov_inspection_sheet" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b276ed72-36fe-4eb1-8898-57bb00d5eee1">
 	<property name="ireport.zoom" value="1.7524694974069621"/>
 	<property name="ireport.x" value="0"/>
@@ -150,6 +150,7 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
     product_chars,
     colour_rule,
     exporter_certificate_code,
+    phyto_data,
     p.booking_reference,
     p.inspection_point,
     p.govt_inspection_sheet_id,
@@ -313,6 +314,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 	<field name="fail_pallet_id" class="java.lang.Integer"/>
 	<field name="iso_country_code" class="java.lang.String"/>
 	<field name="destination_region_name" class="java.lang.String"/>
+	<field name="phyto_data" class="java.lang.String"/>
 	<sortField name="pallet_number"/>
 	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
@@ -848,6 +850,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
+				<textFieldExpression><![CDATA[$F{phyto_data}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="115" y="0" width="21" height="11" uuid="5131c5cb-cb79-407a-842f-929c57266a71"/>

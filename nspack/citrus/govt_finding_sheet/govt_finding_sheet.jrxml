@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-03-08T09:38:02 -->
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
+<!-- 2020-03-12T20:48:03 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="finding_sheet" language="groovy" printOrder="Horizontal" pageWidth="595" pageHeight="842" columnWidth="579" leftMargin="8" rightMargin="8" topMargin="8" bottomMargin="8" uuid="3e015a3f-e95b-45af-822d-5984fdad92cf">
 	<property name="ireport.zoom" value="1.7715610000000015"/>
 	<property name="ireport.x" value="0"/>
@@ -14,7 +14,7 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_Dunbrody_NSPACK"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack.xml"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
@@ -34,8 +34,8 @@
     p.phc,
     grades.grade_code                                                       AS grade,
     fn_party_role_name(govt_inspection_sheets.exporter_party_role_id) AS exporter,
-    destination_regions.destination_region_name
-
+    destination_regions.destination_region_name,
+   ps.phyto_data
 FROM
 govt_inspection_sheets
 LEFT JOIN govt_inspection_pallets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
@@ -68,6 +68,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 	<field name="grade" class="java.lang.String"/>
 	<field name="row_number" class="java.lang.Long"/>
 	<field name="seq_no" class="java.lang.Long"/>
+	<field name="phyto_data" class="java.lang.String"/>
 	<variable name="puc_var" class="java.lang.String" resetType="Page" incrementType="Page"/>
 	<variable name="pallet_number1" class="java.lang.Integer" calculation="DistinctCount">
 		<variableExpression><![CDATA[$F{pallet_number}]]></variableExpression>
@@ -1202,7 +1203,7 @@ R  - Reject]]></text>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{phyto_data}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="237" y="0" width="26" height="52" uuid="7399fc0b-06aa-447d-a930-bdd3d35d13a2"/>
