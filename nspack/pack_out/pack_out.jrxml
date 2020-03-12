@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-03-12T16:49:39 -->
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
+<!-- 2020-03-12T17:10:32 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pack_out" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" uuid="c08c8ed1-c3fa-4b77-b7f2-d6e11642b1b0">
 	<property name="ireport.zoom" value="5.0"/>
 	<property name="ireport.x" value="0"/>
@@ -15,8 +15,7 @@
 	<parameter name="use_packed_weight" class="java.lang.Boolean"/>
 	<parameter name="use_derived_weight" class="java.lang.Boolean"/>
 	<queryString language="SQL">
-		<![CDATA[
- with vpo as
+		<![CDATA[with vpo as
  (SELECT
     farm_code,
     orchards,
@@ -67,8 +66,7 @@ GROUP BY
     actual_count,
     inventory_code)
     
-    select *,sum(derived_nett_weight)over (partition by production_run_id) as total_run_derived_weight from vpo
-]]>
+    select *,sum(derived_nett_weight)over (partition by production_run_id) as total_run_derived_weight from vpo]]>
 	</queryString>
 	<field name="grade_code" class="java.lang.String"/>
 	<field name="nett_weight" class="java.math.BigDecimal"/>
@@ -96,7 +94,7 @@ GROUP BY
 	<field name="derived_nett_weight" class="java.math.BigDecimal"/>
 	<field name="total_run_derived_weight" class="java.math.BigDecimal"/>
 	<variable name="nett_weight_1" class="java.lang.Double" resetType="Group" resetGroup="grade_code" calculation="Sum">
-		<variableExpression><![CDATA[$F{nett_weight}]]></variableExpression>
+		<variableExpression><![CDATA[$P{use_derived_weight} ?$F{derived_nett_weight} : $F{nett_weight}]]></variableExpression>
 	</variable>
 	<variable name="ctn_qty_1" class="java.lang.Long" resetType="Group" resetGroup="grade_code" calculation="Sum">
 		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
@@ -167,7 +165,7 @@ GROUP BY
 				<rectangle>
 					<reportElement x="10" y="4" width="460" height="30" forecolor="#CCCCCC" uuid="d4d7877f-6190-456b-b65b-b3c2932ec9be"/>
 				</rectangle>
-				<textField pattern="#,##0.00">
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
 					<reportElement x="281" y="6" width="90" height="15" uuid="d1533133-5868-46cf-b2c2-74295de69d89"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{nett_weight_1}]]></textFieldExpression>
@@ -190,7 +188,7 @@ GROUP BY
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{ctn_qty_1}]]></textFieldExpression>
 				</textField>
-				<textField pattern="#,##0.00 %">
+				<textField pattern="#,##0.00 %" isBlankWhenNull="true">
 					<reportElement x="208" y="6" width="53" height="15" uuid="25a713f6-6c9b-43f7-9d9a-d9a88f7271f9"/>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{nett_weight_1}/$F{total_bin_weight}]]></textFieldExpression>
@@ -346,7 +344,9 @@ GROUP BY
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="281" y="0" width="90" height="13" uuid="b621fbb8-5fc7-439f-9eba-20e111abf455"/>
-				<textElement textAlignment="Right"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$P{use_derived_weight} ?$F{derived_nett_weight} : $F{nett_weight}]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -377,7 +377,7 @@ GROUP BY
 				<textElement textAlignment="Center">
 					<font size="24"/>
 				</textElement>
-				<text><![CDATA[No bins have been tipped for this run]]></text>
+				<text><![CDATA[No bins tipped/pallets created for this run]]></text>
 			</staticText>
 		</band>
 	</noData>
