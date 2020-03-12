@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-03-12T13:49:27 -->
+<!-- 2020-03-12T14:29:04 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
@@ -115,6 +115,12 @@ FROM
 	</variable>
 	<variable name="running_hours_SUM" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{running_hours}]]></variableExpression>
+	</variable>
+	<variable name="total_earnings" class="java.lang.Double">
+		<variableExpression><![CDATA[ Double.valueOf($F{wage_level}.doubleValue()+$F{incentive}.doubleValue())]]></variableExpression>
+	</variable>
+	<variable name="total_earnings_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$V{total_earnings}]]></variableExpression>
 	</variable>
 	<title>
 		<band splitType="Stretch"/>
@@ -297,6 +303,7 @@ FROM
 			<textField pattern="###0.00;###0.00-">
 				<reportElement x="732" y="0" width="63" height="15" uuid="40d13bc9-0e97-41b8-a0fe-8d4432dab293"/>
 				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{total_earnings}]]></textFieldExpression>
 			</textField>
 			<textField pattern="">
 				<reportElement x="530" y="0" width="46" height="15" uuid="d0f19b2a-bfce-4e8b-8397-315fdd94e84c"/>
@@ -328,7 +335,7 @@ FROM
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="30" splitType="Stretch">
+		<band height="32" splitType="Stretch">
 			<textField>
 				<reportElement x="297" y="0" width="36" height="15" uuid="fd5685bf-4df5-4954-bbe5-284061dd9ceb"/>
 				<textElement textAlignment="Right"/>
@@ -362,10 +369,6 @@ FROM
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$V{incentive_1}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0.00;###0.00-">
-				<reportElement x="730" y="0" width="63" height="15" uuid="dded2442-e481-4552-ae93-214a5bc3bbd3"/>
-				<textElement textAlignment="Right"/>
-			</textField>
 			<line>
 				<reportElement x="3" y="0" width="795" height="1" uuid="13efb243-d9f4-490c-b993-83cc02721d4a"/>
 			</line>
@@ -373,6 +376,11 @@ FROM
 				<reportElement x="469" y="0" width="47" height="15" uuid="65e379b8-c6d0-42f4-a5ee-967931c3c47d"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[new Double( $V{total_fruit_1}.doubleValue() / $V{running_hours_SUM}.doubleValue() )]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;###0.00-">
+				<reportElement x="732" y="0" width="63" height="15" uuid="f3b0f47e-eab3-4b8c-bbc9-35bf10bbb289"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{total_earnings_1}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>

@@ -1,57 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="variety_sum" language="groovy" pageWidth="160" pageHeight="842" columnWidth="150" leftMargin="5" rightMargin="5" topMargin="5" bottomMargin="5">
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
+<!-- 2020-03-12T14:44:41 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="variety_sum" language="groovy" pageWidth="160" pageHeight="842" columnWidth="150" leftMargin="5" rightMargin="5" topMargin="5" bottomMargin="5" uuid="f133652a-980c-47db-8697-22a8e1a1d4b0">
 	<property name="ireport.zoom" value="3.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Dunbrody_New_Framework"/>
 	<parameter name="sub_shift_id" class="java.lang.Integer"/>
-	<queryString>
-		<![CDATA[select  i.variety_description,count(a.*)
-FROM
-  public.cartons a
-
-  INNER JOIN public.fg_products b ON (a.fg_product_id = b.id)
-
-  INNER JOIN public.item_pack_products o ON (b.item_pack_product_id = o.id)
-  INNER JOIN public.varieties i ON (o.variety_id = i.id)
-where a.shift_id=$P{sub_shift_id}
-GROUP BY   i.variety_description
-ORDER BY
-  count(a.*) desc]]>
+	<queryString language="SQL">
+		<![CDATA[select  marketing_varieties.marketing_variety_code,count(cartons.*)
+FROM        cartons
+    LEFT JOIN carton_labels ON carton_labels.id = cartons.carton_label_id
+    LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = cartons.fruit_actual_counts_for_pack_id
+    LEFT JOIN public.shifts ON carton_labels.created_at BETWEEN shifts.start_date_time
+        AND shifts.end_date_time
+    JOIN marketing_varieties ON marketing_varieties.id = cartons.marketing_variety_id
+where shifts.id=$P{sub_shift_id}GROUP BY   marketing_varieties.marketing_variety_code
+ORDER BY  count(cartons.*) desc;]]>
 	</queryString>
-	<field name="variety_description" class="java.lang.String"/>
 	<field name="count" class="java.lang.Long"/>
+	<field name="marketing_variety_code" class="java.lang.String"/>
 	<variable name="count_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{count}]]></variableExpression>
 	</variable>
 	<detail>
 		<band height="12" splitType="Stretch">
 			<textField>
-				<reportElement x="3" y="0" width="100" height="12"/>
+				<reportElement x="3" y="0" width="100" height="12" uuid="b02e15a3-16e3-45a2-83a2-4d882f1f07ea"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.String"><![CDATA[$F{variety_description}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{marketing_variety_code}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="115" y="0" width="33" height="12"/>
+				<reportElement x="115" y="0" width="33" height="12" uuid="32762527-8eae-4c6c-8781-ecdab2294104"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Long"><![CDATA[$F{count}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{count}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<summary>
 		<band height="13" splitType="Stretch">
 			<textField>
-				<reportElement x="115" y="1" width="33" height="12"/>
+				<reportElement x="115" y="1" width="33" height="12" uuid="e4130e2c-23a6-4ce4-8c93-b2d5ff52de5c"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression class="java.lang.Long"><![CDATA[$V{count_1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{count_1}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="28" y="1" width="87" height="12"/>
+				<reportElement x="28" y="1" width="87" height="12" uuid="bb164c5e-9f85-44dd-8103-336eb4229c27"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
