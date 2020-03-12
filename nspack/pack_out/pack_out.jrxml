@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2020-01-31T08:41:11 -->
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
+<!-- 2020-03-12T16:49:39 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pack_out" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" uuid="c08c8ed1-c3fa-4b77-b7f2-d6e11642b1b0">
 	<property name="ireport.zoom" value="5.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Dunbrody_New_Framework"/>
 	<parameter name="production_run_id" class="java.lang.Integer"/>
 	<parameter name="carton_or_bin" class="java.lang.String">
 		<defaultValueExpression><![CDATA[Carton]]></defaultValueExpression>
 	</parameter>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="use_packed_weight" class="java.lang.Boolean"/>
+	<parameter name="use_derived_weight" class="java.lang.Boolean"/>
 	<queryString language="SQL">
-		<![CDATA[SELECT
+		<![CDATA[
+ with vpo as
+ (SELECT
     farm_code,
     orchards,
     deliveries,
@@ -37,11 +40,12 @@
     sum(nett_weight) nett_weight,
     sum(carton_quantity) carton_quantity,
     min(pack_date) pack_date,
-    min(pack_week) pack_week
+    min(pack_week) pack_week,
+    sum(derived_nett_weight) as derived_nett_weight
 FROM
     public.vw_packout_details
 WHERE
-    production_run_id =  $P{production_run_id} 
+       production_run_id =  $P{production_run_id} 
 GROUP BY
     farm_code,
     orchards,
@@ -61,7 +65,10 @@ GROUP BY
     std_size,
     size_ref,
     actual_count,
-    inventory_code;]]>
+    inventory_code)
+    
+    select *,sum(derived_nett_weight)over (partition by production_run_id) as total_run_derived_weight from vpo
+]]>
 	</queryString>
 	<field name="grade_code" class="java.lang.String"/>
 	<field name="nett_weight" class="java.math.BigDecimal"/>
@@ -86,6 +93,8 @@ GROUP BY
 	<field name="carton_quantity" class="java.lang.Long"/>
 	<field name="orchards" class="java.lang.String"/>
 	<field name="basic_pack" class="java.lang.String"/>
+	<field name="derived_nett_weight" class="java.math.BigDecimal"/>
+	<field name="total_run_derived_weight" class="java.math.BigDecimal"/>
 	<variable name="nett_weight_1" class="java.lang.Double" resetType="Group" resetGroup="grade_code" calculation="Sum">
 		<variableExpression><![CDATA[$F{nett_weight}]]></variableExpression>
 	</variable>
@@ -338,7 +347,7 @@ GROUP BY
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="281" y="0" width="90" height="13" uuid="b621fbb8-5fc7-439f-9eba-20e111abf455"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{nett_weight}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{use_derived_weight} ?$F{derived_nett_weight} : $F{nett_weight}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="371" y="0" width="67" height="13" uuid="e97fb374-a6ed-4308-a0cb-d0488d245f84"/>
