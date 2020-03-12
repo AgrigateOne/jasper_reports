@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
+<!-- 2020-03-12T05:45:55 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pack_intakes" language="groovy" pageWidth="400" pageHeight="100" columnWidth="400" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="52084105-b243-45f7-8fd1-a720e5e8b4c7">
+	<property name="ireport.zoom" value="4.0"/>
+	<property name="ireport.x" value="324"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_Dunbrody_NSPACK"/>
+	<parameter name="production_run_tipped_id" class="java.lang.Integer"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+        array_to_string(array_agg(distinct(rmt_deliveries.id )), ';') AS delivery_number
+,   array_to_string(array_agg(distinct(orchards.orchard_code)), ';') AS orchard_code
+FROM
+production_runs a inner join rmt_bins  on rmt_bins.production_run_tipped_id=a.id
+left join public.rmt_deliveries   ON (rmt_bins.rmt_delivery_id = rmt_deliveries.id)
+     LEFT JOIN orchards ON orchards.id = rmt_bins.orchard_id
+where production_run_tipped_id=$P{production_run_tipped_id}]]>
+	</queryString>
+	<field name="delivery_number" class="java.lang.String"/>
+	<field name="orchard_code" class="java.lang.String"/>
+	<pageHeader>
+		<band height="60">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="53" y="30" width="327" height="30" uuid="65c94869-2757-4264-939b-9dcb268babea"/>
+				<textFieldExpression><![CDATA[$F{orchard_code}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="53" y="0" width="327" height="30" uuid="eec68bb6-829b-49c6-8d1d-0ae35a1407e0"/>
+				<textFieldExpression><![CDATA[$F{delivery_number}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="30" width="50" height="13" uuid="48d036a0-82bb-4998-a99c-a63267cf9ae6"/>
+				<text><![CDATA[Orchards:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="50" height="13" uuid="ef90412f-9310-4605-aa56-1a96164d3bc0"/>
+				<text><![CDATA[Intakes:]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+</jasperReport>

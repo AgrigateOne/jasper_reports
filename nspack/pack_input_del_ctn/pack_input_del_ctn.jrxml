@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
+<!-- 2020-03-12T10:29:55 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pack_input_del_ctn" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b6fb5972-61c1-4d79-a065-fdacc2bcc4a7">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="115"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Dunbrody_New_Framework"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["C:\\Users\\gerritf.KROMCO\\Documents\\dunbrody\\reports\\new\\jasper\\packout\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="production_run_id" class="java.lang.Integer"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+  sum(rmt_bins.nett_weight) AS weight,
+  count(rmt_bins.*) AS bin_qty,
+ rmt_bins.production_run_tipped_id,
+  farms.description as farm_description,
+public.plant_resources.plant_resource_code,
+  cultivars.cultivar_name,
+date_part('week'::text, public.production_runs.started_at) AS pack_week,
+  public.production_runs.started_at AS date_packed,(
+select sum(nett_weight) output_weight from
+(SELECT
+cast(  sum(standard_product_weights.nett_weight )as dec(9,2)) nett_weight
+FROM
+ public.cartons 
+     LEFT JOIN cultivars ON cultivars.id = cartons.cultivar_id
+     LEFT JOIN commodities ON commodities.id = cultivars.commodity_id
+ left  JOIN public.production_runs b ON (cartons.production_run_id = b.id)
+ LEFT  JOIN public.standard_pack_codes on standard_pack_codes.id=cartons.standard_pack_code_id
+ left join standard_product_weights on commodities.id=standard_product_weights.commodity_id
+ and standard_product_weights.standard_pack_id =standard_pack_codes.id
+where cartons.production_run_id= $P{production_run_id} 
+union all
+SELECT
+coalesce(
+ cast( sum(
+ coalesce(rmt_bins.nett_weight,0 )
+  )as dec(9,2)),0) nett_weight
+FROM rmt_bins
+     LEFT JOIN cultivar_groups ON cultivar_groups.id = rmt_bins.cultivar_group_id
+     LEFT JOIN cultivars ON cultivars.id = rmt_bins.cultivar_id
+     LEFT JOIN farms ON farms.id = rmt_bins.farm_id
+     LEFT JOIN farm_groups ON farm_groups.id = farms.farm_group_id
+     LEFT JOIN orchards ON orchards.id = rmt_bins.orchard_id
+     LEFT JOIN pucs ON pucs.id = rmt_bins.puc_id
+     LEFT JOIN rmt_classes ON rmt_classes.id = rmt_bins.rmt_class_id
+where rmt_bins.production_run_rebin_id = $P{production_run_id}  and rmt_bins.scrapped  is null and rmt_classes.rmt_class_code  <>'DEGREENING'
+) as output) output_weight
+FROM rmt_bins
+     LEFT JOIN cultivar_groups ON cultivar_groups.id = rmt_bins.cultivar_group_id
+     LEFT JOIN cultivars ON cultivars.id = rmt_bins.cultivar_id
+     LEFT JOIN farms ON farms.id = rmt_bins.farm_id
+     LEFT JOIN farm_groups ON farm_groups.id = farms.farm_group_id
+     LEFT JOIN orchards ON orchards.id = rmt_bins.orchard_id
+     LEFT JOIN pucs ON pucs.id = rmt_bins.puc_id
+     LEFT JOIN rmt_classes ON rmt_classes.id = rmt_bins.rmt_class_id
+     LEFT JOIN public.production_runs ON (rmt_bins.production_run_tipped_id = production_runs.id)
+     LEFT JOIN public.plant_resources on production_runs.production_line_id =plant_resources.id
+WHERE
+  rmt_bins.production_run_tipped_id = $P{production_run_id} 
+GROUP BY
+ rmt_bins.production_run_tipped_id,
+  farms.description,
+public.plant_resources.id,
+  cultivars.cultivar_name,
+  public.production_runs.started_at;]]>
+	</queryString>
+	<field name="weight" class="java.math.BigDecimal"/>
+	<field name="bin_qty" class="java.lang.Long"/>
+	<field name="date_packed" class="java.sql.Timestamp"/>
+	<field name="output_weight" class="java.math.BigDecimal"/>
+	<field name="pack_week" class="java.lang.Double"/>
+	<field name="production_run_tipped_id" class="java.lang.Integer"/>
+	<field name="plant_resource_code" class="java.lang.String"/>
+	<field name="cultivar_name" class="java.lang.String"/>
+	<field name="farm_description" class="java.lang.String"/>
+	<group name="production_run">
+		<groupExpression><![CDATA[]]></groupExpression>
+		<groupHeader>
+			<band height="6">
+				<subreport>
+					<reportElement x="0" y="0" width="544" height="6" uuid="cb7191ca-2348-49a2-880d-546966047cf2"/>
+					<subreportParameter name="tipped_weight">
+						<subreportParameterExpression><![CDATA[$F{weight}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="srproduction_run_id">
+						<subreportParameterExpression><![CDATA[$P{production_run_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["pack_out.jasper"]]></subreportExpression>
+				</subreport>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="127">
+			<subreport>
+				<reportElement x="0" y="18" width="252" height="39" uuid="7b953be6-4207-406d-b0a8-8fdebb271a02"/>
+				<subreportParameter name="production_run_tipped_id">
+					<subreportParameterExpression><![CDATA[$P{production_run_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["pack_intakes.jasper"]]></subreportExpression>
+			</subreport>
+			<textField isBlankWhenNull="true">
+				<reportElement x="79" y="0" width="209" height="13" uuid="95877c00-bde8-4c35-a267-24d87f3eba82"/>
+				<textFieldExpression><![CDATA[$F{farm_description}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="454" y="65" width="100" height="13" uuid="c439d86d-b267-444f-b619-8ba06f1adc96"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Fax: 042 2300702]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="454" y="52" width="100" height="13" uuid="f50242be-b8da-471c-97d2-689fccb3b84b"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Tel: 042 2300498]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="454" y="39" width="100" height="13" uuid="ffa10a92-2896-4728-9b42-92bda12d0d3c"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[6115]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="454" y="13" width="100" height="13" uuid="4fd914da-d292-4a4f-a5fa-c16bdf1d86df"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[PO BOX 62]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="454" y="26" width="100" height="13" uuid="32b4cb93-c5a5-45f8-b332-4a77b0c291b5"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[SUNLAND]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="454" y="0" width="100" height="13" uuid="8e15cefc-1bd1-4c2f-b71b-c81fb971321a"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[UNIFRUTTI SA]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="0" y="78" width="72" height="13" uuid="030096ea-e6d8-4beb-8e63-111eafb245c1"/>
+				<textFieldExpression><![CDATA[$F{date_packed}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="0" y="111" width="60" height="13" uuid="ae88019b-f2de-497f-9ed7-6a60cc674fd0"/>
+				<textFieldExpression><![CDATA[$F{weight}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="133" y="78" width="41" height="13" uuid="3f72a969-4d0a-4d7b-b5cb-0a9278665963"/>
+				<textFieldExpression><![CDATA[$F{cultivar_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="229" y="111" width="33" height="13" uuid="183bda06-a46c-4819-a847-fecf7b8cd840"/>
+				<textFieldExpression><![CDATA[$F{bin_qty}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="297" y="111" width="236" height="13" uuid="0f2ed5e1-aa23-436f-967a-bae3491e3bb5"/>
+				<textFieldExpression><![CDATA[$F{production_run_tipped_id}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="65" width="60" height="13" uuid="711a7ed7-f51e-400c-87ef-18784a5ae903"/>
+				<text><![CDATA[Date Packed]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="133" y="65" width="41" height="13" uuid="06e1eaa9-fb59-467a-9d3c-0f051f942b61"/>
+				<text><![CDATA[Variety]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="98" width="60" height="13" uuid="db03c229-102c-457f-9948-92c11977aa51"/>
+				<text><![CDATA[Total Weight]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="73" y="111" width="80" height="13" uuid="e25b4d7a-f1b3-46e1-8c3d-6835aad84590"/>
+				<textFieldExpression><![CDATA[$F{output_weight}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="73" y="98" width="77" height="13" uuid="62b9f357-510e-4623-9424-55863508843e"/>
+				<text><![CDATA[Weight Packed]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="229" y="98" width="33" height="13" uuid="2ee3a1e5-cd36-4dde-8b98-88dfd4f5b0a4"/>
+				<text><![CDATA[Bins]]></text>
+			</staticText>
+			<textField pattern="#,##0.00 %">
+				<reportElement x="153" y="111" width="56" height="13" uuid="2dba525d-6380-474f-954a-9c7569211646"/>
+				<textFieldExpression><![CDATA[$F{output_weight}/$F{weight}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="153" y="98" width="56" height="13" uuid="31c75612-411f-4eb2-b8c6-597dfedc2a67"/>
+				<text><![CDATA[Percentage]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="319" y="98" width="135" height="13" uuid="0147f2d0-0ac0-479c-8924-20847d20fc88"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{plant_resource_code}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="126" width="555" height="1" uuid="de56293f-d8c6-456b-9a77-0b8da27d995a"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="0" width="72" height="13" uuid="77dd22f5-4dc6-4156-9964-03ddc9a29d8a"/>
+				<text><![CDATA[Client Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="262" y="98" width="57" height="13" uuid="eaaf3d7e-7b7a-4519-9bb9-6ae73df4bd89"/>
+				<text><![CDATA[Prod. Run]]></text>
+			</staticText>
+			<textField pattern="###0">
+				<reportElement x="73" y="78" width="41" height="13" uuid="5265d1f5-e199-4ff0-bb15-ba91a36ed5d8"/>
+				<textFieldExpression><![CDATA[$F{pack_week}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="73" y="65" width="60" height="13" uuid="22940bcb-928b-4561-9fca-465841653bb0"/>
+				<text><![CDATA[Pack Week]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<pageFooter>
+		<band height="13">
+			<staticText>
+				<reportElement x="422" y="0" width="132" height="13" uuid="710cbf85-53b5-4515-98a1-acc8b4d4c0b0"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Based on Cartons]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>
