@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="variety_sum" language="groovy" pageWidth="160" pageHeight="842" columnWidth="150" leftMargin="5" rightMargin="5" topMargin="5" bottomMargin="5">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="sub_shift_id" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[select  i.variety_description,count(a.*)
+FROM
+  public.cartons a
+
+  INNER JOIN public.fg_products b ON (a.fg_product_id = b.id)
+
+  INNER JOIN public.item_pack_products o ON (b.item_pack_product_id = o.id)
+  INNER JOIN public.varieties i ON (o.variety_id = i.id)
+where a.shift_id=$P{sub_shift_id}
+GROUP BY   i.variety_description
+ORDER BY
+  count(a.*) desc]]>
+	</queryString>
+	<field name="variety_description" class="java.lang.String"/>
+	<field name="count" class="java.lang.Long"/>
+	<variable name="count_1" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{count}]]></variableExpression>
+	</variable>
+	<detail>
+		<band height="12" splitType="Stretch">
+			<textField>
+				<reportElement x="3" y="0" width="100" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{variety_description}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="115" y="0" width="33" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{count}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="13" splitType="Stretch">
+			<textField>
+				<reportElement x="115" y="1" width="33" height="12"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$V{count_1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="28" y="1" width="87" height="12"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Totaal:]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>
