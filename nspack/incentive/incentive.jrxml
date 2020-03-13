@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-03-12T14:29:04 -->
+<!-- 2020-03-13T14:11:05 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
@@ -46,7 +46,7 @@
     LEFT JOIN public.shifts ON carton_labels.created_at BETWEEN shifts.start_date_time
         AND shifts.end_date_time
     LEFT JOIN public.shift_types ON shift_types.id = shifts.shift_type_id
-        AND cartons.packhouse_resource_id = shift_types.plant_resource_id
+        AND cartons.production_line_id = shift_types.plant_resource_id
     LEFT JOIN public.contract_workers ON (cartons.contract_worker_id = contract_workers.id)
     LEFT JOIN public.shift_exceptions ON (contract_workers.id = shift_exceptions.contract_worker_id)
         AND (shifts.id = shift_exceptions.shift_id)
@@ -117,7 +117,7 @@ FROM
 		<variableExpression><![CDATA[$F{running_hours}]]></variableExpression>
 	</variable>
 	<variable name="total_earnings" class="java.lang.Double">
-		<variableExpression><![CDATA[ Double.valueOf($F{wage_level}.doubleValue()+$F{incentive}.doubleValue())]]></variableExpression>
+		<variableExpression><![CDATA[Double.valueOf($F{wage_level}.doubleValue()+$F{incentive}.doubleValue())]]></variableExpression>
 	</variable>
 	<variable name="total_earnings_1" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$V{total_earnings}]]></variableExpression>
@@ -255,7 +255,7 @@ FROM
 				<reportElement x="4" y="0" width="51" height="15" uuid="a9189391-1447-48de-a8eb-80c2d63b45d0"/>
 				<textFieldExpression><![CDATA[$F{personnel_barcode_number}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="59" y="0" width="120" height="15" uuid="7c6c77c6-242c-41fe-b29c-e6a3002c405c"/>
 				<textFieldExpression><![CDATA[$F{party_name}]]></textFieldExpression>
 			</textField>
@@ -269,7 +269,7 @@ FROM
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{total_fruit}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0.00;###0.00-">
+			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
 				<reportElement x="576" y="0" width="47" height="15" uuid="ac6917aa-924d-45b4-a92c-8260b7e836f6"/>
 				<textElement textAlignment="Right">
 					<font isBold="false" isItalic="false" isUnderline="false"/>
@@ -290,17 +290,17 @@ FROM
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{fruitphour}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="623" y="0" width="60" height="15" uuid="62b43e32-0db5-4e04-9edb-88966c569168"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{rp1000f}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0.00;###0.00-">
+			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
 				<reportElement x="683" y="0" width="47" height="15" uuid="89b64826-d22a-443a-8bec-94b00adb10c6"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{incentive}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0.00;###0.00-">
+			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
 				<reportElement x="732" y="0" width="63" height="15" uuid="40d13bc9-0e97-41b8-a0fe-8d4432dab293"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$V{total_earnings}]]></textFieldExpression>
