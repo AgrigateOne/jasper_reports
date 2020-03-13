@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-03-12T15:05:54 -->
+<!-- 2020-03-13T14:13:00 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive_count" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="0c54595e-180f-487d-9121-9abe94ba96a4">
 	<property name="ireport.zoom" value="1.53947435469212"/>
 	<property name="ireport.x" value="0"/>
@@ -48,7 +48,7 @@
     LEFT JOIN public.shifts ON carton_labels.created_at BETWEEN shifts.start_date_time
         AND shifts.end_date_time
     LEFT JOIN public.shift_types ON shift_types.id = shifts.shift_type_id
-        AND cartons.packhouse_resource_id = shift_types.plant_resource_id
+        AND cartons.production_line_id = shift_types.plant_resource_id
     LEFT JOIN public.contract_workers ON (cartons.contract_worker_id = contract_workers.id)
     LEFT JOIN public.shift_exceptions ON (contract_workers.id = shift_exceptions.contract_worker_id)
         AND (shifts.id = shift_exceptions.shift_id)
