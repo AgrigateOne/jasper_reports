@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-01-20T05:56:47 -->
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
+<!-- 2020-03-13T13:07:08 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_consignment" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="habata"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack.xml"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -687,12 +687,16 @@ where loads.id = $P{load_id}]]>
 				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
 			</subreport>
 			<componentElement>
-				<reportElement x="305" y="0" width="200" height="26" uuid="4a864b43-2183-4d30-8a03-63772df42db7">
+				<reportElement x="330" y="-6" width="175" height="26" uuid="4a864b43-2183-4d30-8a03-63772df42db7">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitbarWidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.barWidth" value="px"/>
+					<property name="local_mesure_unitbarHeight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.barHeight" value="px"/>
 					<printWhenExpression><![CDATA[$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
-				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" evaluationGroup="">
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barWidth="1" barHeight="20" evaluationGroup="">
 					<jr:codeExpression><![CDATA[$F{load_id}]]></jr:codeExpression>
 				</jr:barbecue>
 			</componentElement>
