@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
+<!-- 2020-03-15T19:08:48 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_pallet_detail" language="groovy" columnCount="2" printOrder="Horizontal" pageWidth="555" pageHeight="802" columnWidth="277" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="57a0c595-5448-465f-8162-0e6517403bd3">
+	<property name="ireport.zoom" value="2.253944402704733"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="ireport.jasperserver.reportUnit" value="/FG/dispatch_consignment"/>
+	<property name="ireport.jasperserver.url" value="http://172.16.16.44:80/jasperserver/services/repository"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NSPACK"/>
+	<parameter name="paramload_id" class="java.lang.Integer"/>
+	<parameter name="paramcommodity" class="java.lang.String"/>
+	<parameter name="parammarketing_variety" class="java.lang.String"/>
+	<parameter name="parammark" class="java.lang.String"/>
+	<parameter name="parambasic_pack" class="java.lang.String"/>
+	<parameter name="paramsize_ref" class="java.lang.String"/>
+	<parameter name="paramgrade" class="java.lang.String"/>
+	<parameter name="parampacked_tm_group" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT vw_pallet_sequence_flat.pallet_number,
+vw_pallet_sequence_flat.location,
+ceiling(vw_pallet_sequence_flat.inspection_age)::int inspection_age
+from  public.vw_pallet_sequence_flat where vw_pallet_sequence_flat.load_id= $P{paramload_id} and 
+vw_pallet_sequence_flat.commodity= $P{paramcommodity}  and 
+vw_pallet_sequence_flat.marketing_variety= $P{parammarketing_variety}  and 
+vw_pallet_sequence_flat.mark= $P{parammark}  and 
+vw_pallet_sequence_flat.basic_pack= $P{parambasic_pack}  and 
+vw_pallet_sequence_flat.size_ref= $P{paramsize_ref}  and 
+vw_pallet_sequence_flat.grade= $P{paramgrade}  and 
+vw_pallet_sequence_flat.packed_tm_group= $P{parampacked_tm_group}]]>
+	</queryString>
+	<field name="pallet_number" class="java.lang.String"/>
+	<field name="location" class="java.lang.String"/>
+	<field name="inspection_age" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="12" splitType="Stretch">
+			<textField>
+				<reportElement x="141" y="0" width="122" height="12" uuid="7882e60d-a0be-42af-8421-b21a1b176e6e"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pallet_number}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="5" y="0" width="97" height="12" uuid="6b01930b-71ac-4e7e-8e9b-2acab2da4cb9"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{location}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="102" y="0" width="23" height="12" uuid="1918c503-7845-492c-89e6-1142b721ee97">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{inspection_age}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
