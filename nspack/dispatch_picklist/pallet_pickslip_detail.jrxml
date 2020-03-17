@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-03-15T19:08:48 -->
+<!-- 2020-03-17T10:33:57 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_pallet_detail" language="groovy" columnCount="2" printOrder="Horizontal" pageWidth="555" pageHeight="802" columnWidth="277" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="57a0c595-5448-465f-8162-0e6517403bd3">
 	<property name="ireport.zoom" value="2.253944402704733"/>
 	<property name="ireport.x" value="0"/>
@@ -20,7 +20,7 @@
 	<queryString language="SQL">
 		<![CDATA[SELECT vw_pallet_sequence_flat.pallet_number,
 vw_pallet_sequence_flat.location,
-ceiling(vw_pallet_sequence_flat.inspection_age)::int inspection_age
+ceiling(vw_pallet_sequence_flat.inspection_age)::int inspection_age,gross_weight
 from  public.vw_pallet_sequence_flat where vw_pallet_sequence_flat.load_id= $P{paramload_id} and 
 vw_pallet_sequence_flat.commodity= $P{paramcommodity}  and 
 vw_pallet_sequence_flat.marketing_variety= $P{parammarketing_variety}  and 
@@ -33,13 +33,14 @@ vw_pallet_sequence_flat.packed_tm_group= $P{parampacked_tm_group}]]>
 	<field name="pallet_number" class="java.lang.String"/>
 	<field name="location" class="java.lang.String"/>
 	<field name="inspection_age" class="java.lang.Integer"/>
+	<field name="gross_weight" class="java.math.BigDecimal"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<detail>
 		<band height="12" splitType="Stretch">
 			<textField>
-				<reportElement x="141" y="0" width="122" height="12" uuid="7882e60d-a0be-42af-8421-b21a1b176e6e"/>
+				<reportElement x="155" y="0" width="122" height="12" uuid="7882e60d-a0be-42af-8421-b21a1b176e6e"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -61,6 +62,16 @@ vw_pallet_sequence_flat.packed_tm_group= $P{parampacked_tm_group}]]>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{inspection_age}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="127" y="0" width="26" height="12" uuid="b92122af-a87e-4a75-8ad1-2d93496df62c">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{gross_weight}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
