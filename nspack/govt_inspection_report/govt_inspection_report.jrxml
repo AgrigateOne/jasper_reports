@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2020-03-12T20:50:32 -->
+<!-- 2020-03-18T08:04:48 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gov_inspection_sheet" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b276ed72-36fe-4eb1-8898-57bb00d5eee1">
 	<property name="ireport.zoom" value="1.7524694974069621"/>
 	<property name="ireport.x" value="0"/>
@@ -35,7 +35,7 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
     shipped,
     in_stock,
     p.inspected,
-    reinspected,
+    p.reinspected,
     palletized,
     partially_palletized,
     allocated,
