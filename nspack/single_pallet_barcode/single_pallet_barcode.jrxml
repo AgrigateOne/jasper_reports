@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-03-18T20:53:38 -->
+<!-- 2020-03-19T11:38:30 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="single_pallet_barcode" language="groovy" printOrder="Horizontal" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c03660f7-c9f2-4f8e-b829-5211b31e0e7e">
 	<property name="ireport.zoom" value="4.0"/>
 	<property name="ireport.x" value="0"/>
@@ -20,7 +20,7 @@
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
 	<style name="Detail" fontName="Arial" fontSize="12"/>
 	<parameter name="paramPallet_number" class="java.lang.String"/>
-	<parameter name="paramRepacked_at" class="java.sql.Timestamp"/>
+	<parameter name="paramRepacked_at" class="java.sql.Date"/>
 	<queryString language="SQL">
 		<![CDATA[select pallet_number,created_at from pallets limit 1]]>
 	</queryString>
