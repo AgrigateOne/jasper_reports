@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-03-18T14:15:02 -->
+<!-- 2020-03-20T05:49:40 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gov_inspection_sheet" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b276ed72-36fe-4eb1-8898-57bb00d5eee1">
 	<property name="ireport.zoom" value="1.7524694974069621"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="46"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/first_intake"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Dunbrody_New_Framework"/>
 	<subDataset name="dataset1" uuid="c85ecac9-39da-4aaa-997f-4e9b10bcfb3c"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA["Users"]]></defaultValueExpression>
@@ -648,7 +648,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<text><![CDATA[Plts]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="385" y="13" width="30" height="13" uuid="6cb26be7-38a9-4b32-836e-2382c3ee4b1f">
+				<reportElement x="384" y="13" width="30" height="13" uuid="6cb26be7-38a9-4b32-836e-2382c3ee4b1f">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -672,7 +672,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<text><![CDATA[Base]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="355" y="13" width="30" height="13" uuid="867dea48-9e27-4564-a1aa-96612a046213"/>
+				<reportElement x="354" y="13" width="30" height="13" uuid="867dea48-9e27-4564-a1aa-96612a046213"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
@@ -696,7 +696,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<textFieldExpression><![CDATA[$F{consignment_note_number}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="420" y="0" width="30" height="26" uuid="6861c8a6-0c1a-4d63-a841-1552a3683f2d">
+				<reportElement x="414" y="0" width="43" height="26" uuid="6861c8a6-0c1a-4d63-a841-1552a3683f2d">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -715,7 +715,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="16" splitType="Stretch">
+		<band height="11" splitType="Stretch">
 			<textField>
 				<reportElement x="280" y="0" width="21" height="11" uuid="a87ae22d-9134-43d0-8703-72800411e360"/>
 				<textElement textAlignment="Center">
@@ -776,7 +776,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<textFieldExpression><![CDATA[$F{commodity}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="355" y="0" width="30" height="11" uuid="7277c671-32e6-45ae-87a8-47d2efbf9f57"/>
+				<reportElement x="354" y="0" width="30" height="11" uuid="7277c671-32e6-45ae-87a8-47d2efbf9f57"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
@@ -835,7 +835,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<textFieldExpression><![CDATA[$F{pallet_size}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="385" y="0" width="30" height="11" uuid="3f309a59-ca60-42ec-9a48-4ca1e76afe66">
+				<reportElement x="384" y="0" width="30" height="11" uuid="3f309a59-ca60-42ec-9a48-4ca1e76afe66">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
@@ -844,7 +844,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<textFieldExpression><![CDATA[$F{orchard}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="420" y="0" width="30" height="11" uuid="57ac9bce-5172-48cb-a60b-e2c034e9cab3">
+				<reportElement x="414" y="0" width="43" height="11" uuid="57ac9bce-5172-48cb-a60b-e2c034e9cab3">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
@@ -919,16 +919,16 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<text><![CDATA[Approved by]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="278" y="0" width="138" height="24" uuid="85bca30f-d438-422b-b3c2-3fab0a490723"/>
+				<reportElement x="281" y="0" width="135" height="24" uuid="85bca30f-d438-422b-b3c2-3fab0a490723"/>
 				<textElement verticalAlignment="Middle">
 					<font isItalic="false"/>
 				</textElement>
-				<text><![CDATA[Packhouse manager]]></text>
+				<text><![CDATA[Logistics]]></text>
 			</staticText>
 		</band>
 	</lastPageFooter>
 	<summary>
-		<band height="31" splitType="Stretch">
+		<band height="79" splitType="Stretch">
 			<textField>
 				<reportElement x="91" y="11" width="100" height="20" uuid="407070f1-c6bc-4af7-87d6-95725260bc5a"/>
 				<textElement textAlignment="Right"/>
@@ -946,6 +946,17 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<reportElement x="304" y="11" width="100" height="20" uuid="dad05585-7db3-4c6f-9a38-6c16a0f80e7e"/>
 				<textFieldExpression><![CDATA[$V{pallet_number_1}]]></textFieldExpression>
 			</textField>
+			<subreport>
+				<reportElement x="2" y="35" width="550" height="44" uuid="9dd7beb6-49f2-406a-a885-f1b6309fe9f2">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="subgovt_inspection_sheet_id">
+					<subreportParameterExpression><![CDATA[$P{govt_inspection_sheet_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["inspection_summary.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</summary>
 </jasperReport>
