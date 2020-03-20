@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2020-03-12T20:51:37 -->
+<!-- 2020-03-20T12:34:17 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="addendum" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="22c9f520-d5e9-4af2-ac4c-ad2be98d416a">
 	<property name="ireport.zoom" value="1.7524694974069637"/>
 	<property name="ireport.x" value="0"/>
@@ -188,7 +188,7 @@ FROM
 		<variableExpression><![CDATA[$F{pallet_number}]]></variableExpression>
 	</variable>
 	<variable name="carton_fruit_nett_mass_1" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{nett_weight}]]></variableExpression>
+		<variableExpression><![CDATA[$F{sequence_nett_weight}]]></variableExpression>
 	</variable>
 	<variable name="puc1" class="java.lang.String" resetType="Group" resetGroup="GRP_load_order_id" calculation="Count">
 		<variableExpression><![CDATA[$F{puc}]]></variableExpression>
@@ -231,7 +231,7 @@ FROM
 		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
 	</variable>
 	<variable name="carton_fruit_nett_mass1" class="java.lang.Double" resetType="Group" resetGroup="GRP_load_order_id" calculation="Sum">
-		<variableExpression><![CDATA[$F{nett_weight}]]></variableExpression>
+		<variableExpression><![CDATA[$F{sequence_nett_weight}]]></variableExpression>
 	</variable>
 	<group name="GRP_load_order_id">
 		<groupExpression><![CDATA[$F{load_id}]]></groupExpression>
@@ -815,7 +815,7 @@ FROM
 						<font size="7"/>
 						<paragraph rightIndent="5"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{nett_weight}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{sequence_nett_weight}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="509" y="0" width="89" height="10" uuid="f03d9c19-f5ba-4f71-af0c-5861271c4d29"/>
@@ -1621,7 +1621,7 @@ FROM
 					<font size="7"/>
 					<paragraph rightIndent="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{nett_weight}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{sequence_nett_weight}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="404" y="0" width="60" height="10" uuid="f3cdc6cc-38a2-420f-8967-3b154f37e583"/>
