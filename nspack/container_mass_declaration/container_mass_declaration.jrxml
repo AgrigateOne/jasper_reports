@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-01-09T19:05:20 -->
+<!-- 2020-03-22T17:46:36 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="container_mass_declaration" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="073de135-c25b-477c-8344-6e93c431bb70">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NSPACK"/>
 	<parameter name="load_container_id" class="java.lang.Integer"/>
@@ -8,6 +8,9 @@
 	<queryString language="SQL">
 		<![CDATA[SELECT 
 fn_party_role_name((SELECT pr.id
+FROM public.party_roles pr
+WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'EXPORTER') LIMIT 1)) AS exporter
+,fn_party_role_name((SELECT pr.id
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1)) AS implementation_owner_name
 ,(SELECT pr.id
@@ -63,6 +66,7 @@ FROM
 	<field name="vessel" class="java.lang.String"/>
 	<field name="voyage" class="java.lang.String"/>
 	<field name="voyage_number" class="java.lang.String"/>
+	<field name="exporter" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -252,7 +256,7 @@ FROM
 			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement x="0" y="40" width="230" height="30" uuid="9caeb34a-b7fc-44c3-b55a-9b34aed552c5"/>
-				<textFieldExpression><![CDATA[$F{implementation_owner_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{exporter}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="302" width="100" height="30" uuid="ef07840b-9259-4b53-ad7b-ab2e73a8a978"/>
