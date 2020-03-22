@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-03-20T05:49:40 -->
+<!-- 2020-03-22T17:41:28 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gov_inspection_sheet" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b276ed72-36fe-4eb1-8898-57bb00d5eee1">
 	<property name="ireport.zoom" value="1.7524694974069621"/>
 	<property name="ireport.x" value="0"/>
@@ -17,6 +17,9 @@
 		<defaultValueExpression><![CDATA[$P{MyBoolean}.booleanValue() ? "govt_inspection_pallets.passed=true" : "govt_inspection_pallets.passed=false"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="govt_inspection_sheet_id" class="java.lang.Integer"/>
+	<parameter name="signee_caption" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Logistics"]]></defaultValueExpression>
+	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT
  case 	when not (govt_inspection_pallets.passed) then    p.pallet_id else null end fail_pallet_id,
@@ -904,27 +907,33 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<reportElement x="416" y="25" width="139" height="35" uuid="de793fd6-0080-4063-8793-3abca56533d8"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="4" y="25" width="134" height="35" uuid="6c7bdde1-9a5e-4ab2-b6dd-67822385974f"/>
-				<textElement verticalAlignment="Middle"/>
+				<reportElement x="0" y="25" width="138" height="35" uuid="6c7bdde1-9a5e-4ab2-b6dd-67822385974f"/>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="4"/>
+				</textElement>
 				<text><![CDATA[Signature]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="281" y="25" width="106" height="35" uuid="23eca3c7-030b-42d0-8621-2c3eb6e193e0"/>
-				<textElement verticalAlignment="Middle"/>
+				<reportElement x="278" y="25" width="138" height="35" uuid="23eca3c7-030b-42d0-8621-2c3eb6e193e0"/>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="4"/>
+				</textElement>
 				<text><![CDATA[Signature]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="4" y="0" width="134" height="24" uuid="8e0cb925-2114-4b9e-9a37-822562c20f8e"/>
-				<textElement verticalAlignment="Middle"/>
+				<reportElement x="0" y="0" width="138" height="24" uuid="8e0cb925-2114-4b9e-9a37-822562c20f8e"/>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="4"/>
+				</textElement>
 				<text><![CDATA[Approved by]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="281" y="0" width="135" height="24" uuid="85bca30f-d438-422b-b3c2-3fab0a490723"/>
+			<textField>
+				<reportElement x="278" y="0" width="138" height="24" uuid="513e8cf4-89ab-4883-af31-fcf97d4bad4d"/>
 				<textElement verticalAlignment="Middle">
-					<font isItalic="false"/>
+					<paragraph leftIndent="4"/>
 				</textElement>
-				<text><![CDATA[Logistics]]></text>
-			</staticText>
+				<textFieldExpression><![CDATA[$P{signee_caption}]]></textFieldExpression>
+			</textField>
 		</band>
 	</lastPageFooter>
 	<summary>
