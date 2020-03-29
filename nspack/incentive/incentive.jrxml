@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-03-22T18:35:17 -->
+<!-- 2020-03-29T17:32:21 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_Dunbrody_NSPACK"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NSPACK"/>
 	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
 	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#FFFFFF" fontName="Arial" fontSize="12" isBold="true"/>
@@ -41,14 +41,21 @@
         sum(fruit_actual_counts_for_packs.actual_count_for_pack) total_fruit,
         contract_workers.id AS cw_id,
         COALESCE(shift_exceptions.running_hours, shifts.running_hours, ((EXTRACT(EPOCH FROM end_date_time) - EXTRACT(EPOCH FROM start_date_time)) / 60 / 60)) AS running_hours,
-         wage_levels.wage_level
+         wage_levels.wage_level,
+         packing_methods.packing_method_code ,
+         packing_methods.actual_count_reduction_factor,
+         1500 as require_pack_hour,
+ 9 as std_hours_per_day,
+ 1.1 as incentive_factor
+
     FROM
         cartons
     LEFT JOIN carton_labels ON carton_labels.id = cartons.carton_label_id
     LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = cartons.fruit_actual_counts_for_pack_id
     LEFT JOIN public.shifts ON carton_labels.created_at BETWEEN shifts.start_date_time
         AND shifts.end_date_time
-    LEFT JOIN public.shift_types ON shift_types.id = shifts.shift_type_id
+    LEFT JOIN packing_methods  on cartons.packing_method_id=packing_methods.id
+       LEFT JOIN public.shift_types ON shift_types.id = shifts.shift_type_id
         AND cartons.production_line_id = shift_types.plant_resource_id
     LEFT JOIN public.contract_workers ON (cartons.contract_worker_id = contract_workers.id)
     LEFT JOIN public.shift_exceptions ON (contract_workers.id = shift_exceptions.contract_worker_id)
@@ -65,28 +72,48 @@
         wage_levels.description,
         contract_workers.id,
         COALESCE(shift_exceptions.running_hours, shifts.running_hours, ((EXTRACT(EPOCH FROM end_date_time) - EXTRACT(EPOCH FROM start_date_time)) / 60 / 60)),
-        shifts.start_date_time
+        shifts.start_date_time,
+        packing_methods.packing_method_code ,
+        packing_methods.actual_count_reduction_factor
+
     ORDER BY
         contract_workers.id DESC,
         shifts.start_date_time
-)
+),calc_sql as (
 SELECT
-    *,
-    '' AS packing_method,
-    (base_sql.total_fruit / base_sql.running_hours)::int AS fruitphour,
-    CAST(wage_level / 9 / 1500 * 1000 * 1.1 AS dec (11, 3)) AS rp1000f,
-    CAST(
-        CASE WHEN CAST((base_sql.total_fruit - base_sql.running_hours * 1500) AS dec (11, 3)) / 1000 * base_sql.wage_level / 9 / 1500 * 1000 * 1.1 > 0 THEN
-            CAST((base_sql.total_fruit - base_sql.running_hours * 1500) AS dec (11, 3)) / 1000 * base_sql.wage_level / 9 / 1500 * 1000 * 1.1
-    ELSE
-        0
-        END AS dec (11, 3)) AS incentive
-FROM
-    base_sql;]]>
+ base_sql.start_date_time,
+ (base_sql.total_fruit / base_sql.running_hours)::int AS fruitphour,
+ CAST(base_sql.wage_level / base_sql.std_hours_per_day / base_sql.require_pack_hour *  base_sql.incentive_factor AS dec (11, 3)) AS rp1000f,
+ base_sql.end_date_time,
+ base_sql.cw_id,
+ base_sql.total_fruit,
+ base_sql.running_hours,
+ base_sql.wage_level, 
+ base_sql.wage_level_description,
+ base_sql.party_name,
+ base_sql.personnel_barcode_number,
+ base_sql.total_cartons,
+ base_sql.std_hours_per_day,
+ base_sql.packing_method_code,
+ base_sql.actual_count_reduction_factor,
+ base_sql.incentive_factor,
+ base_sql.require_pack_hour,
+ shift_type_code,
+ sum(base_sql.total_fruit*actual_count_reduction_factor) over (partition by base_sql.cw_id) as reduced_fruit_for_work_day
+ ,base_sql.require_pack_hour* base_sql.running_hours require_for_work_day
+ FROM base_sql)
+,calc_sql2 as(
+select calc_sql.*,
+calc_sql.wage_level/calc_sql.std_hours_per_day/calc_sql.require_pack_hour*calc_sql.incentive_factor*(calc_sql.reduced_fruit_for_work_day-calc_sql.require_for_work_day ) incentive
+
+ from calc_sql order by incentive desc
+)
+select cw_id,	total_fruit,	running_hours,	wage_level	,wage_level_description,	party_name,	personnel_barcode_number	,total_cartons,	std_hours_per_day	,packing_method_code,	actual_count_reduction_factor,
+	incentive_factor,	require_pack_hour,	reduced_fruit_for_work_day,	require_for_work_day,case when incentive<0 then 0 else incentive end incentive  
+ ,start_date_time,fruitphour,rp1000f,shift_type_code,end_date_time from calc_sql2;]]>
 	</queryString>
 	<field name="party_name" class="java.lang.String"/>
 	<field name="start_date_time" class="java.sql.Timestamp"/>
-	<field name="end_date_time" class="java.sql.Timestamp"/>
 	<field name="running_hours" class="java.lang.Double"/>
 	<field name="wage_level" class="java.math.BigDecimal"/>
 	<field name="wage_level_description" class="java.lang.String"/>
@@ -94,13 +121,18 @@ FROM
 	<field name="total_fruit" class="java.lang.Long"/>
 	<field name="personnel_barcode_number" class="java.lang.String"/>
 	<field name="fruitphour" class="java.lang.Integer"/>
-	<field name="incentive" class="java.math.BigDecimal"/>
+	<field name="incentive" class="java.lang.Double"/>
 	<field name="rp1000f" class="java.math.BigDecimal"/>
-	<field name="packing_method" class="java.lang.String"/>
-	<field name="shift_type_id" class="java.lang.Integer"/>
 	<field name="cw_id" class="java.lang.Integer"/>
 	<field name="shift_type_code" class="java.lang.String"/>
-	<field name="shift_id" class="java.lang.Integer"/>
+	<field name="packing_method_code" class="java.lang.String"/>
+	<field name="actual_count_reduction_factor" class="java.math.BigDecimal"/>
+	<field name="std_hours_per_day" class="java.lang.Integer"/>
+	<field name="incentive_factor" class="java.math.BigDecimal"/>
+	<field name="require_pack_hour" class="java.lang.Integer"/>
+	<field name="reduced_fruit_for_work_day" class="java.math.BigDecimal"/>
+	<field name="require_for_work_day" class="java.lang.Double"/>
+	<field name="end_date_time" class="java.sql.Timestamp"/>
 	<variable name="total_cartons_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{total_cartons}]]></variableExpression>
 	</variable>
@@ -174,11 +206,6 @@ FROM
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Total Cartons]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="623" y="89" width="60" height="30" uuid="809c8fa2-0da3-4b0e-934d-56e4de044029"/>
-				<textElement textAlignment="Right"/>
-				<text><![CDATA[Rate per 1000 Fruit]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="451" y="89" width="78" height="30" uuid="7a312de7-3db2-4b5a-9789-5078a2896971"/>
@@ -311,11 +338,6 @@ FROM
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{fruitphour}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="623" y="0" width="60" height="15" uuid="62b43e32-0db5-4e04-9edb-88966c569168"/>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{rp1000f}]]></textFieldExpression>
-			</textField>
 			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
 				<reportElement x="683" y="0" width="53" height="15" uuid="89b64826-d22a-443a-8bec-94b00adb10c6"/>
 				<textElement textAlignment="Right"/>
@@ -331,7 +353,7 @@ FROM
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{packing_method}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{packing_method_code}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
