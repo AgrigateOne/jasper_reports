@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2020-04-07T09:35:06 -->
+<!-- 2020-04-07T09:41:48 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive_count" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="0c54595e-180f-487d-9121-9abe94ba96a4">
 	<property name="ireport.zoom" value="1.53947435469212"/>
 	<property name="ireport.x" value="0"/>
@@ -174,7 +174,7 @@ FROM
 				<textField>
 					<reportElement x="710" y="0" width="49" height="13" uuid="6b701064-a16e-4fe0-844f-5e3b82621573"/>
 					<textElement textAlignment="Right"/>
-					<textFieldExpression><![CDATA[$V{total_fruit_2}/$F{running_hours}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[IF($F{running_hours} == 0,0,$V{total_fruit_2}/$F{running_hours})]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0.00;#,##0.00-">
 					<reportElement x="660" y="0" width="42" height="13" uuid="b0030198-f6e4-464d-a3de-d3d735edf739"/>
