@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-03-16T14:11:21 -->
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
+<!-- 2020-04-07T09:35:06 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive_count" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="0c54595e-180f-487d-9121-9abe94ba96a4">
 	<property name="ireport.zoom" value="1.53947435469212"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_Dunbrody_NSPACK"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack.xml"/>
 	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
 	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#FFFFFF" fontName="Arial" fontSize="12" isBold="true"/>
@@ -82,7 +82,11 @@
 SELECT
  *,
     '' AS packing_method,
-    base_sql.total_fruit / base_sql.running_hours AS fruitphour,
+     CASE WHEN base_sql.running_hours = 0 THEN
+     0::int
+   ELSE
+     (base_sql.total_fruit / base_sql.running_hours)::int
+   END AS fruitphour,
     CAST(wage_level / 9 / 1500 * 1000 * 1.1 AS dec (11, 3)) AS rp1000f,
     CAST(
         CASE WHEN CAST((base_sql.total_fruit - base_sql.running_hours * 1500) AS dec (11, 3)) / 1000 * base_sql.wage_level / 9 / 1500 * 1000 * 1.1 > 0 THEN
