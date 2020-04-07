@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2020-04-07T09:21:54 -->
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
+<!-- 2020-04-07T17:36:59 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Dunbrody_New_Framework"/>
 	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
 	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#FFFFFF" fontName="Arial" fontSize="12" isBold="true"/>
@@ -24,23 +24,23 @@
         contract_workers.personnel_number AS personnel_barcode_number,
         --cartons.id carton_id,
         --cartons.carton_label_id,
-        shifts.id AS shift_id,
+        s.id AS shift_id,
         --cartons.contract_worker_id,
         contract_workers.first_name || ' ' || contract_workers.surname AS party_name,
         --shift_exceptions.id AS shift_exception_id,
-        shifts.start_date_time,
-        shifts.end_date_time,
+        s.start_date_time,
+        s.end_date_time,
         --carton_labels.created_at,
         day_night_or_custom as shift_type_code,
-        shifts.shift_type_id,
+        s.shift_type_id,
         --cartons.packhouse_resource_id AS carton_packhouse_resource,
         --shift_types.plant_resource_id,
-        --shifts.running_hours AS shift_running_hours,
+        --s.running_hours AS shift_running_hours,
         --shift_exceptions.running_hours AS shift_exception_running_hours,
         count(cartons.id) AS total_cartons,
         sum(fruit_actual_counts_for_packs.actual_count_for_pack) total_fruit,
         contract_workers.id AS cw_id,
-        COALESCE(shift_exceptions.running_hours, shifts.running_hours, ((EXTRACT(EPOCH FROM end_date_time) - EXTRACT(EPOCH FROM start_date_time)) / 60 / 60)) AS running_hours,
+        COALESCE(shift_exceptions.running_hours, s.running_hours, ((EXTRACT(EPOCH FROM end_date_time) - EXTRACT(EPOCH FROM start_date_time)) / 60 / 60)) AS running_hours,
          wage_levels.wage_level,
          packing_methods.packing_method_code ,
          packing_methods.actual_count_reduction_factor,
@@ -52,33 +52,31 @@
         cartons
     LEFT JOIN carton_labels ON carton_labels.id = cartons.carton_label_id
     LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = cartons.fruit_actual_counts_for_pack_id
-    LEFT JOIN public.shifts ON carton_labels.created_at BETWEEN shifts.start_date_time
-        AND shifts.end_date_time
+   LEFT join ( select shifts.end_date_time,shifts.start_date_time,plant_resource_id,shifts.shift_type_id ,shifts.id,day_night_or_custom,shifts.running_hours from public.shifts join shift_types on shifts.shift_type_id =shift_types.id 
+    ) as s ON carton_labels.created_at BETWEEN s.start_date_time AND s.end_date_time and s.plant_resource_id=carton_labels.production_line_id
     LEFT JOIN packing_methods  on cartons.packing_method_id=packing_methods.id
-       LEFT JOIN public.shift_types ON shift_types.id = shifts.shift_type_id
-        AND cartons.production_line_id = shift_types.plant_resource_id
     LEFT JOIN public.contract_workers ON (cartons.contract_worker_id = contract_workers.id)
     LEFT JOIN public.shift_exceptions ON (contract_workers.id = shift_exceptions.contract_worker_id)
-        AND (shifts.id = shift_exceptions.shift_id)
+        AND (s.id = shift_exceptions.shift_id)
     LEFT JOIN wage_levels ON contract_workers.wage_level_id = wage_levels.id
-   where shifts.id=$P{shift_id}
+   where s.id=$P{shift_id}
      GROUP BY
-        shifts.id,
+        s.id,
         day_night_or_custom,
-        shifts.shift_type_id,
-        shifts.start_date_time,
-        shifts.end_date_time,
+        s.shift_type_id,
+        s.start_date_time,
+        s.end_date_time,
         wage_levels.wage_level,
         wage_levels.description,
         contract_workers.id,
-        COALESCE(shift_exceptions.running_hours, shifts.running_hours, ((EXTRACT(EPOCH FROM end_date_time) - EXTRACT(EPOCH FROM start_date_time)) / 60 / 60)),
-        shifts.start_date_time,
+        COALESCE(shift_exceptions.running_hours, s.running_hours, ((EXTRACT(EPOCH FROM end_date_time) - EXTRACT(EPOCH FROM start_date_time)) / 60 / 60)),
+        s.start_date_time,
         packing_methods.packing_method_code ,
         packing_methods.actual_count_reduction_factor
 
     ORDER BY
         contract_workers.id DESC,
-        shifts.start_date_time
+        s.start_date_time
 ),calc_sql as (
 SELECT
  base_sql.start_date_time,
