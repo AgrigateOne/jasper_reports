@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2019-12-28T08:44:11 -->
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
+<!-- 2020-04-11T16:50:14 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_pallet_detail" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="57a0c595-5448-465f-8162-0e6517403bd3">
 	<property name="ireport.zoom" value="2.253944402704733"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/dispatch_consignment"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44:80/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="habata"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Dunbrody_New_Framework"/>
 	<parameter name="load_id" class="java.lang.Integer"/>
 	<parameter name="scartons_equals_pallets" class="java.lang.Boolean"/>
 	<queryString language="SQL">
@@ -38,6 +38,7 @@
  CAST( pallets.nett_weight AS numeric(7,2))
 ,pallets.gross_weight
 ,(select sum(gross_weight) from pallets p where p.load_id=pallets.load_id) load_gross_weight
+,pallet_sequences.nett_weight as seq_nett_weight
 FROM pallets
 JOIN pallet_sequences ON pallet_sequences.pallet_id = pallets.id
 LEFT JOIN cultivar_groups ON cultivar_groups.id = pallet_sequences.cultivar_group_id
@@ -95,6 +96,7 @@ ORDER BY
 	<field name="nett_weight" class="java.math.BigDecimal"/>
 	<field name="gross_weight" class="java.math.BigDecimal"/>
 	<field name="load_gross_weight" class="java.math.BigDecimal"/>
+	<field name="seq_nett_weight" class="java.math.BigDecimal"/>
 	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{ctn_qty}]]></variableExpression>
 	</variable>
@@ -329,7 +331,7 @@ ORDER BY
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{nett_weight}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{seq_nett_weight}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="355" y="0" width="35" height="12" uuid="b17b0077-a9f2-4801-9fda-08d1e27a795c"/>
