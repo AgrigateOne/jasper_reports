@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-03-20T05:43:12 -->
+<!-- 2020-04-17T10:43:10 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="summary" language="groovy" pageWidth="350" pageHeight="802" columnWidth="350" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cba47b92-bbda-40d5-b5d7-7f12c9f0b664">
 	<property name="ireport.zoom" value="3.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_Dunbrody_NSPACK"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_NSPACK_UD"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
@@ -18,6 +18,12 @@
 	<parameter name="subgovt_inspection_sheet_id" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
 	</parameter>
+	<parameter name="sQueryCondition" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{smyboolean}.booleanValue() ? "govt_inspection_passed=true" : "govt_inspection_passed=false"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="smyboolean" class="java.lang.Boolean">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT
  p.commodity,
@@ -27,16 +33,18 @@ p.size_ref,
 p.grade,
 p.actual_count,
 sum(p.carton_quantity) as carton_quantity,
-count(distinct p.pallet_id) as plt_qty
+count(distinct p.pallet_id) as plt_qty,govt_inspection_passed
 FROM
     public.vw_pallet_sequence_flat p
 WHERE  p.govt_inspection_sheet_id= $P{subgovt_inspection_sheet_id}
+  AND (  case when  $P{smyboolean} =true then govt_inspection_passed=true 
+                when  $P{smyboolean} =false then govt_inspection_passed=false end )
 group by  p.commodity,
  p.marketing_variety,
 p.size_ref,
 p.actual_count,
 p.std_pack ,
-p.grade]]>
+p.grade,govt_inspection_passed]]>
 	</queryString>
 	<field name="commodity" class="java.lang.String"/>
 	<field name="marketing_variety" class="java.lang.String"/>
@@ -46,6 +54,7 @@ p.grade]]>
 	<field name="carton_quantity" class="java.lang.Long"/>
 	<field name="plt_qty" class="java.lang.Long"/>
 	<field name="actual_count" class="java.lang.Integer"/>
+	<field name="govt_inspection_passed" class="java.lang.Boolean"/>
 	<variable name="plt_qty_1" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{plt_qty}]]></variableExpression>
 	</variable>
@@ -56,7 +65,7 @@ p.grade]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="31" splitType="Stretch">
+		<band height="30" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="10" width="100" height="20" uuid="5540cf67-45c7-4210-b9a0-39498f2ccbeb"/>
 				<textElement>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-03-22T17:41:28 -->
+<!-- 2020-04-17T10:43:21 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gov_inspection_sheet" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b276ed72-36fe-4eb1-8898-57bb00d5eee1">
 	<property name="ireport.zoom" value="1.7524694974069621"/>
 	<property name="ireport.x" value="0"/>
@@ -165,6 +165,7 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 		else '' end consignment_note_number
 ,govt_inspection_sheets.inspection_billing_party_role_id
 ,govt_inspection_sheets.exporter_party_role_id
+,inspection_failure_reasons.failure_reason 
 FROM
     public.vw_pallet_sequence_flat p
     LEFT JOIN govt_inspection_pallets ON govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
@@ -174,7 +175,7 @@ LEFT JOIN destination_regions ON destination_regions.id = destination_countries.
 left join inspectors on inspectors.id= govt_inspection_sheets.inspector_id
 left join party_roles on inspectors.inspector_party_role_id= party_roles.id
 left join parties on party_roles.party_id=parties.id
-
+left join inspection_failure_reasons on inspection_failure_reasons.id=govt_inspection_pallets.failure_reason_id 
 
 WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
   AND $P!{QueryCondition}]]>
@@ -318,6 +319,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 	<field name="iso_country_code" class="java.lang.String"/>
 	<field name="destination_region_name" class="java.lang.String"/>
 	<field name="phyto_data" class="java.lang.String"/>
+	<field name="failure_reason" class="java.lang.String"/>
 	<sortField name="pallet_number"/>
 	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
@@ -334,6 +336,28 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 	</variable>
 	<group name="TM">
 		<groupExpression><![CDATA[$F{packed_tm_group}]]></groupExpression>
+	</group>
+	<group name="fail_reason">
+		<groupExpression><![CDATA[$F{failure_reason}]]></groupExpression>
+		<groupHeader>
+			<band height="13">
+				<printWhenExpression><![CDATA[new Boolean($F{failure_reason} != null)]]></printWhenExpression>
+				<textField>
+					<reportElement x="57" y="0" width="195" height="13" uuid="8859159c-b37a-4019-b974-26306c5edcb1">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$F{failure_reason}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="1" y="0" width="56" height="13" uuid="56df44c9-4a50-4e8c-9b3d-7b7735d147b0"/>
+					<textElement>
+						<font size="10"/>
+					</textElement>
+					<text><![CDATA[Reason:]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
 	</group>
 	<background>
 		<band splitType="Stretch"/>
@@ -554,7 +578,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 		</band>
 	</title>
 	<pageHeader>
-		<band height="31" splitType="Stretch">
+		<band height="26" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="13" width="24" height="13" uuid="03391b14-b34c-48e4-88ad-b094e06aa174"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -644,14 +668,14 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<text><![CDATA[Farm]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="302" y="13" width="26" height="13" uuid="4238b2dd-5c08-4ce9-8433-6ce9ab06b0e8"/>
+				<reportElement x="301" y="13" width="26" height="13" uuid="4238b2dd-5c08-4ce9-8433-6ce9ab06b0e8"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Plts]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="384" y="13" width="30" height="13" uuid="6cb26be7-38a9-4b32-836e-2382c3ee4b1f">
+				<reportElement x="383" y="13" width="30" height="13" uuid="6cb26be7-38a9-4b32-836e-2382c3ee4b1f">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -668,14 +692,14 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<text><![CDATA[Barcode]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="328" y="13" width="26" height="13" uuid="e93064c5-0d37-4608-93d1-8e96113273f4"/>
+				<reportElement x="327" y="13" width="26" height="13" uuid="e93064c5-0d37-4608-93d1-8e96113273f4"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Base]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="354" y="13" width="30" height="13" uuid="867dea48-9e27-4564-a1aa-96612a046213"/>
+				<reportElement x="353" y="13" width="30" height="13" uuid="867dea48-9e27-4564-a1aa-96612a046213"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
@@ -699,7 +723,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<textFieldExpression><![CDATA[$F{consignment_note_number}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="414" y="0" width="43" height="26" uuid="6861c8a6-0c1a-4d63-a841-1552a3683f2d">
+				<reportElement x="413" y="0" width="44" height="26" uuid="6861c8a6-0c1a-4d63-a841-1552a3683f2d">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -758,7 +782,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<textFieldExpression><![CDATA[$F{marketing_variety}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="328" y="0" width="26" height="11" uuid="b6a1a1d5-1c55-45f4-a80b-11c2e262fe98"/>
+				<reportElement x="327" y="0" width="26" height="11" uuid="b6a1a1d5-1c55-45f4-a80b-11c2e262fe98"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
@@ -779,7 +803,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<textFieldExpression><![CDATA[$F{commodity}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="354" y="0" width="30" height="11" uuid="7277c671-32e6-45ae-87a8-47d2efbf9f57"/>
+				<reportElement x="353" y="0" width="30" height="11" uuid="7277c671-32e6-45ae-87a8-47d2efbf9f57"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
@@ -824,21 +848,21 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<textFieldExpression><![CDATA[$F{mark}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="250" y="0" width="31" height="11" uuid="4f86a9d9-6c70-4005-8b40-f96b9d7b1d34"/>
+				<reportElement x="250" y="0" width="30" height="11" uuid="4f86a9d9-6c70-4005-8b40-f96b9d7b1d34"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{puc}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="302" y="0" width="26" height="11" uuid="a3bfe17f-f5d6-4afc-98d8-87fbc10aff91"/>
+				<reportElement x="301" y="0" width="26" height="11" uuid="a3bfe17f-f5d6-4afc-98d8-87fbc10aff91"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{pallet_size}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="384" y="0" width="30" height="11" uuid="3f309a59-ca60-42ec-9a48-4ca1e76afe66">
+				<reportElement x="383" y="0" width="30" height="11" uuid="3f309a59-ca60-42ec-9a48-4ca1e76afe66">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
@@ -847,7 +871,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<textFieldExpression><![CDATA[$F{orchard}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="414" y="0" width="43" height="11" uuid="57ac9bce-5172-48cb-a60b-e2c034e9cab3">
+				<reportElement x="413" y="0" width="44" height="11" uuid="57ac9bce-5172-48cb-a60b-e2c034e9cab3">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
@@ -962,6 +986,9 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				</reportElement>
 				<subreportParameter name="subgovt_inspection_sheet_id">
 					<subreportParameterExpression><![CDATA[$P{govt_inspection_sheet_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="smyboolean">
+					<subreportParameterExpression><![CDATA[$P{MyBoolean}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["inspection_summary.jasper"]]></subreportExpression>
