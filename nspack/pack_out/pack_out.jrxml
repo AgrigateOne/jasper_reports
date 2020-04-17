@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2020-03-12T17:10:32 -->
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
+<!-- 2020-04-17T11:56:10 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pack_out" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" uuid="c08c8ed1-c3fa-4b77-b7f2-d6e11642b1b0">
 	<property name="ireport.zoom" value="5.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Dunbrody_New_Framework"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_NSPACK_UD"/>
 	<parameter name="production_run_id" class="java.lang.Integer"/>
 	<parameter name="carton_or_bin" class="java.lang.String">
 		<defaultValueExpression><![CDATA[Carton]]></defaultValueExpression>
@@ -236,7 +236,8 @@ GROUP BY
 			</textField>
 			<textField pattern="#,##0.00 %">
 				<reportElement x="153" y="111" width="66" height="13" uuid="e04886f4-8a5e-4cc7-a1cc-bad547dc5256"/>
-				<textFieldExpression><![CDATA[($P{use_packed_weight} ? $F{total_packed_weight} : $F{total_pallet_weight})/$F{total_bin_weight}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($P{use_derived_weight} ? $F{total_run_derived_weight}:
+($P{use_packed_weight} ? $F{total_packed_weight} : $F{total_pallet_weight}))/$F{total_bin_weight}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0">
 				<reportElement x="87" y="78" width="41" height="13" uuid="836a75a2-6604-4036-be70-19d53c1c1aaf"/>
@@ -260,7 +261,9 @@ GROUP BY
 			</textField>
 			<textField pattern="#,##0.00">
 				<reportElement x="73" y="111" width="80" height="13" uuid="422f92dc-5235-42e6-8dcf-8b14fd4b2e84"/>
-				<textFieldExpression><![CDATA[$P{use_packed_weight} ? $F{total_packed_weight} : $F{total_pallet_weight}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{use_derived_weight} ? $F{total_run_derived_weight}:
+
+($P{use_packed_weight} ? $F{total_packed_weight} : $F{total_pallet_weight})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="262" y="111" width="35" height="13" uuid="d281a8d2-329f-40b7-a4d6-9e05395a2dd2"/>
@@ -366,7 +369,7 @@ GROUP BY
 			<textField pattern="#,##0.00 %" isBlankWhenNull="true">
 				<reportElement x="208" y="0" width="53" height="13" uuid="33864a0a-6881-491b-a63a-36e534326f85"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{nett_weight}/$F{total_bin_weight}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($P{use_derived_weight} ?$F{derived_nett_weight} : $F{nett_weight})/$F{total_bin_weight}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
