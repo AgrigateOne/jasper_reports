@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-03-12T10:29:55 -->
+<!-- 2020-04-24T14:35:12 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pack_input_del_ctn" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b6fb5972-61c1-4d79-a065-fdacc2bcc4a7">
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="115"/>
@@ -17,7 +17,7 @@
  rmt_bins.production_run_tipped_id,
   farms.description as farm_description,
 public.plant_resources.plant_resource_code,
-  cultivars.cultivar_name,
+   coalesce(cultivar_groups.cultivar_group_code, string_agg(distinct cultivars.cultivar_name,',' ))cultivar_name ,
 date_part('week'::text, public.production_runs.started_at) AS pack_week,
   public.production_runs.started_at AS date_packed,(
 select sum(nett_weight) output_weight from
@@ -25,7 +25,8 @@ select sum(nett_weight) output_weight from
 cast(  sum(standard_product_weights.nett_weight )as dec(9,2)) nett_weight
 FROM
  public.cartons 
-     LEFT JOIN cultivars ON cultivars.id = cartons.cultivar_id
+     LEFT JOIN cultivar_groups ON cultivar_groups.id = cartons.cultivar_group_id
+ LEFT JOIN cultivars ON cultivars.id = cartons.cultivar_id
      LEFT JOIN commodities ON commodities.id = cultivars.commodity_id
  left  JOIN public.production_runs b ON (cartons.production_run_id = b.id)
  LEFT  JOIN public.standard_pack_codes on standard_pack_codes.id=cartons.standard_pack_code_id
@@ -64,8 +65,10 @@ GROUP BY
  rmt_bins.production_run_tipped_id,
   farms.description,
 public.plant_resources.id,
-  cultivars.cultivar_name,
-  public.production_runs.started_at;]]>
+cultivar_groups.cultivar_group_code,
+  public.production_runs.started_at;
+  
+]]>
 	</queryString>
 	<field name="weight" class="java.math.BigDecimal"/>
 	<field name="bin_qty" class="java.lang.Long"/>
@@ -162,7 +165,7 @@ public.plant_resources.id,
 				<textFieldExpression><![CDATA[$F{weight}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="133" y="78" width="41" height="13" uuid="3f72a969-4d0a-4d7b-b5cb-0a9278665963"/>
+				<reportElement x="133" y="78" width="67" height="13" uuid="3f72a969-4d0a-4d7b-b5cb-0a9278665963"/>
 				<textFieldExpression><![CDATA[$F{cultivar_name}]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -178,7 +181,7 @@ public.plant_resources.id,
 				<text><![CDATA[Date Packed]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="133" y="65" width="41" height="13" uuid="06e1eaa9-fb59-467a-9d3c-0f051f942b61"/>
+				<reportElement x="133" y="65" width="67" height="13" uuid="06e1eaa9-fb59-467a-9d3c-0f051f942b61"/>
 				<text><![CDATA[Variety]]></text>
 			</staticText>
 			<staticText>
