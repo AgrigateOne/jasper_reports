@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-01-20T05:51:47 -->
+<!-- 2020-04-30T16:20:22 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="summary" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cba47b92-bbda-40d5-b5d7-7f12c9f0b664">
 	<property name="ireport.zoom" value="3.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="habata"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Dunbrody_New_Framework"/>
 	<parameter name="load_id" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
 	</parameter>
@@ -21,6 +21,7 @@
  fruit_actual_counts_for_packs.actual_count_for_pack AS actual_size_count_code,
  SUM(pallet_sequences.carton_quantity) AS ctn_qty,
  SUM(pallets.nett_weight) AS nett_weight,
+ SUM(pallet_sequences.nett_weight )as seq_nett_weight,
  SUM(fruit_actual_counts_for_packs.actual_count_for_pack * pallet_sequences.carton_quantity) AS fruit,
  SUM(CAST(pallet_sequences.carton_quantity AS numeric(5,1)) / CAST(pallets.carton_quantity AS numeric(5,1))) AS plt_qty
 ,(select sum(gross_weight) from pallets p where p.load_id=pallets.load_id) load_gross_weight
@@ -61,6 +62,7 @@ ORDER BY  commodities.code,
 	<field name="load_gross_weight" class="java.math.BigDecimal"/>
 	<field name="size_count_code" class="java.lang.String"/>
 	<field name="gross_weight" class="java.math.BigDecimal"/>
+	<field name="seq_nett_weight" class="java.math.BigDecimal"/>
 	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{ctn_qty}]]></variableExpression>
 	</variable>
@@ -68,7 +70,7 @@ ORDER BY  commodities.code,
 		<variableExpression><![CDATA[$F{plt_qty}]]></variableExpression>
 	</variable>
 	<variable name="nett_1" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{nett_weight}]]></variableExpression>
+		<variableExpression><![CDATA[$F{seq_nett_weight}]]></variableExpression>
 	</variable>
 	<variable name="fruit_1" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{fruit}]]></variableExpression>
@@ -252,7 +254,7 @@ ORDER BY  commodities.code,
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{nett_weight}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{seq_nett_weight}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="436" y="0" width="48" height="11" uuid="1622dac6-2c8f-4529-bc16-0603eab6bcbf">
