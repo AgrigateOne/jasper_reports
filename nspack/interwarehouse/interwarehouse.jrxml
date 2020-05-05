@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-05-05T16:51:08 -->
+<!-- 2020-05-05T20:45:35 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="interwarehouse" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_NSPACK_UD"/>
@@ -29,11 +29,16 @@
 	</parameter>
 	<parameter name="vehicle_job_id " class="java.lang.Integer"/>
 	<queryString language="SQL">
-		<![CDATA[select pallet_number,cultivar_group   ,string_agg(distinct size_ref,',')size_refs
- ,string_agg(distinct std_pack,',')std_packs
- ,string_agg(distinct grade,',')grades,sum(carton_quantity) carton_quantity
-   ,
-   fn_party_role_name((SELECT pr.id
+		<![CDATA[select pallet_number
+,string_agg(distinct vw_pallet_sequence_flat.marketing_variety,',')marketing_varieties
+,string_agg(distinct vw_pallet_sequence_flat.packed_tm_group,',')packed_tm_groups
+ 
+,string_agg(distinct std_pack,',')std_packs
+,string_agg(distinct size_ref,',')size_refs
+,string_agg(distinct actual_count::text,',')actual_counts
+
+,string_agg(distinct grade,',')grades,sum(carton_quantity) carton_quantity
+,fn_party_role_name((SELECT pr.id
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1)) AS implementation_owner_name,
 (SELECT pr.id
@@ -47,12 +52,16 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 ,vehicle_jobs.business_process_id
 ,vehicle_jobs.loaded_at
 ,vehicle_jobs.offloaded_at
-
+,locations.location_long_code 
+,business_processes.process
  from vehicle_jobs join  
 vehicle_job_units on vehicle_job_units.vehicle_job_id =vehicle_jobs.id 
     left join vw_pallet_sequence_flat  on pallet_id=stock_item_id 
-where vehicle_job_units.vehicle_job_id = $P{vehicle_job_id } 
-group by stock_item_id,vehicle_jobs.id , cultivar_group   ,pallet_number 
+left join business_processes on business_processes.id=vehicle_jobs.business_process_id 
+left join locations on locations.id=vehicle_jobs.planned_location_to_id 
+        
+    where vehicle_job_units.vehicle_job_id = $P{vehicle_job_id } 
+group by stock_item_id,vehicle_jobs.id,pallet_number 
 ,fn_party_role_name((SELECT pr.id
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1)) ,
@@ -67,7 +76,8 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 ,vehicle_jobs.business_process_id
 ,vehicle_jobs.loaded_at
 ,vehicle_jobs.offloaded_at
-]]>
+,locations.location_long_code 
+,business_processes.process]]>
 	</queryString>
 	<field name="vehicle_number" class="java.lang.String"/>
 	<field name="implementation_owner_party_role_id" class="java.lang.Integer"/>
@@ -80,27 +90,31 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 	<field name="planned_location_to_id" class="java.lang.Integer"/>
 	<field name="business_process_id" class="java.lang.Integer"/>
 	<field name="pallet_number" class="java.lang.String"/>
-	<field name="cultivar_group" class="java.lang.String"/>
 	<field name="size_refs" class="java.lang.String"/>
 	<field name="grades" class="java.lang.String"/>
 	<field name="carton_quantity" class="java.lang.Long"/>
 	<field name="std_packs" class="java.lang.String"/>
+	<field name="marketing_varieties" class="java.lang.String"/>
+	<field name="packed_tm_groups" class="java.lang.String"/>
+	<field name="actual_counts" class="java.lang.String"/>
+	<field name="location_long_code" class="java.lang.String"/>
+	<field name="process" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="69" splitType="Stretch">
+		<band height="89" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
-				<reportElement x="7" y="43" width="98" height="13" uuid="868560cf-517d-468b-bd41-40754abb0adf"/>
+				<reportElement x="7" y="60" width="98" height="13" uuid="868560cf-517d-468b-bd41-40754abb0adf"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[govt inspection sheet:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="105" y="43" width="114" height="13" uuid="7e91ed80-cd9e-435a-8c22-d19a069aa97d"/>
+				<reportElement stretchType="RelativeToBandHeight" x="105" y="60" width="114" height="13" uuid="7e91ed80-cd9e-435a-8c22-d19a069aa97d"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
@@ -145,56 +159,56 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				<reportElement x="0" y="29" width="555" height="1" uuid="6fc4d8bd-3226-452f-93a3-2c780ffafc6b"/>
 			</line>
 			<staticText>
-				<reportElement x="7" y="56" width="98" height="13" uuid="7ae644bb-1fd2-46ab-9775-1662e38447b7"/>
+				<reportElement x="7" y="73" width="98" height="13" uuid="7ae644bb-1fd2-46ab-9775-1662e38447b7"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[planned_location_to_id:]]></text>
+				<text><![CDATA[planned location to:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="105" y="56" width="114" height="13" uuid="3cb19ece-6e6f-434b-b274-fb244fded92b"/>
+				<reportElement x="105" y="73" width="114" height="13" uuid="3cb19ece-6e6f-434b-b274-fb244fded92b"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{planned_location_to_id}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{location_long_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="423" y="56" width="114" height="13" uuid="ea97e593-8c15-4fb2-b6f8-2cdcaf309a2b"/>
+				<reportElement x="423" y="73" width="114" height="13" uuid="ea97e593-8c15-4fb2-b6f8-2cdcaf309a2b"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{business_process_id}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{process}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="325" y="56" width="98" height="13" uuid="41c8e148-71e3-4fde-b3c9-742ee35c6366"/>
+				<reportElement x="350" y="73" width="72" height="13" uuid="41c8e148-71e3-4fde-b3c9-742ee35c6366"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[business_process_id:]]></text>
+				<text><![CDATA[business process:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="7" y="30" width="98" height="13" uuid="89f5f6a2-25a9-479c-9dcc-f1fc9ab6e205"/>
+				<reportElement x="7" y="47" width="98" height="13" uuid="89f5f6a2-25a9-479c-9dcc-f1fc9ab6e205"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Vehicle Job No]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="105" y="30" width="114" height="13" uuid="7920f6dc-cc4d-4466-b017-43eedfcce149"/>
+				<reportElement x="105" y="47" width="114" height="13" uuid="7920f6dc-cc4d-4466-b017-43eedfcce149"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{vehicle_number}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="325" y="30" width="98" height="13" uuid="c23827b9-96b1-4858-8fb3-b68bc82cdf3d"/>
+				<reportElement x="350" y="47" width="72" height="13" uuid="c23827b9-96b1-4858-8fb3-b68bc82cdf3d"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[loaded_at:]]></text>
 			</staticText>
 			<textField pattern="d MMM yyyy h:mm:ss a" isBlankWhenNull="true">
-				<reportElement x="423" y="30" width="114" height="13" uuid="4e33796b-7c53-4ccf-b8b8-5449d200faba"/>
+				<reportElement x="423" y="47" width="114" height="13" uuid="4e33796b-7c53-4ccf-b8b8-5449d200faba"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -215,7 +229,7 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				<text><![CDATA[NS Pack]]></text>
 			</staticText>
 			<componentElement>
-				<reportElement x="330" y="-3" width="175" height="26" uuid="4a864b43-2183-4d30-8a03-63772df42db7">
+				<reportElement x="219" y="32" width="131" height="56" uuid="4a864b43-2183-4d30-8a03-63772df42db7">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="local_mesure_unitbarWidth" value="pixel"/>
@@ -224,7 +238,7 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 					<property name="com.jaspersoft.studio.unit.barHeight" value="px"/>
 					<printWhenExpression><![CDATA[true]]></printWhenExpression>
 				</reportElement>
-				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barWidth="1" barHeight="20" evaluationGroup="">
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barWidth="1" barHeight="70" evaluationGroup="">
 					<jr:codeExpression><![CDATA[$P{vehicle_job_id }]]></jr:codeExpression>
 				</jr:barbecue>
 			</componentElement>
@@ -238,14 +252,14 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				<textFieldExpression><![CDATA[$F{implementation_owner_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="325" y="43" width="98" height="13" uuid="323bb4b2-0341-4a67-bd94-e277fffcef04"/>
+				<reportElement x="350" y="60" width="72" height="13" uuid="323bb4b2-0341-4a67-bd94-e277fffcef04"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[offloaded_at:]]></text>
 			</staticText>
 			<textField pattern="d MMM yyyy h:mm:ss a" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="423" y="43" width="114" height="13" uuid="e6cd7bf1-d423-4553-b492-4cf21723f845"/>
+				<reportElement stretchType="RelativeToBandHeight" x="423" y="60" width="114" height="13" uuid="e6cd7bf1-d423-4553-b492-4cf21723f845"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
@@ -254,7 +268,7 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 		</band>
 	</title>
 	<pageHeader>
-		<band height="33" splitType="Stretch">
+		<band height="38" splitType="Stretch">
 			<line>
 				<reportElement x="0" y="16" width="555" height="1" uuid="dc4d9cf4-a191-48ec-bacf-0a8b1edcc987"/>
 			</line>
@@ -286,13 +300,13 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				<text><![CDATA[pallet_number]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="124" y="20" width="100" height="13" uuid="039ba0bf-1938-49c1-bf4d-403fb1b3ab4c">
+				<reportElement x="124" y="20" width="47" height="13" uuid="039ba0bf-1938-49c1-bf4d-403fb1b3ab4c">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<text><![CDATA[cultivar_group]]></text>
+				<text><![CDATA[Varieties]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="239" y="20" width="47" height="13" uuid="c1702a23-a3bd-42bb-bebb-3f8d2d46f7f0">
@@ -304,7 +318,7 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				<text><![CDATA[SPacks]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="435" y="20" width="64" height="13" uuid="06d2722b-2835-4d64-80fd-5040eebaeb09">
+				<reportElement x="435" y="20" width="47" height="13" uuid="06d2722b-2835-4d64-80fd-5040eebaeb09">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
@@ -313,7 +327,7 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				<text><![CDATA[Grds]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="504" y="20" width="50" height="13" uuid="2a47feaa-00dc-4bdd-bccd-4ae85f2ffef4">
+				<reportElement x="504" y="20" width="47" height="13" uuid="2a47feaa-00dc-4bdd-bccd-4ae85f2ffef4">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
@@ -322,13 +336,31 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				<text><![CDATA[Ctn Qty]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="323" y="20" width="100" height="13" uuid="d7bec463-9e18-4bf0-ba4c-ee45112d3ac4">
+				<reportElement x="323" y="20" width="47" height="13" uuid="d7bec463-9e18-4bf0-ba4c-ee45112d3ac4">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<text><![CDATA[SzRfs]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="180" y="20" width="47" height="13" uuid="b5b143a9-0379-4ce5-bcab-f31c4c512387">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Target Mrkt]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="380" y="20" width="47" height="13" uuid="3e4438fe-3426-4286-b9ec-1f03eeaed294">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Actual Cnt]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
@@ -344,13 +376,13 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				<textFieldExpression><![CDATA[$F{pallet_number}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="124" y="3" width="100" height="13" uuid="b17c37c8-c219-484f-a327-e29c203ca59a">
+				<reportElement x="124" y="3" width="47" height="13" uuid="b17c37c8-c219-484f-a327-e29c203ca59a">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{cultivar_group}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{marketing_varieties}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="239" y="3" width="47" height="13" uuid="7b0281ba-c65c-4113-9289-c12b8cbba417">
@@ -362,7 +394,7 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				<textFieldExpression><![CDATA[$F{std_packs}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="323" y="3" width="100" height="13" uuid="d3eef899-2627-45b4-a633-f8ace00b441e">
+				<reportElement x="323" y="3" width="47" height="13" uuid="d3eef899-2627-45b4-a633-f8ace00b441e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
@@ -371,7 +403,7 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				<textFieldExpression><![CDATA[$F{size_refs}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="435" y="3" width="64" height="13" uuid="acef8336-1258-4291-80d8-4ee7401286fb">
+				<reportElement x="435" y="3" width="47" height="13" uuid="acef8336-1258-4291-80d8-4ee7401286fb">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
@@ -380,13 +412,31 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				<textFieldExpression><![CDATA[$F{grades}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="504" y="3" width="50" height="13" uuid="c19e30b6-2529-4951-b1dc-cbe058609810">
+				<reportElement x="504" y="3" width="47" height="13" uuid="c19e30b6-2529-4951-b1dc-cbe058609810">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{carton_quantity}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="180" y="2" width="47" height="13" uuid="3399a57d-aa00-4f3f-8120-2d70ddd9a355">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{packed_tm_groups}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="380" y="2" width="47" height="13" uuid="6fb645e7-8b96-4a96-bc81-f2786819c959">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{actual_counts}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
