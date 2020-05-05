@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-05-01T16:45:41 -->
+<!-- 2020-05-05T16:51:08 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="interwarehouse" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_NSPACK_UD"/>
@@ -29,8 +29,11 @@
 	</parameter>
 	<parameter name="vehicle_job_id " class="java.lang.Integer"/>
 	<queryString language="SQL">
-		<![CDATA[SELECT  
-fn_party_role_name((SELECT pr.id
+		<![CDATA[select pallet_number,cultivar_group   ,string_agg(distinct size_ref,',')size_refs
+ ,string_agg(distinct std_pack,',')std_packs
+ ,string_agg(distinct grade,',')grades,sum(carton_quantity) carton_quantity
+   ,
+   fn_party_role_name((SELECT pr.id
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1)) AS implementation_owner_name,
 (SELECT pr.id
@@ -45,10 +48,26 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 ,vehicle_jobs.loaded_at
 ,vehicle_jobs.offloaded_at
 
-
-from vehicle_jobs join  
+ from vehicle_jobs join  
 vehicle_job_units on vehicle_job_units.vehicle_job_id =vehicle_jobs.id 
-where vehicle_jobs.id = $P{vehicle_job_id }]]>
+    left join vw_pallet_sequence_flat  on pallet_id=stock_item_id 
+where vehicle_job_units.vehicle_job_id = $P{vehicle_job_id } 
+group by stock_item_id,vehicle_jobs.id , cultivar_group   ,pallet_number 
+,fn_party_role_name((SELECT pr.id
+FROM public.party_roles pr
+WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1)) ,
+(SELECT pr.id
+FROM public.party_roles pr
+WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) 
+,vehicle_job_units.stock_type_id
+,vehicle_job_units.stock_item_id
+,vehicle_jobs.vehicle_number
+,vehicle_jobs.govt_inspection_sheet_id
+,vehicle_jobs.planned_location_to_id
+,vehicle_jobs.business_process_id
+,vehicle_jobs.loaded_at
+,vehicle_jobs.offloaded_at
+]]>
 	</queryString>
 	<field name="vehicle_number" class="java.lang.String"/>
 	<field name="implementation_owner_party_role_id" class="java.lang.Integer"/>
@@ -60,6 +79,12 @@ where vehicle_jobs.id = $P{vehicle_job_id }]]>
 	<field name="govt_inspection_sheet_id" class="java.lang.Integer"/>
 	<field name="planned_location_to_id" class="java.lang.Integer"/>
 	<field name="business_process_id" class="java.lang.Integer"/>
+	<field name="pallet_number" class="java.lang.String"/>
+	<field name="cultivar_group" class="java.lang.String"/>
+	<field name="size_refs" class="java.lang.String"/>
+	<field name="grades" class="java.lang.String"/>
+	<field name="carton_quantity" class="java.lang.Long"/>
+	<field name="std_packs" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -229,27 +254,13 @@ where vehicle_jobs.id = $P{vehicle_job_id }]]>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="43" splitType="Stretch">
+		<band height="33" splitType="Stretch">
 			<line>
 				<reportElement x="0" y="16" width="555" height="1" uuid="dc4d9cf4-a191-48ec-bacf-0a8b1edcc987"/>
 			</line>
 			<line>
 				<reportElement x="0" y="1" width="555" height="1" uuid="d9599272-d130-46ba-9d15-2183e3b3bb7a"/>
 			</line>
-			<staticText>
-				<reportElement x="7" y="18" width="98" height="13" uuid="14ffbf48-a96a-4e88-8049-f7a7da256729"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[stock_type_id]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="115" y="18" width="98" height="13" uuid="9af3f7b7-7993-409d-9fd1-f59520b03a79"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[Stock_item_id]]></text>
-			</staticText>
 			<staticText>
 				<reportElement x="7" y="2" width="98" height="13" uuid="0aacd6ce-5e6e-41bf-a6a9-a8c52a40d5b7"/>
 				<textElement>
@@ -264,23 +275,118 @@ where vehicle_jobs.id = $P{vehicle_job_id }]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{vehicle_number}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="122" height="13" uuid="f89947df-e4d3-44b8-b543-c8331eebf546">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[pallet_number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="124" y="20" width="100" height="13" uuid="039ba0bf-1938-49c1-bf4d-403fb1b3ab4c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[cultivar_group]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="239" y="20" width="47" height="13" uuid="c1702a23-a3bd-42bb-bebb-3f8d2d46f7f0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[SPacks]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="435" y="20" width="64" height="13" uuid="06d2722b-2835-4d64-80fd-5040eebaeb09">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Grds]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="504" y="20" width="50" height="13" uuid="2a47feaa-00dc-4bdd-bccd-4ae85f2ffef4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Ctn Qty]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="323" y="20" width="100" height="13" uuid="d7bec463-9e18-4bf0-ba4c-ee45112d3ac4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[SzRfs]]></text>
+			</staticText>
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="13">
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="115" y="0" width="114" height="13" uuid="9f65d80b-321c-4ee8-8bc7-172705ce8dc2"/>
+		<band height="16">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="3" width="122" height="13" uuid="3685f158-6339-4e45-a224-aeacd7d46ff9">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<textElement>
-					<font size="8"/>
+					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{stock_item_id}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{pallet_number}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="7" y="0" width="98" height="13" uuid="59a211dc-1bef-4ba5-af9d-c31799c1c3e6"/>
+				<reportElement x="124" y="3" width="100" height="13" uuid="b17c37c8-c219-484f-a327-e29c203ca59a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<textElement>
-					<font size="8"/>
+					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{stock_type_id}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cultivar_group}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="239" y="3" width="47" height="13" uuid="7b0281ba-c65c-4113-9289-c12b8cbba417">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{std_packs}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="323" y="3" width="100" height="13" uuid="d3eef899-2627-45b4-a633-f8ace00b441e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{size_refs}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="435" y="3" width="64" height="13" uuid="acef8336-1258-4291-80d8-4ee7401286fb">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{grades}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="504" y="3" width="50" height="13" uuid="c19e30b6-2529-4951-b1dc-cbe058609810">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{carton_quantity}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
