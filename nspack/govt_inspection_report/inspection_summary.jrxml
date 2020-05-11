@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-05-11T09:52:12 -->
+<!-- 2020-05-11T10:02:15 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="summary" language="groovy" pageWidth="350" pageHeight="802" columnWidth="350" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cba47b92-bbda-40d5-b5d7-7f12c9f0b664">
 	<property name="ireport.zoom" value="3.0"/>
 	<property name="ireport.x" value="0"/>
@@ -62,7 +62,7 @@ p.grade,govt_inspection_passed]]>
 	<title>
 		<band height="30" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="10" width="100" height="20" uuid="5540cf67-45c7-4210-b9a0-39498f2ccbeb"/>
+				<reportElement x="0" y="6" width="100" height="20" uuid="5540cf67-45c7-4210-b9a0-39498f2ccbeb"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
