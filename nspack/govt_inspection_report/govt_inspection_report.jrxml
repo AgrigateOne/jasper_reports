@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-04-17T10:43:21 -->
+<!-- 2020-05-11T09:56:12 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gov_inspection_sheet" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b276ed72-36fe-4eb1-8898-57bb00d5eee1">
 	<property name="ireport.zoom" value="1.7524694974069621"/>
 	<property name="ireport.x" value="0"/>
@@ -987,8 +987,8 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<subreportParameter name="subgovt_inspection_sheet_id">
 					<subreportParameterExpression><![CDATA[$P{govt_inspection_sheet_id}]]></subreportParameterExpression>
 				</subreportParameter>
-				<subreportParameter name="smyboolean">
-					<subreportParameterExpression><![CDATA[$P{MyBoolean}]]></subreportParameterExpression>
+				<subreportParameter name="paraminspecstatus">
+					<subreportParameterExpression><![CDATA[($P{MyBoolean}.toString().equals ("true")) ? new String("passed"):new String("failed")]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["inspection_summary.jasper"]]></subreportExpression>

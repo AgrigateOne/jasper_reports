@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-04-17T10:43:10 -->
+<!-- 2020-05-11T09:52:12 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="summary" language="groovy" pageWidth="350" pageHeight="802" columnWidth="350" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cba47b92-bbda-40d5-b5d7-7f12c9f0b664">
 	<property name="ireport.zoom" value="3.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_NSPACK_UD"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Dunbrody_New_Framework"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
@@ -18,12 +18,7 @@
 	<parameter name="subgovt_inspection_sheet_id" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
 	</parameter>
-	<parameter name="sQueryCondition" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA[$P{smyboolean}.booleanValue() ? "govt_inspection_passed=true" : "govt_inspection_passed=false"]]></defaultValueExpression>
-	</parameter>
-	<parameter name="smyboolean" class="java.lang.Boolean">
-		<parameterDescription><![CDATA[]]></parameterDescription>
-	</parameter>
+	<parameter name="paraminspecstatus" class="java.lang.String"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT
  p.commodity,
@@ -37,8 +32,8 @@ count(distinct p.pallet_id) as plt_qty,govt_inspection_passed
 FROM
     public.vw_pallet_sequence_flat p
 WHERE  p.govt_inspection_sheet_id= $P{subgovt_inspection_sheet_id}
-  AND (  case when  $P{smyboolean} =true then govt_inspection_passed=true 
-                when  $P{smyboolean} =false then govt_inspection_passed=false end )
+  AND (  case when  $P{paraminspecstatus} ='passed' then govt_inspection_passed=true 
+                when  $P{paraminspecstatus} ='failed' then govt_inspection_passed=false end )
 group by  p.commodity,
  p.marketing_variety,
 p.size_ref,
