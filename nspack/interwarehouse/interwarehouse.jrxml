@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-05-05T20:45:35 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="interwarehouse" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_NSPACK_UD"/>
+	<property name="ireport.zoom" value="1.771561000000001"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -27,12 +28,12 @@
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA["/home/user/rubymine_projects/packhouse/jasper_resources/dispatch/"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="vehicle_job_id " class="java.lang.Integer"/>
-	<queryString language="SQL">
+	<parameter name="vehicle_job_id" class="java.lang.Integer"/>
+	<queryString>
 		<![CDATA[select pallet_number
 ,string_agg(distinct vw_pallet_sequence_flat.marketing_variety,',')marketing_varieties
 ,string_agg(distinct vw_pallet_sequence_flat.packed_tm_group,',')packed_tm_groups
- 
+
 ,string_agg(distinct std_pack,',')std_packs
 ,string_agg(distinct size_ref,',')size_refs
 ,string_agg(distinct actual_count::text,',')actual_counts
@@ -52,22 +53,22 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 ,vehicle_jobs.business_process_id
 ,vehicle_jobs.loaded_at
 ,vehicle_jobs.offloaded_at
-,locations.location_long_code 
+,locations.location_long_code
 ,business_processes.process
- from vehicle_jobs join  
-vehicle_job_units on vehicle_job_units.vehicle_job_id =vehicle_jobs.id 
-    left join vw_pallet_sequence_flat  on pallet_id=stock_item_id 
-left join business_processes on business_processes.id=vehicle_jobs.business_process_id 
-left join locations on locations.id=vehicle_jobs.planned_location_to_id 
-        
-    where vehicle_job_units.vehicle_job_id = $P{vehicle_job_id } 
-group by stock_item_id,vehicle_jobs.id,pallet_number 
+ from vehicle_jobs join
+vehicle_job_units on vehicle_job_units.vehicle_job_id =vehicle_jobs.id
+    left join vw_pallet_sequence_flat  on pallet_id=stock_item_id
+left join business_processes on business_processes.id=vehicle_jobs.business_process_id
+left join locations on locations.id=vehicle_jobs.planned_location_to_id
+
+    where vehicle_job_units.vehicle_job_id =  $P{vehicle_job_id}
+group by stock_item_id,vehicle_jobs.id,pallet_number
 ,fn_party_role_name((SELECT pr.id
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1)) ,
 (SELECT pr.id
 FROM public.party_roles pr
-WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) 
+WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1)
 ,vehicle_job_units.stock_type_id
 ,vehicle_job_units.stock_item_id
 ,vehicle_jobs.vehicle_number
@@ -76,27 +77,27 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 ,vehicle_jobs.business_process_id
 ,vehicle_jobs.loaded_at
 ,vehicle_jobs.offloaded_at
-,locations.location_long_code 
+,locations.location_long_code
 ,business_processes.process]]>
 	</queryString>
-	<field name="vehicle_number" class="java.lang.String"/>
-	<field name="implementation_owner_party_role_id" class="java.lang.Integer"/>
+	<field name="pallet_number" class="java.lang.String"/>
+	<field name="marketing_varieties" class="java.lang.String"/>
+	<field name="packed_tm_groups" class="java.lang.String"/>
+	<field name="std_packs" class="java.lang.String"/>
+	<field name="size_refs" class="java.lang.String"/>
+	<field name="actual_counts" class="java.lang.String"/>
+	<field name="grades" class="java.lang.String"/>
+	<field name="carton_quantity" class="java.lang.Long"/>
 	<field name="implementation_owner_name" class="java.lang.String"/>
+	<field name="implementation_owner_party_role_id" class="java.lang.Integer"/>
 	<field name="stock_type_id" class="java.lang.Integer"/>
 	<field name="stock_item_id" class="java.lang.Integer"/>
-	<field name="loaded_at" class="java.sql.Timestamp"/>
-	<field name="offloaded_at" class="java.sql.Timestamp"/>
+	<field name="vehicle_number" class="java.lang.String"/>
 	<field name="govt_inspection_sheet_id" class="java.lang.Integer"/>
 	<field name="planned_location_to_id" class="java.lang.Integer"/>
 	<field name="business_process_id" class="java.lang.Integer"/>
-	<field name="pallet_number" class="java.lang.String"/>
-	<field name="size_refs" class="java.lang.String"/>
-	<field name="grades" class="java.lang.String"/>
-	<field name="carton_quantity" class="java.lang.Long"/>
-	<field name="std_packs" class="java.lang.String"/>
-	<field name="marketing_varieties" class="java.lang.String"/>
-	<field name="packed_tm_groups" class="java.lang.String"/>
-	<field name="actual_counts" class="java.lang.String"/>
+	<field name="loaded_at" class="java.sql.Timestamp"/>
+	<field name="offloaded_at" class="java.sql.Timestamp"/>
 	<field name="location_long_code" class="java.lang.String"/>
 	<field name="process" class="java.lang.String"/>
 	<background>
@@ -239,7 +240,7 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 					<printWhenExpression><![CDATA[true]]></printWhenExpression>
 				</reportElement>
 				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barWidth="1" barHeight="70" evaluationGroup="">
-					<jr:codeExpression><![CDATA[$P{vehicle_job_id }]]></jr:codeExpression>
+					<jr:codeExpression><![CDATA[$P{vehicle_job_id}]]></jr:codeExpression>
 				</jr:barbecue>
 			</componentElement>
 			<textField isBlankWhenNull="true">
