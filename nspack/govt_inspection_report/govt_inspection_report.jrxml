@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-05-11T10:04:47 -->
+<!-- 2020-05-11T16:14:25 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gov_inspection_sheet" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b276ed72-36fe-4eb1-8898-57bb00d5eee1">
 	<property name="ireport.zoom" value="1.7524694974069621"/>
 	<property name="ireport.x" value="0"/>
@@ -12,9 +12,9 @@
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA["Users"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="MyBoolean" class="java.lang.Boolean"/>
+	<parameter name="inspection_passed" class="java.lang.Boolean"/>
 	<parameter name="QueryCondition" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA[$P{MyBoolean}.booleanValue() ? "govt_inspection_pallets.passed=true" : "govt_inspection_pallets.passed=false"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[$P{inspection_passed}.booleanValue() ? "govt_inspection_pallets.passed=true" : "govt_inspection_pallets.passed=false"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="govt_inspection_sheet_id" class="java.lang.Integer"/>
 	<parameter name="signee_caption" class="java.lang.String">
@@ -990,7 +990,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 					<subreportParameterExpression><![CDATA[$P{govt_inspection_sheet_id}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="paraminspecstatus">
-					<subreportParameterExpression><![CDATA[($P{MyBoolean}.toString().equals ("true")) ? new String("passed"):new String("failed")]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[($P{inspection_passed}.toString().equals ("true")) ? new String("passed"):new String("failed")]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["inspection_summary.jasper"]]></subreportExpression>
