@@ -295,43 +295,43 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<text><![CDATA[pallet_number]]></text>
+				<text><![CDATA[Pallet Number]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="124" y="20" width="47" height="13" uuid="039ba0bf-1938-49c1-bf4d-403fb1b3ab4c">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<text><![CDATA[Varieties]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="239" y="20" width="47" height="13" uuid="c1702a23-a3bd-42bb-bebb-3f8d2d46f7f0">
+				<reportElement x="249" y="20" width="46" height="13" uuid="c1702a23-a3bd-42bb-bebb-3f8d2d46f7f0">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<text><![CDATA[SPacks]]></text>
+				<text><![CDATA[Pack]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="435" y="20" width="47" height="13" uuid="06d2722b-2835-4d64-80fd-5040eebaeb09">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<text><![CDATA[Grds]]></text>
+				<text><![CDATA[Grade]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="504" y="20" width="47" height="13" uuid="2a47feaa-00dc-4bdd-bccd-4ae85f2ffef4">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<text><![CDATA[Ctn Qty]]></text>
@@ -340,25 +340,25 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				<reportElement x="323" y="20" width="47" height="13" uuid="d7bec463-9e18-4bf0-ba4c-ee45112d3ac4">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<text><![CDATA[SzRfs]]></text>
+				<text><![CDATA[Size Ref]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="180" y="20" width="47" height="13" uuid="b5b143a9-0379-4ce5-bcab-f31c4c512387">
+				<reportElement x="180" y="20" width="59" height="13" uuid="b5b143a9-0379-4ce5-bcab-f31c4c512387">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<text><![CDATA[Target Mrkt]]></text>
+				<text><![CDATA[Target Market]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="380" y="20" width="47" height="13" uuid="3e4438fe-3426-4286-b9ec-1f03eeaed294">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<text><![CDATA[Actual Cnt]]></text>
@@ -371,7 +371,7 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				<reportElement x="0" y="3" width="122" height="13" uuid="3685f158-6339-4e45-a224-aeacd7d46ff9">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{pallet_number}]]></textFieldExpression>
@@ -380,16 +380,16 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				<reportElement x="124" y="3" width="47" height="13" uuid="b17c37c8-c219-484f-a327-e29c203ca59a">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{marketing_varieties}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="239" y="3" width="47" height="13" uuid="7b0281ba-c65c-4113-9289-c12b8cbba417">
+				<reportElement x="249" y="3" width="46" height="13" uuid="7b0281ba-c65c-4113-9289-c12b8cbba417">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{std_packs}]]></textFieldExpression>
@@ -398,7 +398,7 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				<reportElement x="323" y="3" width="47" height="13" uuid="d3eef899-2627-45b4-a633-f8ace00b441e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{size_refs}]]></textFieldExpression>
@@ -407,7 +407,7 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				<reportElement x="435" y="3" width="47" height="13" uuid="acef8336-1258-4291-80d8-4ee7401286fb">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{grades}]]></textFieldExpression>
@@ -416,16 +416,16 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				<reportElement x="504" y="3" width="47" height="13" uuid="c19e30b6-2529-4951-b1dc-cbe058609810">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{carton_quantity}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="180" y="2" width="47" height="13" uuid="3399a57d-aa00-4f3f-8120-2d70ddd9a355">
+				<reportElement x="180" y="2" width="59" height="13" uuid="3399a57d-aa00-4f3f-8120-2d70ddd9a355">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{packed_tm_groups}]]></textFieldExpression>
@@ -434,7 +434,7 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				<reportElement x="380" y="2" width="47" height="13" uuid="6fb645e7-8b96-4a96-bc81-f2786819c959">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{actual_counts}]]></textFieldExpression>
