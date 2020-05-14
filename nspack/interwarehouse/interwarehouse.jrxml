@@ -30,7 +30,7 @@
 	</parameter>
 	<parameter name="vehicle_job_id" class="java.lang.Integer"/>
 	<queryString>
-		<![CDATA[select pallet_number
+		<![CDATA[select pallet_number, vehicle_jobs.id
 ,string_agg(distinct vw_pallet_sequence_flat.marketing_variety,',')marketing_varieties
 ,string_agg(distinct vw_pallet_sequence_flat.packed_tm_group,',')packed_tm_groups
 
@@ -81,6 +81,7 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 ,business_processes.process]]>
 	</queryString>
 	<field name="pallet_number" class="java.lang.String"/>
+	<field name="id" class="java.lang.Integer"/>
 	<field name="marketing_varieties" class="java.lang.String"/>
 	<field name="packed_tm_groups" class="java.lang.String"/>
 	<field name="std_packs" class="java.lang.String"/>
@@ -199,7 +200,7 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{vehicle_number}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="350" y="47" width="72" height="13" uuid="c23827b9-96b1-4858-8fb3-b68bc82cdf3d"/>
