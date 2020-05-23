@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-04-07T17:36:59 -->
+<!-- 2020-05-23T14:12:23 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
@@ -103,6 +103,7 @@ SELECT
  shift_type_code,
  sum(base_sql.total_fruit*actual_count_reduction_factor) over (partition by base_sql.cw_id) as reduced_fruit_for_work_day
  ,base_sql.require_pack_hour* base_sql.running_hours require_for_work_day
+ ,rank() OVER (partition by base_sql.cw_id order by  base_sql.packing_method_code) as cw_rank
  FROM base_sql)
 ,calc_sql2 as(
 select calc_sql.*,
@@ -112,7 +113,8 @@ calc_sql.wage_level/calc_sql.std_hours_per_day/calc_sql.require_pack_hour*calc_s
 )
 select cw_id,	total_fruit,	running_hours,	wage_level	,wage_level_description,	party_name,	personnel_barcode_number	,total_cartons,	std_hours_per_day	,packing_method_code,	actual_count_reduction_factor,
 	incentive_factor,	require_pack_hour,	reduced_fruit_for_work_day,	require_for_work_day,case when incentive<0 then 0 else incentive end incentive  
- ,start_date_time,fruitphour,rp1000f,shift_type_code,end_date_time from calc_sql2;]]>
+ ,start_date_time,fruitphour,rp1000f,shift_type_code,end_date_time
+ ,case when cw_rank=1 then true else false end cw_rank from calc_sql2;]]>
 	</queryString>
 	<field name="party_name" class="java.lang.String"/>
 	<field name="start_date_time" class="java.sql.Timestamp"/>
@@ -135,6 +137,7 @@ select cw_id,	total_fruit,	running_hours,	wage_level	,wage_level_description,	pa
 	<field name="reduced_fruit_for_work_day" class="java.math.BigDecimal"/>
 	<field name="require_for_work_day" class="java.lang.Double"/>
 	<field name="end_date_time" class="java.sql.Timestamp"/>
+	<field name="cw_rank" class="java.lang.Boolean"/>
 	<variable name="total_cartons_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{total_cartons}]]></variableExpression>
 	</variable>
@@ -317,7 +320,9 @@ select cw_id,	total_fruit,	running_hours,	wage_level	,wage_level_description,	pa
 				<textFieldExpression><![CDATA[$F{total_fruit}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-				<reportElement x="576" y="0" width="47" height="15" uuid="ac6917aa-924d-45b4-a92c-8260b7e836f6"/>
+				<reportElement x="576" y="0" width="47" height="15" uuid="ac6917aa-924d-45b4-a92c-8260b7e836f6">
+					<printWhenExpression><![CDATA[$F{cw_rank}]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Right">
 					<font isBold="false" isItalic="false" isUnderline="false"/>
 				</textElement>
@@ -341,12 +346,16 @@ select cw_id,	total_fruit,	running_hours,	wage_level	,wage_level_description,	pa
 				<textFieldExpression><![CDATA[$F{fruitphour}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-				<reportElement x="683" y="0" width="53" height="15" uuid="89b64826-d22a-443a-8bec-94b00adb10c6"/>
+				<reportElement x="683" y="0" width="53" height="15" uuid="89b64826-d22a-443a-8bec-94b00adb10c6">
+					<printWhenExpression><![CDATA[$F{cw_rank}]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{incentive}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-				<reportElement x="736" y="0" width="63" height="15" uuid="40d13bc9-0e97-41b8-a0fe-8d4432dab293"/>
+				<reportElement x="736" y="0" width="63" height="15" uuid="40d13bc9-0e97-41b8-a0fe-8d4432dab293">
+					<printWhenExpression><![CDATA[$F{cw_rank}]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$V{total_earnings}]]></textFieldExpression>
 			</textField>
