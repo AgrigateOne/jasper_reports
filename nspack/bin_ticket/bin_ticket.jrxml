@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-05-24T21:04:47 -->
+<!-- 2020-05-26T05:56:34 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="bin_ticket" language="groovy" columnCount="2" printOrder="Horizontal" pageWidth="595" pageHeight="842" columnWidth="277" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c03660f7-c9f2-4f8e-b829-5211b31e0e7e">
 	<property name="ireport.zoom" value="4.0"/>
 	<property name="ireport.x" value="0"/>
@@ -10,9 +10,7 @@
 	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
 	<style name="Detail" fontName="Arial" fontSize="12"/>
-	<parameter name="bin_id" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[2]]></defaultValueExpression>
-	</parameter>
+	<parameter name="bin_id" class="java.util.Collection" nestedType="java.lang.Integer"/>
 	<parameter name="dummy" class="java.lang.String">
 		<defaultValueExpression><![CDATA["XX"]]></defaultValueExpression>
 	</parameter>
@@ -46,7 +44,7 @@ from
     LEFT JOIN public.cultivars i ON (i.id = j.cultivar_id)
     LEFT JOIN rmt_classes ON rmt_classes.id = j.rmt_class_id
     LEFT JOIN rmt_delivery_destinations d ON d.id = a.rmt_delivery_destination_id
-    where j.id = $P{bin_id} ]]>
+    where  $X{IN, j.id, bin_id}]]>
 	</queryString>
 	<field name="date_delivered" class="java.sql.Timestamp"/>
 	<field name="farm_code" class="java.lang.String"/>
@@ -237,8 +235,8 @@ from
 				</textElement>
 				<textFieldExpression><![CDATA[$F{rmt_bin_id}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="138" y="124" width="68" height="13" uuid="477ea909-9c4d-466e-b68a-faa3e3465927">
+			<textField isBlankWhenNull="true">
+				<reportElement x="138" y="124" width="126" height="13" uuid="477ea909-9c4d-466e-b68a-faa3e3465927">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
