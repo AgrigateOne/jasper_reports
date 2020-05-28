@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-05-23T14:12:23 -->
+<!-- 2020-05-28T06:08:01 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Dunbrody_New_Framework"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_NSPACK_UD"/>
 	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
 	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#FFFFFF" fontName="Arial" fontSize="12" isBold="true"/>
@@ -31,7 +31,7 @@
         s.start_date_time,
         s.end_date_time,
         --carton_labels.created_at,
-        day_night_or_custom as shift_type_code,
+        day_night_or_custom AS shift_type_code,
         s.shift_type_id,
         --cartons.packhouse_resource_id AS carton_packhouse_resource,
         --shift_types.plant_resource_id,
@@ -41,26 +41,40 @@
         sum(fruit_actual_counts_for_packs.actual_count_for_pack) total_fruit,
         contract_workers.id AS cw_id,
         COALESCE(shift_exceptions.running_hours, s.running_hours, ((EXTRACT(EPOCH FROM end_date_time) - EXTRACT(EPOCH FROM start_date_time)) / 60 / 60)) AS running_hours,
-         wage_levels.wage_level,
-         packing_methods.packing_method_code ,
-         packing_methods.actual_count_reduction_factor,
-         1500 as require_pack_hour,
- 9 as std_hours_per_day,
- 1.1 as incentive_factor
-
+        wage_levels.wage_level,
+        packing_methods.packing_method_code,
+        packing_methods.actual_count_reduction_factor,
+        1500 AS require_pack_hour,
+        9 AS std_hours_per_day,
+        1.1 AS incentive_factor,
+        sum(wage_levels.wage_level) over (partition by s.id) as wage_level_shift,
+        count(contract_workers.id) over (partition by s.id) as packers_shift
     FROM
         cartons
-    LEFT JOIN carton_labels ON carton_labels.id = cartons.carton_label_id
-    LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = cartons.fruit_actual_counts_for_pack_id
-   LEFT join ( select shifts.end_date_time,shifts.start_date_time,plant_resource_id,shifts.shift_type_id ,shifts.id,day_night_or_custom,shifts.running_hours from public.shifts join shift_types on shifts.shift_type_id =shift_types.id 
-    ) as s ON carton_labels.created_at BETWEEN s.start_date_time AND s.end_date_time and s.plant_resource_id=carton_labels.production_line_id
-    LEFT JOIN packing_methods  on cartons.packing_method_id=packing_methods.id
-    LEFT JOIN public.contract_workers ON (cartons.contract_worker_id = contract_workers.id)
-    LEFT JOIN public.shift_exceptions ON (contract_workers.id = shift_exceptions.contract_worker_id)
-        AND (s.id = shift_exceptions.shift_id)
-    LEFT JOIN wage_levels ON contract_workers.wage_level_id = wage_levels.id
-   where s.id=$P{shift_id}
-     GROUP BY
+        LEFT JOIN carton_labels ON carton_labels.id = cartons.carton_label_id
+        LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = cartons.fruit_actual_counts_for_pack_id
+        LEFT JOIN (
+            SELECT
+                shifts.end_date_time,
+                shifts.start_date_time,
+                plant_resource_id,
+                shifts.shift_type_id,
+                shifts.id,
+                day_night_or_custom,
+                shifts.running_hours
+            FROM
+                public.shifts
+                JOIN shift_types ON shifts.shift_type_id = shift_types.id) AS s ON carton_labels.created_at BETWEEN s.start_date_time
+                AND s.end_date_time
+                AND s.plant_resource_id = carton_labels.production_line_id
+        LEFT JOIN packing_methods ON cartons.packing_method_id = packing_methods.id
+        LEFT JOIN public.contract_workers ON (cartons.contract_worker_id = contract_workers.id)
+        LEFT JOIN public.shift_exceptions ON (contract_workers.id = shift_exceptions.contract_worker_id)
+            AND (s.id = shift_exceptions.shift_id)
+        LEFT JOIN wage_levels ON contract_workers.wage_level_id = wage_levels.id
+    WHERE
+           s.id=$P{shift_id}
+    GROUP BY
         s.id,
         day_night_or_custom,
         s.shift_type_id,
@@ -71,50 +85,99 @@
         contract_workers.id,
         COALESCE(shift_exceptions.running_hours, s.running_hours, ((EXTRACT(EPOCH FROM end_date_time) - EXTRACT(EPOCH FROM start_date_time)) / 60 / 60)),
         s.start_date_time,
-        packing_methods.packing_method_code ,
+        packing_methods.packing_method_code,
         packing_methods.actual_count_reduction_factor
-
     ORDER BY
         contract_workers.id DESC,
         s.start_date_time
-),calc_sql as (
-SELECT
- base_sql.start_date_time,
-  CASE WHEN base_sql.running_hours = 0 THEN
-   0::int
- ELSE
-   (base_sql.total_fruit / base_sql.running_hours)::int
- END AS fruitphour,
- CAST(base_sql.wage_level / base_sql.std_hours_per_day / base_sql.require_pack_hour *  base_sql.incentive_factor AS dec (11, 3)) AS rp1000f,
- base_sql.end_date_time,
- base_sql.cw_id,
- base_sql.total_fruit,
- base_sql.running_hours,
- base_sql.wage_level, 
- base_sql.wage_level_description,
- base_sql.party_name,
- base_sql.personnel_barcode_number,
- base_sql.total_cartons,
- base_sql.std_hours_per_day,
- base_sql.packing_method_code,
- base_sql.actual_count_reduction_factor,
- base_sql.incentive_factor,
- base_sql.require_pack_hour,
- shift_type_code,
- sum(base_sql.total_fruit*actual_count_reduction_factor) over (partition by base_sql.cw_id) as reduced_fruit_for_work_day
- ,base_sql.require_pack_hour* base_sql.running_hours require_for_work_day
- ,rank() OVER (partition by base_sql.cw_id order by  base_sql.packing_method_code) as cw_rank
- FROM base_sql)
-,calc_sql2 as(
-select calc_sql.*,
-calc_sql.wage_level/calc_sql.std_hours_per_day/calc_sql.require_pack_hour*calc_sql.incentive_factor*(calc_sql.reduced_fruit_for_work_day-calc_sql.require_for_work_day ) incentive
+),
+calc_sql AS (
+    SELECT
+        base_sql.start_date_time,
+        CASE WHEN base_sql.running_hours = 0 THEN
+            0::int
+        ELSE
+            (base_sql.total_fruit / base_sql.running_hours)::int
+        END AS fruitphour,
+        CAST(base_sql.wage_level / base_sql.std_hours_per_day / base_sql.require_pack_hour * base_sql.incentive_factor AS dec (11, 3)) AS rp1000f,
+        base_sql.end_date_time,
+        base_sql.cw_id,
+        base_sql.total_fruit,
+        base_sql.running_hours,
+        base_sql.wage_level,
+        base_sql.wage_level_description,
+        base_sql.party_name,
+        base_sql.personnel_barcode_number,
+        base_sql.total_cartons,
+        base_sql.std_hours_per_day,
+        base_sql.packing_method_code,
+        base_sql.actual_count_reduction_factor,
+        base_sql.incentive_factor,
+        base_sql.require_pack_hour,
+        shift_type_code,
+        sum(base_sql.total_fruit * actual_count_reduction_factor) OVER (PARTITION BY base_sql.cw_id) AS reduced_fruit_for_work_day,
+        base_sql.require_pack_hour * base_sql.running_hours require_for_work_day,
+        rank() OVER (PARTITION BY base_sql.cw_id ORDER BY base_sql.packing_method_code) AS cw_rank,
+        base_sql.shift_id,
+        base_sql.wage_level_shift,
+        base_sql.packers_shift
+    FROM
+        base_sql
+),
+calc_sql2 AS (
+    SELECT
+        calc_sql.*,
+        calc_sql.wage_level / calc_sql.std_hours_per_day / calc_sql.require_pack_hour * calc_sql.incentive_factor * (calc_sql.reduced_fruit_for_work_day - calc_sql.require_for_work_day) incentive
 
- from calc_sql order by incentive desc
+        FROM
+        calc_sql
+    ORDER BY
+        incentive DESC
 )
-select cw_id,	total_fruit,	running_hours,	wage_level	,wage_level_description,	party_name,	personnel_barcode_number	,total_cartons,	std_hours_per_day	,packing_method_code,	actual_count_reduction_factor,
-	incentive_factor,	require_pack_hour,	reduced_fruit_for_work_day,	require_for_work_day,case when incentive<0 then 0 else incentive end incentive  
- ,start_date_time,fruitphour,rp1000f,shift_type_code,end_date_time
- ,case when cw_rank=1 then true else false end cw_rank from calc_sql2;]]>
+SELECT
+    cw_id,
+    total_fruit,
+    running_hours,
+    wage_level,
+    wage_level_description,
+    party_name,
+    personnel_barcode_number,
+    total_cartons,
+    std_hours_per_day,
+    packing_method_code,
+    actual_count_reduction_factor,
+    incentive_factor,
+    require_pack_hour,
+    reduced_fruit_for_work_day,
+    require_for_work_day,
+    CASE WHEN incentive < 0 THEN
+        0
+    ELSE
+        incentive
+    END incentive,
+    start_date_time,
+    fruitphour,
+    rp1000f,
+    shift_type_code,
+    end_date_time,
+    CASE WHEN cw_rank = 1 THEN
+        TRUE
+    ELSE
+        FALSE
+    END cw_rank,
+    sum(total_fruit) over (partition by shift_id) shift_fruit,
+    sum(total_cartons) over (partition by shift_id) shift_cartons,
+    sum(CASE WHEN incentive < 0 THEN
+        0
+    ELSE
+        incentive
+    END) over (partition by shift_id) shift_incentive,
+    shift_id,
+    wage_level_shift,
+    packers_shift
+
+FROM
+    calc_sql2;]]>
 	</queryString>
 	<field name="party_name" class="java.lang.String"/>
 	<field name="start_date_time" class="java.sql.Timestamp"/>
@@ -138,6 +201,12 @@ select cw_id,	total_fruit,	running_hours,	wage_level	,wage_level_description,	pa
 	<field name="require_for_work_day" class="java.lang.Double"/>
 	<field name="end_date_time" class="java.sql.Timestamp"/>
 	<field name="cw_rank" class="java.lang.Boolean"/>
+	<field name="shift_fruit" class="java.math.BigDecimal"/>
+	<field name="shift_cartons" class="java.math.BigDecimal"/>
+	<field name="shift_incentive" class="java.lang.Double"/>
+	<field name="shift_id" class="java.lang.Integer"/>
+	<field name="wage_level_shift" class="java.math.BigDecimal"/>
+	<field name="packers_shift" class="java.lang.Long"/>
 	<variable name="total_cartons_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{total_cartons}]]></variableExpression>
 	</variable>
@@ -297,6 +366,15 @@ select cw_id,	total_fruit,	running_hours,	wage_level	,wage_level_description,	pa
 				<textElement textAlignment="Right"/>
 				<text><![CDATA[Packing Method]]></text>
 			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="68" y="42" width="120" height="18" uuid="775134d5-a804-4305-a4aa-a20548655774"/>
+				<textFieldExpression><![CDATA[$F{shift_id}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="42" width="67" height="18" uuid="56546620-b270-4dcd-a2f5-68a45f4f7afc"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Shift ID:]]></text>
+			</staticText>
 		</band>
 	</pageHeader>
 	<detail>
@@ -395,11 +473,11 @@ select cw_id,	total_fruit,	running_hours,	wage_level	,wage_level_description,	pa
 			<textField>
 				<reportElement x="298" y="0" width="36" height="15" uuid="fd5685bf-4df5-4954-bbe5-284061dd9ceb"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$V{total_cartons_1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{shift_cartons}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="68" y="0" width="120" height="15" uuid="7e890b5a-4b65-4c5a-9d2c-0c25a55a7a2f"/>
-				<textFieldExpression><![CDATA[$V{party_name_1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{packers_shift}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="1" y="0" width="67" height="15" uuid="b105509c-73b5-4dd2-82f1-9cff5faaf841"/>
@@ -408,7 +486,7 @@ select cw_id,	total_fruit,	running_hours,	wage_level	,wage_level_description,	pa
 			<textField>
 				<reportElement x="334" y="0" width="74" height="15" uuid="e5219e47-35a6-4c3e-8ec2-6f758a8e7501"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$V{total_fruit_1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{shift_fruit}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-">
 				<reportElement x="408" y="0" width="43" height="15" uuid="b00634c8-d742-4dd3-b272-7928b4a24247">
@@ -419,17 +497,9 @@ select cw_id,	total_fruit,	running_hours,	wage_level	,wage_level_description,	pa
 				<textFieldExpression><![CDATA[$F{running_hours}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-">
-				<reportElement x="529" y="0" width="47" height="15" uuid="38a490e7-9139-4844-8372-8f10c2ab45ec">
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$V{wage_level_1}]]></textFieldExpression>
-			</textField>
-			<textField pattern="###0.00;###0.00-">
 				<reportElement x="683" y="0" width="53" height="15" uuid="36c7f42b-d107-4804-a89b-90378b263092"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$V{incentive_1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{shift_incentive}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="1" y="0" width="798" height="1" uuid="13efb243-d9f4-490c-b993-83cc02721d4a">
@@ -445,7 +515,12 @@ select cw_id,	total_fruit,	running_hours,	wage_level	,wage_level_description,	pa
 			<textField pattern="###0.00;###0.00-">
 				<reportElement x="736" y="0" width="63" height="15" uuid="f3b0f47e-eab3-4b8c-bbc9-35bf10bbb289"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$V{total_earnings_1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[Double.valueOf($F{shift_incentive}.doubleValue()+$F{wage_level_shift}.doubleValue())]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;###0.00-">
+				<reportElement x="580" y="0" width="43" height="15" uuid="493d12c4-6d7e-4b7c-8e07-e04ff184c1ba"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{wage_level_shift}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>
