@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2020-03-20T12:34:17 -->
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
+<!-- 2020-05-28T12:08:43 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="addendum" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="22c9f520-d5e9-4af2-ac4c-ad2be98d416a">
 	<property name="ireport.zoom" value="1.7524694974069637"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/addendum"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44:80/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Matrosefontein"/>
 	<parameter name="load_id" class="java.lang.Integer"/>
 	<parameter name="user_name" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
@@ -153,7 +153,7 @@ FROM
 	<field name="booking_reference" class="java.lang.String"/>
 	<field name="govt_inspection_sheet_id" class="java.lang.Integer"/>
 	<field name="inspection_point" class="java.lang.String"/>
-	<field name="inspection_date" class="java.sql.Timestamp"/>
+	<field name="inspection_date" class="java.sql.Date"/>
 	<field name="fruit_sticker_2" class="java.lang.String"/>
 	<field name="pallet_carton_quantity" class="java.lang.Integer"/>
 	<field name="fruit_sticker_pm_product_2_id" class="java.lang.Integer"/>
@@ -173,7 +173,6 @@ FROM
 	<field name="updated_at" class="java.sql.Timestamp"/>
 	<field name="std_ctns" class="java.math.BigDecimal"/>
 	<field name="palletized_date" class="java.sql.Date"/>
-	<field name="COLUMN_103" class="java.lang.Integer"/>
 	<field name="repacked" class="java.lang.Boolean"/>
 	<field name="repacked_at" class="java.sql.Timestamp"/>
 	<field name="repacked_date" class="java.sql.Date"/>
@@ -181,6 +180,33 @@ FROM
 	<field name="failed_otmc_results" class="java.sql.Array"/>
 	<field name="failed_otmc" class="java.lang.Boolean"/>
 	<field name="phyto_data" class="java.lang.String"/>
+	<field name="location_id" class="java.lang.Integer"/>
+	<field name="pack_to_inspect_age" class="java.lang.Double"/>
+	<field name="inspect_to_cold_age" class="java.lang.Double"/>
+	<field name="inspect_to_exit_warm_age" class="java.lang.Double"/>
+	<field name="first_cold_storage_date" class="java.sql.Date"/>
+	<field name="govt_first_inspection_date" class="java.sql.Date"/>
+	<field name="govt_reinspection_date" class="java.sql.Date"/>
+	<field name="packed_week" class="java.lang.String"/>
+	<field name="scrapped_date" class="java.sql.Date"/>
+	<field name="farm_group" class="java.lang.String"/>
+	<field name="count_group" class="java.lang.String"/>
+	<field name="COLUMN_115" class="java.lang.Integer"/>
+	<field name="customer_reference" class="java.lang.String"/>
+	<field name="internal_order_number" class="java.lang.String"/>
+	<field name="customer_order_number" class="java.lang.String"/>
+	<field name="arrival_date" class="java.sql.Date"/>
+	<field name="departure_date" class="java.sql.Date"/>
+	<field name="repacked_from_pallet_number" class="java.lang.String"/>
+	<field name="created_by" class="java.lang.String"/>
+	<field name="verified_by" class="java.lang.String"/>
+	<field name="edi_size_count" class="java.lang.String"/>
+	<field name="target_customer_party_role_id" class="java.lang.Integer"/>
+	<field name="target_customer" class="java.lang.String"/>
+	<field name="consignment_note_number" class="java.lang.String"/>
+	<field name="dispatch_note" class="java.lang.String"/>
+	<field name="depot" class="java.lang.String"/>
+	<field name="po_file_name" class="java.lang.String"/>
 	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
 	</variable>
@@ -1111,7 +1137,7 @@ FROM
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="5"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{shipped_at}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{departure_date}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
 				<reportElement x="238" y="82" width="41" height="32" uuid="09c4e6e6-2f7c-4c4d-96fc-e119460c1d43"/>
