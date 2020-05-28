@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-05-28T06:08:01 -->
+<!-- 2020-05-28T15:43:06 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
@@ -120,7 +120,9 @@ calc_sql AS (
         rank() OVER (PARTITION BY base_sql.cw_id ORDER BY base_sql.packing_method_code) AS cw_rank,
         base_sql.shift_id,
         base_sql.wage_level_shift,
-        base_sql.packers_shift
+        base_sql.packers_shift,
+        count(*) over (partition by cw_id,shift_id) cw_cnt
+        
     FROM
         base_sql
 ),
@@ -167,11 +169,11 @@ SELECT
     END cw_rank,
     sum(total_fruit) over (partition by shift_id) shift_fruit,
     sum(total_cartons) over (partition by shift_id) shift_cartons,
-    sum(CASE WHEN incentive < 0 THEN
+sum(CASE WHEN incentive < 0 THEN
         0
     ELSE
         incentive
-    END) over (partition by shift_id) shift_incentive,
+    END/cw_cnt) over (partition by shift_id) shift_incentive,
     shift_id,
     wage_level_shift,
     packers_shift
