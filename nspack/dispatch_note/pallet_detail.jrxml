@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-05-18T10:05:48 -->
+<!-- 2020-06-02T14:02:21 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pallet_detail" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="57a0c595-5448-465f-8162-0e6517403bd3">
 	<property name="ireport.zoom" value="2.253944402704733"/>
 	<property name="ireport.x" value="0"/>
@@ -45,8 +45,8 @@ LEFT JOIN cultivar_groups ON cultivar_groups.id = pallet_sequences.cultivar_grou
 LEFT JOIN cultivars ON cultivars.id = pallet_sequences.cultivar_id
 LEFT JOIN commodities ON commodities.id = COALESCE(cultivars.commodity_id, cultivar_groups.commodity_id)
 JOIN marketing_varieties ON marketing_varieties.id = pallet_sequences.marketing_variety_id
-LEFT JOIN customer_variety_varieties ON customer_variety_varieties.id = pallet_sequences.customer_variety_id
-LEFT JOIN marketing_varieties cvv ON cvv.id = customer_variety_varieties.marketing_variety_id
+LEFT JOIN customer_varieties ON customer_varieties.id = pallet_sequences.customer_variety_id
+LEFT JOIN marketing_varieties cvv ON cvv.id = customer_varieties.variety_as_customer_variety_id
 JOIN marks ON marks.id = pallet_sequences.mark_id
 JOIN target_market_groups ON target_market_groups.id = pallet_sequences.packed_tm_group_id
 JOIN grades ON grades.id = pallet_sequences.grade_id
