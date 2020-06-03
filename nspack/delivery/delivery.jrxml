@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-04-21T14:02:39 -->
+<!-- 2020-06-03T10:44:26 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="delivery_report" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d109052e-9b0f-425e-bdc4-875aca838363">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
@@ -28,7 +28,7 @@
     '' AS color_code,
     '' AS ripeness_code,
     '' AS bin_groups,
-    '' AS gap
+    p.gap_code AS gap
       ,'' AS rmt_product_code,count(j.id)bin_qty
       ,j.bin_fullness ,c.container_material_type_code 
 
@@ -50,6 +50,7 @@ where a.id=$P{delivery_id}
 group by     a.id,j.rmt_delivery_id,
     fn_party_role_name (f.owner_party_role_id) ,
     f.farm_code,
+    p.gap_code,
     o.orchard_code,
     p.puc_code,
     a.qty_damaged_bins,
@@ -60,7 +61,7 @@ group by     a.id,j.rmt_delivery_id,
     a.truck_registration_number,
     i.description ,
     m.code ,j.bin_fullness,
-    d.delivery_destination_code,c.container_material_type_code ]]>
+    d.delivery_destination_code,c.container_material_type_code]]>
 	</queryString>
 	<field name="id" class="java.lang.Integer"/>
 	<field name="farm_owner" class="java.lang.String"/>
