@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-05-23T15:03:57 -->
+<!-- 2020-06-08T08:53:32 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pack_out" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" uuid="c08c8ed1-c3fa-4b77-b7f2-d6e11642b1b0">
 	<property name="ireport.zoom" value="5.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_NSPACK_UD"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Dunbrody_New_Framework"/>
 	<parameter name="production_run_id" class="java.lang.Integer"/>
 	<parameter name="carton_or_bin" class="java.lang.String">
 		<defaultValueExpression><![CDATA[Carton]]></defaultValueExpression>
@@ -15,58 +15,137 @@
 	<parameter name="use_packed_weight" class="java.lang.Boolean"/>
 	<parameter name="use_derived_weight" class="java.lang.Boolean"/>
 	<queryString language="SQL">
-		<![CDATA[with vpo as
- (SELECT
-    farm_code,
+		<![CDATA[select
+	max(production_run_code) OVER () production_run_code,
+	farm_code,
     orchards,
     deliveries,
-    no_of_bins,
-    total_bin_weight,
-    total_packed_weight,
-    total_pallet_weight,
     cultivar,
     marketing_variety_code,
     production_run_id,
-    production_run_code,
-    grade_code,
     packhouse,
     line,
+    grade_code,
     basic_pack,
     std_size,
     size_ref,
     actual_count,
     inventory_code,
-    sum(nett_weight) nett_weight,
-    sum(carton_quantity) carton_quantity,
-    min(pack_date) pack_date,
-    min(pack_week) pack_week,
-    sum(derived_nett_weight) as derived_nett_weight
-FROM
-    public.vw_packout_details
-WHERE
-       production_run_id =  $P{production_run_id} 
-GROUP BY
-    farm_code,
-    orchards,
-    deliveries,
-    no_of_bins,
-    total_bin_weight,
-    total_packed_weight,
-    total_pallet_weight,
-    cultivar,
-    marketing_variety_code,
-    production_run_id,
-    production_run_code,
-    grade_code,
-    packhouse,
-    line,
-    basic_pack,
-    std_size,
-    size_ref,
-    actual_count,
-    inventory_code)
-    
-    select *,sum(derived_nett_weight)over (partition by production_run_id) as total_run_derived_weight from vpo]]>
+    nett_weight,
+    derived_nett_weight,
+    carton_quantity,
+    max(total_bin_weight) OVER () total_bin_weight,
+    max(total_packed_weight) OVER () total_packed_weight,
+    max(total_pallet_weight) OVER () total_pallet_weight,
+    max(no_of_bins) OVER () no_of_bins,
+    min(pack_date) OVER () pack_date,
+    min(pack_week) OVER () pack_week,
+    sum(
+        CASE WHEN record_type = 'Cartons' THEN
+            derived_nett_weight
+        ELSE
+            0
+        END) OVER (PARTITION BY production_run_id) AS total_run_derived_weight
+from  
+(
+    select
+         production_run_code,
+        'Cartons' AS record_type,
+        farm_code,
+        orchards,
+        deliveries,
+        cultivar,
+        marketing_variety_code,
+        production_run_id,
+        packhouse,
+        line,
+        grade_code,
+        basic_pack,
+        std_size,
+        size_ref,
+        actual_count,
+        inventory_code,
+        sum(nett_weight) nett_weight,
+        sum(derived_nett_weight) AS derived_nett_weight,
+        sum(carton_quantity) carton_quantity,
+        total_bin_weight,
+        total_packed_weight,
+        total_pallet_weight,
+        no_of_bins ,
+        min(pack_date) pack_date,
+        min(pack_week) pack_week
+    FROM
+        vw_packout_details vpd
+    WHERE
+        production_run_id = $P{production_run_id} 
+    GROUP by
+    	no_of_bins,
+    	production_run_code,
+        cultivar,
+        marketing_variety_code,
+        production_run_id,
+        grade_code,
+        basic_pack,
+        std_size,
+        size_ref,
+        actual_count,
+        inventory_code,
+        farm_code,
+        orchards,
+        deliveries,
+        total_bin_weight,
+        total_packed_weight,
+        total_pallet_weight,
+        packhouse,
+        line
+    UNION ALL
+    select
+    	'' as production_run_code,
+        'Rebins' AS record_type,
+        farm_code,
+        orchard_code,
+        rmt_delivery_id::text,
+        coalesce(cultivar_name, cultivar_group_code) cultivar,
+        coalesce(cultivar_name, cultivar_group_code) AS marketing_variety_code,
+        production_run_rebin_id AS production_run_id,
+        packhouse,
+        packhouse AS line,
+        rmt_class_code,
+        NULL basic_pack,
+        NULL std_size,
+        NULL size_ref,
+        NULL actual_count,
+        NULL inventory_code,
+        sum(nett_weight) nett_weight,
+        sum(nett_weight) AS derived_nett_weight,
+        count(*) carton_quantity,
+        0 total_bin_weight,
+        0 total_packed_weight,
+        0 total_pallet_weight,
+        0 no_of_bins,
+        null as pack_date,
+        null as pack_week
+    FROM
+        public.vw_bins
+    WHERE
+        production_run_rebin_id =$P{production_run_id} 
+    GROUP BY
+        cultivar,
+        rmt_delivery_id,
+        coalesce(cultivar_name, cultivar_group_code),
+        production_run_rebin_id,
+        rmt_class_code,
+        farm_code,
+        orchard_code,
+        packhouse
+    ORDER BY
+        record_type,
+        grade_code
+) as output_r
+
+
+ORDER BY
+    record_type,grade_code]]>
 	</queryString>
 	<field name="grade_code" class="java.lang.String"/>
 	<field name="nett_weight" class="java.math.BigDecimal"/>
@@ -75,14 +154,12 @@ GROUP BY
 	<field name="pack_date" class="java.sql.Timestamp"/>
 	<field name="pack_week" class="java.lang.Double"/>
 	<field name="deliveries" class="java.lang.String"/>
-	<field name="no_of_bins" class="java.lang.Integer"/>
 	<field name="total_bin_weight" class="java.math.BigDecimal"/>
 	<field name="total_packed_weight" class="java.math.BigDecimal"/>
 	<field name="total_pallet_weight" class="java.math.BigDecimal"/>
 	<field name="cultivar" class="java.lang.String"/>
 	<field name="marketing_variety_code" class="java.lang.String"/>
 	<field name="production_run_id" class="java.lang.Integer"/>
-	<field name="production_run_code" class="java.lang.String"/>
 	<field name="packhouse" class="java.lang.String"/>
 	<field name="line" class="java.lang.String"/>
 	<field name="std_size" class="java.lang.Integer"/>
@@ -93,6 +170,8 @@ GROUP BY
 	<field name="basic_pack" class="java.lang.String"/>
 	<field name="derived_nett_weight" class="java.math.BigDecimal"/>
 	<field name="total_run_derived_weight" class="java.math.BigDecimal"/>
+	<field name="production_run_code" class="java.lang.String"/>
+	<field name="no_of_bins" class="java.lang.Integer"/>
 	<variable name="nett_weight_1" class="java.lang.Double" resetType="Group" resetGroup="grade_code" calculation="Sum">
 		<variableExpression><![CDATA[$P{use_derived_weight} ?$F{derived_nett_weight} : $F{nett_weight}]]></variableExpression>
 	</variable>
@@ -328,7 +407,7 @@ GROUP BY
 	</title>
 	<detail>
 		<band height="13" splitType="Stretch">
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="57" y="0" width="38" height="13" uuid="56631ea8-ab91-4099-b63b-d474e7c3842a"/>
 				<textFieldExpression><![CDATA[$F{basic_pack}]]></textFieldExpression>
 			</textField>
@@ -337,11 +416,11 @@ GROUP BY
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{actual_count}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="129" y="0" width="25" height="13" uuid="d974a7d8-7e94-4963-bab7-e2b822411383"/>
 				<textFieldExpression><![CDATA[$F{size_ref}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="154" y="0" width="37" height="13" uuid="72fc0c37-5939-4430-a3e8-6e80dd80df23"/>
 				<textFieldExpression><![CDATA[$F{inventory_code}]]></textFieldExpression>
 			</textField>
@@ -362,7 +441,7 @@ GROUP BY
 				<textElement textAlignment="Center"/>
 				<text><![CDATA[/]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="10" y="0" width="47" height="13" uuid="bf4a7b6b-cf7c-4c6b-b5d8-31b28a714e55"/>
 				<textFieldExpression><![CDATA[$F{marketing_variety_code}]]></textFieldExpression>
 			</textField>
