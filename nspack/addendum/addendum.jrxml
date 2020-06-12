@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-05-28T12:08:43 -->
+<!-- 2020-06-12T09:59:12 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="addendum" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="22c9f520-d5e9-4af2-ac4c-ad2be98d416a">
 	<property name="ireport.zoom" value="1.7524694974069637"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/addendum"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44:80/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Matrosefontein"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Dunbrody_New_Framework"/>
 	<parameter name="load_id" class="java.lang.Integer"/>
 	<parameter name="user_name" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
@@ -21,7 +21,9 @@
   count(*) OVER (PARTITION BY sq.load_id) AS total_row,
 * 
 FROM 
-(SELECT *
+(SELECT  id,pallet_id,pallet_number,pallet_sequence_number,plt_packhouse,plt_line,packhouse,line,location_id,location,shipped,in_stock,inspected,reinspected,palletized,partially_palletized,allocated,pallet_age,inspection_age,stock_age,cold_age,ambient_age,reinspection_age,pack_to_inspect_age,inspect_to_cold_age,inspect_to_exit_warm_age,first_cold_storage_at,first_cold_storage_date,internal_inspection_passed,govt_inspection_passed,govt_first_inspection_at,govt_first_inspection_date,govt_reinspection_at,govt_reinspection_date,shipped_at,shipped_date,packed_at,packed_date,packed_week,created_at,updated_at,scrapped,scrapped_at,scrapped_date,production_run_id,farm,farm_group,production_region,puc,orchard,commodity,cultivar_group,cultivar,marketing_variety,marketing_org,packed_tm_group,mark,inventory_code,customer_variety,std_size,size_ref,count_group,actual_count,basic_pack,std_pack,std_ctns,resource_allocation_id,treatments,client_size_ref,client_product_code,order_number,season,pm_subtype,pm_type,cpp,fruit_sticker,fruit_sticker_2,gross_weight,gross_weight_measured_at,nett_weight
+,cast(sequence_nett_weight as dec(9,2)) as sequence_nett_weight,exit_ref,phc,stock_created_at,intake_created_at,palletized_at,palletized_date,partially_palletized_at,allocated_at,internal_inspection_at,internal_reinspection_at,pallet_base,stack_type,pallet_verification_failed,verified,verification_passed,verification_failure_reason,verification_result,verified_at,"bom",extended_columns,carton_quantity,scanned_carton,seq_scrapped_at,seq_exit_ref,pick_ref,pallet_carton_quantity,pallet_size,build_status,status,sequence_status,active,load_id,vessel,voyage,voyage_number,container,internal_container,temp_code,vehicle_number,cooled,pol,pod,final_destination,customer,consignee,final_receiver,exporter,billing_client,exporter_certificate_code,customer_reference,internal_order_number,customer_order_number,country,region,eta,ata,etd,atd,arrival_date,departure_date,zero_load_id,fruit_sticker_pm_product_id,fruit_sticker_pm_product_2_id,pallet_verification_failure_reason_id,grade,sell_by_code,product_chars,booking_reference,govt_inspection_sheet_id,inspection_point,inspected_dest_country,last_govt_inspection_pallet_id,pallet_format_id,temp_tail,shipper,depot_pallet,edi_in_file,edi_in_consignment_note_number,inspection_date,addendum_manifest,repacked,repacked_at,repacked_date,repacked_from_pallet_id,repacked_from_pallet_number,failed_otmc_results,failed_otmc,phyto_data,created_by,verified_by,edi_size_count,target_customer_party_role_id,target_customer,consignment_note_number,dispatch_note,depot,po_file_name,colour_rule
+
   FROM vw_pallet_sequence_flat
   WHERE vw_pallet_sequence_flat.load_id=$P{load_id} 
 )  AS sq]]>
@@ -627,7 +629,7 @@ FROM
 					</textElement>
 					<text><![CDATA[Total:]]></text>
 				</staticText>
-				<textField pattern="###0">
+				<textField pattern="###0.00">
 					<reportElement x="464" y="11" width="44" height="10" uuid="85866cba-cc61-4e16-976d-85aeac52dcb4">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -835,7 +837,7 @@ FROM
 					</textElement>
 					<textFieldExpression><![CDATA[$F{carton_quantity}]]></textFieldExpression>
 				</textField>
-				<textField pattern="###0.0" isBlankWhenNull="true">
+				<textField pattern="###0.00" isBlankWhenNull="true">
 					<reportElement x="466" y="0" width="41" height="10" uuid="954cafbd-c2b4-4ff4-9f47-467096882713"/>
 					<textElement textAlignment="Right">
 						<font size="7"/>
@@ -1641,7 +1643,7 @@ FROM
 					<pen lineWidth="0.5"/>
 				</graphicElement>
 			</line>
-			<textField pattern="###0.0" isBlankWhenNull="true">
+			<textField pattern="###0.00" isBlankWhenNull="true">
 				<reportElement x="466" y="0" width="41" height="10" uuid="9f6adb31-e96f-432d-bc40-daa78e110b28"/>
 				<textElement textAlignment="Right">
 					<font size="7"/>
