@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-05-11T16:14:25 -->
+<!-- 2020-06-25T17:30:23 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gov_inspection_sheet" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b276ed72-36fe-4eb1-8898-57bb00d5eee1">
 	<property name="ireport.zoom" value="1.7524694974069621"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="46"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/first_intake"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Dunbrody_New_Framework"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_NSPACK_UD"/>
 	<subDataset name="dataset1" uuid="c85ecac9-39da-4aaa-997f-4e9b10bcfb3c"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA["Users"]]></defaultValueExpression>
@@ -165,17 +165,20 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 		else '' end consignment_note_number
 ,govt_inspection_sheets.inspection_billing_party_role_id
 ,govt_inspection_sheets.exporter_party_role_id
-,inspection_failure_reasons.failure_reason 
+,inspection_failure_reasons.failure_reason ,
+target_market_groups.target_market_group_name 
 FROM
     public.vw_pallet_sequence_flat p
     LEFT JOIN govt_inspection_pallets ON govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
     LEFT JOIN govt_inspection_sheets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
 LEFT JOIN destination_countries ON destination_countries.id = govt_inspection_sheets.destination_country_id
-LEFT JOIN destination_regions ON destination_regions.id = destination_countries.destination_region_id
+LEFT JOIN destination_regions ON destination_regions.id = govt_inspection_sheets.destination_region_id
 left join inspectors on inspectors.id= govt_inspection_sheets.inspector_id
 left join party_roles on inspectors.inspector_party_role_id= party_roles.id
 left join parties on party_roles.party_id=parties.id
 left join inspection_failure_reasons on inspection_failure_reasons.id=govt_inspection_pallets.failure_reason_id 
+left join target_market_groups on govt_inspection_sheets.packed_tm_group_id =target_market_groups.id 
+left join target_market_group_types  on target_market_groups.target_market_group_type_id =target_market_group_types.id and target_market_group_type_code ='PACKED'
 
 WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
   AND $P!{QueryCondition}]]>
@@ -320,6 +323,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 	<field name="destination_region_name" class="java.lang.String"/>
 	<field name="phyto_data" class="java.lang.String"/>
 	<field name="failure_reason" class="java.lang.String"/>
+	<field name="target_market_group_name" class="java.lang.String"/>
 	<sortField name="pallet_number"/>
 	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
