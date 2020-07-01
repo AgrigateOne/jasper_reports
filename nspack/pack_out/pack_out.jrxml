@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-06-24T12:02:22 -->
+<!-- 2020-07-01T09:16:43 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pack_out" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" uuid="c08c8ed1-c3fa-4b77-b7f2-d6e11642b1b0">
 	<property name="ireport.zoom" value="5.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Dunbrody_New_Framework"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_NSPACK_UD"/>
 	<parameter name="production_run_id" class="java.lang.Integer"/>
 	<parameter name="carton_or_bin" class="java.lang.String">
 		<defaultValueExpression><![CDATA[Carton]]></defaultValueExpression>
@@ -39,7 +39,7 @@
     max(output_r.total_pallet_weight) OVER () total_pallet_weight,
     max(output_r.no_of_bins) OVER () no_of_bins,
     pr.started_at pack_date,
-    min(output_r.pack_week) OVER () pack_week,
+    EXTRACT (week FROM pr.started_at)::int pack_week,
     sum(
         CASE WHEN output_r.record_type = 'Cartons' THEN
             output_r.derived_nett_weight
@@ -149,7 +149,7 @@ ORDER BY
 	<field name="inventory_code" class="java.lang.String"/>
 	<field name="farm_code" class="java.lang.String"/>
 	<field name="pack_date" class="java.sql.Timestamp"/>
-	<field name="pack_week" class="java.lang.Double"/>
+	<field name="pack_week" class="java.lang.Integer"/>
 	<field name="deliveries" class="java.lang.String"/>
 	<field name="total_bin_weight" class="java.math.BigDecimal"/>
 	<field name="total_packed_weight" class="java.math.BigDecimal"/>
