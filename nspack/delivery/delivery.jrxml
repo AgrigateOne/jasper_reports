@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-06-03T10:44:26 -->
+<!-- 2020-07-10T10:56:51 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="delivery_report" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d109052e-9b0f-425e-bdc4-875aca838363">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
@@ -37,16 +37,26 @@ FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) AS implementation_owner_party_role_id
 FROM
     rmt_deliveries a
-    LEFT JOIN public.rmt_bins j ON (a.id = j.rmt_delivery_id)
+    LEFT JOIN rmt_delivery_destinations d ON d.id = a.rmt_delivery_destination_id
+    LEFT JOIN seasons s ON a.season_id = s.id
+    /*LEFT JOIN public.rmt_bins j ON (a.id = j.rmt_delivery_id)
     LEFT JOIN farms f ON f.id = j.farm_id
     LEFT JOIN orchards o ON o.id = j.orchard_id
     LEFT JOIN pucs p ON p.id = j.puc_id
     LEFT JOIN rmt_container_material_types c ON (c.id = j.rmt_container_material_type_id)
     LEFT JOIN public.cultivars i ON (i.id = j.cultivar_id)
     LEFT JOIN public.commodities m ON m.id = i.commodity_id
-    LEFT JOIN rmt_delivery_destinations d ON d.id = a.rmt_delivery_destination_id
-    LEFT JOIN seasons s ON a.season_id = s.id
-where a.id=$P{delivery_id}
+*/
+    --join fruit attributes from delivery and not rmt_bins
+LEFT JOIN public.rmt_bins j ON (a.id = j.rmt_delivery_id)
+    LEFT JOIN farms f ON f.id = a.farm_id
+    LEFT JOIN orchards o ON o.id = a.orchard_id
+    LEFT JOIN pucs p ON p.id = a.puc_id
+    LEFT JOIN rmt_container_material_types c ON (c.id = j.rmt_container_material_type_id)
+    LEFT JOIN public.cultivars i ON (i.id = a.cultivar_id)
+    LEFT JOIN public.commodities m ON m.id = i.commodity_id
+    
+    where a.id=$P{delivery_id}
 group by     a.id,j.rmt_delivery_id,
     fn_party_role_name (f.owner_party_role_id) ,
     f.farm_code,
@@ -399,7 +409,7 @@ group by     a.id,j.rmt_delivery_id,
 	</columnHeader>
 	<detail>
 		<band height="20" splitType="Stretch">
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="2" y="0" width="100" height="20" uuid="5667f366-e7b6-48ba-873a-ca63552b75ea">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -408,7 +418,7 @@ group by     a.id,j.rmt_delivery_id,
 				</textElement>
 				<textFieldExpression><![CDATA[$F{container_material_type_code}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="108" y="0" width="100" height="20" uuid="89b37a39-4d2d-4b75-b2f1-592e933d3a94">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -443,7 +453,7 @@ group by     a.id,j.rmt_delivery_id,
 				<textElement>
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[UNIFRUTTI SOUTH AFRICA:_____________________]]></text>
+				<text><![CDATA[:_____________________]]></text>
 			</staticText>
 			<line>
 				<reportElement x="0" y="64" width="555" height="1" uuid="02b5ae41-9015-4b72-90ad-0db66e37d893">
