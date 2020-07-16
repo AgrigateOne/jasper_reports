@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-07-01T09:16:43 -->
+<!-- 2020-07-16T13:14:45 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pack_out" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" uuid="c08c8ed1-c3fa-4b77-b7f2-d6e11642b1b0">
 	<property name="ireport.zoom" value="5.0"/>
 	<property name="ireport.x" value="0"/>
@@ -285,8 +285,8 @@ ORDER BY
 				<reportElement x="0" y="98" width="72" height="13" uuid="af65bbe3-7040-4b39-a470-a21354c9f7a4"/>
 				<text><![CDATA[Total Weight]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="79" y="18" width="208" height="18" uuid="94c5f4c7-8354-4816-8d38-077b6243a5fc"/>
+			<textField isBlankWhenNull="true">
+				<reportElement x="79" y="18" width="476" height="47" uuid="94c5f4c7-8354-4816-8d38-077b6243a5fc"/>
 				<textFieldExpression><![CDATA[$F{deliveries}]]></textFieldExpression>
 			</textField>
 			<staticText>
@@ -373,7 +373,7 @@ ORDER BY
 				<text><![CDATA[Client Name]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="79" y="40" width="141" height="18" uuid="b4ed6d6d-a46e-4978-b15d-15d61dddd28e">
+				<reportElement x="281" y="65" width="141" height="18" uuid="b4ed6d6d-a46e-4978-b15d-15d61dddd28e">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -384,7 +384,7 @@ ORDER BY
 				<text><![CDATA[Deliveries]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="42" width="72" height="13" uuid="90214d16-623b-4796-a713-3e2e5bab6eea"/>
+				<reportElement x="202" y="67" width="72" height="13" uuid="90214d16-623b-4796-a713-3e2e5bab6eea"/>
 				<text><![CDATA[Orchards]]></text>
 			</staticText>
 			<staticText>
