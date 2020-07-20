@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-07-20T12:27:12 -->
+<!-- 2020-07-20T12:38:47 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="finding_sheet" language="groovy" printOrder="Horizontal" pageWidth="595" pageHeight="842" columnWidth="579" leftMargin="8" rightMargin="8" topMargin="8" bottomMargin="8" uuid="3e015a3f-e95b-45af-822d-5984fdad92cf">
 	<property name="ireport.zoom" value="1.7715610000000015"/>
 	<property name="ireport.x" value="0"/>
@@ -414,7 +414,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				<imageExpression><![CDATA["../logos/ppecb.png"]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="406" y="1" width="83" height="10" uuid="1b9417fb-7078-48fe-ae06-47a20118351f">
+				<reportElement x="406" y="7" width="83" height="11" uuid="1b9417fb-7078-48fe-ae06-47a20118351f">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -424,35 +424,35 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				<text><![CDATA[PPECB FINDINGS:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="406" y="11" width="93" height="11" uuid="d439990b-e580-4fb9-b657-1805adac4c7e"/>
+				<reportElement x="406" y="22" width="93" height="11" uuid="d439990b-e580-4fb9-b657-1805adac4c7e"/>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[PP04.01 - 05F06 C |]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="499" y="11" width="57" height="11" uuid="a78daf47-8fce-40c0-8b4c-3a24e5c8cb2f"/>
+				<reportElement x="499" y="22" width="57" height="11" uuid="a78daf47-8fce-40c0-8b4c-3a24e5c8cb2f"/>
 				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[REV 1]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="479" y="24" width="50" height="9" uuid="9bd1549a-35f2-4be0-b9c1-d4f45d4ee4fc"/>
+				<reportElement x="473" y="37" width="50" height="11" uuid="9bd1549a-35f2-4be0-b9c1-d4f45d4ee4fc"/>
 				<textElement textAlignment="Right">
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="529" y="22" width="26" height="11" uuid="bb6561ba-4c4b-4201-a318-06ba9c5c6e88"/>
+				<reportElement x="529" y="37" width="26" height="11" uuid="bb6561ba-4c4b-4201-a318-06ba9c5c6e88"/>
 				<textElement verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="499" y="1" width="55" height="10" uuid="b9cc5641-2fff-4db4-ad57-e90735d802e7">
+				<reportElement x="499" y="7" width="55" height="11" uuid="b9cc5641-2fff-4db4-ad57-e90735d802e7">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
