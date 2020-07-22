@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
+<!-- 2020-07-22T14:18:50 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
+	<property name="ireport.zoom" value="1.4641000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_ns_pack_sr"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#FFFFFF" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<parameter name="shift_id" class="java.lang.Integer"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["C:\\Huis\\dunbrody\\reports\\on_server\\incentive\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="carton_per_price" class="java.lang.Double">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[WITH base_sql AS (
+    SELECT
+        wage_levels.description AS wage_level_description,
+        contract_workers.personnel_number AS personnel_barcode_number,
+        s.id AS shift_id,
+        contract_workers.first_name || ' ' || contract_workers.surname AS party_name,
+        s.start_date_time,
+        s.end_date_time,
+        s.day_night_or_custom AS shift_type_code,
+        s.shift_type_id,
+        count(cartons.id) AS total_cartons,
+          contract_workers.id AS cw_id,
+        count(distinct pallet_sequences.pallet_number ) AS total_pallets,
+        COALESCE(shift_exceptions.running_hours, s.running_hours, ((EXTRACT(EPOCH FROM end_date_time) - EXTRACT(EPOCH FROM start_date_time)) / 60 / 60)) AS running_hours,
+        wage_levels.wage_level,
+        sum(wage_levels.wage_level) over (partition by s.id) as wage_level_shift,
+        count( contract_workers.id) over (partition by s.id) as palletizer_shift
+    FROM
+        cartons
+               join pallet_sequences on cartons.pallet_sequence_id=pallet_sequences.id
+        LEFT JOIN (
+            SELECT
+                shifts.end_date_time,
+                shifts.start_date_time,
+                plant_resource_id,
+                shifts.shift_type_id,
+                shifts.id,
+                day_night_or_custom,
+                shifts.running_hours
+            FROM
+                public.shifts
+               left JOIN shift_types ON shifts.shift_type_id = shift_types.id) AS s ON pallet_sequences.verified_at BETWEEN s.start_date_time
+                AND s.end_date_time
+                AND s.plant_resource_id = cartons.production_line_id
+        LEFT JOIN public.contract_workers ON (cartons.palletizer_identifier_id = contract_workers.id)
+        LEFT JOIN public.shift_exceptions ON (contract_workers.id = shift_exceptions.contract_worker_id)
+            AND (s.id = shift_exceptions.shift_id)
+        LEFT JOIN wage_levels ON contract_workers.wage_level_id = wage_levels.id
+    where           s.id=100
+    GROUP BY
+        s.id,
+        day_night_or_custom,
+        s.shift_type_id,
+        s.start_date_time,
+        s.end_date_time,
+        wage_levels.wage_level,
+        wage_levels.description,
+        contract_workers.id,
+        COALESCE(shift_exceptions.running_hours, s.running_hours, ((EXTRACT(EPOCH FROM end_date_time) - EXTRACT(EPOCH FROM start_date_time)) / 60 / 60)),
+        s.start_date_time
+    ORDER BY
+        contract_workers.id DESC,
+        s.start_date_time
+)select
+personnel_barcode_number as Contract_Worker_no,party_name as Contract_Worker_Name,shift_type_code as Shift_D_N
+, running_hours as Running_Hours,total_cartons as Total_Cartons, total_pallets as Total_Pallets,12 as Total_Earnings
+,        start_date_time,end_date_time
+ from base_sql
+ ]]>
+	</queryString>
+	<field name="contract_worker_no" class="java.lang.String"/>
+	<field name="contract_worker_name" class="java.lang.String"/>
+	<field name="shift_d_n" class="java.lang.String"/>
+	<field name="running_hours" class="java.lang.Double"/>
+	<field name="total_cartons" class="java.lang.Long"/>
+	<field name="total_pallets" class="java.lang.Long"/>
+	<field name="total_earnings" class="java.lang.Integer"/>
+	<field name="start_date_time" class="java.sql.Timestamp"/>
+	<field name="end_date_time" class="java.sql.Timestamp"/>
+	<variable name="incentive" class="java.lang.Double">
+		<variableExpression><![CDATA[$F{total_cartons}*$P{carton_per_price}]]></variableExpression>
+	</variable>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="119" splitType="Stretch">
+			<line>
+				<reportElement x="1" y="87" width="550" height="1" uuid="5a34193e-cfe0-4370-bbc4-c4c5decf103f">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="1" y="118" width="550" height="1" uuid="40403b99-d179-4790-b0af-5d66390d9a2f">
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement style="Column header" x="317" y="89" width="64" height="30" forecolor="#000000" uuid="994518c1-7571-4434-bbf8-99a73e8ecbbc"/>
+				<textElement>
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Total pallets]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="393" y="89" width="43" height="30" forecolor="#000000" uuid="40af268d-0a12-4376-913a-11232d68f904">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Running Hours]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="89" width="67" height="30" uuid="305867e5-a2e5-4f2b-a6cb-6a46e3005b89"/>
+				<textElement>
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[PNo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="281" y="89" width="36" height="30" uuid="00c02650-20e0-4cb8-9cf5-740132cd6884"/>
+				<textElement>
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Total Cartons]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="490" y="89" width="63" height="30" uuid="07ffafdb-14c7-417d-bf61-8711933a835a"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Total Earnings]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="68" y="89" width="120" height="30" uuid="6a9424ce-1390-4108-99e8-ed956c24c933"/>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="437" y="89" width="53" height="30" uuid="4207fc67-7b55-43fa-94ce-2560746370f6"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Incentive]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="188" y="89" width="92" height="30" uuid="15635740-bbde-443d-aa1e-d183c382bdeb"/>
+				<text><![CDATA[Shift D/N]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="188" y="0" width="363" height="31" uuid="7f52ae9c-18fd-4247-83c6-e0e3ab47a76f"/>
+				<textElement textAlignment="Center">
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[Unifrutti]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="188" y="32" width="363" height="20" uuid="2b26c7e0-dbf4-4b77-9af0-1d716e510cd0"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Packer Summary Report]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yy h:mm a">
+				<reportElement x="317" y="60" width="64" height="18" uuid="dd334a4b-f3cc-41bb-8c28-3dbfeae48716"/>
+				<textFieldExpression><![CDATA[$F{start_date_time}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yy h:mm a">
+				<reportElement x="436" y="60" width="78" height="18" uuid="447eadb7-aed1-42ac-844d-a721cbdb686f"/>
+				<textFieldExpression><![CDATA[$F{end_date_time}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="188" y="60" width="92" height="18" uuid="8ff46e75-7cd3-4c68-a4d5-ee0eff880f1b"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[From Date:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="393" y="60" width="43" height="18" uuid="08314734-8aac-47bf-abf6-4f4fec3b780e">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<text><![CDATA[to]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="60" width="67" height="18" uuid="13b9ad4e-5e06-42ee-b21f-35365c5808c5"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Shift Type:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="68" y="60" width="120" height="18" uuid="121ed004-b939-409a-a01a-1140cca7e0ac"/>
+				<textFieldExpression><![CDATA[$F{shift_d_n}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="68" y="32" width="120" height="20" uuid="775134d5-a804-4305-a4aa-a20548655774"/>
+				<textFieldExpression><![CDATA[$P{shift_id}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="32" width="67" height="20" uuid="56546620-b270-4dcd-a2f5-68a45f4f7afc"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Shift ID:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="1" width="67" height="30" uuid="f25da82b-9efb-4199-8976-e0621626442b"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Incentive  per carton:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="68" y="1" width="120" height="30" uuid="3ab788a3-6078-4717-b406-e6ebf6b5b913"/>
+				<textFieldExpression><![CDATA[$P{carton_per_price}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="1" y="0" width="67" height="15" uuid="a9189391-1447-48de-a8eb-80c2d63b45d0"/>
+				<textFieldExpression><![CDATA[$F{contract_worker_no}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="68" y="0" width="120" height="15" uuid="7c6c77c6-242c-41fe-b29c-e6a3002c405c"/>
+				<textFieldExpression><![CDATA[$F{contract_worker_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="281" y="0" width="36" height="15" uuid="f83a63e0-000b-46a1-b35f-5f7818f68111"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{total_cartons}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="317" y="0" width="64" height="15" uuid="d87d3b26-8bf5-456c-aff4-50a1e729fc6b"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{total_pallets}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="188" y="0" width="92" height="15" uuid="e737738c-f322-46eb-853e-6dbd43e8bd0e"/>
+				<textFieldExpression><![CDATA[$F{shift_d_n}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
+				<reportElement x="393" y="0" width="43" height="15" uuid="395f9724-525c-4d6b-8dc1-dfcd109ebde2">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{running_hours}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
+				<reportElement x="437" y="0" width="53" height="15" uuid="89b64826-d22a-443a-8bec-94b00adb10c6"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{incentive}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
+				<reportElement x="490" y="0" width="63" height="15" uuid="40d13bc9-0e97-41b8-a0fe-8d4432dab293"/>
+				<textElement textAlignment="Right"/>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="26" splitType="Stretch">
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement style="Column header" x="436" y="8" width="116" height="18" forecolor="#000000" uuid="a8a917d7-104b-444d-a6c3-37768dd7fb70"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="68" y="7" width="120" height="18" uuid="216b7452-1de7-49ac-95a9-9ca088e41894"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="7" width="67" height="18" uuid="09a115f2-feaf-4179-8f25-e384b70afdd3"/>
+				<text><![CDATA[Page:]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="15" splitType="Stretch">
+			<line>
+				<reportElement x="1" y="0" width="550" height="1" uuid="13efb243-d9f4-490c-b993-83cc02721d4a">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+		</band>
+	</summary>
+</jasperReport>
