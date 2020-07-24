@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-07-24T06:10:54 -->
+<!-- 2020-07-24T17:46:27 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
@@ -84,8 +84,7 @@ personnel_barcode_number as Contract_Worker_no,party_name as Contract_Worker_Nam
 , running_hours as Running_Hours,total_cartons as Total_Cartons, 
 total_pallets as Total_Pallets,12 as Total_Earnings,palletizer_incentive_rate,palletizer_incentive_rate*total_cartons as incentive
 , standard_pack_codes,       start_date_time,end_date_time
- from base_sql
-]]>
+ from base_sql]]>
 	</queryString>
 	<field name="contract_worker_no" class="java.lang.String"/>
 	<field name="contract_worker_name" class="java.lang.String"/>
@@ -103,30 +102,32 @@ total_pallets as Total_Pallets,12 as Total_Earnings,palletizer_incentive_rate,pa
 		<band splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="119" splitType="Stretch">
+		<band height="91" splitType="Stretch">
 			<line>
-				<reportElement x="1" y="87" width="550" height="1" uuid="5a34193e-cfe0-4370-bbc4-c4c5decf103f">
+				<reportElement x="1" y="53" width="550" height="1" uuid="5a34193e-cfe0-4370-bbc4-c4c5decf103f">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 			</line>
 			<line>
-				<reportElement x="1" y="118" width="550" height="1" uuid="40403b99-d179-4790-b0af-5d66390d9a2f">
+				<reportElement x="1" y="90" width="550" height="1" uuid="40403b99-d179-4790-b0af-5d66390d9a2f">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 			</line>
 			<staticText>
-				<reportElement style="Column header" x="350" y="89" width="41" height="30" forecolor="#000000" uuid="994518c1-7571-4434-bbf8-99a73e8ecbbc"/>
+				<reportElement style="Column header" x="350" y="55" width="41" height="30" forecolor="#000000" uuid="994518c1-7571-4434-bbf8-99a73e8ecbbc"/>
 				<textElement>
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Total pallets]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="393" y="89" width="43" height="30" forecolor="#000000" uuid="40af268d-0a12-4376-913a-11232d68f904">
+				<reportElement style="Column header" x="393" y="55" width="43" height="30" forecolor="#000000" uuid="40af268d-0a12-4376-913a-11232d68f904">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -136,90 +137,83 @@ total_pallets as Total_Pallets,12 as Total_Earnings,palletizer_incentive_rate,pa
 				<text><![CDATA[Running Hours]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1" y="89" width="67" height="30" uuid="305867e5-a2e5-4f2b-a6cb-6a46e3005b89"/>
+				<reportElement x="1" y="55" width="67" height="30" uuid="305867e5-a2e5-4f2b-a6cb-6a46e3005b89"/>
 				<textElement>
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[PNo]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="313" y="89" width="36" height="30" uuid="00c02650-20e0-4cb8-9cf5-740132cd6884"/>
+				<reportElement x="313" y="55" width="36" height="30" uuid="00c02650-20e0-4cb8-9cf5-740132cd6884"/>
 				<textElement>
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Total Cartons]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="490" y="89" width="63" height="30" uuid="07ffafdb-14c7-417d-bf61-8711933a835a"/>
+				<reportElement x="490" y="55" width="63" height="30" uuid="07ffafdb-14c7-417d-bf61-8711933a835a"/>
 				<textElement textAlignment="Right"/>
 				<text><![CDATA[Incentive]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="68" y="89" width="120" height="30" uuid="6a9424ce-1390-4108-99e8-ed956c24c933"/>
+				<reportElement x="68" y="55" width="120" height="30" uuid="6a9424ce-1390-4108-99e8-ed956c24c933"/>
 				<text><![CDATA[Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="437" y="89" width="53" height="30" uuid="4207fc67-7b55-43fa-94ce-2560746370f6"/>
+				<reportElement x="437" y="55" width="53" height="30" uuid="4207fc67-7b55-43fa-94ce-2560746370f6"/>
 				<textElement textAlignment="Right"/>
 				<text><![CDATA[Incentive Rate]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="262" y="89" width="50" height="30" uuid="15635740-bbde-443d-aa1e-d183c382bdeb"/>
+				<reportElement x="262" y="55" width="50" height="30" uuid="15635740-bbde-443d-aa1e-d183c382bdeb"/>
 				<text><![CDATA[Shift D/N]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="188" y="0" width="363" height="31" uuid="7f52ae9c-18fd-4247-83c6-e0e3ab47a76f"/>
-				<textElement textAlignment="Center">
-					<font size="24"/>
-				</textElement>
-				<text><![CDATA[Unifrutti]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="188" y="32" width="363" height="20" uuid="2b26c7e0-dbf4-4b77-9af0-1d716e510cd0"/>
+				<reportElement x="188" y="2" width="363" height="20" uuid="2b26c7e0-dbf4-4b77-9af0-1d716e510cd0"/>
 				<textElement textAlignment="Center">
 					<font size="14"/>
 				</textElement>
-				<text><![CDATA[Packer Summary Report]]></text>
+				<text><![CDATA[Palletizing Summary Report]]></text>
 			</staticText>
 			<textField pattern="dd/MM/yy h:mm a">
-				<reportElement x="313" y="60" width="78" height="18" uuid="dd334a4b-f3cc-41bb-8c28-3dbfeae48716"/>
+				<reportElement x="313" y="30" width="78" height="18" uuid="dd334a4b-f3cc-41bb-8c28-3dbfeae48716"/>
 				<textFieldExpression><![CDATA[$F{start_date_time}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yy h:mm a">
-				<reportElement x="436" y="60" width="78" height="18" uuid="447eadb7-aed1-42ac-844d-a721cbdb686f"/>
+				<reportElement x="436" y="30" width="78" height="18" uuid="447eadb7-aed1-42ac-844d-a721cbdb686f"/>
 				<textFieldExpression><![CDATA[$F{end_date_time}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="220" y="60" width="92" height="18" uuid="8ff46e75-7cd3-4c68-a4d5-ee0eff880f1b"/>
+				<reportElement x="220" y="30" width="92" height="18" uuid="8ff46e75-7cd3-4c68-a4d5-ee0eff880f1b"/>
 				<textElement textAlignment="Right"/>
 				<text><![CDATA[From Date:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="393" y="60" width="43" height="18" uuid="08314734-8aac-47bf-abf6-4f4fec3b780e">
+				<reportElement x="393" y="30" width="43" height="18" uuid="08314734-8aac-47bf-abf6-4f4fec3b780e">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<text><![CDATA[to]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1" y="60" width="67" height="18" uuid="13b9ad4e-5e06-42ee-b21f-35365c5808c5"/>
+				<reportElement x="1" y="30" width="67" height="18" uuid="13b9ad4e-5e06-42ee-b21f-35365c5808c5"/>
 				<textElement textAlignment="Right"/>
 				<text><![CDATA[Shift Type:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="68" y="60" width="120" height="18" uuid="121ed004-b939-409a-a01a-1140cca7e0ac"/>
+				<reportElement x="68" y="30" width="120" height="18" uuid="121ed004-b939-409a-a01a-1140cca7e0ac"/>
 				<textFieldExpression><![CDATA[$F{shift_d_n}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="68" y="32" width="120" height="20" uuid="775134d5-a804-4305-a4aa-a20548655774"/>
+				<reportElement x="68" y="2" width="120" height="20" uuid="775134d5-a804-4305-a4aa-a20548655774"/>
 				<textFieldExpression><![CDATA[$P{shift_id}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="1" y="32" width="67" height="20" uuid="56546620-b270-4dcd-a2f5-68a45f4f7afc"/>
+				<reportElement x="1" y="2" width="67" height="20" uuid="56546620-b270-4dcd-a2f5-68a45f4f7afc"/>
 				<textElement textAlignment="Right"/>
 				<text><![CDATA[Shift ID:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="188" y="89" width="74" height="30" uuid="a3f99856-6979-437c-b161-d04c65ab86bf"/>
+				<reportElement x="188" y="55" width="74" height="30" uuid="a3f99856-6979-437c-b161-d04c65ab86bf"/>
 				<text><![CDATA[Std Packs]]></text>
 			</staticText>
 		</band>
