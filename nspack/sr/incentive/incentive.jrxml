@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-06-28T09:21:42 -->
+<!-- 2020-07-28T09:27:19 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
@@ -173,18 +173,13 @@ FROM
 				<text><![CDATA[Ctn]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="736" y="89" width="63" height="30" uuid="07ffafdb-14c7-417d-bf61-8711933a835a"/>
-				<textElement textAlignment="Right"/>
-				<text><![CDATA[Total Earnings]]></text>
-			</staticText>
-			<staticText>
 				<reportElement x="68" y="89" width="120" height="30" uuid="6a9424ce-1390-4108-99e8-ed956c24c933"/>
 				<text><![CDATA[Name]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="665" y="89" width="53" height="30" uuid="4207fc67-7b55-43fa-94ce-2560746370f6"/>
 				<textElement textAlignment="Right"/>
-				<text><![CDATA[Total Incentive]]></text>
+				<text><![CDATA[Total Earnings]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="188" y="89" width="110" height="30" uuid="15635740-bbde-443d-aa1e-d183c382bdeb"/>
@@ -272,7 +267,7 @@ FROM
 			<staticText>
 				<reportElement x="576" y="89" width="53" height="30" uuid="ee3775b3-91c4-46f1-bd6d-5f05bf0be997"/>
 				<textElement textAlignment="Right"/>
-				<text><![CDATA[Incentive]]></text>
+				<text><![CDATA[Cost]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
@@ -306,12 +301,6 @@ FROM
 				</reportElement>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{total_fruit_rand_cwi}]]></textFieldExpression>
-			</textField>
-			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-				<reportElement x="736" y="0" width="63" height="15" uuid="40d13bc9-0e97-41b8-a0fe-8d4432dab293">
-					<printWhenExpression><![CDATA[$F{cw_rank_boolean}]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Right"/>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
 				<reportElement x="466" y="0" width="47" height="15" uuid="d0f19b2a-bfce-4e8b-8397-315fdd94e84c">
