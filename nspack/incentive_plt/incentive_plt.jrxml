@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-07-28T09:39:25 -->
+<!-- 2020-07-28T12:35:10 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
@@ -98,6 +98,15 @@ total_pallets as Total_Pallets,12 as Total_Earnings,palletizer_incentive_rate,pa
 	<field name="palletizer_incentive_rate" class="java.math.BigDecimal"/>
 	<field name="incentive" class="java.math.BigDecimal"/>
 	<field name="standard_pack_codes" class="java.lang.String"/>
+	<variable name="total_pallets1" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_pallets}]]></variableExpression>
+	</variable>
+	<variable name="total_cartons1" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_cartons}]]></variableExpression>
+	</variable>
+	<variable name="incentive1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{incentive}]]></variableExpression>
+	</variable>
 	<title>
 		<band splitType="Stretch"/>
 	</title>
@@ -219,7 +228,7 @@ total_pallets as Total_Pallets,12 as Total_Earnings,palletizer_incentive_rate,pa
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="15" splitType="Stretch">
+		<band height="20" splitType="Stretch">
 			<textField isBlankWhenNull="true">
 				<reportElement x="1" y="0" width="67" height="15" uuid="a9189391-1447-48de-a8eb-80c2d63b45d0"/>
 				<textFieldExpression><![CDATA[$F{contract_worker_no}]]></textFieldExpression>
@@ -227,16 +236,6 @@ total_pallets as Total_Pallets,12 as Total_Earnings,palletizer_incentive_rate,pa
 			<textField isBlankWhenNull="true">
 				<reportElement x="68" y="0" width="120" height="15" uuid="7c6c77c6-242c-41fe-b29c-e6a3002c405c"/>
 				<textFieldExpression><![CDATA[$F{contract_worker_name}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="313" y="0" width="36" height="15" uuid="f83a63e0-000b-46a1-b35f-5f7818f68111"/>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{total_cartons}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="350" y="0" width="41" height="15" uuid="d87d3b26-8bf5-456c-aff4-50a1e729fc6b"/>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{total_pallets}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="262" y="0" width="50" height="15" uuid="e737738c-f322-46eb-853e-6dbd43e8bd0e"/>
@@ -255,14 +254,30 @@ total_pallets as Total_Pallets,12 as Total_Earnings,palletizer_incentive_rate,pa
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{palletizer_incentive_rate}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-				<reportElement x="490" y="0" width="63" height="15" uuid="40d13bc9-0e97-41b8-a0fe-8d4432dab293"/>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{incentive}]]></textFieldExpression>
-			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="188" y="0" width="74" height="15" uuid="7d1239c5-bb42-40b0-858a-6b3c1863d8e3"/>
 				<textFieldExpression><![CDATA[$F{standard_pack_codes}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
+				<reportElement x="350" y="0" width="41" height="15" uuid="8e69167f-f056-42f4-8f48-f1596fd92627">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{total_pallets}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
+				<reportElement x="313" y="0" width="36" height="15" uuid="a8848521-449d-4b68-89da-cb25b0f6e1bb">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{total_cartons}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
+				<reportElement x="500" y="0" width="53" height="15" uuid="fb10e825-191a-4d61-92d4-ae6595d34c2e"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{incentive}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -289,13 +304,28 @@ total_pallets as Total_Pallets,12 as Total_Earnings,palletizer_incentive_rate,pa
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="15" splitType="Stretch">
+		<band height="20" splitType="Stretch">
 			<line>
 				<reportElement x="1" y="0" width="550" height="1" uuid="13efb243-d9f4-490c-b993-83cc02721d4a">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 			</line>
+			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
+				<reportElement x="490" y="2" width="62" height="18" uuid="40d13bc9-0e97-41b8-a0fe-8d4432dab293"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{incentive1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="350" y="0" width="40" height="18" uuid="d87d3b26-8bf5-456c-aff4-50a1e729fc6b"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{total_pallets1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="313" y="0" width="36" height="18" uuid="f83a63e0-000b-46a1-b35f-5f7818f68111"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{total_cartons1}]]></textFieldExpression>
+			</textField>
 		</band>
 	</summary>
 </jasperReport>
