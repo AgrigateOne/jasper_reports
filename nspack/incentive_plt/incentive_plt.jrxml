@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-07-28T12:35:10 -->
+<!-- 2020-07-29T10:22:48 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
@@ -169,11 +169,6 @@ total_pallets as Total_Pallets,12 as Total_Earnings,palletizer_incentive_rate,pa
 				<text><![CDATA[Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="437" y="55" width="53" height="30" uuid="4207fc67-7b55-43fa-94ce-2560746370f6"/>
-				<textElement textAlignment="Right"/>
-				<text><![CDATA[Cost / Pallet]]></text>
-			</staticText>
-			<staticText>
 				<reportElement x="262" y="55" width="50" height="30" uuid="15635740-bbde-443d-aa1e-d183c382bdeb"/>
 				<text><![CDATA[Shift D/N]]></text>
 			</staticText>
@@ -248,11 +243,6 @@ total_pallets as Total_Pallets,12 as Total_Earnings,palletizer_incentive_rate,pa
 				</reportElement>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{running_hours}]]></textFieldExpression>
-			</textField>
-			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-				<reportElement x="437" y="0" width="53" height="15" uuid="89b64826-d22a-443a-8bec-94b00adb10c6"/>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{palletizer_incentive_rate}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="188" y="0" width="74" height="15" uuid="7d1239c5-bb42-40b0-858a-6b3c1863d8e3"/>
