@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
+<!-- 2020-07-29T15:08:09 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="palletizer_summary" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
+	<property name="ireport.zoom" value="1.4641000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_ns_pack_sr"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#FFFFFF" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<parameter name="FromDateTime" class="java.sql.Timestamp"/>
+	<parameter name="ToDateTime" class="java.sql.Timestamp"/>
+	<parameter name="WorkerIds" class="java.util.Collection"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["C:\\Huis\\dunbrody\\reports\\on_server\\incentive\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[WITH base_sql AS (
+    SELECT
+        wage_levels.description AS wage_level_description,
+        contract_workers.personnel_number AS personnel_barcode_number,
+
+        contract_workers.first_name || ' ' || contract_workers.surname AS party_name,
+        count(cartons.id) AS total_cartons,
+          contract_workers.id AS cw_id,
+        count(distinct pallet_sequences.pallet_number ) AS total_pallets,
+        wage_levels.wage_level,
+       string_agg(distinct standard_pack_codes.standard_pack_code,',' order by standard_pack_codes.standard_pack_code)standard_pack_codes, standard_pack_codes.palletizer_incentive_rate 
+    FROM
+        cartons
+               join pallet_sequences on cartons.pallet_sequence_id=pallet_sequences.id
+        join standard_pack_codes on pallet_sequences.standard_pack_code_id =standard_pack_codes.id
+               LEFT JOIN (
+            SELECT
+                shifts.end_date_time,
+                shifts.start_date_time,
+                plant_resource_id,
+                shifts.shift_type_id,
+                shifts.id,
+                day_night_or_custom,
+                shifts.running_hours
+            FROM
+                public.shifts
+               left JOIN shift_types ON shifts.shift_type_id = shift_types.id) AS s ON cartons.created_at BETWEEN s.start_date_time
+                AND s.end_date_time
+                AND s.plant_resource_id = cartons.production_line_id
+        LEFT JOIN public.contract_workers ON (cartons.palletizer_identifier_id = contract_workers.personnel_identifier_id)
+        LEFT JOIN public.shift_exceptions ON (contract_workers.id = shift_exceptions.contract_worker_id)
+            AND (s.id = shift_exceptions.shift_id)
+        LEFT JOIN wage_levels ON contract_workers.wage_level_id = wage_levels.id
+    where  $X{IN,contract_workers.id,WorkerIds} and s.start_date_time between  $P{FromDateTime} and $P{ToDateTime} 
+    GROUP BY
+        wage_levels.wage_level,
+        wage_levels.description,
+        contract_workers.id,
+ standard_pack_codes.palletizer_incentive_rate 
+    ORDER BY
+        contract_workers.id DESC
+)select
+personnel_barcode_number as Contract_Worker_no,party_name as Contract_Worker_Name
+,total_cartons as Total_Cartons, 
+total_pallets as Total_Pallets,palletizer_incentive_rate,palletizer_incentive_rate*total_cartons as incentive
+, standard_pack_codes
+ from base_sql]]>
+	</queryString>
+	<field name="contract_worker_no" class="java.lang.String"/>
+	<field name="contract_worker_name" class="java.lang.String"/>
+	<field name="total_cartons" class="java.lang.Long"/>
+	<field name="total_pallets" class="java.lang.Long"/>
+	<field name="palletizer_incentive_rate" class="java.math.BigDecimal"/>
+	<field name="incentive" class="java.math.BigDecimal"/>
+	<field name="standard_pack_codes" class="java.lang.String"/>
+	<variable name="total_pallets1" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_pallets}]]></variableExpression>
+	</variable>
+	<variable name="total_cartons1" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_cartons}]]></variableExpression>
+	</variable>
+	<variable name="incentive1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{incentive}]]></variableExpression>
+	</variable>
+	<title>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement style="Column header" x="297" y="0" width="41" height="30" forecolor="#000000" uuid="994518c1-7571-4434-bbf8-99a73e8ecbbc"/>
+				<textElement>
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Total pallets]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="67" height="30" uuid="305867e5-a2e5-4f2b-a6cb-6a46e3005b89"/>
+				<textElement>
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[PNo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="261" y="0" width="36" height="30" uuid="00c02650-20e0-4cb8-9cf5-740132cd6884"/>
+				<textElement>
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Total Cartons]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="338" y="0" width="63" height="30" uuid="07ffafdb-14c7-417d-bf61-8711933a835a"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Total Earnings]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="67" y="0" width="120" height="30" uuid="6a9424ce-1390-4108-99e8-ed956c24c933"/>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="187" y="0" width="74" height="30" uuid="a3f99856-6979-437c-b161-d04c65ab86bf"/>
+				<text><![CDATA[Std Packs]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="67" height="15" uuid="a9189391-1447-48de-a8eb-80c2d63b45d0"/>
+				<textFieldExpression><![CDATA[$F{contract_worker_no}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="67" y="0" width="120" height="15" uuid="7c6c77c6-242c-41fe-b29c-e6a3002c405c"/>
+				<textFieldExpression><![CDATA[$F{contract_worker_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="187" y="0" width="74" height="15" uuid="7d1239c5-bb42-40b0-858a-6b3c1863d8e3"/>
+				<textFieldExpression><![CDATA[$F{standard_pack_codes}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
+				<reportElement x="297" y="0" width="41" height="15" uuid="8e69167f-f056-42f4-8f48-f1596fd92627">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{total_pallets}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
+				<reportElement x="261" y="0" width="36" height="15" uuid="a8848521-449d-4b68-89da-cb25b0f6e1bb">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{total_cartons}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
+				<reportElement x="338" y="0" width="63" height="15" uuid="fb10e825-191a-4d61-92d4-ae6595d34c2e"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{incentive}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+</jasperReport>
