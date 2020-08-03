@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-07-29T15:08:09 -->
+<!-- 2020-08-03T13:50:42 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="palletizer_summary" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
@@ -52,7 +52,9 @@
                 shifts.running_hours
             FROM
                 public.shifts
-               left JOIN shift_types ON shifts.shift_type_id = shift_types.id) AS s ON cartons.created_at BETWEEN s.start_date_time
+               left JOIN shift_types ON shifts.shift_type_id = shift_types.id
+               JOIN employment_types on shift_types.employment_type_id = employment_types.id and employment_type_code = 'PALLETIZER'
+               ) AS s ON cartons.created_at BETWEEN s.start_date_time
                 AND s.end_date_time
                 AND s.plant_resource_id = cartons.production_line_id
         LEFT JOIN public.contract_workers ON (cartons.palletizer_identifier_id = contract_workers.personnel_identifier_id)
