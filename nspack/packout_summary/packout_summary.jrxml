@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-06-12T11:39:35 -->
+<!-- 2020-08-10T21:06:15 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="packout_summary" pageWidth="595" pageHeight="842" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="20" bottomMargin="20" uuid="a11c3b0e-77bc-47a3-bfcc-ddc9763f8ca9">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -11,12 +11,21 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NSPACK"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_NSPACK_UD"/>
 	<parameter name="detail_level" class="java.lang.String">
 		<defaultValueExpression><![CDATA["Detail"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="FromDate" class="java.sql.Date"/>
 	<parameter name="ToDate" class="java.sql.Date"/>
+	<parameter name="cultivar" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="orchard" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="puc" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<queryString language="SQL">
 		<![CDATA[with hsql as(
 select 
@@ -66,7 +75,11 @@ join hsql on
 production_runs.orchard_id=hsql.orchard_id and
 production_runs.season_id=hsql.season_id and
 production_runs.puc_id=hsql.puc_id
- where production_runs.started_at::date between  $P{FromDate}    and $P{ToDate} 
+ where
+ (vw_pallet_sequence_flat.puc =  $P{puc}   or  $P{puc}  ='') and 
+(vw_pallet_sequence_flat.orchard =  $P{orchard}   or  $P{orchard}  ='') and 
+(vw_pallet_sequence_flat.cultivar =  $P{cultivar}   or  $P{cultivar}  ='') and 
+  production_runs.started_at::date between  $P{FromDate}    and $P{ToDate} 
  
  group by production_runs.cultivar_id,production_runs.orchard_id,production_runs.season_id,production_runs.puc_id, hsql.bins_tipped_weight
  ,vw_pallet_sequence_flat.marketing_variety
@@ -252,14 +265,14 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 	<title>
 		<band height="68" splitType="Stretch">
 			<staticText>
-				<reportElement x="1" y="0" width="369" height="30" uuid="38a0db5e-e7aa-47fb-a78e-796e8d25a4cb"/>
+				<reportElement x="1" y="0" width="369" height="16" uuid="38a0db5e-e7aa-47fb-a78e-796e8d25a4cb"/>
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<text><![CDATA[Packout Summary]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="7" y="32" width="58" height="15" uuid="64b7ae3d-ea52-409f-a6a7-57a5b0857881">
+				<reportElement x="7" y="19" width="58" height="15" uuid="64b7ae3d-ea52-409f-a6a7-57a5b0857881">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left">
@@ -268,7 +281,7 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 				<text><![CDATA[From Date:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="7" y="48" width="58" height="15" uuid="c8456536-caf3-44bc-b153-4999b3774d29">
+				<reportElement x="7" y="34" width="58" height="15" uuid="c8456536-caf3-44bc-b153-4999b3774d29">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left">
@@ -315,14 +328,14 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 				<text><![CDATA[Print:]]></text>
 			</staticText>
 			<textField pattern="dd/M/yy">
-				<reportElement x="71" y="32" width="96" height="15" uuid="2a1c7ef6-45f5-4e6a-b870-325842c218eb"/>
+				<reportElement x="71" y="19" width="96" height="15" uuid="2a1c7ef6-45f5-4e6a-b870-325842c218eb"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{fromdate}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/M/yy">
-				<reportElement x="71" y="48" width="96" height="15" uuid="abdb3004-cb2d-48ea-80e0-b1f4e64e83fb"/>
+				<reportElement x="71" y="34" width="96" height="15" uuid="abdb3004-cb2d-48ea-80e0-b1f4e64e83fb"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -382,6 +395,54 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[tipped qty]]></text>
+			</staticText>
+			<textField pattern="dd/M/yy" isBlankWhenNull="true">
+				<reportElement x="234" y="19" width="96" height="15" uuid="fe2a16fe-75db-4cf3-984d-612d33e72bc0"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{cultivar}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="170" y="19" width="58" height="15" uuid="8c206921-ad10-4cd1-a149-038f9af6d1e6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Cultivar:]]></text>
+			</staticText>
+			<textField pattern="dd/M/yy" isBlankWhenNull="true">
+				<reportElement x="234" y="34" width="96" height="15" uuid="883a6e56-cae3-49c1-85e7-424dcd9fce7a"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{puc}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="170" y="34" width="58" height="15" uuid="c292995f-17ce-4e25-8f34-561aea033b38">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[PUC:]]></text>
+			</staticText>
+			<textField pattern="dd/M/yy" isBlankWhenNull="true">
+				<reportElement x="234" y="49" width="96" height="15" uuid="85507293-41d5-465f-b868-aaa903290ae8"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{orchard}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="170" y="49" width="58" height="15" uuid="93c6ed28-fa81-4da3-a697-df67c26e82ee">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Orchard:]]></text>
 			</staticText>
 		</band>
 	</title>
