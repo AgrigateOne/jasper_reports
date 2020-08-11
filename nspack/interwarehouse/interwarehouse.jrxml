@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
+<!-- 2020-08-11T13:58:46 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="interwarehouse" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_NSPACK_UD"/>
@@ -29,8 +31,8 @@
 		<defaultValueExpression><![CDATA["/home/user/rubymine_projects/packhouse/jasper_resources/dispatch/"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="vehicle_job_id" class="java.lang.Integer"/>
-	<queryString>
-		<![CDATA[select pallet_number, vehicle_jobs.id
+	<queryString language="SQL">
+		<![CDATA[select vw_pallet_sequence_flat.plt_packhouse,pallet_number, vehicle_jobs.id
 ,string_agg(distinct vw_pallet_sequence_flat.marketing_variety,',')marketing_varieties
 ,string_agg(distinct vw_pallet_sequence_flat.packed_tm_group,',')packed_tm_groups
 
@@ -62,7 +64,7 @@ left join business_processes on business_processes.id=vehicle_jobs.business_proc
 left join locations on locations.id=vehicle_jobs.planned_location_to_id
 
     where vehicle_job_units.vehicle_job_id =  $P{vehicle_job_id}
-group by stock_item_id,vehicle_jobs.id,pallet_number
+group by vw_pallet_sequence_flat.plt_packhouse,stock_item_id,vehicle_jobs.id,pallet_number
 ,fn_party_role_name((SELECT pr.id
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1)) ,
@@ -101,6 +103,7 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 	<field name="offloaded_at" class="java.sql.Timestamp"/>
 	<field name="location_long_code" class="java.lang.String"/>
 	<field name="process" class="java.lang.String"/>
+	<field name="plt_packhouse" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -165,14 +168,14 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[planned location to:]]></text>
+				<text><![CDATA[loaded at location:]]></text>
 			</staticText>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement x="105" y="73" width="114" height="13" uuid="3cb19ece-6e6f-434b-b274-fb244fded92b"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{location_long_code}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{plt_packhouse}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="423" y="73" width="114" height="13" uuid="ea97e593-8c15-4fb2-b6f8-2cdcaf309a2b"/>
