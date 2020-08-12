@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-07-29T10:22:16 -->
+<!-- 2020-08-12T13:51:51 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
@@ -280,7 +280,9 @@ FROM
 				<textFieldExpression><![CDATA[$F{carton_qty}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="419" y="0" width="40" height="15" uuid="d87d3b26-8bf5-456c-aff4-50a1e729fc6b"/>
+				<reportElement x="419" y="0" width="40" height="15" uuid="d87d3b26-8bf5-456c-aff4-50a1e729fc6b">
+					<printWhenExpression><![CDATA[$F{cw_rank_boolean}]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{total_fruit_cwi}]]></textFieldExpression>
 			</textField>
@@ -303,7 +305,9 @@ FROM
 				<textFieldExpression><![CDATA[$F{inv_codes}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="340" y="0" width="36" height="15" uuid="22194ec0-e85e-487c-8ed1-be87fa521e14"/>
+				<reportElement x="340" y="0" width="36" height="15" uuid="22194ec0-e85e-487c-8ed1-be87fa521e14">
+					<printWhenExpression><![CDATA[$F{cw_rank_boolean}]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{total_carton_cwi}]]></textFieldExpression>
 			</textField>
