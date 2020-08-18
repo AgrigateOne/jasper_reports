@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-08-10T21:06:15 -->
+<!-- 2020-08-18T06:06:49 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="packout_summary" pageWidth="595" pageHeight="842" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="20" bottomMargin="20" uuid="a11c3b0e-77bc-47a3-bfcc-ddc9763f8ca9">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -26,13 +26,17 @@
 	<parameter name="puc" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
+	<parameter name="line" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+	</parameter>
 	<queryString language="SQL">
-		<![CDATA[with hsql as(
+		<![CDATA[    with hsql as(
 select 
 production_runs.cultivar_id
 ,production_runs.orchard_id
 ,production_runs.season_id
 ,production_runs.puc_id
+,production_runs.production_line_id 
 ,sum(production_run_stats.bins_tipped_weight)bins_tipped_weight
 ,sum(production_run_stats.bins_tipped)bins_tipped
 , cultivars.description as cultivar_description ,orchards.orchard_code,pucs.puc_code,seasons.season_code
@@ -44,19 +48,19 @@ join orchards on production_runs.orchard_id=orchards.id
 join seasons on production_runs.season_id=seasons.id
 join pucs on production_runs.puc_id=pucs.id
 join production_run_stats on  production_runs.id=production_run_stats.production_run_id
+join plant_resources lines ON lines.id = production_runs.production_line_id
 where production_runs.started_at::date between  $P{FromDate}    and $P{ToDate} 
 group by 
 production_runs.cultivar_id
 ,production_runs.orchard_id
 ,production_runs.season_id
 ,production_runs.puc_id
+,production_runs.production_line_id 
 , cultivars.description ,orchards.orchard_code,pucs.puc_code,seasons.season_code
-
 )
 ,packout as( select production_runs.cultivar_id,production_runs.orchard_id,production_runs.season_id,production_runs.puc_id, hsql.bins_tipped_weight
  ,sum(coalesce(vw_pallet_sequence_flat.nett_weight,0)) as pack_nett_weight
  ,sum(vw_pallet_sequence_flat.carton_quantity) as carton_quantity
-
 ,vw_pallet_sequence_flat.marketing_variety
 ,vw_pallet_sequence_flat.size_ref
 ,vw_pallet_sequence_flat.std_size
@@ -74,15 +78,17 @@ join hsql on
  production_runs.cultivar_id=hsql.cultivar_id and
 production_runs.orchard_id=hsql.orchard_id and
 production_runs.season_id=hsql.season_id and
-production_runs.puc_id=hsql.puc_id
- where
- (vw_pallet_sequence_flat.puc =  $P{puc}   or  $P{puc}  ='') and 
+production_runs.puc_id=hsql.puc_id and
+production_runs.production_line_id=hsql.production_line_id
+where
+ (vw_pallet_sequence_flat.line =  $P{line}   or  $P{line}  ='') and 
+(vw_pallet_sequence_flat.puc =  $P{puc}   or  $P{puc}  ='') and 
 (vw_pallet_sequence_flat.orchard =  $P{orchard}   or  $P{orchard}  ='') and 
 (vw_pallet_sequence_flat.cultivar =  $P{cultivar}   or  $P{cultivar}  ='') and 
   production_runs.started_at::date between  $P{FromDate}    and $P{ToDate} 
  
  group by production_runs.cultivar_id,production_runs.orchard_id,production_runs.season_id,production_runs.puc_id, hsql.bins_tipped_weight
- ,vw_pallet_sequence_flat.marketing_variety
+  ,vw_pallet_sequence_flat.marketing_variety
 ,vw_pallet_sequence_flat.size_ref
 ,vw_pallet_sequence_flat.std_size
 ,vw_pallet_sequence_flat.basic_pack
@@ -93,10 +99,10 @@ production_runs.puc_id=hsql.puc_id
 ,hsql.fromdate
 ,hsql.todate,hsql.bins_tipped)
 select *,
-case when coalesce(bins_tipped_weight,0)=0 then 0 else  cast(pack_nett_weight/bins_tipped_weight*100 as dec(4,1)) end  detail_perc
+case when coalesce(bins_tipped_weight,0)=0 then 0 else  cast(pack_nett_weight/bins_tipped_weight*100 as dec(6,1)) end  detail_perc
 ,sum(pack_nett_weight) OVER (PARTITION BY group1) as packout_weight_group1
 ,sum(carton_quantity) OVER (PARTITION BY group1) as carton_quantity_group1
-,case  when coalesce(bins_tipped_weight,0)=0 then 0 else  cast(sum(pack_nett_weight) OVER (PARTITION BY group1)/bins_tipped_weight*100 as dec(4,1)) end as packout_perc_group1 from packout
+,case  when coalesce(bins_tipped_weight,0)=0 then 0 else  cast(sum(pack_nett_weight) OVER (PARTITION BY group1)/bins_tipped_weight*100 as dec(6,1)) end as packout_perc_group1 from packout
 
 order by season_code,cultivar_description ,orchard_code,puc_code]]>
 	</queryString>
@@ -300,7 +306,7 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 				</reportElement>
 			</line>
 			<textField pattern="d MMM  yyyy">
-				<reportElement x="446" y="2" width="70" height="15" uuid="0542fd86-a506-40c5-ad66-2d00ed4d16d8">
+				<reportElement x="446" y="1" width="70" height="15" uuid="0542fd86-a506-40c5-ad66-2d00ed4d16d8">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
@@ -309,7 +315,7 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField pattern="HH:mm">
-				<reportElement x="516" y="2" width="38" height="15" uuid="fc4c0dd2-b4f4-4895-a9b7-de063459403e">
+				<reportElement x="516" y="1" width="38" height="15" uuid="fc4c0dd2-b4f4-4895-a9b7-de063459403e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left">
@@ -318,7 +324,7 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="370" y="2" width="76" height="15" uuid="34b858b5-732f-448b-be8c-9b0f3e5d8af0">
+				<reportElement x="370" y="1" width="76" height="15" uuid="34b858b5-732f-448b-be8c-9b0f3e5d8af0">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -444,6 +450,22 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 				</textElement>
 				<text><![CDATA[Orchard:]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="330" y="19" width="53" height="15" uuid="13667e12-ea95-4f9a-b64d-40c78f4f10b3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Line:]]></text>
+			</staticText>
+			<textField pattern="dd/M/yy" isBlankWhenNull="true">
+				<reportElement x="383" y="19" width="98" height="15" uuid="27b5a7e5-98f2-4b43-98e2-a60d6b26574a"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{line}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<columnHeader>
