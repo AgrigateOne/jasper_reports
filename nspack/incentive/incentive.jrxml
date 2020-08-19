@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-08-04T17:23:39 -->
+<!-- 2020-08-19T16:35:33 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
@@ -74,7 +74,7 @@
             AND (s.id = shift_exceptions.shift_id)
         LEFT JOIN wage_levels ON contract_workers.wage_level_id = wage_levels.id
     WHERE
-           s.id=$P{shift_id} and standard_pack_codes.is_bin=false
+           s.id=$P{shift_id} and standard_pack_codes.bin=false
     GROUP BY
         s.id,
         day_night_or_custom,
