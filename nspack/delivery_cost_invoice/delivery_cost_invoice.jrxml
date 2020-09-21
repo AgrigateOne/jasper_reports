@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="delivery_cost_invoice" language="groovy" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="dd86a86c-2b6f-47ce-a052-70839df386dd">
+	<property name="ireport.zoom" value="1.6105100000000019"/>
+	<property name="ireport.x" value="41"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="batch_number" class="java.lang.String"/>
+	<parameter name="vat" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select
+fn_party_role_name((SELECT pr.id
+FROM public.party_roles pr
+WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1)) AS implementation_owner_name,
+(SELECT pr.id
+FROM public.party_roles pr
+WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) AS implementation_owner_party_role_id,
+(SELECT o.vat_number
+FROM public.party_roles pr
+JOIN organizations o on o.id=pr.organization_id
+WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) AS vat_number,
+(SELECT o.company_reg_no
+FROM public.party_roles pr
+JOIN organizations o on o.id=pr.organization_id
+WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) AS company_reg_no,
+d.id, f.owner_party_role_id, f.farm_Code,p.puc_code, d.batch_number,
+c.cost_code, c.description, ct.cost_unit, dc.amount, count(b.id) as bin_qty
+
+,(select date_delivered from rmt_deliveries inner_del where batch_number='45' order by date_delivered asc limit 1) as date_from
+,(select date_delivered from rmt_deliveries inner_del where batch_number='45' order by date_delivered desc limit 1) as date_to
+
+--, (count(b.id) * dc.amount) as del_cost, ((count(b.id) * dc.amount) * 0.1) as vat_amount
+,((count(b.id) * dc.amount) + ((count(b.id) * dc.amount) * $P{vat}::numeric)) as total_cost
+
+from rmt_deliveries d
+JOIN rmt_bins b on b.rmt_delivery_id=d.id
+LEFT JOIN farms f ON f.id = d.farm_id
+LEFT JOIN pucs p ON p.id = d.puc_id
+
+LEFT JOIN rmt_delivery_costs dc on dc.rmt_delivery_id=d.id
+LEFT JOIN costs c on c.id=dc.cost_id
+LEFT JOIN cost_types ct on ct.id=c.cost_type_id
+where ct.cost_unit='BIN' and d.batch_number=$P{batch_number}
+group by d.id, f.owner_party_role_id, f.farm_Code,p.puc_code, d.batch_number,
+c.cost_code, c.description, ct.cost_unit, dc.amount
+order by c.cost_code, d.date_delivered]]>
+	</queryString>
+	<field name="implementation_owner_name" class="java.lang.String"/>
+	<field name="implementation_owner_party_role_id" class="java.lang.Integer"/>
+	<field name="vat_number" class="java.lang.String"/>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="owner_party_role_id" class="java.lang.Integer"/>
+	<field name="farm_code" class="java.lang.String"/>
+	<field name="company_reg_no" class="java.lang.String"/>
+	<field name="puc_code" class="java.lang.String"/>
+	<field name="batch_number" class="java.lang.String"/>
+	<field name="cost_code" class="java.lang.String"/>
+	<field name="description" class="java.lang.String"/>
+	<field name="cost_unit" class="java.lang.String"/>
+	<field name="amount" class="java.math.BigDecimal"/>
+	<field name="bin_qty" class="java.lang.Long"/>
+	<field name="date_from" class="java.sql.Timestamp"/>
+	<field name="date_to" class="java.sql.Timestamp"/>
+	<field name="total_cost" class="java.math.BigDecimal"/>
+	<variable name="delivery_numbers" class="java.lang.String">
+		<variableExpression><![CDATA[$V{delivery_numbers}==null ? $F{id} : $V{delivery_numbers}+","+$F{id}]]></variableExpression>
+	</variable>
+	<variable name="id_1" class="java.lang.Integer" resetType="Group" resetGroup="costs" calculation="Count">
+		<variableExpression><![CDATA[$F{id}]]></variableExpression>
+	</variable>
+	<variable name="bin_qty_1" class="java.lang.Long" resetType="Group" resetGroup="costs" calculation="Sum">
+		<variableExpression><![CDATA[$F{bin_qty}]]></variableExpression>
+	</variable>
+	<variable name="cost" class="java.math.BigDecimal" resetType="Group" resetGroup="costs">
+		<variableExpression><![CDATA[$F{amount} * $V{bin_qty_1}]]></variableExpression>
+	</variable>
+	<variable name="vat" class="java.math.BigDecimal" resetType="Group" resetGroup="costs">
+		<variableExpression><![CDATA[new Float($P{vat}) * $V{cost}]]></variableExpression>
+	</variable>
+	<variable name="total" class="java.math.BigDecimal" resetType="Group" resetGroup="costs">
+		<variableExpression><![CDATA[$V{cost} + $V{vat}]]></variableExpression>
+	</variable>
+	<variable name="total_cost_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_cost}]]></variableExpression>
+	</variable>
+	<group name="costs">
+		<groupExpression><![CDATA[$F{cost_code} + $F{cost_unit}]]></groupExpression>
+		<groupFooter>
+			<band height="13">
+				<textField pattern="#,##0.00">
+					<reportElement x="654" y="0" width="74" height="13" uuid="b54207fe-0481-4dd8-a3c6-ac7a9233fbe0"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="20" y="0" width="74" height="13" uuid="b57d21a4-40b3-468a-a745-fb95b0c666cc"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cost_code}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="112" y="0" width="100" height="13" uuid="758c5097-0306-44c9-bb79-2aa99f06a579"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="costs">
+					<reportElement x="278" y="0" width="55" height="13" uuid="c0a93679-16b8-4bf6-861e-245d27eba0bb"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{id_1}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="454" y="0" width="58" height="13" uuid="fed2b897-7536-4e17-b8bf-c8b8ae0b0427"/>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[' / ' + $F{cost_unit}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="costs">
+					<reportElement x="347" y="0" width="38" height="13" uuid="a2a90fbb-9950-4c18-b119-f329f2944469"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{bin_qty_1}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="397" y="0" width="57" height="13" uuid="2dd3e67d-7ef5-4388-bc4c-3da721795141"/>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA['R ' + $F{amount}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="512" y="0" width="73" height="13" uuid="2ab99b99-fdea-4125-9ab0-79731f34f3b6"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{cost}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;#,##0.00-">
+					<reportElement x="585" y="0" width="69" height="13" uuid="d29f5b52-21ff-482f-a5ac-57e2962bda33"/>
+					<textElement textAlignment="Center">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{vat}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="278" splitType="Stretch">
+			<staticText>
+				<reportElement x="164" y="31" width="405" height="26" uuid="db7d8fb2-f2ef-45a0-b714-85da4c96a175"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Delivery Cost Invoice]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="164" y="0" width="405" height="31" uuid="03cc4f70-6829-4f9a-92bd-559529df3adf"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{implementation_owner_name}.toString().toUpperCase()]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="20" y="0" width="708" height="57" uuid="7439eace-b01e-42b8-939c-4d90846c21ae"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<subreport>
+				<reportElement x="70" y="65" width="100" height="85" uuid="8d0f5a1e-76cc-461b-9f4f-87b9a88f2ac2">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="party_role_id">
+					<subreportParameterExpression><![CDATA[$F{implementation_owner_party_role_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="address_type">
+					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement x="360" y="65" width="152" height="20" uuid="cdf67955-444f-4f2c-9252-85dff759bd5e"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[VAT No:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="360" y="85" width="152" height="20" uuid="b219b7ab-83db-4cf7-bbee-cbe71af2f3cc"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Company Reg. No:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="515" y="65" width="97" height="20" uuid="a3f88571-dca8-40bc-9d84-424e0faa8df5"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{vat_number}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="20" y="62" width="708" height="88" uuid="939d7af2-fdd7-4389-a92f-9528ebcd323c"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="20" y="65" width="45" height="14" uuid="e4ec57dc-3b43-4cf9-9c59-4d790733d53c"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Address:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="20" y="155" width="708" height="104" uuid="42be14d6-a50e-40ae-a85e-bc44b452f28e"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</rectangle>
+			<subreport>
+				<reportElement x="70" y="172" width="100" height="85" uuid="8732432d-11d7-4080-ba1b-b4cc46757a04">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="address_type">
+					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="party_role_id">
+					<subreportParameterExpression><![CDATA[$F{owner_party_role_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement x="20" y="158" width="45" height="14" uuid="8cc82868-1a5e-4780-8df8-538c879cb299"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Farm:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="70" y="158" width="42" height="14" uuid="3148e602-7510-4793-a994-a257c4f67f74"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{puc_code}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="158" width="100" height="14" uuid="6578ea96-78f2-46d2-8696-8fb02c1fcadb"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{farm_code}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="437" y="158" width="93" height="14" uuid="7d958889-99df-44a2-9f2b-237f2923eefd"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date Range:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="437" y="172" width="93" height="14" uuid="fc88881e-eebe-491e-a7a4-696401960861"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Invoice No:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="437" y="186" width="93" height="14" uuid="0d2e07f2-3637-4a08-8876-5b9a9daef3a6"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Delivery No:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="530" y="172" width="168" height="14" uuid="87fe72f6-ac7f-485a-ae91-e89ca84253d5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{batch_number}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="530" y="186" width="168" height="14" uuid="07e61b5a-a6ea-40b4-b5cb-c443164b5bd9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new HashSet<>(new ArrayList<String>(Arrays.asList($V{delivery_numbers}.split(",")))).toString().replaceAll("\\[|\\]|\\s", "")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="20" y="259" width="74" height="18" uuid="01840373-f8d5-42d4-be5c-bb3641e26e9d"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Cost Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="654" y="259" width="74" height="18" uuid="5e0e5d90-75f5-4878-9b24-a292e41cd2d9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="585" y="259" width="69" height="18" uuid="2abe5e29-9d64-4d64-a341-f9702f0c2f2a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Vat]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="512" y="259" width="73" height="18" uuid="6869cfa5-d0f2-4d07-8dba-37bb1bd6c668"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Cost]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="397" y="259" width="115" height="18" uuid="5366d535-ac14-4222-9671-be1b0fcdc8fb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Cost Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="347" y="260" width="38" height="18" uuid="da3a2d41-7a0b-4cf1-9b6f-3f78bf440f58"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Bin Qty]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="278" y="259" width="55" height="18" uuid="b030a414-d948-4283-ab93-179b83281ac3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Delivery Qty]]></text>
+			</staticText>
+			<line>
+				<reportElement x="20" y="277" width="708" height="1" uuid="f476b3de-142b-40d3-b488-90b51b6d6060"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="112" y="260" width="100" height="18" uuid="976c4802-de1d-4be3-aca7-101b05440115"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Cost Description]]></text>
+			</staticText>
+			<textField pattern="yyyy/MM/dd" isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="530" y="158" width="89" height="14" uuid="977073be-159a-485e-a293-889ea7a96c40"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date_from}]]></textFieldExpression>
+			</textField>
+			<textField pattern="yyyy/MM/dd" isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="639" y="158" width="89" height="14" uuid="909634e3-1515-44ee-b4e4-4fb8bdbc1dbf"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date_to}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="619" y="158" width="20" height="14" uuid="ae20e648-7ef3-4497-b735-48a2f0626ab3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[to]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="515" y="85" width="97" height="20" uuid="fdf9b573-ffdb-4f65-a072-e7032540f6d8"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{company_reg_no}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<summary>
+		<band height="16">
+			<textField pattern="#,##0.00">
+				<reportElement x="654" y="0" width="74" height="13" uuid="e8d233e1-9ab7-4822-96f2-1c5fddcd344b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_cost_1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="554" y="0" width="100" height="13" uuid="697ac055-bb85-4d11-ada8-8bb51ae84d0a"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Due:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="654" y="0" width="74" height="1" uuid="2cb9811f-c57e-42f8-b22c-fa7b546d56b6"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="654" y="13" width="74" height="1" uuid="88d55eb8-1886-4246-bfeb-da0f26ca1c56"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="654" y="15" width="74" height="1" uuid="e793d4d7-462d-450e-98fc-4363864cc930"/>
+				<graphicElement>
+					<pen lineWidth="0.25"/>
+				</graphicElement>
+			</line>
+		</band>
+	</summary>
+</jasperReport>
