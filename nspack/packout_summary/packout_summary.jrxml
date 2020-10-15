@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-08-18T06:06:49 -->
+<!-- 2020-10-15T10:32:23 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="packout_summary" pageWidth="595" pageHeight="842" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="20" bottomMargin="20" uuid="a11c3b0e-77bc-47a3-bfcc-ddc9763f8ca9">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -11,7 +11,7 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_NSPACK_UD"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_ns_pack_sr"/>
 	<parameter name="detail_level" class="java.lang.String">
 		<defaultValueExpression><![CDATA["Detail"]]></defaultValueExpression>
 	</parameter>
@@ -29,8 +29,9 @@
 	<parameter name="line" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
+	<parameter name="dispatched_only" class="java.lang.Boolean"/>
 	<queryString language="SQL">
-		<![CDATA[    with hsql as(
+		<![CDATA[with hsql as(
 select 
 production_runs.cultivar_id
 ,production_runs.orchard_id
@@ -81,6 +82,7 @@ production_runs.season_id=hsql.season_id and
 production_runs.puc_id=hsql.puc_id and
 production_runs.production_line_id=hsql.production_line_id
 where
+case when  $P{dispatched_only}  = true then vw_pallet_sequence_flat.load_id is not null end and
  (vw_pallet_sequence_flat.line =  $P{line}   or  $P{line}  ='') and 
 (vw_pallet_sequence_flat.puc =  $P{puc}   or  $P{puc}  ='') and 
 (vw_pallet_sequence_flat.orchard =  $P{orchard}   or  $P{orchard}  ='') and 
