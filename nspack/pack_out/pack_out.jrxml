@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-10-15T10:28:51 -->
+<!-- 2020-10-28T13:53:58 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pack_out" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" uuid="c08c8ed1-c3fa-4b77-b7f2-d6e11642b1b0">
 	<property name="ireport.zoom" value="5.0"/>
 	<property name="ireport.x" value="0"/>
@@ -247,6 +247,12 @@ ORDER BY
 	<variable name="nett_weight_2" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{nett_weight}]]></variableExpression>
 	</variable>
+	<variable name="nett_weight1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{nett_weight}]]></variableExpression>
+	</variable>
+	<variable name="derived_nett_weight1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{derived_nett_weight}]]></variableExpression>
+	</variable>
 	<group name="grade_code">
 		<groupExpression><![CDATA[$F{grade_code}]]></groupExpression>
 		<groupHeader>
@@ -379,10 +385,10 @@ ORDER BY
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{packhouse}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.00 %">
+			<textField evaluationTime="Report" pattern="#,##0.00 %">
 				<reportElement x="153" y="111" width="66" height="13" uuid="e04886f4-8a5e-4cc7-a1cc-bad547dc5256"/>
-				<textFieldExpression><![CDATA[$F{total_bin_weight}.intValue()==0?0:($P{use_derived_weight} ? $F{total_run_derived_weight}:
-($P{use_packed_weight} ? $F{total_packed_weight} : $F{total_pallet_weight}))/$F{total_bin_weight}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{total_bin_weight}.intValue()==0?0:($P{use_derived_weight} ? $V{derived_nett_weight1}:
+($P{use_packed_weight} ? $V{nett_weight1} : $F{total_pallet_weight}))/$F{total_bin_weight}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0">
 				<reportElement x="87" y="78" width="41" height="13" uuid="836a75a2-6604-4036-be70-19d53c1c1aaf"/>
@@ -468,6 +474,14 @@ ORDER BY
 				</reportElement>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{total_bin_weight}-$F{total_packed_weight}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="423" y="10" width="100" height="30" uuid="a763f367-4bbd-4221-81a7-cbc8580f35a5"/>
+				<textFieldExpression><![CDATA[$V{nett_weight1}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="307" y="10" width="100" height="30" uuid="1667310e-7c49-41bb-947a-cf8bf5879fab"/>
+				<textFieldExpression><![CDATA[$V{derived_nett_weight1}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
