@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-04-24T14:35:12 -->
+<!-- 2020-10-28T15:34:24 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pack_input_del_ctn" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b6fb5972-61c1-4d79-a065-fdacc2bcc4a7">
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="115"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Dunbrody_New_Framework"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_ns_pack_sr"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA["C:\\Users\\gerritf.KROMCO\\Documents\\dunbrody\\reports\\new\\jasper\\packout\\"]]></defaultValueExpression>
 	</parameter>
@@ -47,7 +47,7 @@ FROM rmt_bins
      LEFT JOIN orchards ON orchards.id = rmt_bins.orchard_id
      LEFT JOIN pucs ON pucs.id = rmt_bins.puc_id
      LEFT JOIN rmt_classes ON rmt_classes.id = rmt_bins.rmt_class_id
-where rmt_bins.production_run_rebin_id = $P{production_run_id}  and rmt_bins.scrapped  is null and rmt_classes.rmt_class_code  <>'DEGREENING'
+where rmt_bins.production_run_rebin_id = $P{production_run_id}  and not  ( rmt_bins.scrapped =true) and rmt_classes.rmt_class_code  <>'DEGREENING'
 ) as output) output_weight
 FROM rmt_bins
      LEFT JOIN cultivar_groups ON cultivar_groups.id = rmt_bins.cultivar_group_id
@@ -66,9 +66,7 @@ GROUP BY
   farms.description,
 public.plant_resources.id,
 cultivar_groups.cultivar_group_code,
-  public.production_runs.started_at;
-  
-]]>
+  public.production_runs.started_at;]]>
 	</queryString>
 	<field name="weight" class="java.math.BigDecimal"/>
 	<field name="bin_qty" class="java.lang.Long"/>
