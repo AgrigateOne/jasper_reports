@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-10-28T13:53:58 -->
+<!-- 2020-10-30T13:04:23 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pack_out" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" uuid="c08c8ed1-c3fa-4b77-b7f2-d6e11642b1b0">
 	<property name="ireport.zoom" value="5.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_ns_pack_sr"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SR_Remote"/>
 	<parameter name="production_run_id" class="java.lang.Integer"/>
 	<parameter name="carton_or_bin" class="java.lang.String">
 		<defaultValueExpression><![CDATA[Carton]]></defaultValueExpression>
@@ -83,7 +83,7 @@
      JOIN basic_pack_codes ON basic_pack_codes.id = pallet_sequences.basic_pack_code_id
      JOIN inventory_codes ON inventory_codes.id = pallet_sequences.inventory_code_id
      JOIN production_run_stats ON production_run_stats.production_run_id = pallet_sequences.production_run_id
-  WHERE case when  $P{dispatched_only}  = true then pallets.load_id is not null end and pallet_sequences.production_run_id = $P{production_run_id}
+  WHERE case when  $P{dispatched_only}  = true then pallets.load_id is not null else true  end and pallet_sequences.production_run_id = $P{production_run_id}
   )
 
 SELECT
