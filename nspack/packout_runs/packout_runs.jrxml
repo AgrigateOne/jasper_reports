@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-10-29T15:23:24 -->
+<!-- 2020-10-30T13:32:06 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="packout_runs" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" uuid="c08c8ed1-c3fa-4b77-b7f2-d6e11642b1b0">
 	<property name="ireport.zoom" value="5.0"/>
 	<property name="ireport.x" value="0"/>
@@ -16,7 +16,7 @@
 	<parameter name="use_derived_weight" class="java.lang.Boolean"/>
 	<parameter name="dispatched_only" class="java.lang.Boolean"/>
 	<queryString language="SQL">
-		<![CDATA[ with bin_tipped_attrib as (
+		<![CDATA[with bin_tipped_attrib as (
 select 
 string_agg(distinct farms.farm_code::text, '; '::text order by farms.farm_code::text )farms,
 string_agg(distinct orchards.orchard_code::text, '; '::text order by orchards.orchard_code::text )orchards,
@@ -72,7 +72,7 @@ select 	    COALESCE(cultivars.cultivar_name, cultivar_groups.cultivar_group_cod
 	     JOIN basic_pack_codes ON basic_pack_codes.id = pallet_sequences.basic_pack_code_id
 	     JOIN inventory_codes ON inventory_codes.id = pallet_sequences.inventory_code_id
 	     JOIN production_run_stats ON production_run_stats.production_run_id = pallet_sequences.production_run_id
-	  WHERE case when  true  = true then pallets.load_id is not null end and  $X{IN, pallet_sequences.production_run_id, production_run_id} 
+	  WHERE case when  $P{dispatched_only}   = true then pallets.load_id is not null else true end and  $X{IN, pallet_sequences.production_run_id, production_run_id} 
 group by 	  COALESCE(cultivars.cultivar_name, cultivar_groups.cultivar_group_code) ,
 	    marketing_varieties.marketing_variety_code,
 	        grades.grade_code,
@@ -150,8 +150,7 @@ $X{IN, production_run_rebin_id, production_run_id}
 	        grade_code) AS output_r 
 	ORDER BY
 	    record_type,
-	    grade_code,std_size,inventory_code
-]]>
+	    grade_code,std_size,inventory_code]]>
 	</queryString>
 	<field name="grade_code" class="java.lang.String"/>
 	<field name="nett_weight" class="java.math.BigDecimal"/>
