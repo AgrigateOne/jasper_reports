@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-10-30T13:04:23 -->
+<!-- 2020-11-04T12:10:20 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pack_out" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" uuid="c08c8ed1-c3fa-4b77-b7f2-d6e11642b1b0">
 	<property name="ireport.zoom" value="5.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SR_Remote"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_ns_pack_sr"/>
 	<parameter name="production_run_id" class="java.lang.Integer"/>
 	<parameter name="carton_or_bin" class="java.lang.String">
 		<defaultValueExpression><![CDATA[Carton]]></defaultValueExpression>
@@ -380,7 +380,7 @@ ORDER BY
 				<reportElement x="0" y="111" width="72" height="13" uuid="307f4dec-72c8-430e-9b66-6e123cdee012"/>
 				<textFieldExpression><![CDATA[$F{total_bin_weight}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="319" y="98" width="135" height="13" uuid="5851e927-40cf-44f2-976e-ddf618f08ef3"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{packhouse}]]></textFieldExpression>
@@ -402,7 +402,7 @@ ORDER BY
 				<reportElement x="147" y="65" width="41" height="13" uuid="b06c8f72-4e4d-43d8-a975-2830d37c91e9"/>
 				<text><![CDATA[Variety]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="458" y="98" width="66" height="13" uuid="6d26618c-4296-45f8-9e84-9ded7ef27aad"/>
 				<textFieldExpression><![CDATA[$F{line}]]></textFieldExpression>
 			</textField>
