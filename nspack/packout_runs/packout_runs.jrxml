@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-11-04T12:05:47 -->
+<!-- 2020-11-05T05:32:02 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="packout_runs" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" uuid="c08c8ed1-c3fa-4b77-b7f2-d6e11642b1b0">
 	<property name="ireport.zoom" value="5.0"/>
 	<property name="ireport.x" value="0"/>
@@ -13,7 +13,6 @@
 	</parameter>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="use_packed_weight" class="java.lang.Boolean"/>
-	<parameter name="use_derived_weight" class="java.lang.Boolean"/>
 	<parameter name="dispatched_only" class="java.lang.Boolean"/>
 	<queryString language="SQL">
 		<![CDATA[with bin_tipped_attrib as (
@@ -36,7 +35,6 @@ bins_tipped as (
 SELECT  pr.cultivar_id ,pr.farm_id ,cultivars.cultivar_name,farms.farm_code,
 	    sum(p.bins_tipped) AS no_of_bins,
 	    sum(p.bins_tipped_weight::numeric(12,2)) AS total_bin_weight,
-	    sum(p.cartons_verified_weight::numeric(12,2)) AS total_packed_weight,
 	    sum(p.pallet_weight::numeric(12,2)) AS total_pallet_weight
 	    ,string_agg(DISTINCT p.production_run_id::text, '; '::text order by p.production_run_id::text  ) runs
  from  
@@ -161,7 +159,7 @@ sum(derived_nett_weight) over ()total_derived_weight,
 	    output_r.carton_quantity
 		,coalesce(bin_tipped_attrib.cultivars,bins_tipped.cultivar_name)cultivars
 		,coalesce(bin_tipped_attrib.farms,bins_tipped.farm_code)farms
-		,bins_tipped.no_of_bins,bins_tipped.total_bin_weight,bins_tipped.total_packed_weight,bins_tipped.total_pallet_weight
+		,bins_tipped.no_of_bins,bins_tipped.total_bin_weight,bins_tipped.total_pallet_weight
 	    ,bin_tipped_attrib.orchards,bin_tipped_attrib.deliveries, coalesce(bin_tipped_attrib.runs,bins_tipped.runs) runs
 	    FROM bins_tipped 
 	    full join bin_tipped_attrib on bins_tipped.farm_id=bin_tipped_attrib.farm_id and bins_tipped.cultivar_id=bin_tipped_attrib.cultivar_id
@@ -175,7 +173,6 @@ sum(derived_nett_weight) over ()total_derived_weight,
 	<field name="inventory_code" class="java.lang.String"/>
 	<field name="deliveries" class="java.lang.String"/>
 	<field name="total_bin_weight" class="java.math.BigDecimal"/>
-	<field name="total_packed_weight" class="java.math.BigDecimal"/>
 	<field name="total_pallet_weight" class="java.math.BigDecimal"/>
 	<field name="cultivar" class="java.lang.String"/>
 	<field name="marketing_variety_code" class="java.lang.String"/>
@@ -193,7 +190,7 @@ sum(derived_nett_weight) over ()total_derived_weight,
 	<field name="total_derived_weight" class="java.math.BigDecimal"/>
 	<field name="runs" class="java.lang.String"/>
 	<variable name="nett_weight_1" class="java.lang.Double" resetType="Group" resetGroup="grade_code" calculation="Sum">
-		<variableExpression><![CDATA[$P{use_derived_weight} ?$F{derived_nett_weight} : $F{nett_weight}]]></variableExpression>
+		<variableExpression><![CDATA[$P{use_packed_weight} ?$F{nett_weight}:$F{derived_nett_weight}]]></variableExpression>
 	</variable>
 	<variable name="ctn_qty_1" class="java.lang.Long" resetType="Group" resetGroup="grade_code" calculation="Sum">
 		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
@@ -328,8 +325,8 @@ sum(derived_nett_weight) over ()total_derived_weight,
 			</textField>
 			<textField evaluationTime="Report" pattern="#,##0.00 %" isBlankWhenNull="true">
 				<reportElement x="153" y="111" width="66" height="13" uuid="e04886f4-8a5e-4cc7-a1cc-bad547dc5256"/>
-				<textFieldExpression><![CDATA[$F{total_bin_weight}.intValue()==0?0:($P{use_derived_weight} ? $V{derived_nett_weight1}:
-($P{use_packed_weight} ? $V{nett_weight1} : $F{total_pallet_weight}))/$F{total_bin_weight}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{total_bin_weight}.intValue()==0?0:
+($P{use_packed_weight} ? $F{total_weight}:$F{total_derived_weight})/$F{total_bin_weight}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="153" y="98" width="66" height="13" uuid="950f53f4-8b28-4915-9865-28f56cfd6369"/>
@@ -341,9 +338,7 @@ sum(derived_nett_weight) over ()total_derived_weight,
 			</staticText>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="73" y="111" width="80" height="13" uuid="422f92dc-5235-42e6-8dcf-8b14fd4b2e84"/>
-				<textFieldExpression><![CDATA[$P{use_derived_weight} ? $F{total_derived_weight}:
-
-($P{use_packed_weight} ? $F{total_packed_weight} : $F{total_pallet_weight})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{use_packed_weight} ? $F{total_weight}:$F{total_derived_weight}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
 				<reportElement x="262" y="111" width="293" height="13" uuid="d281a8d2-329f-40b7-a4d6-9e05395a2dd2"/>
@@ -418,7 +413,7 @@ sum(derived_nett_weight) over ()total_derived_weight,
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{use_derived_weight} ?$F{derived_nett_weight} : $F{nett_weight}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{use_packed_weight} ?$F{nett_weight}:$F{derived_nett_weight}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="371" y="0" width="67" height="13" uuid="e97fb374-a6ed-4308-a0cb-d0488d245f84"/>
@@ -438,7 +433,7 @@ sum(derived_nett_weight) over ()total_derived_weight,
 				<reportElement x="208" y="0" width="53" height="13" uuid="33864a0a-6881-491b-a63a-36e534326f85"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{total_bin_weight}.intValue()==0?0:
-($P{use_derived_weight} ?$F{derived_nett_weight} : $F{nett_weight})/$F{total_bin_weight}]]></textFieldExpression>
+($P{use_packed_weight} ?$F{derived_nett_weight} : $F{nett_weight})/$F{total_bin_weight}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
