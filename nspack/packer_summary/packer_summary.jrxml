@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-09-10T15:23:57 -->
+<!-- 2020-11-12T14:27:07 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="packersummary" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_NSPACK_UD"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NosoftCartonLabel"/>
 	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
 	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#FFFFFF" fontName="Arial" fontSize="12" isBold="true"/>
@@ -40,7 +40,7 @@
         --shift_types.plant_resource_id,
         --s.running_hours AS shift_running_hours,
         --shift_exceptions.running_hours AS shift_exception_running_hours,
-        count(cartons.id) AS total_cartons,
+        count(carton_labels.id) AS total_cartons,
         sum(fruit_actual_counts_for_packs.actual_count_for_pack) total_fruit,
         contract_workers.id AS cw_id,
         COALESCE(shift_exceptions.running_hours, s.running_hours, ((EXTRACT(EPOCH FROM end_date_time) - EXTRACT(EPOCH FROM start_date_time)) / 60 / 60)) AS running_hours,
@@ -54,9 +54,9 @@
         count(contract_workers.id) over (partition by s.id) as packers_shift
     FROM
         cartons
-        LEFT JOIN carton_labels ON carton_labels.id = cartons.carton_label_id
-        left join   standard_pack_codes on cartons.standard_pack_code_id=standard_pack_codes.id
-        LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = cartons.fruit_actual_counts_for_pack_id
+         JOIN carton_labels ON carton_labels.id = cartons.carton_label_id
+        left join   standard_pack_codes on carton_labels.standard_pack_code_id=standard_pack_codes.id
+        LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = carton_labels.fruit_actual_counts_for_pack_id
         LEFT JOIN (
             SELECT
                 shifts.end_date_time,
@@ -70,8 +70,8 @@
                 public.shifts
                 JOIN shift_types ON shifts.shift_type_id = shift_types.id
                 JOIN employment_types on shift_types.employment_type_id = employment_types.id and employment_type_code = 'PACKERS') AS s ON carton_labels.created_at BETWEEN s.start_date_time AND s.end_date_time AND s.plant_resource_id = carton_labels.production_line_id
-                                       LEFT JOIN packing_methods ON cartons.packing_method_id = packing_methods.id
-        LEFT JOIN public.contract_workers ON (cartons.contract_worker_id = contract_workers.id)
+                                       LEFT JOIN packing_methods ON carton_labels.packing_method_id = packing_methods.id
+        LEFT JOIN public.contract_workers ON (carton_labels.contract_worker_id = contract_workers.id)
         LEFT JOIN public.shift_exceptions ON (contract_workers.id = shift_exceptions.contract_worker_id)
             AND (s.id = shift_exceptions.shift_id)
         LEFT JOIN wage_levels ON contract_workers.wage_level_id = wage_levels.id
@@ -157,8 +157,7 @@ sum(CASE WHEN incentive < 0 THEN
         incentive
     END/cw_cnt)incentive from calc_sql2 
     group by cw_id,    personnel_barcode_number,    wage_level,    wage_level_description,    party_name 
-    order by sum(incentive)  desc;
-]]>
+    order by sum(incentive)  desc;]]>
 	</queryString>
 	<field name="party_name" class="java.lang.String"/>
 	<field name="running_hours" class="java.lang.Double"/>
