@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-08-03T13:49:13 -->
+<!-- 2020-11-12T14:46:02 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="packer_summary" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_NSPACK_UD"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NosoftCartonLabel"/>
 	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
 	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#FFFFFF" fontName="Arial" fontSize="12" isBold="true"/>
@@ -21,7 +21,7 @@
     SELECT
         contract_workers.personnel_number AS personnel_barcode_number,
         contract_workers.first_name || ' ' || contract_workers.surname AS party_name,
-        count(cartons.id) AS carton_qty,
+        count(carton_labels.id) AS carton_qty,
         sum(fruit_actual_counts_for_packs.actual_count_for_pack) fruit_qty_cwi,
         sum(fruit_actual_counts_for_packs.actual_count_for_pack*coalesce(inventory_codes.fruit_item_incentive_rate,0)) fruit_rand_cwi,
         contract_workers.id AS cw_id,
@@ -30,8 +30,8 @@
 
     FROM
         cartons
-        LEFT JOIN carton_labels ON carton_labels.id = cartons.carton_label_id
-        LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = cartons.fruit_actual_counts_for_pack_id
+         JOIN carton_labels ON carton_labels.id = cartons.carton_label_id
+        LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = carton_labels.fruit_actual_counts_for_pack_id
         LEFT JOIN (
             SELECT
                 shifts.end_date_time,
@@ -48,10 +48,10 @@
                 ) AS s ON carton_labels.created_at BETWEEN s.start_date_time
                 AND s.end_date_time
                 AND s.plant_resource_id = carton_labels.production_line_id
-        LEFT JOIN public.contract_workers ON (cartons.contract_worker_id = contract_workers.id)
+        LEFT JOIN public.contract_workers ON (carton_labels.contract_worker_id = contract_workers.id)
         LEFT JOIN public.shift_exceptions ON (contract_workers.id = shift_exceptions.contract_worker_id)
             AND (s.id = shift_exceptions.shift_id)
-        LEFT JOIN public.inventory_codes  ON inventory_codes.id = cartons.inventory_code_id
+        LEFT JOIN public.inventory_codes  ON inventory_codes.id = carton_labels.inventory_code_id
   where 
   $X{IN,contract_workers.id,WorkerIds} and s.start_date_time between  $P{FromDateTime} and $P{ToDateTime} 
         GROUP BY
@@ -86,15 +86,15 @@
 	<field name="cw_rank" class="java.lang.Long"/>
 	<field name="fruit_qty_cwi" class="java.lang.Long"/>
 	<field name="carton_qty" class="java.lang.Long"/>
-	<field name="fruit_item_incentive_rate" class="java.lang.Double"/>
+	<field name="fruit_item_incentive_rate" class="java.math.BigDecimal"/>
 	<field name="inv_codes" class="java.lang.String"/>
-	<field name="total_fruit_rand_cwi" class="java.lang.Double"/>
+	<field name="total_fruit_rand_cwi" class="java.math.BigDecimal"/>
 	<field name="total_carton_cwi" class="java.math.BigDecimal"/>
-	<field name="total_fruit_rand_shift" class="java.lang.Double"/>
+	<field name="total_fruit_rand_shift" class="java.math.BigDecimal"/>
 	<field name="total_fruit_cwi" class="java.math.BigDecimal"/>
 	<field name="total_fruit_shift" class="java.math.BigDecimal"/>
 	<field name="total_carton_shift" class="java.math.BigDecimal"/>
-	<field name="fruit_rand_cwi" class="java.lang.Double"/>
+	<field name="fruit_rand_cwi" class="java.math.BigDecimal"/>
 	<variable name="cw_id1" class="java.lang.Integer" calculation="DistinctCount">
 		<variableExpression><![CDATA[$F{cw_id}]]></variableExpression>
 	</variable>
