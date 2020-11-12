@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-10-28T15:34:24 -->
+<!-- 2020-11-12T14:22:02 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pack_out" language="groovy" pageWidth="520" pageHeight="842" columnWidth="520" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="d842c918-0439-4010-8f55-1a8609bc219f">
 	<property name="ireport.zoom" value="5.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Dunbrody_New_Framework"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NosoftCartonLabel"/>
 	<parameter name="tipped_weight" class="java.lang.Double"/>
 	<parameter name="srproduction_run_id" class="java.lang.Integer"/>
 	<parameter name="Parameter1" class="java.lang.String"/>
@@ -14,33 +14,34 @@
 marketing_varieties.marketing_variety_code ,
  grades.grade_code,
 basic_pack_codes.basic_pack_code ,
- count(cartons.id) AS ctn_qty,
+ count(carton_labels.id) AS ctn_qty,
   sum(standard_product_weights.nett_weight)  nett_weight  ,
  inventory_codes.inventory_code ,
 fruit_actual_counts_for_packs.actual_count_for_pack ,size_count_interval_group
 FROM cartons
-     JOIN production_runs ON production_runs.id = cartons.production_run_id
-     JOIN plant_resources packhouses ON packhouses.id = cartons.packhouse_resource_id
-     JOIN plant_resources lines ON lines.id = cartons.production_line_id
+join carton_labels on carton_labels.id=cartons.carton_label_id 
+     JOIN production_runs ON production_runs.id = carton_labels.production_run_id
+     JOIN plant_resources packhouses ON packhouses.id = carton_labels.packhouse_resource_id
+     JOIN plant_resources lines ON lines.id = carton_labels.production_line_id
      left JOIN farms ON farms.id = (( SELECT rmt_bins.farm_id
            FROM rmt_bins
           WHERE rmt_bins.production_run_tipped_id = production_runs.id
          LIMIT 1))
-     JOIN cultivar_groups ON cultivar_groups.id = cartons.cultivar_group_id
-     LEFT JOIN cultivars ON cultivars.id = cartons.cultivar_id
+     JOIN cultivar_groups ON cultivar_groups.id = carton_labels.cultivar_group_id
+     LEFT JOIN cultivars ON cultivars.id = carton_labels.cultivar_id
        LEFT JOIN commodities ON commodities.id = cultivars.commodity_id
-     JOIN marketing_varieties ON marketing_varieties.id = cartons.marketing_variety_id
-     JOIN grades ON grades.id = cartons.grade_id
-     LEFT JOIN std_fruit_size_counts ON std_fruit_size_counts.id = cartons.std_fruit_size_count_id
-     LEFT JOIN fruit_size_references ON fruit_size_references.id = cartons.fruit_size_reference_id
-     LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = cartons.fruit_actual_counts_for_pack_id
-     JOIN basic_pack_codes ON basic_pack_codes.id = cartons.basic_pack_code_id
-      LEFT  JOIN public.standard_pack_codes on standard_pack_codes.id=cartons.standard_pack_code_id
+     JOIN marketing_varieties ON marketing_varieties.id = carton_labels.marketing_variety_id
+     JOIN grades ON grades.id = carton_labels.grade_id
+     LEFT JOIN std_fruit_size_counts ON std_fruit_size_counts.id = carton_labels.std_fruit_size_count_id
+     LEFT JOIN fruit_size_references ON fruit_size_references.id = carton_labels.fruit_size_reference_id
+     LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = carton_labels.fruit_actual_counts_for_pack_id
+     JOIN basic_pack_codes ON basic_pack_codes.id = carton_labels.basic_pack_code_id
+      LEFT  JOIN public.standard_pack_codes on standard_pack_codes.id=carton_labels.standard_pack_code_id
  left join standard_product_weights on commodities.id=standard_product_weights.commodity_id
  and standard_product_weights.standard_pack_id =standard_pack_codes.id
-      JOIN inventory_codes ON inventory_codes.id = cartons.inventory_code_id
-     JOIN production_run_stats ON production_run_stats.production_run_id = cartons.production_run_id
-where cartons.production_run_id=$P{srproduction_run_id}
+      JOIN inventory_codes ON inventory_codes.id = carton_labels.inventory_code_id
+     JOIN production_run_stats ON production_run_stats.production_run_id = carton_labels.production_run_id
+where carton_labels.production_run_id=$P{srproduction_run_id}
 GROUP BY marketing_varieties.marketing_variety_code ,
  grades.grade_code,
 basic_pack_codes.basic_pack_code ,

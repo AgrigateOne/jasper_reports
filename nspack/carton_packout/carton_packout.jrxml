@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-10-28T15:34:24 -->
+<!-- 2020-11-12T14:18:52 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pack_input_del_ctn" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b6fb5972-61c1-4d79-a065-fdacc2bcc4a7">
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="115"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_ns_pack_sr"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NosoftCartonLabel"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA["C:\\Users\\gerritf.KROMCO\\Documents\\dunbrody\\reports\\new\\jasper\\packout\\"]]></defaultValueExpression>
 	</parameter>
@@ -25,14 +25,15 @@ select sum(nett_weight) output_weight from
 cast(  sum(standard_product_weights.nett_weight )as dec(9,2)) nett_weight
 FROM
  public.cartons 
-     LEFT JOIN cultivar_groups ON cultivar_groups.id = cartons.cultivar_group_id
- LEFT JOIN cultivars ON cultivars.id = cartons.cultivar_id
+ join carton_labels on carton_labels.id=cartons.carton_label_id 
+     LEFT JOIN cultivar_groups ON cultivar_groups.id = carton_labels.cultivar_group_id
+ LEFT JOIN cultivars ON cultivars.id = carton_labels.cultivar_id
      LEFT JOIN commodities ON commodities.id = cultivars.commodity_id
- left  JOIN public.production_runs b ON (cartons.production_run_id = b.id)
- LEFT  JOIN public.standard_pack_codes on standard_pack_codes.id=cartons.standard_pack_code_id
+ left  JOIN public.production_runs b ON (carton_labels.production_run_id = b.id)
+ LEFT  JOIN public.standard_pack_codes on standard_pack_codes.id=carton_labels.standard_pack_code_id
  left join standard_product_weights on commodities.id=standard_product_weights.commodity_id
  and standard_product_weights.standard_pack_id =standard_pack_codes.id
-where cartons.production_run_id= $P{production_run_id} 
+where carton_labels.production_run_id= $P{production_run_id} 
 union all
 SELECT
 coalesce(
