@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-08-19T16:34:46 -->
+<!-- 2020-11-12T14:30:40 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="variety_sum" language="groovy" pageWidth="160" pageHeight="842" columnWidth="160" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f133652a-980c-47db-8697-22a8e1a1d4b0">
 	<property name="ireport.zoom" value="3.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Dunbrody_New_Framework"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NosoftCartonLabel"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
@@ -17,16 +17,16 @@
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<parameter name="sub_shift_id" class="java.lang.Integer"/>
 	<queryString language="SQL">
-		<![CDATA[select  marketing_varieties.marketing_variety_code,count(cartons.*)
+		<![CDATA[select  marketing_varieties.marketing_variety_code,count(carton_labels.*)
 FROM        cartons
-    LEFT JOIN carton_labels ON carton_labels.id = cartons.carton_label_id
-    LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = cartons.fruit_actual_counts_for_pack_id
+     JOIN carton_labels ON carton_labels.id = cartons.carton_label_id
+    LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = carton_labels.fruit_actual_counts_for_pack_id
     LEFT JOIN public.shifts ON carton_labels.created_at BETWEEN shifts.start_date_time
         AND shifts.end_date_time
-    JOIN marketing_varieties ON marketing_varieties.id = cartons.marketing_variety_id
-   left join standard_pack_codes on cartons.standard_pack_code_id =standard_pack_codes.id
+    JOIN marketing_varieties ON marketing_varieties.id = carton_labels.marketing_variety_id
+   left join standard_pack_codes on carton_labels.standard_pack_code_id =standard_pack_codes.id
 where shifts.id=$P{sub_shift_id} and  standard_pack_codes.bin=false GROUP BY   marketing_varieties.marketing_variety_code
-ORDER BY  count(cartons.*) desc;]]>
+ORDER BY  count(carton_labels.*) desc;]]>
 	</queryString>
 	<field name="count" class="java.lang.Long"/>
 	<field name="marketing_variety_code" class="java.lang.String"/>
