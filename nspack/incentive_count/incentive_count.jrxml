@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.3  -->
-<!-- 2020-04-07T10:19:15 -->
+<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
+<!-- 2020-11-12T14:13:26 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive_count" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="0c54595e-180f-487d-9121-9abe94ba96a4">
 	<property name="ireport.zoom" value="1.53947435469212"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NosoftCartonLabel"/>
 	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
 	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#FFFFFF" fontName="Arial" fontSize="12" isBold="true"/>
@@ -44,24 +44,23 @@
         contract_workers.id AS cw_id,
         COALESCE(shift_exceptions.running_hours, shifts.running_hours, ((EXTRACT(EPOCH FROM end_date_time) - EXTRACT(EPOCH FROM start_date_time)) / 60 / 60)) AS running_hours,
          wage_levels.wage_level
-    FROM
-        cartons
-    LEFT JOIN carton_labels ON carton_labels.id = cartons.carton_label_id
-    LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = cartons.fruit_actual_counts_for_pack_id
+    from carton_labels
+           JOIN  cartons ON carton_labels.id = cartons.carton_label_id
+    LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = carton_labels.fruit_actual_counts_for_pack_id
     LEFT JOIN public.shifts ON carton_labels.created_at BETWEEN shifts.start_date_time
         AND shifts.end_date_time
     LEFT JOIN public.shift_types ON shift_types.id = shifts.shift_type_id
-        AND cartons.production_line_id = shift_types.plant_resource_id
-    LEFT JOIN public.contract_workers ON (cartons.contract_worker_id = contract_workers.id)
+        AND carton_labels.production_line_id = shift_types.plant_resource_id
+    LEFT JOIN public.contract_workers ON (carton_labels.contract_worker_id = contract_workers.id)
     LEFT JOIN public.shift_exceptions ON (contract_workers.id = shift_exceptions.contract_worker_id)
         AND (shifts.id = shift_exceptions.shift_id)
-    JOIN basic_pack_codes ON basic_pack_codes.id = cartons.basic_pack_code_id
-      LEFT JOIN std_fruit_size_counts ON std_fruit_size_counts.id = cartons.std_fruit_size_count_id
-    LEFT JOIN cultivars ON cultivars.id = cartons.cultivar_id
+    JOIN basic_pack_codes ON basic_pack_codes.id = carton_labels.basic_pack_code_id
+      LEFT JOIN std_fruit_size_counts ON std_fruit_size_counts.id = carton_labels.std_fruit_size_count_id
+    LEFT JOIN cultivars ON cultivars.id = carton_labels.cultivar_id
     LEFT JOIN commodities ON commodities.id = cultivars.commodity_id
-    JOIN marketing_varieties ON marketing_varieties.id = cartons.marketing_variety_id
+    JOIN marketing_varieties ON marketing_varieties.id = carton_labels.marketing_variety_id
     LEFT JOIN wage_levels ON contract_workers.wage_level_id = wage_levels.id
-    where shifts.id=$P{shift_id}
+    where shifts.id= $P{shift_id} 
      GROUP BY
         shifts.id,
         commodities.description,
@@ -111,7 +110,7 @@ FROM
 	<field name="total_cartons" class="java.lang.Long"/>
 	<field name="total_fruit" class="java.lang.Long"/>
 	<field name="personnel_barcode_number" class="java.lang.String"/>
-	<field name="fruitphour" class="java.lang.Double"/>
+	<field name="fruitphour" class="java.lang.Integer"/>
 	<field name="incentive" class="java.math.BigDecimal"/>
 	<field name="total_earnings" class="java.math.BigDecimal"/>
 	<field name="rp1000f" class="java.math.BigDecimal"/>
