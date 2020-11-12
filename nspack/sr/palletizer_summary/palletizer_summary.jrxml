@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-08-31T16:24:05 -->
+<!-- 2020-11-12T14:35:14 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="palletizer_summary" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_ns_pack_sr"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NosoftCartonLabel"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
@@ -32,14 +32,15 @@
         contract_workers.personnel_number AS personnel_barcode_number,
 
         contract_workers.first_name || ' ' || contract_workers.surname AS party_name,
-        count(cartons.id) AS total_cartons,
+        count(carton_labels.id) AS total_cartons,
           contract_workers.id AS cw_id,
         count(distinct pallet_sequences.pallet_number ) AS total_pallets,
         wage_levels.wage_level,
        string_agg(distinct standard_pack_codes.standard_pack_code,',' order by standard_pack_codes.standard_pack_code)standard_pack_codes, standard_pack_codes.palletizer_incentive_rate 
     FROM
         cartons
-	 join standard_pack_codes on cartons.standard_pack_code_id = standard_pack_codes.id
+        join carton_labels on carton_labels.id=cartons.carton_label_id
+	 join standard_pack_codes on carton_labels.standard_pack_code_id = standard_pack_codes.id
 	 left join pallet_sequences on cartons.pallet_sequence_id = pallet_sequences.id
                LEFT JOIN (
             SELECT
@@ -56,7 +57,7 @@
                JOIN employment_types on shift_types.employment_type_id = employment_types.id and employment_type_code = 'PALLETIZER'
                ) AS s ON cartons.created_at BETWEEN s.start_date_time
                 AND s.end_date_time
-                AND s.plant_resource_id = cartons.production_line_id
+                AND s.plant_resource_id = carton_labels.production_line_id
         LEFT JOIN public.contract_workers ON (cartons.palletizer_contract_worker_id = contract_workers.id)
         LEFT JOIN public.shift_exceptions ON (contract_workers.id = shift_exceptions.contract_worker_id)
             AND (s.id = shift_exceptions.shift_id)
