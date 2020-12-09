@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-11-05T08:13:13 -->
+<!-- 2020-12-09T05:48:45 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="packout_runs" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" uuid="c08c8ed1-c3fa-4b77-b7f2-d6e11642b1b0">
 	<property name="ireport.zoom" value="5.0"/>
 	<property name="ireport.x" value="0"/>
@@ -37,7 +37,8 @@ run_attrib as (
 SELECT  pr.cultivar_id ,pr.farm_id ,cultivars.cultivar_name,farms.farm_code
 	    ,string_agg(DISTINCT p.production_run_id::text, '; '::text order by p.production_run_id::text  ) runs
 ,string_agg(distinct orchards.orchard_code::text, '; '::text order by orchards.orchard_code::text )orchards
-	    from  
+,min(pr.started_at) started_at
+,max(pr.completed_at) completed_at from  
  production_run_stats p 
  join production_runs pr on pr.id=p.production_run_id 
  LEFT JOIN cultivars ON cultivars.id = pr.cultivar_id
@@ -163,6 +164,8 @@ sum(derived_nett_weight) over ()total_derived_weight,
 		,bin_tipped.no_of_bins,bin_tipped.total_bin_weight
 	    ,run_attrib.orchards, coalesce(bin_tipped.runs,run_attrib.runs) runs
 	    ,bin_tipped.deliveries
+	    ,run_attrib.started_at
+	    ,run_attrib.completed_at
 	    FROM run_attrib 
 	    full join bin_tipped on bin_tipped.farm_id=run_attrib.farm_id and bin_tipped.cultivar_id=run_attrib.cultivar_id
 	    full join output_r on run_attrib.farm_id=output_r.farm_id and run_attrib.cultivar_id=output_r.cultivar_id
@@ -190,6 +193,8 @@ sum(derived_nett_weight) over ()total_derived_weight,
 	<field name="total_derived_weight" class="java.math.BigDecimal"/>
 	<field name="runs" class="java.lang.String"/>
 	<field name="deliveries" class="java.lang.String"/>
+	<field name="started_at" class="java.sql.Timestamp"/>
+	<field name="completed_at" class="java.sql.Timestamp"/>
 	<variable name="nett_weight_1" class="java.lang.Double" resetType="Group" resetGroup="grade_code" calculation="Sum">
 		<variableExpression><![CDATA[$P{use_packed_weight} ?$F{nett_weight}:$F{derived_nett_weight}]]></variableExpression>
 	</variable>
@@ -334,7 +339,7 @@ sum(derived_nett_weight) over ()total_derived_weight,
 				<text><![CDATA[Percentage]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="147" y="65" width="41" height="13" uuid="b06c8f72-4e4d-43d8-a975-2830d37c91e9"/>
+				<reportElement x="182" y="65" width="41" height="13" uuid="b06c8f72-4e4d-43d8-a975-2830d37c91e9"/>
 				<text><![CDATA[Variety]]></text>
 			</staticText>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
@@ -358,7 +363,7 @@ sum(derived_nett_weight) over ()total_derived_weight,
 				<textFieldExpression><![CDATA[$F{farms}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="147" y="78" width="41" height="13" uuid="ff8ceebd-7a1b-4b82-9612-4d9b1fe68dca"/>
+				<reportElement x="182" y="78" width="41" height="13" uuid="ff8ceebd-7a1b-4b82-9612-4d9b1fe68dca"/>
 				<textFieldExpression><![CDATA[$F{cultivars}]]></textFieldExpression>
 			</textField>
 			<line>
@@ -380,7 +385,7 @@ sum(derived_nett_weight) over ()total_derived_weight,
 				<text><![CDATA[Deliveries]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="202" y="67" width="72" height="13" uuid="90214d16-623b-4796-a713-3e2e5bab6eea"/>
+				<reportElement x="224" y="65" width="55" height="13" uuid="90214d16-623b-4796-a713-3e2e5bab6eea"/>
 				<text><![CDATA[Orchards]]></text>
 			</staticText>
 			<staticText>
@@ -388,6 +393,24 @@ sum(derived_nett_weight) over ()total_derived_weight,
 				<textElement textAlignment="Right"/>
 				<text><![CDATA[Total Non-pack Weight]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="0" y="65" width="180" height="13" uuid="ef342b23-6b66-4f6e-890e-d5699201d14c"/>
+				<text><![CDATA[Run Start and Completed Date]]></text>
+			</staticText>
+			<textField pattern="d MMM h:mm a">
+				<reportElement x="0" y="78" width="90" height="13" uuid="15cf4b53-eac1-4fc5-bba9-f91762337a0c">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{started_at}]]></textFieldExpression>
+			</textField>
+			<textField pattern="d MMM h:mm a">
+				<reportElement x="92" y="78" width="90" height="13" uuid="7c07b186-caca-431c-8b5b-be12023c4c9e">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{completed_at}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<detail>
