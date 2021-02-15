@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-07-22T05:26:55 -->
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_consignment" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Dunbrody_New_Framework"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Mat_Nspack"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -220,7 +220,7 @@ where loads.id = $P{load_id}]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="237" splitType="Stretch">
+		<band height="240" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isBlankWhenNull="true">
@@ -424,8 +424,11 @@ where loads.id = $P{load_id}]]>
 				</textElement>
 				<text><![CDATA[Export Party:]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement x="75" y="194" width="94" height="13" uuid="3cb19ece-6e6f-434b-b274-fb244fded92b"/>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement x="75" y="194" width="95" height="15" uuid="3cb19ece-6e6f-434b-b274-fb244fded92b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -439,14 +442,18 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{export_party_role_name}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="75" y="207" width="94" height="13" uuid="ea97e593-8c15-4fb2-b6f8-2cdcaf309a2b"/>
+				<reportElement x="75" y="214" width="94" height="13" uuid="ea97e593-8c15-4fb2-b6f8-2cdcaf309a2b">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{booking_reference}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="5" y="207" width="65" height="13" uuid="41c8e148-71e3-4fde-b3c9-742ee35c6366"/>
+				<reportElement x="5" y="214" width="65" height="13" uuid="41c8e148-71e3-4fde-b3c9-742ee35c6366">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -495,7 +502,9 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[Depart Port:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="5" y="220" width="65" height="13" uuid="c23827b9-96b1-4858-8fb3-b68bc82cdf3d"/>
+				<reportElement x="5" y="226" width="65" height="13" uuid="c23827b9-96b1-4858-8fb3-b68bc82cdf3d">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -524,7 +533,9 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{vehicle_number}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="75" y="220" width="470" height="13" uuid="4e33796b-7c53-4ccf-b8b8-5449d200faba"/>
+				<reportElement x="75" y="226" width="470" height="13" uuid="4e33796b-7c53-4ccf-b8b8-5449d200faba">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
 				<textElement>
 					<font size="8"/>
 				</textElement>
