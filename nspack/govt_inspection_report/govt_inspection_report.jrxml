@@ -1134,31 +1134,31 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 		</band>
 	</title>
 	<pageHeader>
-		<band height="43" splitType="Stretch">
+		<band height="58" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
-				<reportElement x="0" y="30" width="24" height="13" uuid="03391b14-b34c-48e4-88ad-b094e06aa174"/>
+				<reportElement x="0" y="45" width="24" height="13" uuid="03391b14-b34c-48e4-88ad-b094e06aa174"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Com]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="24" y="30" width="23" height="13" uuid="f0117312-3a07-4c7a-a13f-63ef978ec02e"/>
+				<reportElement x="24" y="45" width="23" height="13" uuid="f0117312-3a07-4c7a-a13f-63ef978ec02e"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Var]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="47" y="30" width="25" height="13" uuid="22753fa7-e3d4-4c6d-9576-0825fa9511f8"/>
+				<reportElement x="47" y="45" width="25" height="13" uuid="22753fa7-e3d4-4c6d-9576-0825fa9511f8"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Pack]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="72" y="30" width="22" height="13" uuid="6d343af3-e8e4-4116-b4a5-4d638475461e">
+				<reportElement x="72" y="45" width="22" height="13" uuid="6d343af3-e8e4-4116-b4a5-4d638475461e">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -1167,7 +1167,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<text><![CDATA[Grd]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="94" y="30" width="18" height="13" uuid="49671f40-2934-4733-b6af-9288b50b3e3d">
+				<reportElement x="94" y="45" width="18" height="13" uuid="49671f40-2934-4733-b6af-9288b50b3e3d">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -1176,63 +1176,63 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<text><![CDATA[Cnt]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="152" y="30" width="26" height="13" uuid="708d0864-3d80-497e-95fb-7e477d487918"/>
+				<reportElement x="152" y="45" width="26" height="13" uuid="708d0864-3d80-497e-95fb-7e477d487918"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Mark]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="178" y="30" width="20" height="13" uuid="fb430d7e-3647-4e8b-a11a-698a8ad29cac"/>
+				<reportElement x="178" y="45" width="20" height="13" uuid="fb430d7e-3647-4e8b-a11a-698a8ad29cac"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[TM]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="198" y="30" width="25" height="13" uuid="ee39a171-73cc-4562-adf0-f9cc52d86827"/>
+				<reportElement x="198" y="45" width="25" height="13" uuid="ee39a171-73cc-4562-adf0-f9cc52d86827"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[TC]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="223" y="30" width="27" height="13" uuid="dd224acd-3df2-4b33-ad7c-0843cc85780e"/>
+				<reportElement x="223" y="45" width="27" height="13" uuid="dd224acd-3df2-4b33-ad7c-0843cc85780e"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[TR]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="280" y="30" width="21" height="13" uuid="e6afac30-5cf7-457a-ba87-ff39f46ce0f7"/>
+				<reportElement x="280" y="45" width="21" height="13" uuid="e6afac30-5cf7-457a-ba87-ff39f46ce0f7"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Ctns]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="138" y="30" width="14" height="13" uuid="b006ecd9-9474-4990-b773-f698441dce88"/>
+				<reportElement x="138" y="45" width="14" height="13" uuid="b006ecd9-9474-4990-b773-f698441dce88"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[IC]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="250" y="30" width="30" height="13" uuid="0c0ecd14-4700-480e-91aa-9c8b878a61a6"/>
+				<reportElement x="250" y="45" width="30" height="13" uuid="0c0ecd14-4700-480e-91aa-9c8b878a61a6"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Farm]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="301" y="30" width="26" height="13" uuid="4238b2dd-5c08-4ce9-8433-6ce9ab06b0e8"/>
+				<reportElement x="301" y="45" width="26" height="13" uuid="4238b2dd-5c08-4ce9-8433-6ce9ab06b0e8"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Plts]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="383" y="30" width="30" height="13" uuid="6cb26be7-38a9-4b32-836e-2382c3ee4b1f">
+				<reportElement x="383" y="45" width="30" height="13" uuid="6cb26be7-38a9-4b32-836e-2382c3ee4b1f">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -1242,45 +1242,45 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<text><![CDATA[Orch]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="457" y="30" width="98" height="13" uuid="9f167809-de02-4968-92aa-bb6af980d98a"/>
+				<reportElement x="457" y="45" width="98" height="13" uuid="9f167809-de02-4968-92aa-bb6af980d98a"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Barcode]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="327" y="30" width="26" height="13" uuid="e93064c5-0d37-4608-93d1-8e96113273f4"/>
+				<reportElement x="327" y="45" width="26" height="13" uuid="e93064c5-0d37-4608-93d1-8e96113273f4"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Base]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="353" y="30" width="30" height="13" uuid="867dea48-9e27-4564-a1aa-96612a046213"/>
+				<reportElement x="353" y="45" width="30" height="13" uuid="867dea48-9e27-4564-a1aa-96612a046213"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[PHC]]></text>
 			</staticText>
 			<line>
-				<reportElement x="1" y="42" width="555" height="1" uuid="4edad7c7-afbc-4cae-a04f-d40bd51b3694"/>
+				<reportElement x="1" y="57" width="555" height="1" uuid="4edad7c7-afbc-4cae-a04f-d40bd51b3694"/>
 			</line>
 			<staticText>
-				<reportElement x="204" y="4" width="56" height="13" uuid="12b6a678-f6d4-4cd8-9c33-be19ec4ea816"/>
+				<reportElement x="271" y="4" width="56" height="13" uuid="12b6a678-f6d4-4cd8-9c33-be19ec4ea816"/>
 				<textElement>
 					<font size="10"/>
 				</textElement>
 				<text><![CDATA[Waybill:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="260" y="4" width="100" height="13" uuid="3c38160a-3032-4433-81df-de8a8cbd2560"/>
+				<reportElement x="327" y="4" width="100" height="13" uuid="3c38160a-3032-4433-81df-de8a8cbd2560"/>
 				<textElement>
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{consignment_note_number}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="413" y="30" width="67" height="13" uuid="6861c8a6-0c1a-4d63-a841-1552a3683f2d">
+				<reportElement x="413" y="45" width="67" height="13" uuid="6861c8a6-0c1a-4d63-a841-1552a3683f2d">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -1292,21 +1292,23 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<text><![CDATA[Phyto Data]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="115" y="30" width="21" height="13" uuid="0012db30-c291-415f-9bd3-86edde986d60"/>
+				<reportElement x="115" y="45" width="21" height="13" uuid="0012db30-c291-415f-9bd3-86edde986d60">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Size]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1" y="17" width="37" height="13" uuid="51ad6b6c-5774-44a7-92fd-f4caabc692c9"/>
+				<reportElement x="1" y="17" width="125" height="13" uuid="51ad6b6c-5774-44a7-92fd-f4caabc692c9"/>
 				<textElement>
 					<font size="10"/>
 				</textElement>
-				<text><![CDATA[GGN:]]></text>
+				<text><![CDATA[GLOBALG.A.P. number:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="38" y="17" width="160" height="13" uuid="6d4c395e-6b4f-4393-aca1-49518bd17b16">
+				<reportElement x="128" y="17" width="160" height="13" uuid="6d4c395e-6b4f-4393-aca1-49518bd17b16">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement>
@@ -1314,6 +1316,13 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				</textElement>
 				<textFieldExpression><![CDATA[$F{global_gap_number}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="128" y="30" width="125" height="13" uuid="1479bf18-c0df-47d2-b837-950adfae4619"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[GLOBALG.A.P. certified]]></text>
+			</staticText>
 		</band>
 	</pageHeader>
 	<detail>
