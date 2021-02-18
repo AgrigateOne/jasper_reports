@@ -1318,13 +1318,6 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				</textElement>
 				<textFieldExpression><![CDATA[$F{global_gap_number}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="120" y="32" width="125" height="13" uuid="1479bf18-c0df-47d2-b837-950adfae4619"/>
-				<textElement>
-					<font size="10"/>
-				</textElement>
-				<text><![CDATA[GLOBALG.A.P. certified]]></text>
-			</staticText>
 		</band>
 	</pageHeader>
 	<detail>
