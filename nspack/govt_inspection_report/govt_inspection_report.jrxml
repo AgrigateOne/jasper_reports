@@ -1301,14 +1301,16 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<text><![CDATA[Size]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1" y="17" width="125" height="13" uuid="51ad6b6c-5774-44a7-92fd-f4caabc692c9"/>
+				<reportElement x="1" y="17" width="120" height="13" uuid="51ad6b6c-5774-44a7-92fd-f4caabc692c9">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement>
 					<font size="10"/>
 				</textElement>
 				<text><![CDATA[GLOBALG.A.P. number:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="128" y="17" width="160" height="13" uuid="6d4c395e-6b4f-4393-aca1-49518bd17b16">
+				<reportElement x="120" y="17" width="160" height="13" uuid="6d4c395e-6b4f-4393-aca1-49518bd17b16">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement>
