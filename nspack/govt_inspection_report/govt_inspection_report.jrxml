@@ -8,6 +8,8 @@
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44/jasperserver/services/repository"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SR_nspack.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="158"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="831"/>
 	<subDataset name="dataset1" uuid="c85ecac9-39da-4aaa-997f-4e9b10bcfb3c"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA["Users"]]></defaultValueExpression>
@@ -22,17 +24,24 @@
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[WITH ggn as (
-	select string_agg(distinct gap_code::text, '; '::text order by gap_code::text )global_gap_number,
-	p.puc
+	select puc,
+	case when gap_code is not null AND govt_inspection_sheets.created_at between p.gap_code_valid_from and p.gap_code_valid_until then gap_code else null end  gap_code
 FROM
     public.vw_pallet_sequence_flat p
     LEFT JOIN govt_inspection_pallets ON govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
     LEFT JOIN govt_inspection_sheets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
-WHERE  p.govt_inspection_sheet_id= 23
-	GROUP BY p.puc
+WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
+) ,
+ggn_validation AS( 
+	select 
+	string_agg(distinct gap_code::text, '; '::text order by gap_code::text )gap_code,
+	puc
+FROM ggn
+	GROUP BY puc	 
 )
 SELECT
- ggn.global_gap_number,
+case when p.gap_code is not null AND govt_inspection_sheets.created_at between p.gap_code_valid_from and p.gap_code_valid_until then 'global gap certified' else null end  gap_certification,
+ ggn_validation.gap_code,
  case 	when not (govt_inspection_pallets.passed) then    p.pallet_id else null end fail_pallet_id,
 (SELECT pr.id
 FROM public.party_roles pr
@@ -187,7 +196,7 @@ left join parties on party_roles.party_id=parties.id
 left join inspection_failure_reasons on inspection_failure_reasons.id=govt_inspection_pallets.failure_reason_id 
 left join target_market_groups on govt_inspection_sheets.packed_tm_group_id =target_market_groups.id 
 left join target_market_group_types  on target_market_groups.target_market_group_type_id =target_market_group_types.id and target_market_group_type_code ='PACKED'
-join ggn on p.puc = ggn.puc
+join ggn_validation on p.puc = ggn_validation.puc
 WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
   AND $P!{QueryCondition}]]>
 	</queryString>
@@ -875,7 +884,8 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 		<property name="com.jaspersoft.studio.field.label" value="target_market_group_name"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="target_market_groups"/>
 	</field>
-	<field name="global_gap_number" class="java.lang.String"/>
+	<field name="gap_code" class="java.lang.String"/>
+	<field name="gap_certification" class="java.lang.String"/>
 	<sortField name="pallet_number"/>
 	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
@@ -1316,7 +1326,16 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<textElement>
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{global_gap_number}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{gap_code}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="120" y="32" width="160" height="13" uuid="c8d87372-e5ae-424e-b481-70b067c67fa4">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{gap_certification}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
