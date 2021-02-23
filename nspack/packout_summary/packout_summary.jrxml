@@ -30,7 +30,7 @@
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<parameter name="dispatched_only" class="java.lang.Boolean"/>
-	<queryString>
+	<queryString language="plsql">
 		<![CDATA[with hsql as(
 select 
 production_runs.cultivar_id
@@ -82,7 +82,7 @@ production_runs.season_id=hsql.season_id and
 production_runs.puc_id=hsql.puc_id and
 production_runs.production_line_id=hsql.production_line_id
 where
-case when  $P{dispatched_only}  = true then vw_pallet_sequence_flat.load_id is not null else vw_pallet_sequence_flat.load_id is  null end and
+case when  $P{dispatched_only}  = true then vw_pallet_sequence_flat.load_id is not null end and
  (vw_pallet_sequence_flat.line =  $P{line}   or  $P{line}  ='') and 
 (vw_pallet_sequence_flat.puc =  $P{puc}   or  $P{puc}  ='') and 
 (vw_pallet_sequence_flat.orchard =  $P{orchard}   or  $P{orchard}  ='') and 
@@ -273,7 +273,7 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 	<title>
 		<band height="68" splitType="Stretch">
 			<staticText>
-				<reportElement x="1" y="0" width="369" height="16" uuid="38a0db5e-e7aa-47fb-a78e-796e8d25a4cb"/>
+				<reportElement x="1" y="0" width="379" height="16" uuid="38a0db5e-e7aa-47fb-a78e-796e8d25a4cb"/>
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
@@ -317,7 +317,7 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField pattern="HH:mm">
-				<reportElement x="516" y="1" width="38" height="15" uuid="fc4c0dd2-b4f4-4895-a9b7-de063459403e">
+				<reportElement x="516" y="1" width="48" height="15" uuid="fc4c0dd2-b4f4-4895-a9b7-de063459403e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left">
