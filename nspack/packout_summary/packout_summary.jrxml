@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="packout_summary" pageWidth="595" pageHeight="842" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="20" bottomMargin="20" uuid="a11c3b0e-77bc-47a3-bfcc-ddc9763f8ca9">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
@@ -10,8 +10,10 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_Matrosefontein"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="173"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="821"/>
 	<parameter name="detail_level" class="java.lang.String">
 		<defaultValueExpression><![CDATA["Detail"]]></defaultValueExpression>
 	</parameter>
@@ -29,8 +31,10 @@
 	<parameter name="line" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
-	<parameter name="dispatched_only" class="java.lang.Boolean"/>
-	<queryString language="plsql">
+	<parameter name="dispatched_only" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
 		<![CDATA[with hsql as(
 select 
 production_runs.cultivar_id
@@ -82,7 +86,9 @@ production_runs.season_id=hsql.season_id and
 production_runs.puc_id=hsql.puc_id and
 production_runs.production_line_id=hsql.production_line_id
 where
-case when  $P{dispatched_only}  = true then vw_pallet_sequence_flat.load_id is not null end and
+case when  $P{dispatched_only}  = true then vw_pallet_sequence_flat.load_id is not null 
+when coalesce($P{dispatched_only} ,false) = false then 1=1 
+ end and
  (vw_pallet_sequence_flat.line =  $P{line}   or  $P{line}  ='') and 
 (vw_pallet_sequence_flat.puc =  $P{puc}   or  $P{puc}  ='') and 
 (vw_pallet_sequence_flat.orchard =  $P{orchard}   or  $P{orchard}  ='') and 
@@ -108,32 +114,125 @@ case when coalesce(bins_tipped_weight,0)=0 then 0 else  cast(pack_nett_weight/bi
 
 order by season_code,cultivar_description ,orchard_code,puc_code]]>
 	</queryString>
-	<field name="bins_tipped_weight" class="java.math.BigDecimal"/>
-	<field name="pack_nett_weight" class="java.math.BigDecimal"/>
-	<field name="size_ref" class="java.lang.String"/>
-	<field name="std_size" class="java.lang.Integer"/>
-	<field name="basic_pack" class="java.lang.String"/>
-	<field name="inventory_code" class="java.lang.String"/>
-	<field name="cultivar_description" class="java.lang.String"/>
-	<field name="orchard_code" class="java.lang.String"/>
-	<field name="puc_code" class="java.lang.String"/>
-	<field name="season_code" class="java.lang.String"/>
-	<field name="group1" class="java.lang.String"/>
-	<field name="cultivar_id" class="java.lang.Integer"/>
-	<field name="orchard_id" class="java.lang.Integer"/>
-	<field name="season_id" class="java.lang.Integer"/>
-	<field name="puc_id" class="java.lang.Integer"/>
-	<field name="detail_perc" class="java.math.BigDecimal"/>
-	<field name="packout_weight_group1" class="java.math.BigDecimal"/>
-	<field name="packout_perc_group1" class="java.math.BigDecimal"/>
-	<field name="fromdate" class="java.sql.Date"/>
-	<field name="todate" class="java.sql.Date"/>
-	<field name="carton_quantity" class="java.lang.Long"/>
-	<field name="marketing_variety" class="java.lang.String"/>
-	<field name="packed_tm_group" class="java.lang.String"/>
-	<field name="grade" class="java.lang.String"/>
-	<field name="carton_quantity_group1" class="java.math.BigDecimal"/>
-	<field name="bins_tipped" class="java.lang.Long"/>
+	<field name="cultivar_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="cultivar_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="cultivar_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="production_runs"/>
+	</field>
+	<field name="orchard_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="orchard_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="orchard_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="production_runs"/>
+	</field>
+	<field name="season_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="season_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="season_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="production_runs"/>
+	</field>
+	<field name="puc_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="puc_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="puc_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="production_runs"/>
+	</field>
+	<field name="bins_tipped_weight" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="bins_tipped_weight"/>
+		<property name="com.jaspersoft.studio.field.label" value="bins_tipped_weight"/>
+	</field>
+	<field name="pack_nett_weight" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="pack_nett_weight"/>
+		<property name="com.jaspersoft.studio.field.label" value="pack_nett_weight"/>
+	</field>
+	<field name="carton_quantity" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="carton_quantity"/>
+		<property name="com.jaspersoft.studio.field.label" value="carton_quantity"/>
+	</field>
+	<field name="marketing_variety" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="marketing_variety"/>
+		<property name="com.jaspersoft.studio.field.label" value="marketing_variety"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="size_ref" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="size_ref"/>
+		<property name="com.jaspersoft.studio.field.label" value="size_ref"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="std_size" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="std_size"/>
+		<property name="com.jaspersoft.studio.field.label" value="std_size"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="basic_pack" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="basic_pack"/>
+		<property name="com.jaspersoft.studio.field.label" value="basic_pack"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="packed_tm_group" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="packed_tm_group"/>
+		<property name="com.jaspersoft.studio.field.label" value="packed_tm_group"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="grade" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="grade"/>
+		<property name="com.jaspersoft.studio.field.label" value="grade"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="inventory_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="inventory_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="inventory_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="cultivar_description" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cultivar_description"/>
+		<property name="com.jaspersoft.studio.field.label" value="cultivar_description"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cultivars"/>
+	</field>
+	<field name="orchard_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="orchard_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="orchard_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="orchards"/>
+	</field>
+	<field name="puc_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="puc_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="puc_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pucs"/>
+	</field>
+	<field name="season_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="season_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="season_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="seasons"/>
+	</field>
+	<field name="group1" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="group1"/>
+		<property name="com.jaspersoft.studio.field.label" value="group1"/>
+	</field>
+	<field name="fromdate" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="fromdate"/>
+		<property name="com.jaspersoft.studio.field.label" value="fromdate"/>
+	</field>
+	<field name="todate" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="todate"/>
+		<property name="com.jaspersoft.studio.field.label" value="todate"/>
+	</field>
+	<field name="bins_tipped" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="bins_tipped"/>
+		<property name="com.jaspersoft.studio.field.label" value="bins_tipped"/>
+	</field>
+	<field name="detail_perc" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="detail_perc"/>
+		<property name="com.jaspersoft.studio.field.label" value="detail_perc"/>
+	</field>
+	<field name="packout_weight_group1" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="packout_weight_group1"/>
+		<property name="com.jaspersoft.studio.field.label" value="packout_weight_group1"/>
+	</field>
+	<field name="carton_quantity_group1" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="carton_quantity_group1"/>
+		<property name="com.jaspersoft.studio.field.label" value="carton_quantity_group1"/>
+	</field>
+	<field name="packout_perc_group1" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="packout_perc_group1"/>
+		<property name="com.jaspersoft.studio.field.label" value="packout_perc_group1"/>
+	</field>
 	<variable name="pack_nett_weight_SUM" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{pack_nett_weight}]]></variableExpression>
 	</variable>
@@ -273,7 +372,7 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 	<title>
 		<band height="68" splitType="Stretch">
 			<staticText>
-				<reportElement x="1" y="0" width="379" height="16" uuid="38a0db5e-e7aa-47fb-a78e-796e8d25a4cb"/>
+				<reportElement x="1" y="0" width="369" height="16" uuid="38a0db5e-e7aa-47fb-a78e-796e8d25a4cb"/>
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
@@ -289,7 +388,7 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 				<text><![CDATA[From Date:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="7" y="34" width="58" height="26" uuid="c8456536-caf3-44bc-b153-4999b3774d29">
+				<reportElement x="7" y="34" width="58" height="15" uuid="c8456536-caf3-44bc-b153-4999b3774d29">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left">
@@ -317,7 +416,7 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField pattern="HH:mm">
-				<reportElement x="516" y="1" width="48" height="15" uuid="fc4c0dd2-b4f4-4895-a9b7-de063459403e">
+				<reportElement x="516" y="1" width="38" height="15" uuid="fc4c0dd2-b4f4-4895-a9b7-de063459403e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left">
@@ -343,7 +442,7 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 				<textFieldExpression><![CDATA[$F{fromdate}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/M/yy">
-				<reportElement x="71" y="34" width="96" height="30" uuid="abdb3004-cb2d-48ea-80e0-b1f4e64e83fb"/>
+				<reportElement x="71" y="34" width="96" height="15" uuid="abdb3004-cb2d-48ea-80e0-b1f4e64e83fb"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
