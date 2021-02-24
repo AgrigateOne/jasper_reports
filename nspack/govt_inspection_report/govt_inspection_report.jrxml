@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gov_inspection_sheet" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b276ed72-36fe-4eb1-8898-57bb00d5eee1">
 	<property name="ireport.zoom" value="1.7524694974069621"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="46"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/first_intake"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SR_nspack.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Remote_Matrosefontein"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="158"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="831"/>
@@ -183,7 +183,7 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 ,govt_inspection_sheets.inspection_billing_party_role_id
 ,govt_inspection_sheets.exporter_party_role_id
 ,inspection_failure_reasons.failure_reason ,
-target_market_groups.target_market_group_name 
+target_market_groups.target_market_group_name ,inspection_tm
 FROM
     public.vw_pallet_sequence_flat p
     LEFT JOIN govt_inspection_pallets ON govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
@@ -200,6 +200,14 @@ join ggn_validation on p.puc = ggn_validation.puc
 WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
   AND $P!{QueryCondition}]]>
 	</queryString>
+	<field name="gap_certification" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="gap_certification"/>
+		<property name="com.jaspersoft.studio.field.label" value="gap_certification"/>
+	</field>
+	<field name="gap_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="gap_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="gap_code"/>
+	</field>
 	<field name="fail_pallet_id" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="fail_pallet_id"/>
 		<property name="com.jaspersoft.studio.field.label" value="fail_pallet_id"/>
@@ -603,7 +611,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 		<property name="com.jaspersoft.studio.field.label" value="bom"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
-	<field name="extended_columns" class="java.lang.Object">
+	<field name="extended_columns" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="extended_columns"/>
 		<property name="com.jaspersoft.studio.field.label" value="extended_columns"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
@@ -884,8 +892,11 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 		<property name="com.jaspersoft.studio.field.label" value="target_market_group_name"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="target_market_groups"/>
 	</field>
-	<field name="gap_code" class="java.lang.String"/>
-	<field name="gap_certification" class="java.lang.String"/>
+	<field name="inspection_tm" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="inspection_tm"/>
+		<property name="com.jaspersoft.studio.field.label" value="inspection_tm"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
 	<sortField name="pallet_number"/>
 	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
@@ -1391,7 +1402,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{packed_tm_group}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{inspection_tm}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="0" width="24" height="11" uuid="8972db56-64f0-42d9-b128-86f3ef137b32"/>
