@@ -91,7 +91,7 @@ when coalesce($P{dispatched_only} ,false) = false then 1=1
  end and
  (vw_pallet_sequence_flat.line =  $P{line}   or  $P{line}  ='') and 
 (vw_pallet_sequence_flat.puc =  $P{puc}   or  $P{puc}  ='') and 
-(vw_pallet_sequence_flat.orchard =  $P{orchard}   or  $P{orchard}  ='') and 
+(vw_pallet_sequence_flat.orchard =  coalesce($P{orchard},'')   or  coalesce($P{orchard},'')  ='') and 
 (vw_pallet_sequence_flat.cultivar =  $P{cultivar}   or  $P{cultivar}  ='') and 
   production_runs.started_at::date between  $P{FromDate}    and $P{ToDate} 
  
