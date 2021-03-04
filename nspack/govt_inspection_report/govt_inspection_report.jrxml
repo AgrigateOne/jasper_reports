@@ -1153,6 +1153,29 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$V{fail_pallet_id1}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="397" y="24" width="62" height="10" uuid="e1e1bf3f-197d-4182-bdb5-91e716ea4501">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[     UPN:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="453" y="24" width="101" height="10" uuid="612d5b0f-a48f-4a12-80ee-bf72fbc41cbe">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{upn}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
