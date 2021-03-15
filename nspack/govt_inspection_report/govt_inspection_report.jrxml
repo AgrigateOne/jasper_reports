@@ -1351,19 +1351,20 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<text><![CDATA[Size]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1" y="4" width="120" height="13" uuid="51ad6b6c-5774-44a7-92fd-f4caabc692c9">
+				<reportElement x="1" y="4" width="50" height="13" uuid="51ad6b6c-5774-44a7-92fd-f4caabc692c9">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement>
 					<font size="10"/>
 				</textElement>
-				<text><![CDATA[GLOBALG.A.P. number:]]></text>
+				<text><![CDATA[GG number:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="120" y="4" width="160" height="13" uuid="6d4c395e-6b4f-4393-aca1-49518bd17b16">
+				<reportElement x="51" y="4" width="160" height="13" uuid="6d4c395e-6b4f-4393-aca1-49518bd17b16">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement>
 					<font size="10"/>
@@ -1371,8 +1372,9 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<textFieldExpression><![CDATA[$F{gap_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="120" y="19" width="160" height="13" uuid="c8d87372-e5ae-424e-b481-70b067c67fa4">
+				<reportElement x="51" y="19" width="160" height="13" uuid="c8d87372-e5ae-424e-b481-70b067c67fa4">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement>
 					<font size="10"/>
