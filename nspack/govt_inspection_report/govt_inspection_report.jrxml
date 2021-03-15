@@ -1367,7 +1367,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<textElement>
 					<font size="10"/>
 				</textElement>
-				<text><![CDATA[GG number:]]></text>
+				<text><![CDATA[GG:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement x="105" y="4" width="150" height="13" uuid="6d4c395e-6b4f-4393-aca1-49518bd17b16">
