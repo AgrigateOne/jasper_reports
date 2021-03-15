@@ -977,15 +977,21 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<textFieldExpression><![CDATA[$F{order_number}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="110" y="196" width="150" height="13" uuid="9ff87982-6993-4d32-b414-809b1f23e2b0"/>
+				<reportElement x="105" y="196" width="150" height="13" uuid="9ff87982-6993-4d32-b414-809b1f23e2b0">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<textFieldExpression><![CDATA[$F{inspection_point}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="110" y="170" width="150" height="13" uuid="150f65fa-8c7c-4add-8883-93c354fb52c7"/>
+				<reportElement x="105" y="170" width="150" height="13" uuid="150f65fa-8c7c-4add-8883-93c354fb52c7">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<textFieldExpression><![CDATA[$F{inspector}]]></textFieldExpression>
 			</textField>
 			<textField pattern="yyyy-M-dd">
-				<reportElement x="110" y="183" width="150" height="13" uuid="830c5490-e6bb-487b-b0ae-6817e92b379e"/>
+				<reportElement x="105" y="183" width="150" height="13" uuid="830c5490-e6bb-487b-b0ae-6817e92b379e">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<textFieldExpression><![CDATA[$F{inspection_date_time}]]></textFieldExpression>
 			</textField>
 			<line>
@@ -1047,7 +1053,9 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<reportElement x="0" y="52" width="555" height="2" uuid="6cf556c8-04a5-4df4-b342-0d156cae945c"/>
 			</line>
 			<textField pattern="yyyy-M-dd">
-				<reportElement x="110" y="209" width="150" height="13" uuid="d689d4d9-11be-4594-89a0-213b3036c56d"/>
+				<reportElement x="105" y="209" width="150" height="13" uuid="d689d4d9-11be-4594-89a0-213b3036c56d">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<textElement>
 					<font size="10"/>
 				</textElement>
@@ -1311,7 +1319,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<reportElement x="1" y="57" width="555" height="1" uuid="4edad7c7-afbc-4cae-a04f-d40bd51b3694"/>
 			</line>
 			<staticText>
-				<reportElement x="330" y="4" width="58" height="13" uuid="12b6a678-f6d4-4cd8-9c33-be19ec4ea816">
+				<reportElement x="262" y="4" width="58" height="13" uuid="12b6a678-f6d4-4cd8-9c33-be19ec4ea816">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -1321,7 +1329,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<text><![CDATA[Waybill:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="390" y="4" width="100" height="13" uuid="3c38160a-3032-4433-81df-de8a8cbd2560">
+				<reportElement x="322" y="4" width="100" height="13" uuid="3c38160a-3032-4433-81df-de8a8cbd2560">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement>
@@ -1351,17 +1359,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<text><![CDATA[Size]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1" y="4" width="50" height="13" uuid="51ad6b6c-5774-44a7-92fd-f4caabc692c9">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<textElement>
-					<font size="10"/>
-				</textElement>
-				<text><![CDATA[GG number:]]></text>
-			</staticText>
-			<textField isBlankWhenNull="true">
-				<reportElement x="51" y="4" width="160" height="13" uuid="6d4c395e-6b4f-4393-aca1-49518bd17b16">
+				<reportElement x="0" y="4" width="73" height="13" uuid="51ad6b6c-5774-44a7-92fd-f4caabc692c9">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1369,10 +1367,20 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<textElement>
 					<font size="10"/>
 				</textElement>
+				<text><![CDATA[GG number:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="105" y="4" width="150" height="13" uuid="6d4c395e-6b4f-4393-aca1-49518bd17b16">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{gap_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="51" y="19" width="160" height="13" uuid="c8d87372-e5ae-424e-b481-70b067c67fa4">
+				<reportElement x="105" y="19" width="150" height="13" uuid="c8d87372-e5ae-424e-b481-70b067c67fa4">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -1382,7 +1390,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<textFieldExpression><![CDATA[$F{gap_certification}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="327" y="19" width="62" height="13" uuid="c39f4098-0931-47fe-acc6-8c25c51ee68f">
+				<reportElement x="262" y="19" width="60" height="13" uuid="c39f4098-0931-47fe-acc6-8c25c51ee68f">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -1394,7 +1402,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<text><![CDATA[     UPN:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="390" y="19" width="101" height="13" uuid="4f1a29ab-5505-4f4d-b648-6604f29e7c44">
+				<reportElement x="322" y="19" width="101" height="13" uuid="4f1a29ab-5505-4f4d-b648-6604f29e7c44">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
