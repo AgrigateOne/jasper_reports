@@ -485,12 +485,12 @@ where p.load_id =  $P{load_id}]]>
 				<text><![CDATA[ACCOMPANYING DOCUMENT FOR PHYTOSANITARY INSPECTIONS FOR FRESH FRUIT]]></text>
 			</staticText>
 			<image>
-				<reportElement x="0" y="0" width="200" height="80" uuid="82bf7624-3bf6-47cc-a386-ca5a101fdcc0">
+				<reportElement x="0" y="0" width="278" height="80" uuid="82bf7624-3bf6-47cc-a386-ca5a101fdcc0">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<imageExpression><![CDATA["/home/patie/RubymineProjects/crossbeams/jasper_reports/nspack/logos/department_aff.png"]]></imageExpression>
+				<imageExpression><![CDATA["../logos/sa_ministry_of_agric.png"]]></imageExpression>
 			</image>
 			<frame>
 				<reportElement x="0" y="107" width="554" height="311" uuid="0c1f0752-dd46-49f2-90d7-ed10a50be9cc">
