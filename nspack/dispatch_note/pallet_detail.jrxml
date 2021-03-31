@@ -332,7 +332,9 @@ ORDER BY
 				<text><![CDATA[Count]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="472" y="0" width="76" height="13" uuid="139c2eb7-34a0-4179-9b52-0397d983e785"/>
+				<reportElement x="465" y="0" width="76" height="13" uuid="139c2eb7-34a0-4179-9b52-0397d983e785">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -358,7 +360,7 @@ ORDER BY
 				<reportElement x="252" y="0" width="35" height="13" uuid="7224d875-64b4-466d-aed0-85006952e8f5">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Gross]]></text>
