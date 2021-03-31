@@ -364,7 +364,7 @@ ORDER BY
 				<text><![CDATA[Gross]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="415" y="0" width="25" height="13" uuid="8849a077-2613-4c31-8a90-deedac2d3589">
+				<reportElement x="413" y="0" width="25" height="13" uuid="8849a077-2613-4c31-8a90-deedac2d3589">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<printWhenExpression><![CDATA[!$P{scartons_equals_pallets}]]></printWhenExpression>
 				</reportElement>
@@ -374,7 +374,7 @@ ORDER BY
 				<text><![CDATA[Ctns]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="444" y="0" width="25" height="13" uuid="5517ec36-82fa-4790-a51f-0dac405c0e76">
+				<reportElement x="438" y="0" width="25" height="13" uuid="5517ec36-82fa-4790-a51f-0dac405c0e76">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -444,7 +444,8 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{inventory_code}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00" isBlankWhenNull="true">
-				<reportElement x="444" y="0" width="25" height="12" uuid="c40ef02a-6cbe-4349-baa2-b7b1bdef3821">
+				<reportElement x="436" y="0" width="14" height="12" uuid="c40ef02a-6cbe-4349-baa2-b7b1bdef3821">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left">
@@ -501,7 +502,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{actual_size_count_code}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement isPrintRepeatedValues="false" x="468" y="0" width="80" height="12" uuid="0804e167-2e0e-453b-b9d4-cb0d10a06dab">
+				<reportElement isPrintRepeatedValues="false" x="454" y="0" width="98" height="12" uuid="0804e167-2e0e-453b-b9d4-cb0d10a06dab">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -511,7 +512,7 @@ ORDER BY
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Left">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{pallet_number}]]></textFieldExpression>
@@ -554,8 +555,9 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{gross_weight}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#0.##" isBlankWhenNull="true">
-				<reportElement x="415" y="0" width="25" height="12" uuid="da421630-6238-4bec-bda3-daad0f2aa138">
+				<reportElement x="413" y="0" width="20" height="12" uuid="da421630-6238-4bec-bda3-daad0f2aa138">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<printWhenExpression><![CDATA[!$P{scartons_equals_pallets}]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center">
@@ -564,7 +566,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{ctn_qty}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="372" y="0" width="45" height="12" uuid="03da3778-1617-48cb-83b7-a97bcdfe4fce">
+				<reportElement x="370" y="0" width="44" height="12" uuid="03da3778-1617-48cb-83b7-a97bcdfe4fce">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -580,7 +582,7 @@ ORDER BY
 	<summary>
 		<band height="36" splitType="Stretch">
 			<textField pattern="###0.00">
-				<reportElement x="444" y="3" width="25" height="13" uuid="eafb0fde-cf16-4785-bf1c-2e291259339a">
+				<reportElement x="430" y="3" width="25" height="13" uuid="eafb0fde-cf16-4785-bf1c-2e291259339a">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
@@ -617,7 +619,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{load_gross_weight}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#0.##">
-				<reportElement x="413" y="3" width="25" height="13" uuid="d68028be-4c92-425b-a17f-ac1cd26250bf">
+				<reportElement x="402" y="3" width="25" height="13" uuid="d68028be-4c92-425b-a17f-ac1cd26250bf">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<printWhenExpression><![CDATA[!$P{scartons_equals_pallets}]]></printWhenExpression>
 				</reportElement>
