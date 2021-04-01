@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-08-31T16:27:39 -->
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
@@ -44,6 +43,7 @@
        string_agg(distinct standard_pack_codes.standard_pack_code,',' order by standard_pack_codes.standard_pack_code)standard_pack_codes, standard_pack_codes.palletizer_incentive_rate 
     FROM
         cartons
+              join  carton_labels ON carton_labels.id = cartons.carton_label_id
                join pallet_sequences on cartons.pallet_sequence_id=pallet_sequences.id
         join standard_pack_codes on pallet_sequences.standard_pack_code_id =standard_pack_codes.id
                LEFT JOIN (
@@ -59,7 +59,7 @@
                 public.shifts
                left JOIN shift_types ON shifts.shift_type_id = shift_types.id) AS s ON cartons.created_at BETWEEN s.start_date_time
                 AND s.end_date_time
-                AND s.plant_resource_id = cartons.production_line_id
+                AND s.plant_resource_id = carton_labels.production_line_id
         LEFT JOIN public.contract_workers ON (cartons.palletizer_contract_worker_id = contract_workers.id)
         LEFT JOIN public.shift_exceptions ON (contract_workers.id = shift_exceptions.contract_worker_id)
             AND (s.id = shift_exceptions.shift_id)
