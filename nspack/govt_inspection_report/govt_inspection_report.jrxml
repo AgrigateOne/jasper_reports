@@ -24,8 +24,15 @@
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[WITH ggn as (
-	select puc,
-	case when gap_code is not null AND govt_inspection_sheets.created_at between p.gap_code_valid_from and p.gap_code_valid_until then gap_code else null end  gap_code
+select distinct p.govt_inspection_sheet_id,
+	case 
+	    when 
+	           gap_code is not null AND govt_inspection_sheets.created_at between p.gap_code_valid_from and p.gap_code_valid_until 
+	    then 
+	          gap_code
+	    else 
+	        null 
+	    end  gap_code
 FROM
     public.vw_pallet_sequence_flat p
     LEFT JOIN govt_inspection_pallets ON govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
@@ -35,9 +42,9 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 ggn_validation AS( 
 	select 
 	string_agg(distinct gap_code::text, '; '::text order by gap_code::text )gap_code,
-	puc
+	govt_inspection_sheet_id
 FROM ggn
-	GROUP BY puc	 
+	GROUP BY govt_inspection_sheet_id	 
 )
 SELECT
 case when p.gap_code is not null AND govt_inspection_sheets.created_at between p.gap_code_valid_from and p.gap_code_valid_until then 'global gap certified' else null end  gap_certification,
@@ -196,7 +203,7 @@ left join parties on party_roles.party_id=parties.id
 left join inspection_failure_reasons on inspection_failure_reasons.id=govt_inspection_pallets.failure_reason_id 
 left join target_market_groups on govt_inspection_sheets.packed_tm_group_id =target_market_groups.id 
 left join target_market_group_types  on target_market_groups.target_market_group_type_id =target_market_group_types.id and target_market_group_type_code ='PACKED'
-join ggn_validation on p.puc = ggn_validation.puc
+join ggn_validation on p.govt_inspection_sheet_id = ggn_validation.govt_inspection_sheet_id
 WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
   AND $P!{QueryCondition}]]>
 	</queryString>
@@ -1319,7 +1326,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<reportElement x="1" y="57" width="555" height="1" uuid="4edad7c7-afbc-4cae-a04f-d40bd51b3694"/>
 			</line>
 			<staticText>
-				<reportElement x="262" y="4" width="58" height="13" uuid="12b6a678-f6d4-4cd8-9c33-be19ec4ea816">
+				<reportElement x="350" y="0" width="58" height="13" uuid="12b6a678-f6d4-4cd8-9c33-be19ec4ea816">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -1329,7 +1336,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<text><![CDATA[Waybill:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="322" y="4" width="100" height="13" uuid="3c38160a-3032-4433-81df-de8a8cbd2560">
+				<reportElement x="410" y="0" width="100" height="13" uuid="3c38160a-3032-4433-81df-de8a8cbd2560">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement>
@@ -1370,7 +1377,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<text><![CDATA[GG:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="105" y="4" width="150" height="13" uuid="6d4c395e-6b4f-4393-aca1-49518bd17b16">
+				<reportElement x="74" y="4" width="264" height="28" uuid="6d4c395e-6b4f-4393-aca1-49518bd17b16">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
@@ -1380,7 +1387,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<textFieldExpression><![CDATA[$F{gap_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="105" y="19" width="150" height="13" uuid="c8d87372-e5ae-424e-b481-70b067c67fa4">
+				<reportElement x="100" y="32" width="150" height="13" uuid="c8d87372-e5ae-424e-b481-70b067c67fa4">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -1390,7 +1397,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<textFieldExpression><![CDATA[$F{gap_certification}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="262" y="19" width="60" height="13" uuid="c39f4098-0931-47fe-acc6-8c25c51ee68f">
+				<reportElement x="345" y="19" width="60" height="13" uuid="c39f4098-0931-47fe-acc6-8c25c51ee68f">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -1402,7 +1409,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<text><![CDATA[     UPN:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="322" y="19" width="101" height="13" uuid="4f1a29ab-5505-4f4d-b648-6604f29e7c44">
+				<reportElement x="410" y="19" width="101" height="13" uuid="4f1a29ab-5505-4f4d-b648-6604f29e7c44">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
