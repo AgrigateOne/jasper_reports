@@ -37,3 +37,18 @@ set :repo_url, 'git@github.com:NoSoft-SA/jasper_reports.git'
 
 # Uncomment the following to require manually verifying the host key before first deploy.
 # set :ssh_options, verify_host_key: :secure
+
+desc 'Create a symlink for SR2 to use SR client-specific reports'
+task :client_symlink do
+  on primary :app do
+    within release_path do
+      execute :ln, "-s 'sr' 'nspack/sr2'"
+    end
+  end
+end
+
+namespace :deploy do
+  after :updated, :symlink_clients do
+    invoke 'client_symlink'
+  end
+end
