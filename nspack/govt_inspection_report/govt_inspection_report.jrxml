@@ -1366,7 +1366,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<text><![CDATA[Size]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="4" width="73" height="13" uuid="51ad6b6c-5774-44a7-92fd-f4caabc692c9">
+				<reportElement x="0" y="4" width="24" height="15" uuid="51ad6b6c-5774-44a7-92fd-f4caabc692c9">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1376,10 +1376,11 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				</textElement>
 				<text><![CDATA[GG:]]></text>
 			</staticText>
-			<textField isBlankWhenNull="true">
-				<reportElement x="74" y="4" width="264" height="28" uuid="6d4c395e-6b4f-4393-aca1-49518bd17b16">
+			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
+				<reportElement x="24" y="4" width="321" height="22" uuid="6d4c395e-6b4f-4393-aca1-49518bd17b16">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
 					<font size="10"/>
@@ -1387,7 +1388,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<textFieldExpression><![CDATA[$F{gap_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="100" y="32" width="150" height="13" uuid="c8d87372-e5ae-424e-b481-70b067c67fa4">
+				<reportElement x="24" y="30" width="150" height="13" uuid="c8d87372-e5ae-424e-b481-70b067c67fa4">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -1397,7 +1398,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<textFieldExpression><![CDATA[$F{gap_certification}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="345" y="19" width="60" height="13" uuid="c39f4098-0931-47fe-acc6-8c25c51ee68f">
+				<reportElement x="350" y="19" width="60" height="13" uuid="c39f4098-0931-47fe-acc6-8c25c51ee68f">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -1406,7 +1407,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<textElement>
 					<font size="10"/>
 				</textElement>
-				<text><![CDATA[     UPN:]]></text>
+				<text><![CDATA[UPN:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement x="410" y="19" width="101" height="13" uuid="4f1a29ab-5505-4f4d-b648-6604f29e7c44">
