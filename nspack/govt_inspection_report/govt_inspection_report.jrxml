@@ -184,10 +184,8 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
     govt_inspection_sheets.created_at inspection_date_time,
  fn_party_role_name(govt_inspection_sheets.inspection_billing_party_role_id) AS billing_party,
  fn_party_role_name(inspectors.inspector_party_role_id) AS inspector,
- case 	when not (govt_inspection_pallets.passed) then LPAD(govt_inspection_pallets.govt_inspection_sheet_id::text,10, '0')||'F' 
-		when (govt_inspection_pallets.passed) then LPAD(govt_inspection_pallets.govt_inspection_sheet_id::text,10, '0') 
-		else '' end consignment_note_number
-,govt_inspection_sheets.inspection_billing_party_role_id
+p.consignment_note_number,
+govt_inspection_sheets.inspection_billing_party_role_id
 ,govt_inspection_sheets.exporter_party_role_id
 ,inspection_failure_reasons.failure_reason ,
 target_market_groups.target_market_group_name ,inspection_tm,govt_inspection_sheets.upn
