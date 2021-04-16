@@ -1081,7 +1081,9 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<text><![CDATA[Waybill:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="56" y="157" width="100" height="13" uuid="2551f732-f89c-44e1-bbb0-e43b7aae8a54"/>
+				<reportElement x="105" y="157" width="150" height="13" uuid="2551f732-f89c-44e1-bbb0-e43b7aae8a54">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<textElement>
 					<font size="10"/>
 				</textElement>
@@ -1176,7 +1178,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 				<textElement>
 					<font size="7"/>
 				</textElement>
-				<text><![CDATA[     UPN:]]></text>
+				<text><![CDATA[UPN:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement x="453" y="24" width="101" height="10" uuid="612d5b0f-a48f-4a12-80ee-bf72fbc41cbe">

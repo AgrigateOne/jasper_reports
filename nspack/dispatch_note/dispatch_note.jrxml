@@ -3,6 +3,8 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_consignment" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Mat_Nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="74"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="919"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -34,7 +36,13 @@
 	<parameter name="cartons_equals_pallets" class="java.lang.Boolean"/>
 	<parameter name="hide_dispatch_summary_gross" class="java.lang.Boolean"/>
 	<queryString language="SQL">
-		<![CDATA[SELECT
+		<![CDATA[WITH consignment_note AS (
+select distinct consignment_note_number as dispatch_consignment_note_number
+,load_id
+from 	vw_pallet_sequence_flat
+where load_id = $P{load_id}
+)
+SELECT
 fn_party_role_name((SELECT pr.id
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1)) AS implementation_owner_name,
@@ -81,7 +89,6 @@ depots.depot_code,
 fn_party_role_name(loads.billing_client_party_role_id) AS billing_party,
 fn_party_role_name(loads.consignee_party_role_id) AS consignee_party,
 fn_party_role_name(loads.customer_party_role_id) AS customer_party,
-'DN' || CAST(loads.id AS text) AS dispatch_consignment_note_number, -- load_vehicles.dispatch_consignment_note_number,
 exp_org.medium_description AS exporter_org_med,
 load_vehicles.vehicle_number,
 load_vehicles.driver_name,
@@ -92,7 +99,8 @@ loads.edi_file_name as file_name,
 pod_port.port_code AS port_name,
 pol_port.port_code AS depart_port_name,
 loads.customer_party_role_id,
-loads.exporter_party_role_id
+loads.exporter_party_role_id,
+consignment_note.dispatch_consignment_note_number
 FROM loads
 JOIN depots ON depots.id = loads.depot_id
 JOIN destination_cities ON destination_cities.id = loads.final_destination_id
@@ -110,6 +118,7 @@ LEFT JOIN party_roles exp_pr ON exp_pr.id = loads.exporter_party_role_id
 LEFT JOIN organizations exp_org ON exp_org.party_id = exp_pr.party_id
 JOIN party_roles exp_role ON exp_role.id = loads.exporter_party_role_id
 LEFT JOIN party_roles cust_pr ON cust_pr.id = loads.customer_party_role_id
+LEFT JOIN consignment_note   on consignment_note.load_id = loads.id
 where loads.id = $P{load_id}]]>
 	</queryString>
 	<field name="customer_reference" class="java.lang.String"/>
@@ -760,14 +769,14 @@ where loads.id = $P{load_id}]]>
 		<band height="17" splitType="Stretch">
 			<textField>
 				<reportElement x="41" y="2" width="31" height="13" uuid="40bfa11a-7e33-4cd3-a6c8-3db1f0646a61"/>
-				<textElement>
+				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="false" isItalic="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{load_id}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="5" y="2" width="34" height="13" uuid="fdcede6c-c0e5-438c-bc7d-5d93af21f8d8"/>
-				<textElement>
+				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="false" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[Load ID:]]></text>
@@ -780,42 +789,42 @@ where loads.id = $P{load_id}]]>
 			</line>
 			<staticText>
 				<reportElement x="313" y="2" width="77" height="13" uuid="fae9c34f-fc85-4312-b486-dad474b00f24"/>
-				<textElement>
+				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Order Number:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement x="393" y="2" width="42" height="13" uuid="ee201418-a365-43ed-afc7-7d7cf2043576"/>
-				<textElement>
+				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{order_number}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="495" y="2" width="60" height="13" uuid="69dcf885-3536-4534-b0e4-b50389e7a465"/>
-				<textElement>
+				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{load_id}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="446" y="2" width="49" height="13" uuid="e975b093-e946-4f2d-9e68-a15d275cb435"/>
-				<textElement>
+				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Load Order:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement stretchType="RelativeToBandHeight" x="192" y="2" width="121" height="13" uuid="b34663db-e097-4c7b-92b6-fd99df80408d"/>
-				<textElement>
+				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{dispatch_consignment_note_number}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="151" y="2" width="41" height="13" uuid="ad485c40-637f-44f2-aa25-9e5977822b4e"/>
-				<textElement>
+				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Cons No:]]></text>

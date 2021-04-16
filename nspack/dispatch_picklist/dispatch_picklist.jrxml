@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-03-17T10:31:30 -->
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_picklist" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_Dunbrody_NSPACK"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="113"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="879"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -82,7 +83,7 @@ depots.depot_code,
 fn_party_role_name(loads.billing_client_party_role_id) AS billing_party,
 fn_party_role_name(loads.consignee_party_role_id) AS consignee_party,
 fn_party_role_name(loads.customer_party_role_id) AS customer_party,
-'DN' || CAST(loads.id AS text) AS dispatch_consignment_note_number, -- load_vehicles.dispatch_consignment_note_number,
+vw_pallet_sequence_flat.consignment_note_number AS dispatch_consignment_note_number, 
 exp_org.medium_description AS exporter_org_med,
 load_vehicles.vehicle_number,
 load_vehicles.driver_name,
@@ -121,7 +122,7 @@ LEFT JOIN party_roles cust_pr ON cust_pr.id = loads.customer_party_role_id
 LEFT JOIN party_roles exp_pr ON exp_pr.id = loads.exporter_party_role_id
 LEFT JOIN organizations exp_org ON exp_org.party_id = exp_pr.party_id
 
-where vw_pallet_sequence_flat.load_id=5
+where vw_pallet_sequence_flat.load_id=  $P{load_id} 
 group by 
 fn_party_role_name((SELECT pr.id
 FROM public.party_roles pr
@@ -161,7 +162,7 @@ depots.depot_code,
 fn_party_role_name(loads.billing_client_party_role_id) ,
 fn_party_role_name(loads.consignee_party_role_id),
 fn_party_role_name(loads.customer_party_role_id) ,
-'DN' || CAST(loads.id AS text) , -- load_vehicles.dispatch_consignment_note_number,
+'DN' || CAST(loads.id AS text) , 
 exp_org.medium_description ,
 load_vehicles.vehicle_number,
 load_vehicles.driver_name,
@@ -179,7 +180,8 @@ vw_pallet_sequence_flat.basic_pack,
 vw_pallet_sequence_flat.size_ref,
 vw_pallet_sequence_flat.actual_count,
 vw_pallet_sequence_flat.grade,
-vw_pallet_sequence_flat.packed_tm_group]]>
+vw_pallet_sequence_flat.packed_tm_group,
+vw_pallet_sequence_flat.consignment_note_number]]>
 	</queryString>
 	<field name="customer_reference" class="java.lang.String"/>
 	<field name="booking_reference" class="java.lang.String"/>
@@ -502,7 +504,7 @@ vw_pallet_sequence_flat.packed_tm_group]]>
 				</textElement>
 				<text><![CDATA[Export Party:]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement x="77" y="102" width="94" height="13" uuid="3cb19ece-6e6f-434b-b274-fb244fded92b"/>
 				<textElement>
 					<font size="8"/>
