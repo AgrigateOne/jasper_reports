@@ -5,7 +5,8 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_ns_pack_sr"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="production_run_id" class="java.util.Collection" nestedType="java.lang.Integer"/>
 	<parameter name="carton_or_bin" class="java.lang.String">
 		<defaultValueExpression><![CDATA['Carton']]></defaultValueExpression>
@@ -16,162 +17,177 @@
 	<queryString language="SQL">
 		<![CDATA[with bin_tipped as (
 select pr.cultivar_id ,pr.farm_id ,
-string_agg(distinct farms.farm_code::text, '; '::text order by farms.farm_code::text )farms,
-string_agg(distinct orchards.orchard_code::text, '; '::text order by orchards.orchard_code::text )orchards,
-string_agg(DISTINCT b.rmt_delivery_id::text, '; '::text  order by b.rmt_delivery_id::text) deliveries,
-string_agg(DISTINCT  cultivars.cultivar_name::text, '; '::text  order by cultivars.cultivar_name::text) cultivars
-,string_agg(DISTINCT b.production_run_tipped_id::text, '; '::text order by b.production_run_tipped_id::text  ) runs
-	    ,count(b.id) AS no_of_bins
-	    ,sum(b.nett_weight ::numeric(12,2)) AS total_bin_weight
-	FROM  production_runs pr 
-   left join rmt_bins b on pr.id=b.production_run_tipped_id 
-     LEFT JOIN cultivar_groups ON cultivar_groups.id = b.cultivar_group_id
-     LEFT JOIN cultivars ON cultivars.id = b.cultivar_id
+string_agg(distinct farms.farm_code::text, '; '   order by farms.farm_code::text )farms,
+string_agg(distinct pucs.puc_code::text, '; '   order by pucs.puc_code ::text)pucs,
+string_agg(distinct orchards.orchard_code::text, '; '   order by orchards.orchard_code::text )orchards,
+string_agg(distinct b.rmt_delivery_id::text, '; '    order by b.rmt_delivery_id::text) deliveries,
+string_agg(DISTINCT  cultivars.cultivar_name::text, '; '    order by cultivars.cultivar_name::text) cultivars
+,string_agg(DISTINCT b.production_run_tipped_id::text, '; '   order by b.production_run_tipped_id::text  ) runs
+,count(b.id) AS no_of_bins
+,sum(b.nett_weight::numeric(12,2)) AS total_bin_weight
+FROM  production_runs pr
+left join rmt_bins b on pr.id=b.production_run_tipped_id
+LEFT JOIN cultivar_groups ON cultivar_groups.id = b.cultivar_group_id
+LEFT JOIN cultivars ON cultivars.id = b.cultivar_id
 left JOIN orchards ON orchards.id = b.orchard_id
-  LEFT JOIN farms ON farms.id = b.farm_id
-	                  WHERE not  ( b.scrapped =true)  and $X{IN, pr.id , production_run_id}   
-group by pr.cultivar_id ,pr.farm_id 
+LEFT JOIN farms ON farms.id = b.farm_id
+Left join pucs on b.puc_id = pucs.id
+WHERE not  ( b.scrapped =true)  and $X{IN, pr.id , production_run_id}
+group by pr.cultivar_id ,pr.farm_id
 ),
 run_attrib as (
-SELECT  pr.cultivar_id ,pr.farm_id ,cultivars.cultivar_name,farms.farm_code
-	    ,string_agg(DISTINCT p.production_run_id::text, '; '::text order by p.production_run_id::text  ) runs
-,string_agg(distinct orchards.orchard_code::text, '; '::text order by orchards.orchard_code::text )orchards
+SELECT  pr.cultivar_id ,pr.farm_id ,cultivars.cultivar_name,
+string_agg(distinct farms.farm_code, '; '   order by farms.farm_code )farms,
+string_agg(distinct pucs.puc_code, '; '   order by pucs.puc_code )pucs
+,string_agg(DISTINCT p.production_run_id::text, '; '   order by p.production_run_id::text  ) runs
+,string_agg(distinct orchards.orchard_code, '; '   order by orchards.orchard_code )orchards
 ,min(pr.started_at) started_at
-,max(pr.completed_at) completed_at from  
- production_run_stats p 
- join production_runs pr on pr.id=p.production_run_id 
- LEFT JOIN cultivars ON cultivars.id = pr.cultivar_id
- LEFT JOIN farms ON farms.id = pr.farm_id
-  left JOIN orchards ON orchards.id = pr.orchard_id
- where  $X{IN, p.production_run_id, production_run_id}
-group by  pr.cultivar_id ,pr.farm_id ,cultivars.cultivar_name,farms.farm_code
+,max(pr.completed_at) completed_at
+,string_agg(distinct date_part('week'::text, pr.started_at)::text, '; '   order by date_part('week'::text, pr.started_at)::text ) as pack_weeks
+from
+production_run_stats p
+join production_runs pr on pr.id=p.production_run_id
+LEFT JOIN cultivars ON cultivars.id = pr.cultivar_id
+LEFT JOIN farms ON farms.id = pr.farm_id
+LEFT JOIN pucs ON pucs.id = pr.puc_id
+left JOIN orchards ON orchards.id = pr.orchard_id
+where  $X{IN, p.production_run_id, production_run_id}
+group by  pr.cultivar_id ,pr.farm_id ,cultivars.cultivar_name,farms.farm_code,pucs.puc_code
 )
-, packout_details as (	 
-select 	  production_runs.cultivar_id ,production_runs.farm_id ,   COALESCE(cultivars.cultivar_name, cultivar_groups.cultivar_group_code) AS cultivar,
-	    marketing_varieties.marketing_variety_code,
-	    grades.grade_code,basic_pack_codes.basic_pack_code as basic_pack,
-	    std_fruit_size_counts.size_count_value AS std_size,
-	    fruit_size_references.size_reference AS size_ref,
-	    fruit_actual_counts_for_packs.actual_count_for_pack AS actual_count,
-	    inventory_codes.inventory_code,
-	   sum(pallet_sequences.nett_weight::numeric(12,2)) AS nett_weight,
-	    sum(pallet_sequences.carton_quantity)carton_quantity,
-	    sum(standard_product_weights.nett_weight * pallet_sequences.carton_quantity::numeric) AS derived_nett_weight
-	   FROM pallet_sequences
-	   join pallets on   pallet_sequences.pallet_id =pallets.id
-	   JOIN production_runs ON production_runs.id = pallet_sequences.production_run_id
-	     JOIN plant_resources packhouses ON packhouses.id = pallet_sequences.packhouse_resource_id
-	     JOIN plant_resources lines ON lines.id = pallet_sequences.production_line_id
-	     left JOIN farms ON farms.id = (( SELECT rmt_bins.farm_id
-	           FROM rmt_bins
-	          WHERE rmt_bins.production_run_tipped_id = production_runs.id
-	         LIMIT 1))
-	     JOIN cultivar_groups ON cultivar_groups.id = pallet_sequences.cultivar_group_id
-	     LEFT JOIN cultivars ON cultivars.id = pallet_sequences.cultivar_id
-	     LEFT JOIN commodities ON commodities.id = cultivars.commodity_id
-	     LEFT JOIN standard_pack_codes ON standard_pack_codes.id = pallet_sequences.standard_pack_code_id
-	     LEFT JOIN standard_product_weights ON commodities.id = standard_product_weights.commodity_id AND standard_product_weights.standard_pack_id = standard_pack_codes.id
-	     JOIN marketing_varieties ON marketing_varieties.id = pallet_sequences.marketing_variety_id
-	     JOIN grades ON grades.id = pallet_sequences.grade_id
-	     LEFT JOIN std_fruit_size_counts ON std_fruit_size_counts.id = pallet_sequences.std_fruit_size_count_id
-	     LEFT JOIN fruit_size_references ON fruit_size_references.id = pallet_sequences.fruit_size_reference_id
-	     LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = pallet_sequences.fruit_actual_counts_for_pack_id
-	     JOIN basic_pack_codes ON basic_pack_codes.id = pallet_sequences.basic_pack_code_id
-	     JOIN inventory_codes ON inventory_codes.id = pallet_sequences.inventory_code_id
-	     JOIN production_run_stats ON production_run_stats.production_run_id = pallet_sequences.production_run_id
-	  WHERE case when    $P{dispatched_only}   = true then pallets.load_id is not null else true end and $X{IN, pallet_sequences.production_run_id, production_run_id} 
-group by   production_runs.cultivar_id ,production_runs.farm_id , 	  COALESCE(cultivars.cultivar_name, cultivar_groups.cultivar_group_code) ,
-	    marketing_varieties.marketing_variety_code,
-	        grades.grade_code,
- 	    basic_pack_codes.basic_pack_code ,
-	    std_fruit_size_counts.size_count_value ,
-	    fruit_size_references.size_reference ,
-	    fruit_actual_counts_for_packs.actual_count_for_pack ,
-	    inventory_codes.inventory_code
-	  ), output_r as (  SELECT
-	    	cultivar_id ,
-			farm_id ,    
-		'Cartons' AS record_type,
-	        cultivar,
-	        marketing_variety_code,
-	        grade_code,
-	        basic_pack,
-	        std_size,
-	        size_ref,
-	        actual_count,
-	        inventory_code,
-	        sum(nett_weight) nett_weight,
-	        sum(derived_nett_weight) AS derived_nett_weight,
-	        sum(carton_quantity) carton_quantity
-	        	    FROM
-	        packout_details vpd
-	        GROUP BY
-			cultivar_id ,
-			farm_id ,
-	        cultivar,
-	        marketing_variety_code,
-	        grade_code,
-	        basic_pack,
-	        std_size,
-	        size_ref,
-	        actual_count,
-	        inventory_code
-	        UNION ALL
-	    select
-			cultivar_id ,
-			farm_id ,
-	        'Rebins' AS record_type,
-	        coalesce(cultivar_name, cultivar_group_code) cultivar,
-	        coalesce(cultivar_name, cultivar_group_code) AS marketing_variety_code,
-	        rmt_class_code,
-	        NULL basic_pack,
-	        NULL std_size,
-	        NULL size_ref,
-	        NULL actual_count,
-	        NULL inventory_code,
-	        sum(nett_weight) nett_weight,
-	        sum(nett_weight) AS derived_nett_weight,
-	        count(*) carton_quantity
-	    FROM
-	        public.vw_bins
-	    where not  ( scrapped =true) and $X{IN, production_run_rebin_id, production_run_id} 	  
-	        GROUP BY
-			cultivar_id ,
-			farm_id ,
-	        cultivar,
-	        coalesce(cultivar_name, cultivar_group_code),
-	        rmt_class_code
-	    ORDER BY
-	        record_type,
-	        grade_code) 
-	SELECT
-sum(nett_weight) over () total_weight,	    
-sum(derived_nett_weight) over ()total_derived_weight,   
-	    output_r.cultivar,
-	    output_r.marketing_variety_code,
-	    output_r.grade_code,
-	    output_r.basic_pack,
-	    output_r.std_size,
-	    output_r.size_ref,
-	    output_r.actual_count,
-	    output_r.inventory_code,
-	    output_r.nett_weight,
-	    output_r.derived_nett_weight,
-	    output_r.carton_quantity
-		,coalesce(bin_tipped.cultivars,run_attrib.cultivar_name)cultivars
-		,coalesce(bin_tipped.farms,run_attrib.farm_code)farms
-		,bin_tipped.no_of_bins,bin_tipped.total_bin_weight
-	    ,bin_tipped.orchards as orchards
-        ,coalesce(bin_tipped.runs,run_attrib.runs) runs
-	    ,bin_tipped.deliveries
-	    ,run_attrib.started_at
-	    ,run_attrib.completed_at
-	    FROM run_attrib 
-	    full join bin_tipped on bin_tipped.farm_id=run_attrib.farm_id and bin_tipped.cultivar_id=run_attrib.cultivar_id
-	    full join output_r on run_attrib.farm_id=output_r.farm_id and run_attrib.cultivar_id=output_r.cultivar_id
-	ORDER BY
-	    record_type,
-	    grade_code,std_size,inventory_code]]>
+, packout_details as (
+select   production_runs.cultivar_id ,production_runs.farm_id ,   COALESCE(cultivars.cultivar_name, cultivar_groups.cultivar_group_code) AS cultivar,
+marketing_varieties.marketing_variety_code,
+grades.grade_code,basic_pack_codes.basic_pack_code as basic_pack,
+std_fruit_size_counts.size_count_value AS std_size,
+fruit_size_references.size_reference AS size_ref,
+fruit_actual_counts_for_packs.actual_count_for_pack AS actual_count,
+inventory_codes.inventory_code,
+sum(pallet_sequences.nett_weight::numeric(12,2)) AS nett_weight,
+sum(pallet_sequences.carton_quantity)carton_quantity,
+sum(standard_product_weights.nett_weight * pallet_sequences.carton_quantity::numeric) AS derived_nett_weight,
+string_agg(DISTINCT packhouses.plant_resource_code, '; '   order by packhouses.plant_resource_code) packhouses
+FROM pallet_sequences
+join pallets on   pallet_sequences.pallet_id =pallets.id
+JOIN production_runs ON production_runs.id = pallet_sequences.production_run_id
+JOIN plant_resources packhouses ON packhouses.id = pallet_sequences.packhouse_resource_id
+JOIN plant_resources lines ON lines.id = pallet_sequences.production_line_id
+left JOIN farms ON farms.id = (( SELECT rmt_bins.farm_id
+                  FROM rmt_bins
+                  WHERE rmt_bins.production_run_tipped_id = production_runs.id
+LIMIT 1))
+JOIN cultivar_groups ON cultivar_groups.id = pallet_sequences.cultivar_group_id
+LEFT JOIN cultivars ON cultivars.id = pallet_sequences.cultivar_id
+LEFT JOIN commodities ON commodities.id = cultivars.commodity_id
+LEFT JOIN standard_pack_codes ON standard_pack_codes.id = pallet_sequences.standard_pack_code_id
+LEFT JOIN standard_product_weights ON commodities.id = standard_product_weights.commodity_id AND standard_product_weights.standard_pack_id = standard_pack_codes.id
+JOIN marketing_varieties ON marketing_varieties.id = pallet_sequences.marketing_variety_id
+JOIN grades ON grades.id = pallet_sequences.grade_id
+LEFT JOIN std_fruit_size_counts ON std_fruit_size_counts.id = pallet_sequences.std_fruit_size_count_id
+LEFT JOIN fruit_size_references ON fruit_size_references.id = pallet_sequences.fruit_size_reference_id
+LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = pallet_sequences.fruit_actual_counts_for_pack_id
+JOIN basic_pack_codes ON basic_pack_codes.id = pallet_sequences.basic_pack_code_id
+JOIN inventory_codes ON inventory_codes.id = pallet_sequences.inventory_code_id
+JOIN production_run_stats ON production_run_stats.production_run_id = pallet_sequences.production_run_id
+WHERE case when    $P{dispatched_only}   = true then pallets.load_id is not null else true end and $X{IN, pallet_sequences.production_run_id, production_run_id}
+group by   production_runs.cultivar_id ,production_runs.farm_id ,   COALESCE(cultivars.cultivar_name, cultivar_groups.cultivar_group_code) ,
+marketing_varieties.marketing_variety_code,
+grades.grade_code,
+basic_pack_codes.basic_pack_code ,
+std_fruit_size_counts.size_count_value ,
+fruit_size_references.size_reference ,
+fruit_actual_counts_for_packs.actual_count_for_pack ,
+inventory_codes.inventory_code
+), output_r as (  SELECT
+cultivar_id ,
+farm_id ,
+'Cartons' AS record_type,
+cultivar,
+marketing_variety_code,
+grade_code,
+basic_pack,
+std_size,
+size_ref,
+actual_count,
+inventory_code,
+sum(nett_weight) nett_weight,
+sum(derived_nett_weight) AS derived_nett_weight,
+sum(carton_quantity) carton_quantity,
+packhouses
+FROM
+packout_details vpd
+GROUP BY
+cultivar_id ,
+farm_id ,
+cultivar,
+marketing_variety_code,
+grade_code,
+basic_pack,
+std_size,
+size_ref,
+actual_count,
+inventory_code,
+packhouses
+UNION ALL
+select
+cultivar_id ,
+farm_id ,
+'Rebins' AS record_type,
+coalesce(cultivar_name, cultivar_group_code) cultivar,
+coalesce(cultivar_name, cultivar_group_code) AS marketing_variety_code,
+rmt_class_code,
+NULL basic_pack,
+NULL std_size,
+NULL size_ref,
+NULL actual_count,
+NULL inventory_code,
+sum(nett_weight) nett_weight,
+sum(nett_weight) AS derived_nett_weight,
+count(*) carton_quantity,
+NULL packhouses
+FROM
+public.vw_bins
+where not  ( scrapped =true) and $X{IN, production_run_rebin_id, production_run_id}
+GROUP BY
+cultivar_id ,
+farm_id ,
+cultivar,
+coalesce(cultivar_name, cultivar_group_code),
+rmt_class_code,
+packhouses
+ORDER BY
+record_type,
+grade_code)
+SELECT
+run_attrib.pack_weeks,
+output_r.packhouses,
+coalesce(bin_tipped.farms,run_attrib.farms) farms,
+coalesce(bin_tipped.pucs,run_attrib.pucs) pucs,
+sum(nett_weight) over () total_weight,
+sum(derived_nett_weight) over ()total_derived_weight,
+output_r.cultivar,
+output_r.marketing_variety_code,
+output_r.grade_code,
+output_r.basic_pack,
+output_r.std_size,
+output_r.size_ref,
+output_r.actual_count,
+output_r.inventory_code,
+output_r.nett_weight,
+output_r.derived_nett_weight,
+output_r.carton_quantity
+,coalesce(bin_tipped.cultivars,run_attrib.cultivar_name)cultivars
+,bin_tipped.no_of_bins,bin_tipped.total_bin_weight
+,bin_tipped.orchards as orchards
+,coalesce(bin_tipped.runs,run_attrib.runs) runs
+,bin_tipped.deliveries
+,run_attrib.started_at
+,run_attrib.completed_at
+FROM run_attrib
+full join bin_tipped on bin_tipped.farm_id=run_attrib.farm_id and bin_tipped.cultivar_id=run_attrib.cultivar_id
+full join output_r on run_attrib.farm_id=output_r.farm_id and run_attrib.cultivar_id=output_r.cultivar_id
+ORDER BY
+record_type,
+grade_code,std_size,inventory_code]]>
 	</queryString>
 	<field name="grade_code" class="java.lang.String"/>
 	<field name="nett_weight" class="java.math.BigDecimal"/>
@@ -195,6 +211,9 @@ sum(derived_nett_weight) over ()total_derived_weight,
 	<field name="deliveries" class="java.lang.String"/>
 	<field name="started_at" class="java.sql.Timestamp"/>
 	<field name="completed_at" class="java.sql.Timestamp"/>
+	<field name="packhouses" class="java.lang.String"/>
+	<field name="pucs" class="java.lang.String"/>
+	<field name="pack_weeks" class="java.lang.String"/>
 	<variable name="nett_weight_1" class="java.lang.Double" resetType="Group" resetGroup="grade_code" calculation="Sum">
 		<variableExpression><![CDATA[$P{use_packed_weight} ?$F{nett_weight}:$F{derived_nett_weight}]]></variableExpression>
 	</variable>
@@ -308,14 +327,14 @@ sum(derived_nett_weight) over ()total_derived_weight,
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="154">
+		<band height="180">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
-				<reportElement x="229" y="120" width="33" height="13" uuid="5bd917a6-ecbd-477b-ac47-d0471e936972"/>
+				<reportElement x="229" y="150" width="33" height="13" uuid="5bd917a6-ecbd-477b-ac47-d0471e936972"/>
 				<text><![CDATA[Bins]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="120" width="72" height="13" uuid="af65bbe3-7040-4b39-a470-a21354c9f7a4"/>
+				<reportElement x="0" y="150" width="72" height="13" uuid="af65bbe3-7040-4b39-a470-a21354c9f7a4"/>
 				<text><![CDATA[Total Weight]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
@@ -323,56 +342,60 @@ sum(derived_nett_weight) over ()total_derived_weight,
 				<textFieldExpression><![CDATA[$F{deliveries}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="229" y="133" width="33" height="13" uuid="880f630e-999a-4f90-8a16-6e5fc87afd71"/>
+				<reportElement x="229" y="163" width="33" height="13" uuid="880f630e-999a-4f90-8a16-6e5fc87afd71"/>
 				<textFieldExpression><![CDATA[$F{no_of_bins}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="0" y="133" width="72" height="13" uuid="307f4dec-72c8-430e-9b66-6e123cdee012"/>
+				<reportElement x="0" y="163" width="72" height="13" uuid="307f4dec-72c8-430e-9b66-6e123cdee012"/>
 				<textFieldExpression><![CDATA[$F{total_bin_weight}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report" pattern="#,##0.00 %" isBlankWhenNull="true">
-				<reportElement x="153" y="133" width="66" height="13" uuid="e04886f4-8a5e-4cc7-a1cc-bad547dc5256"/>
+				<reportElement x="153" y="163" width="66" height="13" uuid="e04886f4-8a5e-4cc7-a1cc-bad547dc5256"/>
 				<textFieldExpression><![CDATA[$F{total_bin_weight}.intValue()==0?0:
 ($P{use_packed_weight} ? $F{total_weight}:$F{total_derived_weight})/$F{total_bin_weight}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="153" y="120" width="66" height="13" uuid="950f53f4-8b28-4915-9865-28f56cfd6369"/>
+				<reportElement x="153" y="150" width="66" height="13" uuid="950f53f4-8b28-4915-9865-28f56cfd6369"/>
 				<text><![CDATA[Percentage]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="182" y="65" width="41" height="13" uuid="b06c8f72-4e4d-43d8-a975-2830d37c91e9"/>
+				<reportElement x="186" y="65" width="41" height="13" uuid="b06c8f72-4e4d-43d8-a975-2830d37c91e9">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<text><![CDATA[Variety]]></text>
 			</staticText>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="73" y="133" width="80" height="13" uuid="422f92dc-5235-42e6-8dcf-8b14fd4b2e84"/>
+				<reportElement x="73" y="163" width="80" height="13" uuid="422f92dc-5235-42e6-8dcf-8b14fd4b2e84"/>
 				<textFieldExpression><![CDATA[$P{use_packed_weight} ? $F{total_weight}:$F{total_derived_weight}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="false">
-				<reportElement x="262" y="133" width="293" height="13" uuid="d281a8d2-329f-40b7-a4d6-9e05395a2dd2"/>
+				<reportElement x="262" y="163" width="293" height="13" uuid="d281a8d2-329f-40b7-a4d6-9e05395a2dd2"/>
 				<textFieldExpression><![CDATA[$F{runs}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="262" y="120" width="57" height="13" uuid="1b4459a7-02b3-49e3-a40a-926bd06f0584"/>
+				<reportElement x="262" y="150" width="68" height="13" uuid="1b4459a7-02b3-49e3-a40a-926bd06f0584"/>
 				<text><![CDATA[Prod. Run]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="73" y="120" width="77" height="13" uuid="e0025ad7-7e1d-45ac-81f0-12f03c5a8003"/>
+				<reportElement x="73" y="150" width="77" height="13" uuid="e0025ad7-7e1d-45ac-81f0-12f03c5a8003"/>
 				<text><![CDATA[Weight Packed]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="79" y="0" width="209" height="13" uuid="261f179c-4ebd-4311-a4a4-d2d731d26f64"/>
+				<reportElement x="79" y="0" width="231" height="13" uuid="261f179c-4ebd-4311-a4a4-d2d731d26f64"/>
 				<textFieldExpression><![CDATA[$F{farms}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="182" y="78" width="238" height="13" uuid="ff8ceebd-7a1b-4b82-9612-4d9b1fe68dca"/>
+				<reportElement x="186" y="78" width="238" height="13" uuid="ff8ceebd-7a1b-4b82-9612-4d9b1fe68dca">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<textFieldExpression><![CDATA[$F{cultivars}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="0" y="150" width="555" height="1" uuid="bbb15e5f-9b64-4204-9282-d3daf213a1cb"/>
+				<reportElement x="1" y="179" width="555" height="1" uuid="bbb15e5f-9b64-4204-9282-d3daf213a1cb"/>
 			</line>
 			<staticText>
 				<reportElement x="0" y="0" width="72" height="13" uuid="f8cb3ed4-e283-491a-98f5-ca186c5bd474"/>
-				<text><![CDATA[Client Name]]></text>
+				<text><![CDATA[Client Name:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement x="59" y="96" width="230" height="13" uuid="b4ed6d6d-a46e-4978-b15d-15d61dddd28e">
@@ -384,14 +407,14 @@ sum(derived_nett_weight) over ()total_derived_weight,
 			</textField>
 			<staticText>
 				<reportElement x="1" y="19" width="72" height="13" uuid="45b53b01-1006-4434-bbe1-7a245f49bbbc"/>
-				<text><![CDATA[Deliveries]]></text>
+				<text><![CDATA[Deliveries:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="96" width="55" height="13" uuid="90214d16-623b-4796-a713-3e2e5bab6eea">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<text><![CDATA[Orchards]]></text>
+				<text><![CDATA[Orchards:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="435" y="65" width="120" height="13" uuid="3a3fef4e-63ee-436c-98b4-f9c5caeff589"/>
@@ -400,7 +423,7 @@ sum(derived_nett_weight) over ()total_derived_weight,
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="65" width="180" height="13" uuid="ef342b23-6b66-4f6e-890e-d5699201d14c"/>
-				<text><![CDATA[Run Start and Completed Date]]></text>
+				<text><![CDATA[Run Start and Completed Date:]]></text>
 			</staticText>
 			<textField pattern="d MMM h:mm a">
 				<reportElement x="0" y="78" width="90" height="13" uuid="15cf4b53-eac1-4fc5-bba9-f91762337a0c">
@@ -416,6 +439,52 @@ sum(derived_nett_weight) over ()total_derived_weight,
 				</reportElement>
 				<textFieldExpression><![CDATA[$F{completed_at}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="320" y="130" width="60" height="13" uuid="0b63366a-d171-4edf-b321-b43f39e4a306">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<text><![CDATA[Pack Week:]]></text>
+			</staticText>
+			<textField pattern="###0">
+				<reportElement x="380" y="130" width="183" height="13" uuid="6d91bb19-5fd5-486a-b605-068c662de646">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{pack_weeks}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="45" y="133" width="275" height="13" uuid="99aea265-e191-4a55-8fe2-37e5d11e2a0a">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{packhouses}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="30" y="115" width="231" height="13" uuid="26f9441e-b1ae-449b-83ab-b165e517173a">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{pucs}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="115" width="30" height="13" uuid="77152575-eee7-4cf2-a6df-9052d1f4de5d">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<text><![CDATA[Puc:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="133" width="44" height="13" uuid="aa2eccf0-f7d7-4ff2-9449-dcb3edd74e6d">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<text><![CDATA[Packhse:]]></text>
+			</staticText>
 		</band>
 	</title>
 	<detail>
