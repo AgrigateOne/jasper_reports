@@ -4,13 +4,15 @@
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="115"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NosoftCartonLabel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA["Users"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="production_run_id" class="java.lang.Integer"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT
+ packhouses.plant_resource_code as  packhouse,
   sum(rmt_bins.nett_weight) AS weight,
   count(rmt_bins.*) AS bin_qty,
  rmt_bins.production_run_tipped_id,
@@ -59,6 +61,7 @@ FROM rmt_bins
      LEFT JOIN rmt_classes ON rmt_classes.id = rmt_bins.rmt_class_id
      LEFT JOIN public.production_runs ON (rmt_bins.production_run_tipped_id = production_runs.id)
      LEFT JOIN public.plant_resources on production_runs.production_line_id =plant_resources.id
+    LEFT JOIN public.plant_resources packhouses on production_runs.packhouse_resource_id =packhouses.id
 WHERE
   rmt_bins.production_run_tipped_id = $P{production_run_id} 
 GROUP BY
@@ -66,7 +69,8 @@ GROUP BY
   farms.description,
 public.plant_resources.id,
 cultivar_groups.cultivar_group_code,
-  public.production_runs.started_at;]]>
+  public.production_runs.started_at
+  ,packhouses.plant_resource_code ;]]>
 	</queryString>
 	<field name="weight" class="java.math.BigDecimal"/>
 	<field name="bin_qty" class="java.lang.Long"/>
@@ -77,6 +81,7 @@ cultivar_groups.cultivar_group_code,
 	<field name="plant_resource_code" class="java.lang.String"/>
 	<field name="cultivar_name" class="java.lang.String"/>
 	<field name="farm_description" class="java.lang.String"/>
+	<field name="packhouse" class="java.lang.String"/>
 	<group name="production_run">
 		<groupExpression><![CDATA[]]></groupExpression>
 		<groupHeader>
@@ -171,7 +176,9 @@ cultivar_groups.cultivar_group_code,
 				<textFieldExpression><![CDATA[$F{bin_qty}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="297" y="111" width="236" height="13" uuid="0f2ed5e1-aa23-436f-967a-bae3491e3bb5"/>
+				<reportElement x="270" y="111" width="236" height="13" uuid="0f2ed5e1-aa23-436f-967a-bae3491e3bb5">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<textFieldExpression><![CDATA[$F{production_run_tipped_id}]]></textFieldExpression>
 			</textField>
 			<staticText>
@@ -207,8 +214,8 @@ cultivar_groups.cultivar_group_code,
 				<text><![CDATA[Percentage]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="319" y="98" width="135" height="13" uuid="0147f2d0-0ac0-479c-8924-20847d20fc88"/>
-				<textElement textAlignment="Right"/>
+				<reportElement x="420" y="100" width="135" height="13" uuid="0147f2d0-0ac0-479c-8924-20847d20fc88"/>
+				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$F{plant_resource_code}]]></textFieldExpression>
 			</textField>
 			<line>
@@ -230,6 +237,10 @@ cultivar_groups.cultivar_group_code,
 				<reportElement x="73" y="65" width="60" height="13" uuid="22940bcb-928b-4561-9fca-465841653bb0"/>
 				<text><![CDATA[Pack Week]]></text>
 			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="340" y="100" width="72" height="13" uuid="ed81a166-1ed5-4ac0-adde-801e657c2303"/>
+				<textFieldExpression><![CDATA[$F{packhouse}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<pageFooter>
