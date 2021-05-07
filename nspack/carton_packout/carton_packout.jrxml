@@ -114,7 +114,7 @@ cultivar_groups.cultivar_group_code,
 				<subreportExpression><![CDATA["pack_intakes.jasper"]]></subreportExpression>
 			</subreport>
 			<textField isBlankWhenNull="true">
-				<reportElement x="79" y="0" width="209" height="13" uuid="95877c00-bde8-4c35-a267-24d87f3eba82"/>
+				<reportElement x="79" y="0" width="251" height="13" uuid="95877c00-bde8-4c35-a267-24d87f3eba82"/>
 				<textFieldExpression><![CDATA[$F{farm_description}]]></textFieldExpression>
 			</textField>
 			<staticText>

@@ -14,7 +14,7 @@
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="use_packed_weight" class="java.lang.Boolean"/>
 	<parameter name="dispatched_only" class="java.lang.Boolean"/>
-	<queryString language="SQL">
+	<queryString language="plsql">
 		<![CDATA[with bin_tipped as (
 select pr.cultivar_id ,pr.farm_id ,
 string_agg(distinct farms.farm_code::text, '; '   order by farms.farm_code::text )farms,
