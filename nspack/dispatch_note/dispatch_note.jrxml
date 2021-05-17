@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_consignment" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Mat_Nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="74"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="919"/>
@@ -36,13 +36,7 @@
 	<parameter name="cartons_equals_pallets" class="java.lang.Boolean"/>
 	<parameter name="hide_dispatch_summary_gross" class="java.lang.Boolean"/>
 	<queryString language="SQL">
-		<![CDATA[WITH consignment_note AS (
-select distinct consignment_note_number as dispatch_consignment_note_number
-,load_id
-from 	vw_pallet_sequence_flat
-where load_id = $P{load_id}
-)
-SELECT
+		<![CDATA[SELECT
 fn_party_role_name((SELECT pr.id
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1)) AS implementation_owner_name,
@@ -89,6 +83,7 @@ depots.depot_code,
 fn_party_role_name(loads.billing_client_party_role_id) AS billing_party,
 fn_party_role_name(loads.consignee_party_role_id) AS consignee_party,
 fn_party_role_name(loads.customer_party_role_id) AS customer_party,
+'DN' || CAST(loads.id AS text) AS dispatch_consignment_note_number, -- load_vehicles.dispatch_consignment_note_number,
 exp_org.medium_description AS exporter_org_med,
 load_vehicles.vehicle_number,
 load_vehicles.driver_name,
@@ -99,8 +94,7 @@ loads.edi_file_name as file_name,
 pod_port.port_code AS port_name,
 pol_port.port_code AS depart_port_name,
 loads.customer_party_role_id,
-loads.exporter_party_role_id,
-consignment_note.dispatch_consignment_note_number
+loads.exporter_party_role_id
 FROM loads
 JOIN depots ON depots.id = loads.depot_id
 JOIN destination_cities ON destination_cities.id = loads.final_destination_id
@@ -118,7 +112,6 @@ LEFT JOIN party_roles exp_pr ON exp_pr.id = loads.exporter_party_role_id
 LEFT JOIN organizations exp_org ON exp_org.party_id = exp_pr.party_id
 JOIN party_roles exp_role ON exp_role.id = loads.exporter_party_role_id
 LEFT JOIN party_roles cust_pr ON cust_pr.id = loads.customer_party_role_id
-LEFT JOIN consignment_note   on consignment_note.load_id = loads.id
 where loads.id = $P{load_id}]]>
 	</queryString>
 	<field name="customer_reference" class="java.lang.String"/>
