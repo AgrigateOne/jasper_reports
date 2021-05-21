@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gov_inspection_sheet" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b276ed72-36fe-4eb1-8898-57bb00d5eee1">
 	<property name="ireport.zoom" value="1.7524694974069621"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="46"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/first_intake"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Remote_Matrosefontein"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_Addo"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="158"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="831"/>
@@ -45,7 +45,11 @@ ggn_validation AS(
 	govt_inspection_sheet_id
 FROM ggn
 	GROUP BY govt_inspection_sheet_id	 
-)
+),
+scrapped_pallet_number as ( select distinct ps.pallet_number,p.last_govt_inspection_pallet_id,govt_inspection_pallets.id govt_inspection_pallet_id FROM pallets p
+     JOIN pallet_sequences ps ON p.id = ps.scrapped_from_pallet_id
+  join govt_inspection_pallets on govt_inspection_pallets.pallet_id=ps.scrapped_from_pallet_id
+     where  govt_inspection_pallets.govt_inspection_sheet_id= $P{govt_inspection_sheet_id})
 SELECT
 case when p.gap_code is not null AND govt_inspection_sheets.created_at between p.gap_code_valid_from and p.gap_code_valid_until then 'global gap certified' else null end  gap_certification,
  ggn_validation.gap_code,
@@ -55,7 +59,7 @@ FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) AS implementation_owner_party_role_id,
     p.id,
     p.pallet_id,
-    pallet_number,
+      coalesce(scrapped_pallet_number.pallet_number, p.pallet_number)as pallet_number,
     pallet_sequence_number,
     plt_packhouse,
     plt_line,
@@ -189,10 +193,10 @@ govt_inspection_sheets.inspection_billing_party_role_id
 ,govt_inspection_sheets.exporter_party_role_id
 ,inspection_failure_reasons.failure_reason ,
 target_market_groups.target_market_group_name ,inspection_tm,govt_inspection_sheets.upn
-FROM
-    public.vw_pallet_sequence_flat p
-    LEFT JOIN govt_inspection_pallets ON govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
-    LEFT JOIN govt_inspection_sheets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+from govt_inspection_sheets
+ LEFT JOIN govt_inspection_pallets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+ LEFT JOIN public.vw_pallet_sequence_flat p on govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
+left join scrapped_pallet_number on scrapped_pallet_number.last_govt_inspection_pallet_id= govt_inspection_pallets.id 
 LEFT JOIN destination_countries ON destination_countries.id = govt_inspection_sheets.destination_country_id
 LEFT JOIN destination_regions ON destination_regions.id = govt_inspection_sheets.destination_region_id
 left join inspectors on inspectors.id= govt_inspection_sheets.inspector_id
@@ -202,7 +206,7 @@ left join inspection_failure_reasons on inspection_failure_reasons.id=govt_inspe
 left join target_market_groups on govt_inspection_sheets.packed_tm_group_id =target_market_groups.id 
 left join target_market_group_types  on target_market_groups.target_market_group_type_id =target_market_group_types.id and target_market_group_type_code ='PACKED'
 join ggn_validation on p.govt_inspection_sheet_id = ggn_validation.govt_inspection_sheet_id
-WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
+WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}
   AND $P!{QueryCondition}]]>
 	</queryString>
 	<field name="gap_certification" class="java.lang.String">
@@ -876,6 +880,7 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 	<field name="consignment_note_number" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="consignment_note_number"/>
 		<property name="com.jaspersoft.studio.field.label" value="consignment_note_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
 	<field name="inspection_billing_party_role_id" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="inspection_billing_party_role_id"/>
@@ -902,7 +907,11 @@ WHERE  p.govt_inspection_sheet_id= $P{govt_inspection_sheet_id}
 		<property name="com.jaspersoft.studio.field.label" value="inspection_tm"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
-	<field name="upn" class="java.lang.String"/>
+	<field name="upn" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="upn"/>
+		<property name="com.jaspersoft.studio.field.label" value="upn"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="govt_inspection_sheets"/>
+	</field>
 	<sortField name="pallet_number"/>
 	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
