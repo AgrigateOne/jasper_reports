@@ -1059,7 +1059,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="453" y="14" width="100" height="10" uuid="05e3658c-f32e-4c93-8f01-ef04ec5c1a42"/>
 				<textElement>
 					<font size="7"/>
@@ -1095,7 +1095,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}
 				</textElement>
 				<text><![CDATA[Waybill:]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="105" y="157" width="150" height="13" uuid="2551f732-f89c-44e1-bbb0-e43b7aae8a54">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -1350,7 +1350,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}
 				</textElement>
 				<text><![CDATA[Waybill:]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="410" y="0" width="120" height="13" uuid="3c38160a-3032-4433-81df-de8a8cbd2560">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
