@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="addendum" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="22c9f520-d5e9-4af2-ac4c-ad2be98d416a">
 	<property name="ireport.zoom" value="1.7524694974069637"/>
 	<property name="ireport.x" value="0"/>
@@ -26,8 +26,7 @@ FROM
 
   FROM vw_pallet_sequence_flat
   WHERE vw_pallet_sequence_flat.load_id=$P{load_id} 
-)  AS sq
-]]>
+)  AS sq]]>
 	</queryString>
 	<field name="load_id" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="load_id"/>
@@ -1980,16 +1979,21 @@ FROM
 				</textElement>
 				<textFieldExpression><![CDATA[$F{booking_reference}]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement x="1" y="0" width="146" height="80" uuid="4d93be6c-bfde-441a-a429-1310524d45eb">
-					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+			<image scaleImage="FillFrame">
+				<reportElement x="1" y="0" width="150" height="80" uuid="4d93be6c-bfde-441a-a429-1310524d45eb">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<imageExpression><![CDATA["../logos/department_aff.png"]]></imageExpression>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<imageExpression><![CDATA["../logos/new_department_aff.png"]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="188" y="63" width="613" height="18" uuid="08dcbcb8-ec8e-438c-a46b-99a8c4df9a4c"/>
