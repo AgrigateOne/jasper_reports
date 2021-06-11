@@ -1163,7 +1163,7 @@ FROM
 					<textElement>
 						<font fontName="SansSerif" size="5"/>
 					</textElement>
-					<text><![CDATA[Name of APIS:]]></text>
+					<text><![CDATA[Name of D:IS  ]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
 					<reportElement x="386" y="38" width="138" height="10" uuid="9dcde7c2-7d50-4e0b-b54d-e3a68c08c45d"/>
@@ -1295,7 +1295,7 @@ FROM
 					<textElement textAlignment="Center">
 						<font fontName="SansSerif" size="5"/>
 					</textElement>
-					<text><![CDATA[APIS stamp]]></text>
+					<text><![CDATA[D:IS stamp]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="1" y="146" width="170" height="8" uuid="5216d5d2-3dd5-46c6-ba60-cbb297a57953"/>
@@ -2122,7 +2122,7 @@ FROM
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="5"/>
 				</textElement>
-				<text><![CDATA[Pallet Netto Weight]]></text>
+				<text><![CDATA[Nett/ Gross pallet weight]]></text>
 			</staticText>
 			<line>
 				<reportElement x="0" y="0" width="802" height="1" uuid="0d8d35a2-9803-49c8-b8d0-281f4108aff0"/>
