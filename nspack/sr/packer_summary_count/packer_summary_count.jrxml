@@ -169,7 +169,7 @@
 				<text><![CDATA[Total Earnings]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="546" y="0" width="44" height="30" uuid="fdee7a68-1f2f-49f6-a6ab-1806ed94d3ff">
+				<reportElement x="550" y="0" width="40" height="30" uuid="fdee7a68-1f2f-49f6-a6ab-1806ed94d3ff">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
@@ -177,7 +177,9 @@
 				<text><![CDATA[Inv]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="310" y="0" width="50" height="30" uuid="d032bb1b-be48-43c2-b13d-3a76e115e68c"/>
+				<reportElement x="311" y="0" width="50" height="30" uuid="d032bb1b-be48-43c2-b13d-3a76e115e68c">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Left">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
@@ -199,7 +201,7 @@
 				<text><![CDATA[Cost]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="100" y="0" width="45" height="30" uuid="ffdef32f-ddac-46a5-b2c8-4348ac3c042e">
+				<reportElement x="100" y="0" width="40" height="30" uuid="ffdef32f-ddac-46a5-b2c8-4348ac3c042e">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left"/>
@@ -223,7 +225,7 @@
 				<reportElement x="185" y="0" width="41" height="30" uuid="d0ca7c73-8d78-4c79-b219-82a11810ec8f">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center"/>
+				<textElement textAlignment="Left"/>
 				<text><![CDATA[Basic Pack]]></text>
 			</staticText>
 		</band>
@@ -235,7 +237,9 @@
 				<textFieldExpression><![CDATA[$F{personnel_barcode_number}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="36" y="0" width="59" height="15" uuid="7c6c77c6-242c-41fe-b29c-e6a3002c405c"/>
+				<reportElement x="36" y="0" width="64" height="15" uuid="7c6c77c6-242c-41fe-b29c-e6a3002c405c">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textFieldExpression><![CDATA[$F{party_name}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
@@ -266,7 +270,8 @@
 				<textFieldExpression><![CDATA[$F{inv_codes}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="310" y="0" width="50" height="15" uuid="22194ec0-e85e-487c-8ed1-be87fa521e14">
+				<reportElement x="311" y="0" width="50" height="15" uuid="22194ec0-e85e-487c-8ed1-be87fa521e14">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<printWhenExpression><![CDATA[$F{cw_rank}==1]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Left"/>
@@ -286,8 +291,11 @@
 				<textFieldExpression><![CDATA[$F{fruit_rand_cwi}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="95" y="0" width="45" height="15" uuid="e63d1a87-406c-4fe1-b460-08ca2d1a2dfa"/>
-				<textElement textAlignment="Center"/>
+				<reportElement x="100" y="0" width="40" height="15" uuid="e63d1a87-406c-4fe1-b460-08ca2d1a2dfa">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$F{commodity_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
