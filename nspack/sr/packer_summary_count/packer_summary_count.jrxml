@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-11-12T14:47:52 -->
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="packer_summary_count" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NosoftCartonLabel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
 	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
 	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#FFFFFF" fontName="Arial" fontSize="12" isBold="true"/>
@@ -136,8 +135,8 @@
 	<title>
 		<band height="30" splitType="Stretch">
 			<staticText>
-				<reportElement style="Column header" x="357" y="0" width="70" height="30" forecolor="#000000" uuid="994518c1-7571-4434-bbf8-99a73e8ecbbc"/>
-				<textElement textAlignment="Right">
+				<reportElement style="Column header" x="420" y="0" width="130" height="30" forecolor="#000000" uuid="994518c1-7571-4434-bbf8-99a73e8ecbbc"/>
+				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Total Fruit Qty]]></text>
@@ -150,73 +149,75 @@
 				<text><![CDATA[PNo]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="249" y="0" width="36" height="30" uuid="00c02650-20e0-4cb8-9cf5-740132cd6884"/>
-				<textElement textAlignment="Right">
+				<reportElement x="270" y="0" width="41" height="30" uuid="00c02650-20e0-4cb8-9cf5-740132cd6884"/>
+				<textElement textAlignment="Left">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Ctn]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="36" y="0" width="36" height="30" uuid="6a9424ce-1390-4108-99e8-ed956c24c933"/>
+				<reportElement x="36" y="0" width="64" height="30" uuid="6a9424ce-1390-4108-99e8-ed956c24c933"/>
 				<text><![CDATA[Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="544" y="0" width="95" height="30" uuid="4207fc67-7b55-43fa-94ce-2560746370f6"/>
+				<reportElement x="670" y="0" width="95" height="30" uuid="4207fc67-7b55-43fa-94ce-2560746370f6">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Right"/>
 				<text><![CDATA[Total Earnings]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="427" y="0" width="47" height="30" uuid="fdee7a68-1f2f-49f6-a6ab-1806ed94d3ff">
+				<reportElement x="546" y="0" width="34" height="30" uuid="fdee7a68-1f2f-49f6-a6ab-1806ed94d3ff">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right"/>
+				<textElement textAlignment="Center"/>
 				<text><![CDATA[Inv]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="285" y="0" width="36" height="30" uuid="d032bb1b-be48-43c2-b13d-3a76e115e68c"/>
-				<textElement textAlignment="Right">
+				<reportElement x="310" y="0" width="50" height="30" uuid="d032bb1b-be48-43c2-b13d-3a76e115e68c"/>
+				<textElement textAlignment="Left">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Total Cartons]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="321" y="0" width="36" height="30" forecolor="#000000" uuid="38599196-b84c-4582-92cf-49a0c5422c02"/>
+				<reportElement style="Column header" x="360" y="0" width="59" height="30" forecolor="#000000" uuid="38599196-b84c-4582-92cf-49a0c5422c02"/>
 				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Fruit Qty]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="474" y="0" width="70" height="30" uuid="ee3775b3-91c4-46f1-bd6d-5f05bf0be997"/>
-				<textElement textAlignment="Right"/>
+				<reportElement x="580" y="0" width="90" height="30" uuid="ee3775b3-91c4-46f1-bd6d-5f05bf0be997"/>
+				<textElement textAlignment="Center"/>
 				<text><![CDATA[Cost]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="72" y="0" width="45" height="30" uuid="ffdef32f-ddac-46a5-b2c8-4348ac3c042e">
+				<reportElement x="100" y="0" width="45" height="30" uuid="ffdef32f-ddac-46a5-b2c8-4348ac3c042e">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left"/>
 				<text><![CDATA[Comm]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="117" y="0" width="47" height="30" uuid="e5a79cfb-26e2-447a-8aaf-aa28d36cd63d">
+				<reportElement x="140" y="0" width="47" height="30" uuid="e5a79cfb-26e2-447a-8aaf-aa28d36cd63d">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right"/>
-				<text><![CDATA[Mark Var]]></text>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[MarkVar]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="205" y="0" width="44" height="30" uuid="a6611038-265a-4e60-ad9b-40d3812d54b2">
+				<reportElement x="226" y="0" width="44" height="30" uuid="a6611038-265a-4e60-ad9b-40d3812d54b2">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left"/>
 				<text><![CDATA[Actual Count]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="164" y="0" width="41" height="30" uuid="d0ca7c73-8d78-4c79-b219-82a11810ec8f">
+				<reportElement x="185" y="0" width="41" height="30" uuid="d0ca7c73-8d78-4c79-b219-82a11810ec8f">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Left"/>
+				<textElement textAlignment="Center"/>
 				<text><![CDATA[Basic Pack]]></text>
 			</staticText>
 		</band>
@@ -228,66 +229,67 @@
 				<textFieldExpression><![CDATA[$F{personnel_barcode_number}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="36" y="0" width="36" height="15" uuid="7c6c77c6-242c-41fe-b29c-e6a3002c405c"/>
+				<reportElement x="36" y="0" width="59" height="15" uuid="7c6c77c6-242c-41fe-b29c-e6a3002c405c"/>
 				<textFieldExpression><![CDATA[$F{party_name}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="249" y="0" width="36" height="15" uuid="f83a63e0-000b-46a1-b35f-5f7818f68111"/>
-				<textElement textAlignment="Right"/>
+				<reportElement x="270" y="0" width="41" height="15" uuid="f83a63e0-000b-46a1-b35f-5f7818f68111"/>
+				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$F{carton_qty}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="357" y="0" width="70" height="15" uuid="d87d3b26-8bf5-456c-aff4-50a1e729fc6b">
+			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
+				<reportElement x="420" y="0" width="130" height="15" uuid="d87d3b26-8bf5-456c-aff4-50a1e729fc6b">
 					<printWhenExpression><![CDATA[$F{cw_rank}==1]]></printWhenExpression>
 				</reportElement>
-				<textElement textAlignment="Right"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{total_fruit_cwi}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-				<reportElement x="544" y="0" width="95" height="15" uuid="89b64826-d22a-443a-8bec-94b00adb10c6">
+				<reportElement x="670" y="0" width="95" height="15" uuid="89b64826-d22a-443a-8bec-94b00adb10c6">
 					<printWhenExpression><![CDATA[$F{cw_rank}==1]]></printWhenExpression>
 				</reportElement>
-				<textElement textAlignment="Right"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{total_fruit_rand_cwi}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="427" y="0" width="47" height="15" uuid="d0f19b2a-bfce-4e8b-8397-315fdd94e84c">
+				<reportElement x="550" y="0" width="30" height="15" uuid="d0f19b2a-bfce-4e8b-8397-315fdd94e84c">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Left"/>
+				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{inv_codes}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="285" y="0" width="36" height="15" uuid="22194ec0-e85e-487c-8ed1-be87fa521e14">
+				<reportElement x="310" y="0" width="50" height="15" uuid="22194ec0-e85e-487c-8ed1-be87fa521e14">
 					<printWhenExpression><![CDATA[$F{cw_rank}==1]]></printWhenExpression>
 				</reportElement>
-				<textElement textAlignment="Right"/>
+				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$F{total_carton_cwi}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="321" y="0" width="36" height="15" uuid="47595efc-74d0-4561-827c-1b9bca8e2d60"/>
-				<textElement textAlignment="Right"/>
+				<reportElement x="360" y="0" width="59" height="15" uuid="47595efc-74d0-4561-827c-1b9bca8e2d60"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{fruit_qty_cwi}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-				<reportElement x="474" y="0" width="70" height="15" uuid="afdb5bfd-7103-4c45-8757-df719ab63d6d"/>
-				<textElement textAlignment="Right"/>
+				<reportElement x="580" y="0" width="90" height="15" uuid="afdb5bfd-7103-4c45-8757-df719ab63d6d"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{fruit_rand_cwi}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="72" y="0" width="45" height="15" uuid="e63d1a87-406c-4fe1-b460-08ca2d1a2dfa"/>
+				<reportElement x="95" y="0" width="45" height="15" uuid="e63d1a87-406c-4fe1-b460-08ca2d1a2dfa"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{commodity_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="117" y="0" width="47" height="15" uuid="c3ef17ce-ebad-42fd-856a-a58b36e20f5d"/>
+				<reportElement x="140" y="0" width="47" height="15" uuid="c3ef17ce-ebad-42fd-856a-a58b36e20f5d"/>
 				<textFieldExpression><![CDATA[$F{marketing_variety_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="164" y="0" width="41" height="15" uuid="326d8b42-ecad-462b-89d4-fe53c68a56a6"/>
+				<reportElement x="185" y="0" width="41" height="15" uuid="326d8b42-ecad-462b-89d4-fe53c68a56a6"/>
 				<textFieldExpression><![CDATA[$F{basic_pack_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="205" y="0" width="44" height="15" uuid="a310a5fa-9f23-43a3-aabd-5dcfe770b8bb"/>
+				<reportElement x="226" y="0" width="44" height="15" uuid="a310a5fa-9f23-43a3-aabd-5dcfe770b8bb"/>
 				<textFieldExpression><![CDATA[$F{actual_count}]]></textFieldExpression>
 			</textField>
 		</band>
