@@ -157,20 +157,23 @@
 			</staticText>
 			<staticText>
 				<reportElement x="36" y="0" width="64" height="30" uuid="6a9424ce-1390-4108-99e8-ed956c24c933"/>
+				<textElement textAlignment="Left"/>
 				<text><![CDATA[Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="670" y="0" width="95" height="30" uuid="4207fc67-7b55-43fa-94ce-2560746370f6">
+				<reportElement x="675" y="0" width="94" height="30" uuid="4207fc67-7b55-43fa-94ce-2560746370f6">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right"/>
 				<text><![CDATA[Total Earnings]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="546" y="0" width="34" height="30" uuid="fdee7a68-1f2f-49f6-a6ab-1806ed94d3ff">
+				<reportElement x="546" y="0" width="44" height="30" uuid="fdee7a68-1f2f-49f6-a6ab-1806ed94d3ff">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<textElement textAlignment="Center"/>
+				<textElement textAlignment="Left"/>
 				<text><![CDATA[Inv]]></text>
 			</staticText>
 			<staticText>
@@ -188,7 +191,10 @@
 				<text><![CDATA[Fruit Qty]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="580" y="0" width="90" height="30" uuid="ee3775b3-91c4-46f1-bd6d-5f05bf0be997"/>
+				<reportElement x="590" y="0" width="85" height="30" uuid="ee3775b3-91c4-46f1-bd6d-5f05bf0be997">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Center"/>
 				<text><![CDATA[Cost]]></text>
 			</staticText>
@@ -245,17 +251,18 @@
 				<textFieldExpression><![CDATA[$F{total_fruit_cwi}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-				<reportElement x="670" y="0" width="95" height="15" uuid="89b64826-d22a-443a-8bec-94b00adb10c6">
+				<reportElement x="675" y="0" width="110" height="15" uuid="89b64826-d22a-443a-8bec-94b00adb10c6">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<printWhenExpression><![CDATA[$F{cw_rank}==1]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{total_fruit_rand_cwi}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="550" y="0" width="30" height="15" uuid="d0f19b2a-bfce-4e8b-8397-315fdd94e84c">
+				<reportElement x="550" y="0" width="40" height="15" uuid="d0f19b2a-bfce-4e8b-8397-315fdd94e84c">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right"/>
+				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$F{inv_codes}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
@@ -271,8 +278,11 @@
 				<textFieldExpression><![CDATA[$F{fruit_qty_cwi}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-				<reportElement x="580" y="0" width="90" height="15" uuid="afdb5bfd-7103-4c45-8757-df719ab63d6d"/>
-				<textElement textAlignment="Center"/>
+				<reportElement x="590" y="0" width="85" height="15" uuid="afdb5bfd-7103-4c45-8757-df719ab63d6d">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{fruit_rand_cwi}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
