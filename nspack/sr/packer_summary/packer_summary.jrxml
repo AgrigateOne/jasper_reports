@@ -101,7 +101,9 @@
 	<title>
 		<band height="30" splitType="Stretch">
 			<staticText>
-				<reportElement style="Column header" x="280" y="0" width="80" height="30" forecolor="#000000" uuid="994518c1-7571-4434-bbf8-99a73e8ecbbc"/>
+				<reportElement style="Column header" x="280" y="0" width="81" height="30" forecolor="#000000" uuid="994518c1-7571-4434-bbf8-99a73e8ecbbc">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Left">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
@@ -185,6 +187,7 @@ Qty]]></text>
 			<textField isBlankWhenNull="true">
 				<reportElement x="280" y="0" width="80" height="15" uuid="d87d3b26-8bf5-456c-aff4-50a1e729fc6b">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<printWhenExpression><![CDATA[$F{cw_rank}==1]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$F{total_fruit_cwi}]]></textFieldExpression>
@@ -209,6 +212,7 @@ Qty]]></text>
 				<reportElement x="170" y="0" width="48" height="15" uuid="22194ec0-e85e-487c-8ed1-be87fa521e14">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<printWhenExpression><![CDATA[$F{cw_rank}==1]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$F{total_carton_cwi}]]></textFieldExpression>
