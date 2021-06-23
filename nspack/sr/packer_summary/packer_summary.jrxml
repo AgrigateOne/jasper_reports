@@ -10,8 +10,8 @@
 	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#FFFFFF" fontName="Arial" fontSize="12" isBold="true"/>
 	<style name="Detail" fontName="Arial" fontSize="12"/>
-	<parameter name="FromDateTime" class="java.sql.Timestamp"/>
-	<parameter name="ToDateTime" class="java.sql.Timestamp"/>
+	<parameter name="FromDateTime" class="java.util.Date"/>
+	<parameter name="ToDateTime" class="java.util.Date"/>
 	<parameter name="WorkerIds" class="java.util.Collection"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["C:\\Huis\\dunbrody\\reports\\on_server\\incentive\\"]]></defaultValueExpression>
@@ -129,8 +129,9 @@ Qty]]></text>
 				<text><![CDATA[Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="520" y="0" width="92" height="30" uuid="4207fc67-7b55-43fa-94ce-2560746370f6">
+				<reportElement x="520" y="0" width="93" height="30" uuid="4207fc67-7b55-43fa-94ce-2560746370f6">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right"/>
 				<text><![CDATA[Total Earnings]]></text>
