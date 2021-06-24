@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-07-10T12:47:05 -->
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="delivery_report" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d109052e-9b0f-425e-bdc4-875aca838363">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_NSPACK_UD"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="199"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="794"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="delivery_id" class="java.lang.Integer"/>
 	<parameter name="user_name" class="java.lang.String"/>
 	<queryString language="SQL">
@@ -35,6 +37,7 @@
 ,(SELECT pr.id
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) AS implementation_owner_party_role_id
+,a.reference_number
 FROM
     rmt_deliveries a
     LEFT JOIN rmt_delivery_destinations d ON d.id = a.rmt_delivery_destination_id
@@ -99,6 +102,7 @@ group by     a.id,j.rmt_delivery_id,
 	<field name="bin_qty" class="java.lang.Long"/>
 	<field name="implementation_owner_party_role_id" class="java.lang.Integer"/>
 	<field name="del_id" class="java.lang.String"/>
+	<field name="reference_number" class="java.lang.String"/>
 	<variable name="bin_qty1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{bin_qty}]]></variableExpression>
 	</variable>
@@ -381,14 +385,33 @@ group by     a.id,j.rmt_delivery_id,
 				<text><![CDATA[COMMODITY:]]></text>
 			</staticText>
 			<componentElement>
-				<reportElement x="170" y="10" width="100" height="120" uuid="49b0c4c2-5169-4511-8017-21690e8cee3a">
+				<reportElement x="210" y="10" width="100" height="120" uuid="49b0c4c2-5169-4511-8017-21690e8cee3a">
 					<property name="local_mesure_unitbarWidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.barWidth" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barWidth="1">
 					<jr:codeExpression><![CDATA[$F{del_id}]]></jr:codeExpression>
 				</jr:barbecue>
 			</componentElement>
+			<staticText>
+				<reportElement x="0" y="60" width="128" height="20" uuid="cefa1f2b-ca47-4859-b12f-e92dabc5b308"/>
+				<textElement textAlignment="Left">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REFERENCE NUMBER:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="130" y="60" width="58" height="20" uuid="1a3f60b9-96f3-4308-967b-e8aa6ea82e63">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{reference_number}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
