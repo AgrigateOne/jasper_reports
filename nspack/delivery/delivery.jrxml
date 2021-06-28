@@ -10,6 +10,7 @@
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="delivery_id" class="java.lang.Integer"/>
 	<parameter name="user_name" class="java.lang.String"/>
+	<parameter name="client" class="java.lang.String"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT (a.id::text)as del_id,
     a.id,j.rmt_delivery_id,
