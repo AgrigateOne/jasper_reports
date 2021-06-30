@@ -1,5 +1,5 @@
 # config valid for current version and patch releases of Capistrano
-lock '~> 3.14.0'
+lock '~> 3.16.0'
 
 set :application, 'jasper_reports'
 set :repo_url, 'git@github.com:NoSoft-SA/jasper_reports.git'
@@ -47,8 +47,22 @@ task :client_symlink do
   end
 end
 
+
 namespace :deploy do
   after :updated, :symlink_clients do
     invoke 'client_symlink'
+  end
+end
+
+namespace :deploy do
+  after :updated, :restart_service do
+    on roles(:app) do |_|
+      puts('----------------------------------------------------------------------------------------------')
+      puts('---')
+      puts('--- REMEMBER: Restart the Jruby Jasper service:: sudo systemctl restart jruby_jasper.service')
+      puts('---       OR: Use the nsmenu option to restart Jruby Jasper.')
+      puts('---')
+      puts('----------------------------------------------------------------------------------------------')
+    end
   end
 end
