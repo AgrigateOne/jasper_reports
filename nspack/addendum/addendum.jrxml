@@ -1662,7 +1662,8 @@ FROM
 					</graphicElement>
 				</rectangle>
 				<staticText>
-					<reportElement x="652" y="71" width="53" height="15" uuid="3580e8ca-26ed-4381-b50d-f8f32cedd94a">
+					<reportElement x="652" y="71" width="54" height="15" uuid="3580e8ca-26ed-4381-b50d-f8f32cedd94a">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<printWhenExpression><![CDATA[!$P{place_of_issue}.equalsIgnoreCase( "CPT" ) && !$P{place_of_issue}.equalsIgnoreCase( "DBN" ) && !$P{place_of_issue}.equalsIgnoreCase( "MPM" ) && !$P{place_of_issue}.equalsIgnoreCase( "PLZ" )]]></printWhenExpression>
 					</reportElement>
 					<box>
