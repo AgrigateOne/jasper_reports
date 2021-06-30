@@ -129,9 +129,11 @@ group by     a.id,j.rmt_delivery_id,
 				<reportElement x="1" y="0" width="555" height="1" uuid="69c10a66-7d49-452e-860a-adca56bf55bf"/>
 			</line>
 			<subreport>
-				<reportElement x="156" y="35" width="124" height="93" uuid="d06b356f-5c73-47c7-96d6-b403512fca46">
+				<reportElement x="1" y="35" width="125" height="93" uuid="d06b356f-5c73-47c7-96d6-b403512fca46">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<subreportParameter name="party_role_id">
 					<subreportParameterExpression><![CDATA[$F{implementation_owner_party_role_id}]]></subreportParameterExpression>
@@ -142,12 +144,6 @@ group by     a.id,j.rmt_delivery_id,
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
 			</subreport>
-			<image scaleImage="FillFrame">
-				<reportElement x="1" y="34" width="155" height="95" uuid="cec8a742-da62-4466-81fe-5e56e595dbdc">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<imageExpression><![CDATA["../logos/habata.png"]]></imageExpression>
-			</image>
 		</band>
 	</title>
 	<pageHeader>
