@@ -50,11 +50,12 @@ scrapped_pallet_number as (
             select distinct v.pallet_id as scrapped_pallet_id,v.pallet_number,v.pallet_sequence_number,v.govt_inspection_passed,v.grade,v.carton_quantity,v.pallet_size,v.pallet_base,v.phc,
             v.farm,    v.puc,    v.orchard,    v.commodity,    v.cultivar_group,    v.cultivar,    v.marketing_variety,    v.marketing_org,
             v.packed_tm_group,    v.mark,    v.inventory_code,    v.customer_variety,    v.std_size,    v.size_ref,   v.actual_count,    v.basic_pack,    v.std_pack
-            ,v.phyto_data,v.inspection_tm
+            ,v.phyto_data,v.inspection_tm,COALESCE(v.customer_variety,v.marketing_variety) as variety
             FROM vw_scrapped_pallet_sequence_flat v where govt_inspection_sheet_id = $P{govt_inspection_sheet_id}
             and v.govt_inspection_passed is false
      )
 SELECT
+COALESCE(scrapped_pallet_number.variety, p.customer_variety, p.marketing_variety,'') as variety,
 coalesce(scrapped_pallet_number.pallet_number, p.pallet_number)as pallet_number,
 coalesce(scrapped_pallet_number.pallet_sequence_number, p.pallet_sequence_number)as pallet_sequence_number,
 govt_inspection_pallets.passed,
@@ -918,6 +919,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}
 		<property name="com.jaspersoft.studio.field.label" value="upn"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="govt_inspection_sheets"/>
 	</field>
+	<field name="variety" class="java.lang.String"/>
 	<sortField name="pallet_number"/>
 	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
@@ -1477,7 +1479,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{marketing_variety}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{variety}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="327" y="0" width="26" height="11" uuid="b6a1a1d5-1c55-45f4-a80b-11c2e262fe98"/>

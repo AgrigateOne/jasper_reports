@@ -23,7 +23,7 @@
 FROM 
 (SELECT  id,pallet_id,pallet_number,pallet_sequence_number,plt_packhouse,plt_line,packhouse,line,location_id,location,shipped,in_stock,inspected,reinspected,palletized,partially_palletized,allocated,pallet_age,inspection_age,stock_age,cold_age,ambient_age,reinspection_age,pack_to_inspect_age,inspect_to_cold_age,inspect_to_exit_warm_age,first_cold_storage_at,first_cold_storage_date,govt_inspection_passed,govt_first_inspection_at,govt_first_inspection_date,govt_reinspection_at,govt_reinspection_date,shipped_at,shipped_date,packed_at,packed_date,packed_week,created_at,updated_at,scrapped,scrapped_at,scrapped_date,production_run_id,farm,farm_group,production_region,puc,orchard,commodity,cultivar_group,cultivar,marketing_variety,marketing_org,packed_tm_group,mark,inventory_code,customer_variety,std_size,size_ref,count_group,actual_count,basic_pack,std_pack,std_ctns,resource_allocation_id,treatments,client_size_ref,client_product_code,order_number,season,pm_subtype,pm_type,cpp,fruit_sticker,fruit_sticker_2,gross_weight,gross_weight_measured_at,nett_weight
 ,cast(sequence_nett_weight as dec(9,2)) as sequence_nett_weight,exit_ref,phc,stock_created_at,intake_created_at,palletized_at,palletized_date,partially_palletized_at,allocated_at,pallet_base,stack_type,pallet_verification_failed,verified,verification_passed,verification_failure_reason,verification_result,verified_at,"bom",extended_columns,carton_quantity,scanned_carton,seq_scrapped_at,seq_exit_ref,pick_ref,pallet_carton_quantity,pallet_size,build_status,status,sequence_status,active,load_id,vessel,voyage,voyage_number,container,internal_container,temp_code,vehicle_number,cooled,pol,pod,final_destination,customer,consignee,final_receiver,exporter,billing_client,exporter_certificate_code,customer_reference,internal_order_number,customer_order_number,country,region,eta,ata,etd,atd,arrival_date,departure_date,zero_load_id,fruit_sticker_pm_product_id,fruit_sticker_pm_product_2_id,pallet_verification_failure_reason_id,grade,sell_by_code,product_chars,booking_reference,govt_inspection_sheet_id,inspection_point,inspected_dest_country,last_govt_inspection_pallet_id,pallet_format_id,temp_tail,shipper,depot_pallet,edi_in_file,edi_in_consignment_note_number,inspection_date,addendum_manifest,repacked,repacked_at,repacked_date,repacked_from_pallet_id,repacked_from_pallet_number,failed_otmc_results,failed_otmc,phyto_data,created_by,verified_by,edi_size_count,target_customer_party_role_id,target_customer,consignment_note_number,dispatch_note,depot,po_file_name,colour_rule
-
+,COALESCE(customer_variety,marketing_variety) as variety
   FROM vw_pallet_sequence_flat
   WHERE vw_pallet_sequence_flat.load_id=$P{load_id} 
 )  AS sq]]>
@@ -916,6 +916,7 @@ FROM
 		<property name="com.jaspersoft.studio.field.label" value="colour_rule"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
+	<field name="variety" class="java.lang.String"/>
 	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
 	</variable>
@@ -1520,7 +1521,7 @@ FROM
 					<textElement textAlignment="Center">
 						<font size="7"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{marketing_variety}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{variety}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="311" y="0" width="32" height="10" uuid="9bcd08bc-9238-4200-ac4c-64809393e8ad"/>
@@ -2276,7 +2277,7 @@ FROM
 				<textElement textAlignment="Center">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{marketing_variety}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{variety}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="344" y="0" width="58" height="10" uuid="536a0e8a-45f0-4c6b-b8b5-007cda3b2a84"/>
