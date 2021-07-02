@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-11-04T12:10:20 -->
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pack_out" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" uuid="c08c8ed1-c3fa-4b77-b7f2-d6e11642b1b0">
 	<property name="ireport.zoom" value="5.0"/>
 	<property name="ireport.x" value="0"/>
@@ -17,201 +16,208 @@
 	<parameter name="dispatched_only" class="java.lang.Boolean"/>
 	<queryString language="SQL">
 		<![CDATA[with packout_details as (
- SELECT farms.farm_code,
-    ( SELECT string_agg(sub.orchard_code::text, '; '::text) AS string_agg
-           FROM ( SELECT DISTINCT orchards.orchard_code
-                   FROM rmt_bins
-                     JOIN orchards ON orchards.id = rmt_bins.orchard_id
-                  WHERE rmt_bins.production_run_tipped_id = production_runs.id) sub) AS orchards,
-    date_trunc('day'::text, pallet_sequences.created_at) AS pack_date,
-    date_part('week'::text, pallet_sequences.created_at) AS pack_week,
-    ( SELECT string_agg(sub.rmt_delivery_id::text, '; '::text) AS string_agg
-           FROM ( SELECT DISTINCT rmt_bins.rmt_delivery_id
-                   FROM rmt_bins
-                  WHERE rmt_bins.production_run_tipped_id = pallet_sequences.production_run_id
-                  ORDER BY rmt_bins.rmt_delivery_id) sub) AS deliveries,
-    production_run_stats.bins_tipped AS no_of_bins,
-    production_run_stats.bins_tipped_weight::numeric(12,2) AS total_bin_weight,
-    production_run_stats.cartons_verified_weight::numeric(12,2) AS total_packed_weight,
-    production_run_stats.pallet_weight::numeric(12,2) AS total_pallet_weight,
-        CASE production_run_stats.bins_tipped_weight
-            WHEN 0 THEN 0.0::numeric(7,2)
-            ELSE (production_run_stats.cartons_verified_weight / production_run_stats.bins_tipped_weight * 100::numeric)::numeric(7,2)
-        END AS run_carton_percentage,
-        CASE production_run_stats.bins_tipped_weight
-            WHEN 0 THEN 0.0::numeric(7,2)
-            ELSE (production_run_stats.pallet_weight / production_run_stats.bins_tipped_weight * 100::numeric)::numeric(7,2)
-        END AS run_pallet_percentage,
-    COALESCE(cultivars.cultivar_name, cultivar_groups.cultivar_group_code) AS cultivar,
-    marketing_varieties.marketing_variety_code,
-    pallet_sequences.production_run_id,
-    fn_production_run_code(pallet_sequences.production_run_id) AS production_run_code,
-    grades.grade_code,
-    packhouses.plant_resource_code AS packhouse,
-    lines.plant_resource_code AS line,
-    basic_pack_codes.basic_pack_code AS basic_pack,
-    std_fruit_size_counts.size_count_value AS std_size,
-    fruit_size_references.size_reference AS size_ref,
-    fruit_actual_counts_for_packs.actual_count_for_pack AS actual_count,
-    inventory_codes.inventory_code,
-    pallet_sequences.nett_weight::numeric(12,2) AS nett_weight,
-    pallet_sequences.carton_quantity,
-        CASE production_run_stats.cartons_verified_weight
-            WHEN 0 THEN 0.0::numeric(7,2)
-            ELSE (pallet_sequences.nett_weight / production_run_stats.cartons_verified_weight * 100::numeric)::numeric(7,2)
-        END AS percentage,
-    standard_product_weights.nett_weight * pallet_sequences.carton_quantity::numeric AS derived_nett_weight
-   FROM pallet_sequences
-   join pallets on   pallet_sequences.pallet_id =pallets.id
-   JOIN production_runs ON production_runs.id = pallet_sequences.production_run_id
-     JOIN plant_resources packhouses ON packhouses.id = pallet_sequences.packhouse_resource_id
-     JOIN plant_resources lines ON lines.id = pallet_sequences.production_line_id
-     JOIN farms ON farms.id = (( SELECT rmt_bins.farm_id
-           FROM rmt_bins
-          WHERE rmt_bins.production_run_tipped_id = production_runs.id
-         LIMIT 1))
-     JOIN cultivar_groups ON cultivar_groups.id = pallet_sequences.cultivar_group_id
-     LEFT JOIN cultivars ON cultivars.id = pallet_sequences.cultivar_id
-     LEFT JOIN commodities ON commodities.id = cultivars.commodity_id
-     LEFT JOIN standard_pack_codes ON standard_pack_codes.id = pallet_sequences.standard_pack_code_id
-     LEFT JOIN standard_product_weights ON commodities.id = standard_product_weights.commodity_id AND standard_product_weights.standard_pack_id = standard_pack_codes.id
-     JOIN marketing_varieties ON marketing_varieties.id = pallet_sequences.marketing_variety_id
-     JOIN grades ON grades.id = pallet_sequences.grade_id
-     LEFT JOIN std_fruit_size_counts ON std_fruit_size_counts.id = pallet_sequences.std_fruit_size_count_id
-     LEFT JOIN fruit_size_references ON fruit_size_references.id = pallet_sequences.fruit_size_reference_id
-     LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = pallet_sequences.fruit_actual_counts_for_pack_id
-     JOIN basic_pack_codes ON basic_pack_codes.id = pallet_sequences.basic_pack_code_id
-     JOIN inventory_codes ON inventory_codes.id = pallet_sequences.inventory_code_id
-     JOIN production_run_stats ON production_run_stats.production_run_id = pallet_sequences.production_run_id
+SELECT farms.farm_code,
+( SELECT string_agg(sub.orchard_code::text, '; '::text) AS string_agg
+   FROM ( SELECT DISTINCT orchards.orchard_code
+		   FROM rmt_bins
+			 JOIN orchards ON orchards.id = rmt_bins.orchard_id
+		  WHERE rmt_bins.production_run_tipped_id = production_runs.id) sub) AS orchards,
+date_trunc('day'::text, pallet_sequences.created_at) AS pack_date,
+date_part('week'::text, pallet_sequences.created_at) AS pack_week,
+( SELECT string_agg(sub.rmt_delivery_id::text, '; '::text) AS string_agg
+   FROM ( SELECT DISTINCT rmt_bins.rmt_delivery_id
+		   FROM rmt_bins
+		  WHERE rmt_bins.production_run_tipped_id = pallet_sequences.production_run_id
+		  ORDER BY rmt_bins.rmt_delivery_id) sub) AS deliveries,
+production_run_stats.bins_tipped AS no_of_bins,
+production_run_stats.bins_tipped_weight::numeric(12,2) AS total_bin_weight,
+production_run_stats.cartons_verified_weight::numeric(12,2) AS total_packed_weight,
+production_run_stats.pallet_weight::numeric(12,2) AS total_pallet_weight,
+CASE production_run_stats.bins_tipped_weight
+	WHEN 0 THEN 0.0::numeric(7,2)
+	ELSE (production_run_stats.cartons_verified_weight / production_run_stats.bins_tipped_weight * 100::numeric)::numeric(7,2)
+END AS run_carton_percentage,
+CASE production_run_stats.bins_tipped_weight
+	WHEN 0 THEN 0.0::numeric(7,2)
+	ELSE (production_run_stats.pallet_weight / production_run_stats.bins_tipped_weight * 100::numeric)::numeric(7,2)
+END AS run_pallet_percentage,
+COALESCE(cultivars.cultivar_name, cultivar_groups.cultivar_group_code) AS cultivar,
+marketing_varieties.marketing_variety_code,
+pallet_sequences.production_run_id,
+fn_production_run_code(pallet_sequences.production_run_id) AS production_run_code,
+grades.grade_code,
+packhouses.plant_resource_code AS packhouse,
+lines.plant_resource_code AS line,
+basic_pack_codes.basic_pack_code AS basic_pack,
+std_fruit_size_counts.size_count_value AS std_size,
+fruit_size_references.size_reference AS size_ref,
+fruit_actual_counts_for_packs.actual_count_for_pack AS actual_count,
+inventory_codes.inventory_code,
+pallet_sequences.nett_weight::numeric(12,2) AS nett_weight,
+pallet_sequences.carton_quantity,
+CASE production_run_stats.cartons_verified_weight
+	WHEN 0 THEN 0.0::numeric(7,2)
+	ELSE (pallet_sequences.nett_weight / production_run_stats.cartons_verified_weight * 100::numeric)::numeric(7,2)
+END AS percentage,
+standard_product_weights.nett_weight * pallet_sequences.carton_quantity::numeric AS derived_nett_weight,
+COALESCE(cvv.marketing_variety_code,marketing_varieties.marketing_variety_code) as variety
+FROM pallet_sequences
+join pallets on   pallet_sequences.pallet_id =pallets.id
+JOIN production_runs ON production_runs.id = pallet_sequences.production_run_id
+JOIN plant_resources packhouses ON packhouses.id = pallet_sequences.packhouse_resource_id
+JOIN plant_resources lines ON lines.id = pallet_sequences.production_line_id
+JOIN farms ON farms.id = (( SELECT rmt_bins.farm_id
+   FROM rmt_bins
+  WHERE rmt_bins.production_run_tipped_id = production_runs.id
+ LIMIT 1))
+JOIN cultivar_groups ON cultivar_groups.id = pallet_sequences.cultivar_group_id
+LEFT JOIN cultivars ON cultivars.id = pallet_sequences.cultivar_id
+LEFT JOIN commodities ON commodities.id = cultivars.commodity_id
+LEFT JOIN standard_pack_codes ON standard_pack_codes.id = pallet_sequences.standard_pack_code_id
+LEFT JOIN standard_product_weights ON commodities.id = standard_product_weights.commodity_id AND standard_product_weights.standard_pack_id = standard_pack_codes.id
+JOIN marketing_varieties ON marketing_varieties.id = pallet_sequences.marketing_variety_id
+LEFT JOIN customer_varieties ON customer_varieties.id = pallet_sequences.customer_variety_id
+LEFT JOIN marketing_varieties cvv ON cvv.id = customer_varieties.variety_as_customer_variety_id
+JOIN grades ON grades.id = pallet_sequences.grade_id
+LEFT JOIN std_fruit_size_counts ON std_fruit_size_counts.id = pallet_sequences.std_fruit_size_count_id
+LEFT JOIN fruit_size_references ON fruit_size_references.id = pallet_sequences.fruit_size_reference_id
+LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = pallet_sequences.fruit_actual_counts_for_pack_id
+JOIN basic_pack_codes ON basic_pack_codes.id = pallet_sequences.basic_pack_code_id
+JOIN inventory_codes ON inventory_codes.id = pallet_sequences.inventory_code_id
+JOIN production_run_stats ON production_run_stats.production_run_id = pallet_sequences.production_run_id
   WHERE case when  $P{dispatched_only}  = true then pallets.load_id is not null else true  end and pallet_sequences.production_run_id = $P{production_run_id}
-  )
+)
 
 SELECT
-    max(output_r.production_run_code) OVER () production_run_code,
-    output_r.farm_code,
-    output_r.orchards,
-    output_r.deliveries,
-    output_r.cultivar,
-    output_r.marketing_variety_code,
-    output_r.production_run_id,
-    output_r.packhouse,
-    output_r.line,
-    output_r.grade_code,
-    output_r.basic_pack,
-    output_r.std_size,
-    output_r.size_ref,
-    output_r.actual_count,
-    output_r.inventory_code,
-    output_r.nett_weight,
-    output_r.derived_nett_weight,
-    output_r.carton_quantity,
-    max(output_r.total_bin_weight) OVER () total_bin_weight,
-    max(output_r.total_packed_weight) OVER () total_packed_weight,
-    max(output_r.total_pallet_weight) OVER () total_pallet_weight,
-    max(output_r.no_of_bins) OVER () no_of_bins,
-    pr.started_at pack_date,
-    EXTRACT (week FROM pr.started_at)::int pack_week,
-    sum(
-        CASE WHEN output_r.record_type = 'Cartons' THEN
-            output_r.derived_nett_weight
-        ELSE
-            0
-        END) OVER (PARTITION BY output_r.production_run_id) AS total_run_derived_weight
+max(output_r.production_run_code) OVER () production_run_code,
+output_r.farm_code,
+output_r.orchards,
+output_r.deliveries,
+output_r.cultivar,
+output_r.marketing_variety_code,
+output_r.production_run_id,
+output_r.packhouse,
+output_r.line,
+output_r.grade_code,
+output_r.basic_pack,
+output_r.std_size,
+output_r.size_ref,
+output_r.actual_count,
+output_r.inventory_code,
+output_r.nett_weight,
+output_r.derived_nett_weight,
+output_r.carton_quantity,
+output_r.variety,
+max(output_r.total_bin_weight) OVER () total_bin_weight,
+max(output_r.total_packed_weight) OVER () total_packed_weight,
+max(output_r.total_pallet_weight) OVER () total_pallet_weight,
+max(output_r.no_of_bins) OVER () no_of_bins,
+pr.started_at pack_date,
+EXTRACT (week FROM pr.started_at)::int pack_week,
+sum(
+CASE WHEN output_r.record_type = 'Cartons' THEN
+	output_r.derived_nett_weight
+ELSE
+	0
+END) OVER (PARTITION BY output_r.production_run_id) AS total_run_derived_weight
 FROM (
-    SELECT
-        production_run_code,
-        'Cartons' AS record_type,
-        farm_code,
-        orchards,
-        deliveries,
-        cultivar,
-        marketing_variety_code,
-        production_run_id,
-        packhouse,
-        line,
-        grade_code,
-        basic_pack,
-        std_size,
-        size_ref,
-        actual_count,
-        inventory_code,
-        sum(nett_weight) nett_weight,
-        sum(derived_nett_weight) AS derived_nett_weight,
-        sum(carton_quantity) carton_quantity,
-        total_bin_weight,
-        total_packed_weight,
-        total_pallet_weight,
-        no_of_bins,
-        min(pack_date) pack_date,
-        min(pack_week) pack_week
-    FROM
-        packout_details vpd
-        GROUP BY
-        no_of_bins,
-        production_run_code,
-        cultivar,
-        marketing_variety_code,
-        production_run_id,
-        grade_code,
-        basic_pack,
-        std_size,
-        size_ref,
-        actual_count,
-        inventory_code,
-        farm_code,
-        orchards,
-        deliveries,
-        total_bin_weight,
-        total_packed_weight,
-        total_pallet_weight,
-        packhouse,
-        line
-    UNION ALL
-    SELECT
-        '' AS production_run_code,
-        'Rebins' AS record_type,
-        farm_code,
-        orchard_code,
-        rmt_delivery_id::text,
-        coalesce(cultivar_name, cultivar_group_code) cultivar,
-        coalesce(cultivar_name, cultivar_group_code) AS marketing_variety_code,
-        production_run_rebin_id AS production_run_id,
-        packhouse,
-        packhouse AS line,
-        rmt_class_code,
-        NULL basic_pack,
-        NULL std_size,
-        NULL size_ref,
-        NULL actual_count,
-        NULL inventory_code,
-        sum(nett_weight) nett_weight,
-        sum(nett_weight) AS derived_nett_weight,
-        count(*) carton_quantity,
-        0 total_bin_weight,
-        0 total_packed_weight,
-        0 total_pallet_weight,
-        0 no_of_bins,
-        NULL AS pack_date,
-        NULL AS pack_week
-    FROM
-        public.vw_bins
-    WHERE
-       production_run_rebin_id = $P{production_run_id}
-    GROUP BY
-        cultivar,
-        rmt_delivery_id,
-        coalesce(cultivar_name, cultivar_group_code),
-        production_run_rebin_id,
-        rmt_class_code,
-        farm_code,
-        orchard_code,
-        packhouse
-    ORDER BY
-        record_type,
-        grade_code) AS output_r join production_runs pr  on output_r.production_run_id=pr.id
+SELECT
+production_run_code,
+'Cartons' AS record_type,
+farm_code,
+orchards,
+deliveries,
+cultivar,
+marketing_variety_code,
+production_run_id,
+packhouse,
+line,
+grade_code,
+basic_pack,
+std_size,
+size_ref,
+actual_count,
+inventory_code,
+sum(nett_weight) nett_weight,
+sum(derived_nett_weight) AS derived_nett_weight,
+sum(carton_quantity) carton_quantity,
+total_bin_weight,
+total_packed_weight,
+total_pallet_weight,
+no_of_bins,
+min(pack_date) pack_date,
+min(pack_week) pack_week,
+variety
+FROM
+packout_details vpd
+GROUP BY
+no_of_bins,
+production_run_code,
+cultivar,
+marketing_variety_code,
+production_run_id,
+grade_code,
+basic_pack,
+std_size,
+size_ref,
+actual_count,
+inventory_code,
+farm_code,
+orchards,
+deliveries,
+total_bin_weight,
+total_packed_weight,
+total_pallet_weight,
+packhouse,
+line,
+variety
+UNION ALL
+SELECT
+'' AS production_run_code,
+'Rebins' AS record_type,
+farm_code,
+orchard_code,
+rmt_delivery_id::text,
+coalesce(cultivar_name, cultivar_group_code) cultivar,
+coalesce(cultivar_name, cultivar_group_code) AS marketing_variety_code,
+production_run_rebin_id AS production_run_id,
+packhouse,
+packhouse AS line,
+rmt_class_code,
+NULL basic_pack,
+NULL std_size,
+NULL size_ref,
+NULL actual_count,
+NULL inventory_code,
+sum(nett_weight) nett_weight,
+sum(nett_weight) AS derived_nett_weight,
+count(*) carton_quantity,
+0 total_bin_weight,
+0 total_packed_weight,
+0 total_pallet_weight,
+0 no_of_bins,
+NULL AS pack_date,
+NULL AS pack_week,
+coalesce(cultivar_name, cultivar_group_code) AS variety
+FROM
+public.vw_bins
+WHERE
+production_run_rebin_id = $P{production_run_id}
+GROUP BY
+cultivar,
+rmt_delivery_id,
+coalesce(cultivar_name, cultivar_group_code),
+production_run_rebin_id,
+rmt_class_code,
+farm_code,
+orchard_code,
+packhouse
 ORDER BY
-    record_type,
-    grade_code]]>
+record_type,
+grade_code) AS output_r join production_runs pr  on output_r.production_run_id=pr.id
+ORDER BY
+record_type,
+grade_code]]>
 	</queryString>
 	<field name="grade_code" class="java.lang.String"/>
 	<field name="nett_weight" class="java.math.BigDecimal"/>
@@ -238,6 +244,7 @@ ORDER BY
 	<field name="total_run_derived_weight" class="java.math.BigDecimal"/>
 	<field name="production_run_code" class="java.lang.String"/>
 	<field name="no_of_bins" class="java.lang.Integer"/>
+	<field name="variety" class="java.lang.String"/>
 	<variable name="nett_weight_1" class="java.lang.Double" resetType="Group" resetGroup="grade_code" calculation="Sum">
 		<variableExpression><![CDATA[$P{use_derived_weight} ?$F{derived_nett_weight} : $F{nett_weight}]]></variableExpression>
 	</variable>
@@ -523,7 +530,7 @@ ORDER BY
 			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement x="10" y="0" width="47" height="13" uuid="bf4a7b6b-cf7c-4c6b-b5d8-31b28a714e55"/>
-				<textFieldExpression><![CDATA[$F{marketing_variety_code}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{variety}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00 %" isBlankWhenNull="true">
 				<reportElement x="208" y="0" width="53" height="13" uuid="33864a0a-6881-491b-a63a-36e534326f85"/>

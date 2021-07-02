@@ -66,6 +66,7 @@ sum(pallet_sequences.nett_weight::numeric(12,2)) AS nett_weight,
 sum(pallet_sequences.carton_quantity)carton_quantity,
 sum(standard_product_weights.nett_weight * pallet_sequences.carton_quantity::numeric) AS derived_nett_weight,
 string_agg(DISTINCT packhouses.plant_resource_code, '; '   order by packhouses.plant_resource_code) packhouses
+,COALESCE(cvv.marketing_variety_code,marketing_varieties.marketing_variety_code) as variety
 FROM pallet_sequences
 join pallets on   pallet_sequences.pallet_id =pallets.id
 JOIN production_runs ON production_runs.id = pallet_sequences.production_run_id
@@ -81,6 +82,8 @@ LEFT JOIN commodities ON commodities.id = cultivars.commodity_id
 LEFT JOIN standard_pack_codes ON standard_pack_codes.id = pallet_sequences.standard_pack_code_id
 LEFT JOIN standard_product_weights ON commodities.id = standard_product_weights.commodity_id AND standard_product_weights.standard_pack_id = standard_pack_codes.id
 JOIN marketing_varieties ON marketing_varieties.id = pallet_sequences.marketing_variety_id
+LEFT JOIN customer_varieties ON customer_varieties.id = pallet_sequences.customer_variety_id
+LEFT JOIN marketing_varieties cvv ON cvv.id = customer_varieties.variety_as_customer_variety_id
 JOIN grades ON grades.id = pallet_sequences.grade_id
 LEFT JOIN std_fruit_size_counts ON std_fruit_size_counts.id = pallet_sequences.std_fruit_size_count_id
 LEFT JOIN fruit_size_references ON fruit_size_references.id = pallet_sequences.fruit_size_reference_id
@@ -97,6 +100,7 @@ std_fruit_size_counts.size_count_value ,
 fruit_size_references.size_reference ,
 fruit_actual_counts_for_packs.actual_count_for_pack ,
 inventory_codes.inventory_code
+,cvv.marketing_variety_code
 ), output_r as (  SELECT
 cultivar_id ,
 farm_id ,
@@ -112,7 +116,8 @@ inventory_code,
 sum(nett_weight) nett_weight,
 sum(derived_nett_weight) AS derived_nett_weight,
 sum(carton_quantity) carton_quantity,
-packhouses
+packhouses,
+variety
 FROM
 packout_details vpd
 GROUP BY
@@ -126,7 +131,8 @@ std_size,
 size_ref,
 actual_count,
 inventory_code,
-packhouses
+packhouses,
+variety
 UNION ALL
 select
 cultivar_id ,
@@ -143,7 +149,8 @@ NULL inventory_code,
 sum(nett_weight) nett_weight,
 sum(nett_weight) AS derived_nett_weight,
 count(*) carton_quantity,
-NULL packhouses
+NULL packhouses,
+coalesce(cultivar_name, cultivar_group_code) AS variety
 FROM
 public.vw_bins
 where not  ( scrapped =true) and $X{IN, production_run_rebin_id, production_run_id}
@@ -174,7 +181,8 @@ output_r.actual_count,
 output_r.inventory_code,
 output_r.nett_weight,
 output_r.derived_nett_weight,
-output_r.carton_quantity
+output_r.carton_quantity,
+output_r.variety
 ,coalesce(bin_tipped.cultivars,run_attrib.cultivar_name)cultivars
 ,bin_tipped.no_of_bins,bin_tipped.total_bin_weight
 ,bin_tipped.orchards as orchards
@@ -214,6 +222,7 @@ grade_code,std_size,inventory_code]]>
 	<field name="packhouses" class="java.lang.String"/>
 	<field name="pucs" class="java.lang.String"/>
 	<field name="pack_weeks" class="java.lang.String"/>
+	<field name="variety" class="java.lang.String"/>
 	<variable name="nett_weight_1" class="java.lang.Double" resetType="Group" resetGroup="grade_code" calculation="Sum">
 		<variableExpression><![CDATA[$P{use_packed_weight} ?$F{nett_weight}:$F{derived_nett_weight}]]></variableExpression>
 	</variable>
@@ -381,7 +390,7 @@ grade_code,std_size,inventory_code]]>
 				<text><![CDATA[Weight Packed]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="79" y="0" width="231" height="13" uuid="261f179c-4ebd-4311-a4a4-d2d731d26f64"/>
+				<reportElement x="79" y="0" width="261" height="13" uuid="261f179c-4ebd-4311-a4a4-d2d731d26f64"/>
 				<textFieldExpression><![CDATA[$F{farms}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
@@ -525,7 +534,7 @@ grade_code,std_size,inventory_code]]>
 			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement x="10" y="0" width="47" height="13" uuid="bf4a7b6b-cf7c-4c6b-b5d8-31b28a714e55"/>
-				<textFieldExpression><![CDATA[$F{marketing_variety_code}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{variety}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00 %" isBlankWhenNull="true">
 				<reportElement x="208" y="0" width="53" height="13" uuid="33864a0a-6881-491b-a63a-36e534326f85"/>

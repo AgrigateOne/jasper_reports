@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-11-12T14:22:02 -->
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pack_out" language="groovy" pageWidth="520" pageHeight="842" columnWidth="520" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="d842c918-0439-4010-8f55-1a8609bc219f">
 	<property name="ireport.zoom" value="5.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NosoftCartonLabel"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="140"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="852"/>
 	<parameter name="tipped_weight" class="java.lang.Double"/>
 	<parameter name="srproduction_run_id" class="java.lang.Integer"/>
 	<parameter name="Parameter1" class="java.lang.String"/>
@@ -18,6 +19,7 @@ basic_pack_codes.basic_pack_code ,
   sum(standard_product_weights.nett_weight)  nett_weight  ,
  inventory_codes.inventory_code ,
 fruit_actual_counts_for_packs.actual_count_for_pack ,size_count_interval_group
+,COALESCE(cvv.marketing_variety_code,marketing_varieties.marketing_variety_code) as variety
 FROM cartons
 join carton_labels on carton_labels.id=cartons.carton_label_id 
      JOIN production_runs ON production_runs.id = carton_labels.production_run_id
@@ -31,6 +33,8 @@ join carton_labels on carton_labels.id=cartons.carton_label_id
      LEFT JOIN cultivars ON cultivars.id = carton_labels.cultivar_id
        LEFT JOIN commodities ON commodities.id = cultivars.commodity_id
      JOIN marketing_varieties ON marketing_varieties.id = carton_labels.marketing_variety_id
+     LEFT JOIN customer_varieties ON customer_varieties.id = carton_labels.customer_variety_id
+LEFT JOIN marketing_varieties cvv ON cvv.id = customer_varieties.variety_as_customer_variety_id
      JOIN grades ON grades.id = carton_labels.grade_id
      LEFT JOIN std_fruit_size_counts ON std_fruit_size_counts.id = carton_labels.std_fruit_size_count_id
      LEFT JOIN fruit_size_references ON fruit_size_references.id = carton_labels.fruit_size_reference_id
@@ -46,7 +50,7 @@ GROUP BY marketing_varieties.marketing_variety_code ,
  grades.grade_code,
 basic_pack_codes.basic_pack_code ,
  inventory_codes.inventory_code ,
-fruit_actual_counts_for_packs.actual_count_for_pack ,size_count_interval_group
+fruit_actual_counts_for_packs.actual_count_for_pack ,size_count_interval_group,cvv.marketing_variety_code
 union all
 SELECT
   cultivars.cultivar_name ,
@@ -54,7 +58,7 @@ SELECT
   , ''
   ,count(*)
   ,cast( sum(rmt_bins.nett_weight )as dec(9,2)) weight
-  ,'','0',''
+  ,'','0','',''
 FROM rmt_bins
      LEFT JOIN cultivar_groups ON cultivar_groups.id = rmt_bins.cultivar_group_id
      LEFT JOIN cultivars ON cultivars.id = rmt_bins.cultivar_id
@@ -76,6 +80,7 @@ order by grade_code]]>
 	<field name="basic_pack_code" class="java.lang.String"/>
 	<field name="actual_count_for_pack" class="java.lang.Integer"/>
 	<field name="size_count_interval_group" class="java.lang.String"/>
+	<field name="variety" class="java.lang.String"/>
 	<variable name="nett_weight_1" class="java.lang.Double" resetType="Group" resetGroup="grade_code" calculation="Sum">
 		<variableExpression><![CDATA[$F{nett_weight}]]></variableExpression>
 	</variable>
@@ -90,7 +95,7 @@ order by grade_code]]>
 		<groupHeader>
 			<band height="29">
 				<textField>
-					<reportElement x="46" y="0" width="100" height="13" uuid="3c7d415a-4ddb-4673-9fa8-266b47a16369"/>
+					<reportElement x="46" y="0" width="108" height="13" uuid="3c7d415a-4ddb-4673-9fa8-266b47a16369"/>
 					<textFieldExpression><![CDATA[$F{grade_code}]]></textFieldExpression>
 				</textField>
 				<staticText>
@@ -211,7 +216,7 @@ order by grade_code]]>
 			</staticText>
 			<textField>
 				<reportElement x="10" y="0" width="47" height="13" uuid="fb6ef9ca-2131-4ce1-8d11-18a370efc408"/>
-				<textFieldExpression><![CDATA[$F{marketing_variety_code}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{variety}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00 %">
 				<reportElement x="208" y="0" width="53" height="13" uuid="7420acb8-d2f9-4127-ba9d-7ec22f1d81ae"/>

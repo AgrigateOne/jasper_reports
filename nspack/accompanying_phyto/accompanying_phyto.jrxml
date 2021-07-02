@@ -145,7 +145,8 @@ exporter.tel_no_2 as exporter_tel_no_2,
 'Daff_Seq_No' as daff_seq_no,
 'Packhouse_Person_Contact' as  packhouse_person_contact,
 p.consignment_note_number as intake_document_no ,
-p.sell_by_code
+p.sell_by_code,
+COALESCE(p.customer_variety,p.marketing_variety) as variety
 from vw_pallet_sequence_flat p
 LEFT JOIN govt_inspection_pallets ON govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
 LEFT JOIN govt_inspection_sheets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
@@ -392,6 +393,7 @@ where p.load_id =  $P{load_id}]]>
 		<property name="com.jaspersoft.studio.field.label" value="sell_by_code"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
+	<field name="variety" class="java.lang.String"/>
 	<sortField name="row_number"/>
 	<group name="pucs_grp" isStartNewPage="true" minDetailsToStartFromTop="5">
 		<groupExpression><![CDATA[$F{puc}]]></groupExpression>
@@ -725,7 +727,7 @@ contact details:]]></text>
 						</staticText>
 					</frame>
 					<staticText>
-						<reportElement x="411" y="68" width="109" height="31" uuid="7dcda83d-b1e4-437e-80e8-807b91abf2c6">
+						<reportElement x="411" y="60" width="109" height="39" uuid="7dcda83d-b1e4-437e-80e8-807b91abf2c6">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						</reportElement>
 						<textElement textAlignment="Center"/>
@@ -1347,7 +1349,7 @@ Address:]]></text>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{marketing_variety}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{variety}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="142" y="1" width="50" height="12" uuid="f0ecc350-22ab-46bd-a697-9976644a4161">
