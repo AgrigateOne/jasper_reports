@@ -50,7 +50,7 @@ scrapped_pallet_number as (
             select distinct v.pallet_id as scrapped_pallet_id,v.pallet_number,v.pallet_sequence_number,v.govt_inspection_passed,v.grade,v.carton_quantity,v.pallet_size,v.pallet_base,v.phc,
             v.farm,    v.puc,    v.orchard,    v.commodity,    v.cultivar_group,    v.cultivar,    v.marketing_variety,    v.marketing_org,
             v.packed_tm_group,    v.mark,    v.inventory_code,    v.customer_variety,    v.std_size,    v.size_ref,   v.actual_count,    v.basic_pack,    v.std_pack
-            ,v.phyto_data,v.inspection_tm,COALESCE(v.customer_variety,v.marketing_variety) as variety
+            ,v.phyto_data,v.inspection_tm,COALESCE(v.customer_variety,v.marketing_variety) as variety,v.inspection_point
             FROM vw_scrapped_pallet_sequence_flat v where govt_inspection_sheet_id = $P{govt_inspection_sheet_id}
             and v.govt_inspection_passed is false
      )
@@ -188,18 +188,20 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
     colour_rule,
     exporter_certificate_code,
     p.booking_reference,
-    p.inspection_point,
-    p.govt_inspection_sheet_id,
+       p.govt_inspection_sheet_id,
     govt_inspection_sheets.created_at inspection_date_time,
     fn_party_role_name(govt_inspection_sheets.inspection_billing_party_role_id) AS billing_party,
     fn_party_role_name(inspectors.inspector_party_role_id) AS inspector,
-    p.consignment_note_number,
+        case 	when not (govt_inspection_pallets.passed) then govt_inspection_sheets.consignment_note_number ||'F' 
+    when (govt_inspection_pallets.passed) then govt_inspection_sheets.consignment_note_number 
+    else '' end consignment_note_number,
     govt_inspection_sheets.inspection_billing_party_role_id
     ,govt_inspection_sheets.exporter_party_role_id
     ,inspection_failure_reasons.failure_reason ,
     target_market_groups.target_market_group_name ,govt_inspection_sheets.upn,
     coalesce(scrapped_pallet_number.phyto_data,p.phyto_data) as phyto_data,
-    coalesce(scrapped_pallet_number.inspection_tm,p.inspection_tm) as inspection_tm
+    coalesce(scrapped_pallet_number.inspection_tm,p.inspection_tm) as inspection_tm,
+    scrapped_pallet_number.inspection_point
 from govt_inspection_sheets
  LEFT JOIN govt_inspection_pallets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
  LEFT JOIN public.vw_pallet_sequence_flat p on govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
@@ -1429,7 +1431,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}
 				<text><![CDATA[UPN:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="410" y="19" width="109" height="13" uuid="4f1a29ab-5505-4f4d-b648-6604f29e7c44">
+				<reportElement x="410" y="19" width="120" height="13" uuid="4f1a29ab-5505-4f4d-b648-6604f29e7c44">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
