@@ -201,7 +201,7 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
     target_market_groups.target_market_group_name ,govt_inspection_sheets.upn,
     coalesce(scrapped_pallet_number.phyto_data,p.phyto_data) as phyto_data,
     coalesce(scrapped_pallet_number.inspection_tm,p.inspection_tm) as inspection_tm,
-  coalesce(scrapped_pallet_number.inspection_point, p.inspection_point, ' ' ) as inspection_point
+  govt_inspection_sheets.inspection_point
 from govt_inspection_sheets
  LEFT JOIN govt_inspection_pallets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
  LEFT JOIN public.vw_pallet_sequence_flat p on govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
@@ -1184,7 +1184,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}
 				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
 			</subreport>
 			<textField evaluationTime="Report">
-				<reportElement x="322" y="183" width="61" height="13" uuid="e44d19c0-656f-4e54-aa9e-8767d601d467"/>
+				<reportElement x="322" y="183" width="82" height="13" uuid="e44d19c0-656f-4e54-aa9e-8767d601d467"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$V{fail_pallet_id1}]]></textFieldExpression>
 			</textField>
