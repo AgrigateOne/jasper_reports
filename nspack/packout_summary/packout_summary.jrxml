@@ -668,9 +668,10 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 				<text><![CDATA[Variety]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="201" y="0" width="30" height="30" uuid="a5198946-26c1-436b-a935-b17bf6b2e97d">
+				<reportElement x="230" y="0" width="30" height="30" uuid="a5198946-26c1-436b-a935-b17bf6b2e97d">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement>
 					<font size="8"/>
@@ -802,8 +803,9 @@ order by season_code,cultivar_description ,orchard_code,puc_code]]>
 				<textFieldExpression><![CDATA[$F{carton_quantity}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="200" y="0" width="27" height="15" uuid="42d2bade-da09-4002-abb5-2494d6b12f02">
+				<reportElement x="230" y="0" width="27" height="15" uuid="42d2bade-da09-4002-abb5-2494d6b12f02">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement>
 					<font size="8"/>
