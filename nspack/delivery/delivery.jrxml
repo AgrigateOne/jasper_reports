@@ -11,6 +11,7 @@
 	<parameter name="delivery_id" class="java.lang.Integer"/>
 	<parameter name="user_name" class="java.lang.String"/>
 	<parameter name="client" class="java.lang.String"/>
+	<parameter name="client_code" class="java.lang.String"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT (a.id::text)as del_id,
     a.id,j.rmt_delivery_id,
@@ -111,7 +112,7 @@ group by     a.id,j.rmt_delivery_id,
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="132" splitType="Stretch">
+		<band height="133" splitType="Stretch">
 			<staticText>
 				<reportElement mode="Transparent" x="0" y="6" width="555" height="28" uuid="e2616111-bb31-43e0-9cb0-1ba51dcae159"/>
 				<textElement textAlignment="Center">
@@ -120,7 +121,9 @@ group by     a.id,j.rmt_delivery_id,
 				<text><![CDATA[Intake Document]]></text>
 			</staticText>
 			<line>
-				<reportElement x="0" y="130" width="555" height="1" uuid="d976bc39-4d83-4011-9f58-cbf7af691d7b"/>
+				<reportElement x="0" y="132" width="555" height="1" uuid="d976bc39-4d83-4011-9f58-cbf7af691d7b">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
 			</line>
 			<line>
 				<reportElement x="1" y="32" width="555" height="1" uuid="5a9ae2e9-3185-4034-bd02-b316d4ba62a5"/>
@@ -129,11 +132,40 @@ group by     a.id,j.rmt_delivery_id,
 				<reportElement x="1" y="0" width="555" height="1" uuid="69c10a66-7d49-452e-860a-adca56bf55bf"/>
 			</line>
 			<subreport>
-				<reportElement x="1" y="35" width="125" height="93" uuid="d06b356f-5c73-47c7-96d6-b403512fca46">
+				<reportElement x="128" y="35" width="125" height="92" uuid="d06b356f-5c73-47c7-96d6-b403512fca46">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$P{client_code}=="sr"]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="party_role_id">
+					<subreportParameterExpression><![CDATA[$F{implementation_owner_party_role_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="address_type">
+					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
+			</subreport>
+			<image>
+				<reportElement x="1" y="34" width="125" height="98" uuid="05af8593-d736-45d1-b466-b245af72108c">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$P{client_code}=="sr"]]></printWhenExpression>
+				</reportElement>
+				<imageExpression><![CDATA["/home/patie/nosoft_projects/crossbeams/jasper_reports/nspack/logos/habata.png" ]]></imageExpression>
+			</image>
+			<subreport>
+				<reportElement x="1" y="33" width="125" height="97" uuid="63e21d02-c728-48f2-b2e0-2ce93009fc34">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$P{client_code} != "sr"]]></printWhenExpression>
 				</reportElement>
 				<subreportParameter name="party_role_id">
 					<subreportParameterExpression><![CDATA[$F{implementation_owner_party_role_id}]]></subreportParameterExpression>
