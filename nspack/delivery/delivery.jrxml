@@ -138,7 +138,7 @@ group by     a.id,j.rmt_delivery_id,
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<printWhenExpression><![CDATA[$P{client_code}=="sr"]]></printWhenExpression>
+					<printWhenExpression><![CDATA[$P{client_code}=="hb"]]></printWhenExpression>
 				</reportElement>
 				<subreportParameter name="party_role_id">
 					<subreportParameterExpression><![CDATA[$F{implementation_owner_party_role_id}]]></subreportParameterExpression>
@@ -154,9 +154,9 @@ group by     a.id,j.rmt_delivery_id,
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<printWhenExpression><![CDATA[$P{client_code}=="sr"]]></printWhenExpression>
+					<printWhenExpression><![CDATA[$P{client_code}=="hb"]]></printWhenExpression>
 				</reportElement>
-				<imageExpression><![CDATA["..logos/sr_logo.png"]]></imageExpression>
+				<imageExpression><![CDATA["..logos/" +  $P{client_code} + ".png"]]></imageExpression>
 			</image>
 			<subreport>
 				<reportElement x="1" y="33" width="125" height="97" uuid="63e21d02-c728-48f2-b2e0-2ce93009fc34">
@@ -165,7 +165,7 @@ group by     a.id,j.rmt_delivery_id,
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<printWhenExpression><![CDATA[$P{client_code} != "sr"]]></printWhenExpression>
+					<printWhenExpression><![CDATA[$P{client_code} != "hb"]]></printWhenExpression>
 				</reportElement>
 				<subreportParameter name="party_role_id">
 					<subreportParameterExpression><![CDATA[$F{implementation_owner_party_role_id}]]></subreportParameterExpression>
