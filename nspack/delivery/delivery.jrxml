@@ -156,7 +156,7 @@ group by     a.id,j.rmt_delivery_id,
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<printWhenExpression><![CDATA[$P{client_code}=="sr"]]></printWhenExpression>
 				</reportElement>
-				<imageExpression><![CDATA["/home/patie/nosoft_projects/crossbeams/jasper_reports/nspack/logos/habata.png" ]]></imageExpression>
+				<imageExpression><![CDATA["..logos/sr_logo.png"]]></imageExpression>
 			</image>
 			<subreport>
 				<reportElement x="1" y="33" width="125" height="97" uuid="63e21d02-c728-48f2-b2e0-2ce93009fc34">
