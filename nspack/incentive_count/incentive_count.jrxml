@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-11-12T14:13:26 -->
+<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive_count" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="0c54595e-180f-487d-9121-9abe94ba96a4">
 	<property name="ireport.zoom" value="1.53947435469212"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NosoftCartonLabel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SR_nspack.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
 	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#FFFFFF" fontName="Arial" fontSize="12" isBold="true"/>
@@ -56,8 +56,8 @@
         AND (shifts.id = shift_exceptions.shift_id)
     JOIN basic_pack_codes ON basic_pack_codes.id = carton_labels.basic_pack_code_id
       LEFT JOIN std_fruit_size_counts ON std_fruit_size_counts.id = carton_labels.std_fruit_size_count_id
-    LEFT JOIN cultivars ON cultivars.id = carton_labels.cultivar_id
-    LEFT JOIN commodities ON commodities.id = cultivars.commodity_id
+    LEFT JOIN cultivar_groups ON cultivar_groups.id = carton_labels.cultivar_group_id
+    LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
     JOIN marketing_varieties ON marketing_varieties.id = carton_labels.marketing_variety_id
     LEFT JOIN wage_levels ON contract_workers.wage_level_id = wage_levels.id
     where shifts.id= $P{shift_id} 
@@ -327,7 +327,7 @@ FROM
 				</textElement>
 				<textFieldExpression><![CDATA[$F{total_fruit}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="159" y="0" width="184" height="11" uuid="68100389-f4d0-409d-bd14-ad3b362460a6"/>
 				<textElement>
 					<font size="8" isBold="true"/>

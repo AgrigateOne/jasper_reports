@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-05-24T18:47:59 -->
+<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="bin_loads" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Matrosefontein"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SR_nspack.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -85,7 +85,7 @@ FROM
     LEFT JOIN orchards ON orchards.id = bin_load_products.orchard_id
     LEFT JOIN pucs ON pucs.id = bin_load_products.puc_id
     LEFT JOIN rmt_classes ON rmt_classes.id = bin_load_products.rmt_class_id
-    LEFT JOIN commodities ON commodities.id = cultivars.commodity_id
+    LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
     LEFT JOIN rmt_container_material_types ON rmt_container_material_types.id = bin_load_products.rmt_container_material_type_id
 	left join depots on dest_depot_id = depots.id
  where bin_loads.id = $P{bin_load_id}

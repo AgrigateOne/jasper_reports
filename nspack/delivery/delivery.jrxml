@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="delivery_report" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d109052e-9b0f-425e-bdc4-875aca838363">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SR_nspack.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="199"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="794"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -59,7 +59,8 @@ LEFT JOIN public.rmt_bins j ON (a.id = j.rmt_delivery_id)
     LEFT JOIN pucs p ON p.id = a.puc_id
     LEFT JOIN rmt_container_material_types c ON (c.id = j.rmt_container_material_type_id)
     LEFT JOIN public.cultivars i ON (i.id = a.cultivar_id)
-    LEFT JOIN public.commodities m ON m.id = i.commodity_id
+    LEFT JOIN public.cultivar_groups ON public.cultivar_groups.id = i.cultivar_group_id
+    LEFT JOIN public.commodities m ON m.id = public.cultivar_groups.commodity_id
     
     where a.id=$P{delivery_id}
 group by     a.id,j.rmt_delivery_id,
