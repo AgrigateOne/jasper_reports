@@ -522,7 +522,7 @@ grade_code,std_size,inventory_code]]>
 			</staticText>
 			<image scaleImage="FillFrame">
 				<reportElement x="270" y="0" width="125" height="70" uuid="d4c8d60e-1654-4103-8676-18456b18842c"/>
-				<imageExpression><![CDATA["../logos/" +$P{client_code}.toLowerCase()  + "_logo.png"]]></imageExpression>
+				<imageExpression><![CDATA["../logos/" +$P{client_code}  + "_logo.png"]]></imageExpression>
 			</image>
 		</band>
 	</title>
