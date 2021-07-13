@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pack_input_del_ctn" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b6fb5972-61c1-4d79-a065-fdacc2bcc4a7">
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="115"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SR_nspack.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="247"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="747"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA["Users"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="production_run_id" class="java.lang.Integer"/>
+	<parameter name="client_code" class="java.lang.String"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT
  packhouses.plant_resource_code as  packhouse,
@@ -51,6 +54,9 @@ FROM rmt_bins
      LEFT JOIN rmt_classes ON rmt_classes.id = rmt_bins.rmt_class_id
 where rmt_bins.production_run_rebin_id = $P{production_run_id}  and not  ( rmt_bins.scrapped =true) and rmt_classes.rmt_class_code  <>'DEGREENING'
 ) as output) output_weight
+  ,(SELECT pr.id
+    FROM public.party_roles pr
+    WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) AS implementation_owner_party_role_id
 FROM rmt_bins
      LEFT JOIN cultivar_groups ON cultivar_groups.id = rmt_bins.cultivar_group_id
      LEFT JOIN cultivars ON cultivars.id = rmt_bins.cultivar_id
@@ -82,6 +88,7 @@ cultivar_groups.cultivar_group_code,
 	<field name="cultivar_name" class="java.lang.String"/>
 	<field name="farm_description" class="java.lang.String"/>
 	<field name="packhouse" class="java.lang.String"/>
+	<field name="implementation_owner_party_role_id" class="java.lang.Integer"/>
 	<group name="production_run">
 		<groupExpression><![CDATA[]]></groupExpression>
 		<groupHeader>
@@ -114,51 +121,9 @@ cultivar_groups.cultivar_group_code,
 				<subreportExpression><![CDATA["pack_intakes.jasper"]]></subreportExpression>
 			</subreport>
 			<textField isBlankWhenNull="true">
-				<reportElement x="79" y="0" width="251" height="13" uuid="95877c00-bde8-4c35-a267-24d87f3eba82"/>
+				<reportElement x="79" y="0" width="173" height="26" uuid="95877c00-bde8-4c35-a267-24d87f3eba82"/>
 				<textFieldExpression><![CDATA[$F{farm_description}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="454" y="65" width="100" height="13" uuid="c439d86d-b267-444f-b619-8ba06f1adc96"/>
-				<textElement>
-					<font size="10"/>
-				</textElement>
-				<text><![CDATA[Fax: 042 2300702]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="454" y="52" width="100" height="13" uuid="f50242be-b8da-471c-97d2-689fccb3b84b"/>
-				<textElement>
-					<font size="10"/>
-				</textElement>
-				<text><![CDATA[Tel: 042 2300498]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="454" y="39" width="100" height="13" uuid="ffa10a92-2896-4728-9b42-92bda12d0d3c"/>
-				<textElement>
-					<font size="10"/>
-				</textElement>
-				<text><![CDATA[6115]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="454" y="13" width="100" height="13" uuid="4fd914da-d292-4a4f-a5fa-c16bdf1d86df"/>
-				<textElement>
-					<font size="10"/>
-				</textElement>
-				<text><![CDATA[PO BOX 62]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="454" y="26" width="100" height="13" uuid="32b4cb93-c5a5-45f8-b332-4a77b0c291b5"/>
-				<textElement>
-					<font size="10"/>
-				</textElement>
-				<text><![CDATA[SUNLAND]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="454" y="0" width="100" height="13" uuid="8e15cefc-1bd1-4c2f-b71b-c81fb971321a"/>
-				<textElement>
-					<font size="10"/>
-				</textElement>
-				<text><![CDATA[UNIFRUTTI SA]]></text>
-			</staticText>
 			<textField pattern="dd/MM/yyyy">
 				<reportElement x="0" y="78" width="72" height="13" uuid="030096ea-e6d8-4beb-8e63-111eafb245c1"/>
 				<textFieldExpression><![CDATA[$F{date_packed}]]></textFieldExpression>
@@ -241,6 +206,29 @@ cultivar_groups.cultivar_group_code,
 				<reportElement x="340" y="100" width="72" height="13" uuid="ed81a166-1ed5-4ac0-adde-801e657c2303"/>
 				<textFieldExpression><![CDATA[$F{packhouse}]]></textFieldExpression>
 			</textField>
+			<image scaleImage="FillFrame">
+				<reportElement x="300" y="1" width="125" height="72" uuid="19bce499-4660-4581-a64a-846bee26a526">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA["../logos/" +$P{client_code}  + "_logo.png"]]></imageExpression>
+			</image>
+			<subreport>
+				<reportElement x="426" y="1" width="125" height="72" uuid="61b3f442-94eb-4f0d-a916-84d764eab40e">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<subreportParameter name="party_role_id">
+					<subreportParameterExpression><![CDATA[$F{implementation_owner_party_role_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="address_type">
+					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</pageHeader>
 	<pageFooter>
