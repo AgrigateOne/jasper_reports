@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="packout_runs" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" uuid="c08c8ed1-c3fa-4b77-b7f2-d6e11642b1b0">
 	<property name="ireport.zoom" value="5.0"/>
 	<property name="ireport.x" value="0"/>
@@ -14,6 +14,7 @@
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false"/>
 	<parameter name="use_packed_weight" class="java.lang.Boolean"/>
 	<parameter name="dispatched_only" class="java.lang.Boolean"/>
+	<parameter name="client_code" class="java.lang.String"/>
 	<queryString language="plsql">
 		<![CDATA[with bin_tipped as (
 select pr.cultivar_id ,pr.farm_id ,
@@ -296,17 +297,6 @@ grade_code,std_size,inventory_code]]>
 					</reportElement>
 					<text><![CDATA[Percentage]]></text>
 				</staticText>
-				<textField>
-					<reportElement x="57" y="13" width="43" height="13" uuid="075ec0a1-0953-4174-85f8-f0e448be1ab9">
-						<property name="local_mesure_unitx" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.x" value="px"/>
-						<property name="local_mesure_unity" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.y" value="px"/>
-						<property name="local_mesure_unitheight" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textFieldExpression><![CDATA[$P{carton_or_bin}]]></textFieldExpression>
-				</textField>
 				<staticText>
 					<reportElement x="173" y="12" width="63" height="15" uuid="db3569ec-b4d9-49b5-8491-0bdde7c06f75">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -314,6 +304,15 @@ grade_code,std_size,inventory_code]]>
 					</reportElement>
 					<textElement textAlignment="Center"/>
 					<text><![CDATA[Packed TM]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="57" y="13" width="43" height="13" uuid="46e4899f-4daa-4887-b87f-c324b3a862ea">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<text><![CDATA[Pack]]></text>
 				</staticText>
 			</band>
 		</groupHeader>
@@ -374,7 +373,7 @@ grade_code,std_size,inventory_code]]>
 				<text><![CDATA[Total Weight]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="79" y="18" width="476" height="47" uuid="94c5f4c7-8354-4816-8d38-077b6243a5fc"/>
+				<reportElement x="79" y="18" width="182" height="47" uuid="94c5f4c7-8354-4816-8d38-077b6243a5fc"/>
 				<textFieldExpression><![CDATA[$F{deliveries}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
@@ -417,7 +416,7 @@ grade_code,std_size,inventory_code]]>
 				<text><![CDATA[Weight Packed]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="79" y="0" width="281" height="13" uuid="261f179c-4ebd-4311-a4a4-d2d731d26f64"/>
+				<reportElement x="79" y="0" width="182" height="13" uuid="261f179c-4ebd-4311-a4a4-d2d731d26f64"/>
 				<textFieldExpression><![CDATA[$F{farms}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
@@ -521,6 +520,10 @@ grade_code,std_size,inventory_code]]>
 				</reportElement>
 				<text><![CDATA[Packhse:]]></text>
 			</staticText>
+			<image scaleImage="FillFrame">
+				<reportElement x="270" y="0" width="125" height="70" uuid="d4c8d60e-1654-4103-8676-18456b18842c"/>
+				<imageExpression><![CDATA["../logos/" +$P{client_code}.toLowerCase()  + "_logo.png"]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<detail>
