@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive_count" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
-	<property name="ireport.zoom" value="1.4641000000000006"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive_count" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="0c54595e-180f-487d-9121-9abe94ba96a4">
+	<property name="ireport.zoom" value="1.53947435469212"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SR_nspack.xml"/>
@@ -11,403 +11,377 @@
 	<style name="Column header" forecolor="#FFFFFF" fontName="Arial" fontSize="12" isBold="true"/>
 	<style name="Detail" fontName="Arial" fontSize="12"/>
 	<parameter name="shift_id" class="java.lang.Integer"/>
-	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["C:\\Huis\\dunbrody\\reports\\on_server\\incentive\\"]]></defaultValueExpression>
-	</parameter>
-	<parameter name="user_name" class="java.lang.String">
-		<defaultValueExpression><![CDATA["UD"]]></defaultValueExpression>
+	<parameter name="dummy" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[WITH base_sql AS (
     SELECT
-        contract_workers.personnel_number AS personnel_barcode_number,
-        s.id AS shift_id,
+        wage_levels.description AS wage_level_description,
+   contract_workers.personnel_number      AS personnel_barcode_number,
+        --cartons.id carton_id,
+        --cartons.carton_label_id,
+        shifts.id AS shift_id,
+        --cartons.contract_worker_id,
         contract_workers.first_name || ' ' || contract_workers.surname AS party_name,
-        s.start_date_time,
-        s.end_date_time,
-        day_night_or_custom AS shift_type_code,
-        s.shift_type_id,
+        --shift_exceptions.id AS shift_exception_id,
+        shifts.start_date_time,
+        shifts.end_date_time,
+        --carton_labels.created_at,
+        size_count_interval_group count_group,
+        commodities.description as commodity_code,
+        basic_pack_codes.basic_pack_code as pack_code,
+        fruit_actual_counts_for_packs.actual_count_for_pack as count_code,
+        marketing_varieties.marketing_variety_code variety_code,
+        day_night_or_custom as shift_type_code,
+        shifts.shift_type_id,
+        --cartons.packhouse_resource_id AS carton_packhouse_resource,
+        --shift_types.plant_resource_id,
+        --shifts.running_hours AS shift_running_hours,
+        --shift_exceptions.running_hours AS shift_exception_running_hours,
+        count(cartons.id) AS total_cartons,
+        sum(fruit_actual_counts_for_packs.actual_count_for_pack) total_fruit,
         contract_workers.id AS cw_id,
-        inventory_codes.fruit_item_incentive_rate,
-        commodities.code AS commodity_code,
-        basic_pack_codes.basic_pack_code,
-        standard_pack_codes.standard_pack_code,
-        fruit_size_references.size_reference AS size_ref,
-        fruit_actual_counts_for_packs.actual_count_for_pack AS actual_count,
-        marketing_varieties.marketing_variety_code,
-        COALESCE(shift_exceptions.running_hours, s.running_hours, ((EXTRACT(EPOCH FROM end_date_time) - EXTRACT(EPOCH FROM start_date_time)) / 60 / 60)) AS running_hours,
-        string_agg(DISTINCT inventory_codes.inventory_code, ',' ORDER BY inventory_codes.inventory_code) AS inv_codes,
-        count(carton_labels.id) AS carton_qty,
-        sum(fruit_actual_counts_for_packs.actual_count_for_pack) fruit_qty_cwi,
-        sum(fruit_actual_counts_for_packs.actual_count_for_pack * coalesce(inventory_codes.fruit_item_incentive_rate, 0)) fruit_rand_cwi,
-        count(contract_workers.id) OVER (PARTITION BY s.id) AS packers_shift
-    FROM
-        cartons
-        LEFT JOIN carton_labels ON carton_labels.id = cartons.carton_label_id
-        LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = carton_labels.fruit_actual_counts_for_pack_id
-        LEFT JOIN (
-            SELECT
-                shifts.end_date_time,
-                shifts.start_date_time,
-                plant_resource_id,
-                shifts.shift_type_id,
-                shifts.id,
-                day_night_or_custom,
-                shifts.running_hours
-            FROM
-                public.shifts
-                JOIN shift_types ON shifts.shift_type_id = shift_types.id) AS s ON carton_labels.created_at BETWEEN s.start_date_time
-                AND s.end_date_time
-                AND s.plant_resource_id = carton_labels.production_line_id
-        LEFT JOIN public.contract_workers ON (carton_labels.contract_worker_id = contract_workers.id)
-        LEFT JOIN public.shift_exceptions ON (contract_workers.id = shift_exceptions.contract_worker_id)
-            AND (s.id = shift_exceptions.shift_id)
-        LEFT JOIN public.inventory_codes ON inventory_codes.id = carton_labels.inventory_code_id
-        JOIN cultivar_groups ON cultivar_groups.id = carton_labels.cultivar_group_id
-        LEFT JOIN grades ON grades.id = carton_labels.grade_id
-        LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
-        JOIN marketing_varieties ON marketing_varieties.id = carton_labels.marketing_variety_id
-        LEFT JOIN customer_varieties ON customer_varieties.id = carton_labels.customer_variety_id
-        LEFT JOIN marketing_varieties cvv ON cvv.id = customer_varieties.variety_as_customer_variety_id
-        LEFT JOIN std_fruit_size_counts ON std_fruit_size_counts.id = carton_labels.std_fruit_size_count_id
-        LEFT JOIN uoms ON uoms.id = std_fruit_size_counts.uom_id
-        LEFT JOIN fruit_size_references ON fruit_size_references.id = carton_labels.fruit_size_reference_id
-        JOIN basic_pack_codes ON basic_pack_codes.id = carton_labels.basic_pack_code_id
-        JOIN standard_pack_codes ON standard_pack_codes.id = carton_labels.standard_pack_code_id
-        JOIN marks ON marks.id = carton_labels.mark_id
-    WHERE
-        s.id = $P{shift_id}
-    GROUP BY
-        s.id,
-        inventory_codes.fruit_item_incentive_rate,
-        day_night_or_custom,
-        s.shift_type_id,
-        s.start_date_time,
-        s.end_date_time,
-        contract_workers.id,
-        COALESCE(shift_exceptions.running_hours, s.running_hours, ((EXTRACT(EPOCH FROM end_date_time) - EXTRACT(EPOCH FROM start_date_time)) / 60 / 60)),
-        s.start_date_time,
-        commodities.code,
-        basic_pack_codes.basic_pack_code,
-        standard_pack_codes.standard_pack_code,
-        fruit_size_references.size_reference,
+        COALESCE(shift_exceptions.running_hours, shifts.running_hours, ((EXTRACT(EPOCH FROM end_date_time) - EXTRACT(EPOCH FROM start_date_time)) / 60 / 60)) AS running_hours,
+         wage_levels.wage_level
+    from carton_labels
+           JOIN  cartons ON carton_labels.id = cartons.carton_label_id
+    LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = carton_labels.fruit_actual_counts_for_pack_id
+    LEFT JOIN public.shifts ON carton_labels.created_at BETWEEN shifts.start_date_time
+        AND shifts.end_date_time
+    LEFT JOIN public.shift_types ON shift_types.id = shifts.shift_type_id
+        AND carton_labels.production_line_id = shift_types.plant_resource_id
+    LEFT JOIN public.contract_workers ON (carton_labels.contract_worker_id = contract_workers.id)
+    LEFT JOIN public.shift_exceptions ON (contract_workers.id = shift_exceptions.contract_worker_id)
+        AND (shifts.id = shift_exceptions.shift_id)
+    JOIN basic_pack_codes ON basic_pack_codes.id = carton_labels.basic_pack_code_id
+      LEFT JOIN std_fruit_size_counts ON std_fruit_size_counts.id = carton_labels.std_fruit_size_count_id
+    LEFT JOIN cultivar_groups ON cultivar_groups.id = carton_labels.cultivar_group_id
+    LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
+    JOIN marketing_varieties ON marketing_varieties.id = carton_labels.marketing_variety_id
+    LEFT JOIN wage_levels ON contract_workers.wage_level_id = wage_levels.id
+    where shifts.id= $P{shift_id} 
+     GROUP BY
+        shifts.id,
+        commodities.description,
+        basic_pack_codes.basic_pack_code ,
+        marketing_varieties.marketing_variety_code ,
         fruit_actual_counts_for_packs.actual_count_for_pack,
-        marketing_varieties.marketing_variety_code,
-        cvv.marketing_variety_code
+        size_count_interval_group,
+        day_night_or_custom,
+        shifts.shift_type_id,
+        shifts.start_date_time,
+        shifts.end_date_time,
+        wage_levels.wage_level,
+        wage_levels.description,
+        contract_workers.id,
+        COALESCE(shift_exceptions.running_hours, shifts.running_hours, ((EXTRACT(EPOCH FROM end_date_time) - EXTRACT(EPOCH FROM start_date_time)) / 60 / 60)),
+        shifts.start_date_time
     ORDER BY
         contract_workers.id DESC,
-        s.start_date_time
-),
-calc_sql AS (
-    SELECT
-        base_sql.start_date_time,
-        base_sql.end_date_time,
-        base_sql.cw_id,
-        base_sql.fruit_qty_cwi,
-        base_sql.running_hours,
-        base_sql.party_name,
-        base_sql.personnel_barcode_number,
-        base_sql.carton_qty,
-        base_sql.fruit_item_incentive_rate,
-        base_sql.shift_type_code,
-        base_sql.inv_codes,
-        base_sql.fruit_rand_cwi,
-   	    base_sql.commodity_code,
-        base_sql.basic_pack_code,
-        base_sql.standard_pack_code,
-        base_sql.size_ref,
-        base_sql.actual_count,
-        base_sql.marketing_variety_code,
-        sum(fruit_qty_cwi) OVER (PARTITION BY cw_id) total_fruit_cwi,
-        sum(fruit_rand_cwi) OVER (PARTITION BY cw_id) total_fruit_rand_cwi,
-        sum(carton_qty) OVER (PARTITION BY cw_id) total_carton_cwi,
-        sum(fruit_qty_cwi) OVER () total_fruit_shift,
-        sum(carton_qty) OVER () total_carton_shift,
-        sum(fruit_rand_cwi) OVER () total_fruit_rand_shift,
-        rank() OVER (PARTITION BY base_sql.cw_id order by fruit_rand_cwi desc) AS cw_rank,
-        base_sql.shift_id,
-        base_sql.packers_shift,
-        count(*) OVER (PARTITION BY base_sql.cw_id,
-            base_sql.shift_id) cw_cnt
-    FROM base_sql
+        shifts.start_date_time
 )
 SELECT
-    calc_sql.*,
-    CASE WHEN cw_rank = 1 THEN
-        TRUE
+ *,
+    '' AS packing_method,
+     CASE WHEN base_sql.running_hours = 0 THEN
+     0::int
+   ELSE
+     (base_sql.total_fruit / base_sql.running_hours)::int
+   END AS fruitphour,
+    CAST(wage_level / 9 / 1500 * 1000 * 1.1 AS dec (11, 3)) AS rp1000f,
+    CAST(
+        CASE WHEN CAST((base_sql.total_fruit - base_sql.running_hours * 1500) AS dec (11, 3)) / 1000 * base_sql.wage_level / 9 / 1500 * 1000 * 1.1 > 0 THEN
+            CAST((base_sql.total_fruit - base_sql.running_hours * 1500) AS dec (11, 3)) / 1000 * base_sql.wage_level / 9 / 1500 * 1000 * 1.1
     ELSE
-        FALSE
-    END cw_rank_boolean
+        0
+        END AS dec (11, 3)) AS incentive
+,null::numeric as total_earnings
 FROM
-    calc_sql
-ORDER BY
-    cw_id,
-    calc_sql.cw_rank;]]>
+    base_sql;]]>
 	</queryString>
 	<field name="party_name" class="java.lang.String"/>
 	<field name="start_date_time" class="java.sql.Timestamp"/>
-	<field name="running_hours" class="java.lang.Double"/>
-	<field name="personnel_barcode_number" class="java.lang.String"/>
-	<field name="cw_id" class="java.lang.Integer"/>
-	<field name="shift_type_code" class="java.lang.String"/>
 	<field name="end_date_time" class="java.sql.Timestamp"/>
-	<field name="cw_rank" class="java.lang.Long"/>
-	<field name="shift_id" class="java.lang.Integer"/>
-	<field name="packers_shift" class="java.lang.Long"/>
-	<field name="fruit_qty_cwi" class="java.lang.Long"/>
-	<field name="carton_qty" class="java.lang.Long"/>
-	<field name="fruit_item_incentive_rate" class="java.math.BigDecimal"/>
-	<field name="inv_codes" class="java.lang.String"/>
-	<field name="total_fruit_rand_cwi" class="java.math.BigDecimal"/>
-	<field name="total_carton_cwi" class="java.math.BigDecimal"/>
-	<field name="cw_cnt" class="java.lang.Long"/>
-	<field name="total_fruit_rand_shift" class="java.math.BigDecimal"/>
-	<field name="total_fruit_cwi" class="java.math.BigDecimal"/>
-	<field name="total_fruit_shift" class="java.math.BigDecimal"/>
-	<field name="total_carton_shift" class="java.math.BigDecimal"/>
-	<field name="cw_rank_boolean" class="java.lang.Boolean"/>
-	<field name="fruit_rand_cwi" class="java.math.BigDecimal"/>
+	<field name="running_hours" class="java.lang.Double"/>
+	<field name="wage_level" class="java.math.BigDecimal"/>
+	<field name="wage_level_description" class="java.lang.String"/>
+	<field name="shift_type_code" class="java.lang.String"/>
+	<field name="total_cartons" class="java.lang.Long"/>
+	<field name="total_fruit" class="java.lang.Long"/>
+	<field name="personnel_barcode_number" class="java.lang.String"/>
+	<field name="fruitphour" class="java.lang.Integer"/>
+	<field name="incentive" class="java.math.BigDecimal"/>
+	<field name="total_earnings" class="java.math.BigDecimal"/>
+	<field name="rp1000f" class="java.math.BigDecimal"/>
+	<field name="pack_code" class="java.lang.String"/>
+	<field name="count_group" class="java.lang.String"/>
+	<field name="count_code" class="java.lang.Integer"/>
 	<field name="commodity_code" class="java.lang.String"/>
-	<field name="basic_pack_code" class="java.lang.String"/>
-	<field name="standard_pack_code" class="java.lang.String"/>
-	<field name="size_ref" class="java.lang.String"/>
-	<field name="actual_count" class="java.lang.Integer"/>
-	<field name="marketing_variety_code" class="java.lang.String"/>
-	<variable name="cw_id1" class="java.lang.Integer" calculation="DistinctCount">
-		<variableExpression><![CDATA[$F{cw_id}]]></variableExpression>
+	<field name="variety_code" class="java.lang.String"/>
+	<field name="shift_id" class="java.lang.Integer"/>
+	<field name="shift_type_id" class="java.lang.Integer"/>
+	<field name="cw_id" class="java.lang.Integer"/>
+	<field name="packing_method" class="java.lang.String"/>
+	<variable name="total_cartons_1" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_cartons}]]></variableExpression>
 	</variable>
+	<variable name="party_name_1" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{party_name}]]></variableExpression>
+	</variable>
+	<variable name="total_fruit_1" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_fruit}]]></variableExpression>
+	</variable>
+	<variable name="wage_level_1" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{wage_level}]]></variableExpression>
+	</variable>
+	<variable name="incentive_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{incentive}]]></variableExpression>
+	</variable>
+	<variable name="total_earnings_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_earnings}]]></variableExpression>
+	</variable>
+	<variable name="total_fruit_2" class="java.lang.Long" resetType="Group" resetGroup="personnel_no" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_fruit}]]></variableExpression>
+	</variable>
+	<variable name="total_cartons_2" class="java.lang.Long" resetType="Group" resetGroup="personnel_no" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_cartons}]]></variableExpression>
+	</variable>
+	<variable name="personnel_barcode_number_1" class="java.lang.Integer" calculation="DistinctCount">
+		<variableExpression><![CDATA[$F{personnel_barcode_number}]]></variableExpression>
+	</variable>
+	<variable name="total_fruit_3" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_fruit}]]></variableExpression>
+	</variable>
+	<variable name="running_hours_1" class="java.math.BigDecimal" incrementType="Group" incrementGroup="personnel_no" calculation="Sum">
+		<variableExpression><![CDATA[$F{running_hours}]]></variableExpression>
+	</variable>
+	<variable name="running_hours_SUM" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{running_hours}]]></variableExpression>
+	</variable>
+	<group name="personnel_no">
+		<groupExpression><![CDATA[$F{personnel_barcode_number}]]></groupExpression>
+		<groupFooter>
+			<band height="13">
+				<textField>
+					<reportElement x="595" y="0" width="59" height="13" uuid="33175bfb-8481-4afb-8f05-6a68d0f85bdb"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{total_fruit_2}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="546" y="0" width="49" height="13" uuid="1e490c2f-1aed-4169-89b6-a56585e6fc7e"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$V{total_cartons_2}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="710" y="0" width="49" height="13" uuid="6b701064-a16e-4fe0-844f-5e3b82621573"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{running_hours}.intValue() == 0 ? 0 : $V{total_fruit_2}/$F{running_hours}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;#,##0.00-">
+					<reportElement x="660" y="0" width="42" height="13" uuid="b0030198-f6e4-464d-a3de-d3d735edf739"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression><![CDATA[$F{running_hours}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
 	<title>
 		<band splitType="Stretch"/>
 	</title>
 	<pageHeader>
 		<band height="119" splitType="Stretch">
 			<line>
-				<reportElement x="1" y="87" width="798" height="1" uuid="5a34193e-cfe0-4370-bbc4-c4c5decf103f">
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement x="4" y="85" width="793" height="1" uuid="04c5cb5e-3fd9-45a9-9832-55b8ec936728"/>
 			</line>
 			<line>
-				<reportElement x="1" y="118" width="798" height="1" uuid="40403b99-d179-4790-b0af-5d66390d9a2f">
-					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement x="4" y="115" width="793" height="1" uuid="7f11487c-b69e-414a-8f40-5e91e6d39b46"/>
 			</line>
 			<staticText>
-				<reportElement style="Column header" x="654" y="89" width="40" height="30" forecolor="#000000" uuid="994518c1-7571-4434-bbf8-99a73e8ecbbc"/>
+				<reportElement style="Column header" x="660" y="89" width="42" height="30" forecolor="#000000" uuid="f6219dfe-b33d-44ac-8a4b-3d7d737a81fc"/>
 				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Total Fruit Qty]]></text>
+				<text><![CDATA[Running Hours]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1" y="89" width="67" height="30" uuid="305867e5-a2e5-4f2b-a6cb-6a46e3005b89"/>
+				<reportElement x="7" y="89" width="53" height="30" uuid="cc653a46-807e-43f5-85cd-cb5fef766296"/>
 				<textElement>
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[PNo]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="540" y="89" width="36" height="30" uuid="00c02650-20e0-4cb8-9cf5-740132cd6884"/>
-				<textElement textAlignment="Right">
-					<font fontName="SansSerif" size="10" isBold="false"/>
-				</textElement>
-				<text><![CDATA[Ctn]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="68" y="89" width="120" height="30" uuid="6a9424ce-1390-4108-99e8-ed956c24c933"/>
-				<text><![CDATA[Name]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="747" y="89" width="53" height="30" uuid="4207fc67-7b55-43fa-94ce-2560746370f6"/>
-				<textElement textAlignment="Right"/>
-				<text><![CDATA[Total Earnings]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="188" y="89" width="110" height="30" uuid="15635740-bbde-443d-aa1e-d183c382bdeb"/>
-				<text><![CDATA[Shift D/N]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="188" y="0" width="388" height="31" uuid="7f52ae9c-18fd-4247-83c6-e0e3ab47a76f"/>
-				<textElement textAlignment="Center">
-					<font size="24"/>
-				</textElement>
-				<text><![CDATA[Sitrusrand]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="188" y="31" width="388" height="20" uuid="2b26c7e0-dbf4-4b77-9af0-1d716e510cd0"/>
-				<textElement textAlignment="Center">
-					<font size="14"/>
-				</textElement>
-				<text><![CDATA[Packer Summary Report]]></text>
-			</staticText>
-			<textField pattern="dd/MM/yy h:mm a">
-				<reportElement x="334" y="60" width="74" height="18" uuid="dd334a4b-f3cc-41bb-8c28-3dbfeae48716"/>
-				<textFieldExpression><![CDATA[$F{start_date_time}]]></textFieldExpression>
-			</textField>
-			<textField pattern="dd/MM/yy h:mm a">
-				<reportElement x="451" y="60" width="78" height="18" uuid="447eadb7-aed1-42ac-844d-a721cbdb686f"/>
-				<textFieldExpression><![CDATA[$F{end_date_time}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="188" y="60" width="110" height="18" uuid="8ff46e75-7cd3-4c68-a4d5-ee0eff880f1b"/>
-				<textElement textAlignment="Right"/>
-				<text><![CDATA[From Date:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="408" y="60" width="43" height="18" uuid="08314734-8aac-47bf-abf6-4f4fec3b780e">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<text><![CDATA[to]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="1" y="60" width="67" height="18" uuid="13b9ad4e-5e06-42ee-b21f-35365c5808c5"/>
-				<textElement textAlignment="Right"/>
-				<text><![CDATA[Shift Type:]]></text>
-			</staticText>
-			<textField isBlankWhenNull="true">
-				<reportElement x="68" y="60" width="120" height="18" uuid="121ed004-b939-409a-a01a-1140cca7e0ac"/>
-				<textFieldExpression><![CDATA[$F{shift_type_code}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="493" y="89" width="47" height="30" uuid="fdee7a68-1f2f-49f6-a6ab-1806ed94d3ff">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Right"/>
-				<text><![CDATA[Inv]]></text>
-			</staticText>
-			<textField isBlankWhenNull="true">
-				<reportElement x="68" y="42" width="120" height="18" uuid="775134d5-a804-4305-a4aa-a20548655774"/>
-				<textFieldExpression><![CDATA[$F{shift_id}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="1" y="42" width="67" height="18" uuid="56546620-b270-4dcd-a2f5-68a45f4f7afc"/>
-				<textElement textAlignment="Right"/>
-				<text><![CDATA[Shift ID:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="576" y="89" width="36" height="30" uuid="d032bb1b-be48-43c2-b13d-3a76e115e68c"/>
+				<reportElement x="546" y="89" width="49" height="30" uuid="407567d4-05aa-49f9-9e79-9e93ebc6aa6c"/>
 				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Total Cartons]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="612" y="89" width="42" height="30" forecolor="#000000" uuid="38599196-b84c-4582-92cf-49a0c5422c02"/>
+				<reportElement x="710" y="89" width="49" height="30" uuid="a7dc104e-1c17-4a88-86ff-8157ffa43326"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Fruit per Hour]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="69" y="89" width="90" height="30" uuid="615f1601-b60c-4744-b256-9056803f1428"/>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="159" y="89" width="184" height="30" uuid="8ae33515-bd31-456a-aa27-92513bd988f0"/>
+				<text><![CDATA[Shift D/N]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="0" width="794" height="31" uuid="9777db30-a7df-4809-b985-06b4431ac754"/>
+				<textElement textAlignment="Center">
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[Unifrutti]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="7" y="30" width="790" height="20" uuid="50eee0ca-edfb-4b31-99a4-a769505ce3d0"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Packer Summary Report]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy h.mm a">
+				<reportElement x="324" y="50" width="100" height="17" uuid="de5db6bd-7719-4f3a-b0d3-dbf20f53c9de"/>
+				<textFieldExpression><![CDATA[$F{start_date_time}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy h.mm a">
+				<reportElement x="451" y="50" width="100" height="17" uuid="a4a654b5-5eda-47bb-9bed-27708b2d8326"/>
+				<textFieldExpression><![CDATA[$F{end_date_time}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="247" y="50" width="77" height="17" uuid="d32251c9-fba9-4a8d-8de1-ef87dd855171"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[From Date:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="425" y="50" width="16" height="17" uuid="27490be4-5bcf-44ec-8636-6afb94948674"/>
+				<text><![CDATA[to]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="506" y="89" width="30" height="30" uuid="849a2f2b-8268-4235-a292-6517a1011177"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Count]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="595" y="89" width="59" height="30" uuid="e2a5879d-af54-465e-8da2-992796052d58"/>
 				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Fruit Qty]]></text>
+				<text><![CDATA[Total Fruit]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="694" y="89" width="53" height="30" uuid="ee3775b3-91c4-46f1-bd6d-5f05bf0be997"/>
+				<reportElement x="423" y="89" width="45" height="30" uuid="7d353b47-934d-428e-9026-1c14d230427d"/>
+				<text><![CDATA[Pack]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="343" y="89" width="26" height="30" uuid="d839c915-d044-4a58-8314-b875f7b2a954"/>
+				<text><![CDATA[Com]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="98" y="67" width="300" height="18" uuid="283527fd-4f2e-45b9-b535-99ea79e5a6d3"/>
 				<textElement textAlignment="Right"/>
-				<text><![CDATA[Cost]]></text>
+				<text><![CDATA[Shift Type:]]></text>
 			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="399" y="67" width="126" height="18" uuid="174875a6-ab30-48bd-94a3-b478492723ab"/>
+				<textFieldExpression><![CDATA[$F{shift_type_code}]]></textFieldExpression>
+			</textField>
 			<staticText>
-				<reportElement x="392" y="89" width="47" height="30" uuid="e018bfc4-28a4-452a-ba43-8d936aa8ab29">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Left"/>
-				<text><![CDATA[Basic Pack]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="439" y="89" width="54" height="30" uuid="65456d8e-994b-4f5c-b568-a7d5efd15a4a">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Left"/>
-				<text><![CDATA[Actual Count]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="345" y="89" width="47" height="30" uuid="179edb81-f034-493e-a467-8bdec64804fe">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Right"/>
-				<text><![CDATA[Mark Var]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="298" y="89" width="47" height="30" uuid="b0cf8ece-dd73-40ad-bc51-e4ba07b07d76">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Left"/>
-				<text><![CDATA[Comm]]></text>
+				<reportElement x="383" y="89" width="26" height="30" uuid="34c1e9ca-a3b1-4efe-8856-b42c3aa52d13"/>
+				<text><![CDATA[Var]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="15" splitType="Stretch">
-			<textField isBlankWhenNull="true">
-				<reportElement x="1" y="0" width="67" height="15" uuid="a9189391-1447-48de-a8eb-80c2d63b45d0"/>
+		<band height="11" splitType="Stretch">
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="7" y="0" width="62" height="11" uuid="9a950ab0-8173-4bc1-b62f-e8a435353a2e"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{personnel_barcode_number}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="68" y="0" width="120" height="15" uuid="7c6c77c6-242c-41fe-b29c-e6a3002c405c"/>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="69" y="0" width="132" height="11" uuid="1a488d02-d510-4944-9767-0056284bfc9a"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{party_name}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="540" y="0" width="36" height="15" uuid="f83a63e0-000b-46a1-b35f-5f7818f68111"/>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{carton_qty}]]></textFieldExpression>
+			<textField>
+				<reportElement x="546" y="0" width="49" height="11" uuid="099f18a0-383e-4364-88df-e767eb12b01e"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_cartons}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="595" y="0" width="59" height="11" uuid="4cc32404-bb00-4f65-abca-ef200e892a97"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_fruit}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="654" y="0" width="40" height="15" uuid="d87d3b26-8bf5-456c-aff4-50a1e729fc6b">
-					<printWhenExpression><![CDATA[$F{cw_rank_boolean}]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{total_fruit_cwi}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="188" y="0" width="110" height="15" uuid="e737738c-f322-46eb-853e-6dbd43e8bd0e"/>
+				<reportElement x="159" y="0" width="184" height="11" uuid="68100389-f4d0-409d-bd14-ad3b362460a6"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{shift_type_code}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-				<reportElement x="747" y="0" width="53" height="15" uuid="89b64826-d22a-443a-8bec-94b00adb10c6">
-					<printWhenExpression><![CDATA[$F{cw_rank_boolean}]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{total_fruit_rand_cwi}]]></textFieldExpression>
+			<textField>
+				<reportElement x="710" y="0" width="49" height="11" uuid="329436af-7e87-40eb-88b3-c3b14cd2781b"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fruitphour}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="493" y="0" width="47" height="15" uuid="d0f19b2a-bfce-4e8b-8397-315fdd94e84c">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Left"/>
-				<textFieldExpression><![CDATA[$F{inv_codes}]]></textFieldExpression>
+			<textField>
+				<reportElement x="480" y="0" width="23" height="11" uuid="8fe0e267-f9d8-4989-a759-1a57c089f80f"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{count_group}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="576" y="0" width="36" height="15" uuid="22194ec0-e85e-487c-8ed1-be87fa521e14">
-					<printWhenExpression><![CDATA[$F{cw_rank_boolean}]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{total_carton_cwi}]]></textFieldExpression>
+			<textField>
+				<reportElement x="506" y="0" width="30" height="11" uuid="fe51c139-6bce-44ff-9f56-168fec54fcc6"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{count_code}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="612" y="0" width="42" height="15" uuid="47595efc-74d0-4561-827c-1b9bca8e2d60"/>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{fruit_qty_cwi}]]></textFieldExpression>
+			<textField>
+				<reportElement x="660" y="0" width="42" height="11" uuid="77ddfbb5-9ee4-409a-89c6-b3b67adc8fe0"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{running_hours}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-				<reportElement x="694" y="0" width="53" height="15" uuid="afdb5bfd-7103-4c45-8757-df719ab63d6d"/>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{fruit_rand_cwi}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="298" y="0" width="47" height="15" uuid="729b3a6f-c8df-496f-8965-9b18d31ec658"/>
+			<textField>
+				<reportElement x="343" y="0" width="26" height="11" uuid="bf27fed8-f336-43f2-a991-99b6f1bb44ea"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{commodity_code}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="392" y="0" width="48" height="15" uuid="408e5e22-5c24-4baf-be6a-d93d24cbf31d"/>
-				<textFieldExpression><![CDATA[$F{basic_pack_code}]]></textFieldExpression>
+			<textField>
+				<reportElement x="423" y="0" width="45" height="11" uuid="ecd3f7fc-4b15-4701-b401-ba3a52f5e1d0"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pack_code}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="440" y="0" width="53" height="15" uuid="ab8fe627-cf41-4579-a5e5-49a9a03a256f"/>
-				<textFieldExpression><![CDATA[$F{actual_count}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="345" y="0" width="47" height="15" uuid="12976d49-1b68-4a37-b22b-97ae53d4cd7f"/>
-				<textFieldExpression><![CDATA[$F{marketing_variety_code}]]></textFieldExpression>
+			<textField>
+				<reportElement x="383" y="0" width="26" height="11" uuid="275c3d43-fe2c-401b-95a6-b8ccc8493ba0"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{variety_code}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -415,49 +389,56 @@ ORDER BY
 		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="26" splitType="Stretch">
+		<band height="27" splitType="Stretch">
 			<textField pattern="EEEEE dd MMMMM yyyy">
-				<reportElement style="Column header" x="684" y="8" width="116" height="18" forecolor="#000000" uuid="a8a917d7-104b-444d-a6c3-37768dd7fb70"/>
+				<reportElement style="Column header" x="385" y="0" width="131" height="18" forecolor="#000000" uuid="b969148f-6c1d-4ec1-bd5a-bf73febe1b6f"/>
 				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="68" y="7" width="120" height="18" uuid="216b7452-1de7-49ac-95a9-9ca088e41894"/>
+				<reportElement x="31" y="7" width="100" height="18" uuid="156af2ac-dfad-4825-966f-c37c9bfea33a"/>
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="1" y="7" width="67" height="18" uuid="09a115f2-feaf-4179-8f25-e384b70afdd3"/>
+				<reportElement x="2" y="7" width="29" height="18" uuid="a83ef536-e8e4-43e2-9b10-7d3bf7167b2d"/>
 				<text><![CDATA[Page:]]></text>
 			</staticText>
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="18" splitType="Stretch">
+		<band height="30" splitType="Stretch">
+			<textField>
+				<reportElement x="546" y="0" width="49" height="15" uuid="ff1a4b41-d1c1-483a-a698-6dbda9e7d388"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{total_cartons_1}]]></textFieldExpression>
+			</textField>
 			<staticText>
-				<reportElement x="1" y="0" width="67" height="15" uuid="b105509c-73b5-4dd2-82f1-9cff5faaf841"/>
+				<reportElement x="1" y="0" width="53" height="15" uuid="ec6f1ab4-150f-4312-ba08-a2681438a6fd"/>
 				<text><![CDATA[No Packers]]></text>
 			</staticText>
-			<textField pattern="###0.00;###0.00-">
-				<reportElement x="747" y="0" width="53" height="15" uuid="36c7f42b-d107-4804-a89b-90378b263092"/>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{total_fruit_rand_shift}]]></textFieldExpression>
-			</textField>
 			<line>
-				<reportElement x="1" y="0" width="798" height="1" uuid="13efb243-d9f4-490c-b993-83cc02721d4a">
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
+				<reportElement x="3" y="0" width="794" height="1" uuid="36b1b9e4-d12e-4716-8216-ef7e4575b839"/>
 			</line>
 			<textField>
-				<reportElement x="68" y="-1" width="62" height="16" uuid="e4d4c34e-6d71-4ddc-810c-153511f34b4f"/>
-				<textFieldExpression><![CDATA[$V{cw_id1}]]></textFieldExpression>
+				<reportElement x="69" y="0" width="90" height="15" uuid="db52808a-429c-4610-9670-03719f8657ed"/>
+				<textFieldExpression><![CDATA[$V{personnel_barcode_number_1}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="340" y="0" width="36" height="15" uuid="9e8f0b5e-005e-4e8e-8c86-9c4f439fff2a"/>
+			<textField>
+				<reportElement x="595" y="0" width="59" height="15" uuid="f2a71c15-e060-45c1-b7a3-7986a8a8bd8b"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{total_carton_shift}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{total_fruit_3}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;###0.00-">
+				<reportElement x="660" y="0" width="42" height="15" uuid="b6b16647-b515-4f0b-ae3e-41e3eef1b3c9"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{running_hours_1}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Auto" pattern="#,##0">
+				<reportElement x="710" y="1" width="49" height="15" uuid="c66faeef-d039-420f-823d-0441403d1c45"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[new Double( $V{total_fruit_3}.doubleValue() / $V{running_hours_1}.doubleValue() )]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>
