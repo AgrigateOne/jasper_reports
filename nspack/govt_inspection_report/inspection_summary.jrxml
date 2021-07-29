@@ -21,7 +21,13 @@
 	</parameter>
 	<parameter name="paraminspecstatus" class="java.lang.String"/>
 	<queryString language="SQL">
-		<![CDATA[SELECT
+		<![CDATA[WITH plt_cnt AS(
+	select count(distinct pallet_number) as plt_qty,max(govt_inspection_sheet_id) as govt_inspection_sheet_id 
+	from vw_pallet_sequence_flat 
+   WHERE  govt_inspection_sheet_id= $P{subgovt_inspection_sheet_id}
+    AND (  case when  $P{paraminspecstatus} ='passed' then govt_inspection_passed=true 
+                when  $P{paraminspecstatus} ='failed' then govt_inspection_passed=false end ))
+SELECT
  p.commodity,
  p.marketing_variety,
 p.std_pack ,
@@ -29,10 +35,13 @@ p.size_ref,
 p.grade,
 p.actual_count,
 sum(p.carton_quantity) as carton_quantity,
-count(distinct p.pallet_id) as plt_qty,govt_inspection_passed,
-COALESCE(p.customer_variety, p.marketing_variety,'') as variety
+max(plt_cnt.plt_qty) as plt_qty,
+govt_inspection_passed,
+COALESCE(p.customer_variety, p.marketing_variety,'') as variety,
+count(distinct p.pallet_id) as each_plt_qty
 FROM
     public.vw_pallet_sequence_flat p
+	join plt_cnt on p.govt_inspection_sheet_id = plt_cnt.govt_inspection_sheet_id
 WHERE  p.govt_inspection_sheet_id= $P{subgovt_inspection_sheet_id}
   AND (  case when  $P{paraminspecstatus} ='passed' then govt_inspection_passed=true 
                 when  $P{paraminspecstatus} ='failed' then govt_inspection_passed=false end )
@@ -53,6 +62,7 @@ p.grade,govt_inspection_passed,p.customer_variety]]>
 	<field name="actual_count" class="java.lang.Integer"/>
 	<field name="govt_inspection_passed" class="java.lang.Boolean"/>
 	<field name="variety" class="java.lang.String"/>
+	<field name="each_plt_qty" class="java.lang.Long"/>
 	<variable name="plt_qty_1" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{plt_qty}]]></variableExpression>
 	</variable>
@@ -201,7 +211,7 @@ p.grade,govt_inspection_passed,p.customer_variety]]>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{plt_qty}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{each_plt_qty}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -225,7 +235,7 @@ p.grade,govt_inspection_passed,p.customer_variety]]>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{plt_qty_1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{plt_qty}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>
