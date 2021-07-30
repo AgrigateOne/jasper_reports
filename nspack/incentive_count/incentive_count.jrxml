@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive_count" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="0c54595e-180f-487d-9121-9abe94ba96a4">
 	<property name="ireport.zoom" value="1.53947435469212"/>
 	<property name="ireport.x" value="0"/>
@@ -230,13 +230,6 @@ FROM
 			<staticText>
 				<reportElement x="159" y="89" width="184" height="30" uuid="8ae33515-bd31-456a-aa27-92513bd988f0"/>
 				<text><![CDATA[Shift D/N]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="3" y="0" width="794" height="31" uuid="9777db30-a7df-4809-b985-06b4431ac754"/>
-				<textElement textAlignment="Center">
-					<font size="24"/>
-				</textElement>
-				<text><![CDATA[Unifrutti]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="7" y="30" width="790" height="20" uuid="50eee0ca-edfb-4b31-99a4-a769505ce3d0"/>
