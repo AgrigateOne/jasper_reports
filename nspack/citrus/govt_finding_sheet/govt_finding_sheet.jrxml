@@ -42,7 +42,7 @@
 govt_inspection_sheets
 LEFT JOIN govt_inspection_pallets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
 LEFT JOIN destination_countries ON destination_countries.id = govt_inspection_sheets.destination_country_id
-LEFT JOIN destination_regions ON destination_regions.id = destination_countries.destination_region_id
+LEFT JOIN destination_regions ON destination_regions.id = govt_inspection_sheets.destination_region_id
 
 JOIN pallets p ON govt_inspection_pallets.pallet_id = p.id
 JOIN pallet_sequences ps ON p.id = ps.pallet_id
@@ -409,7 +409,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				<text><![CDATA[PERISHABLE PRODUCTS EXPORT CONTROL BOARD]]></text>
 			</staticText>
 			<image>
-				<reportElement x="191" y="0" width="186" height="39" uuid="b8df7190-655c-4151-9c52-2bc5fcd27e7e"/>
+				<reportElement x="191" y="0" width="199" height="39" uuid="b8df7190-655c-4151-9c52-2bc5fcd27e7e"/>
 				<imageExpression><![CDATA["../../logos/ppecb.png"]]></imageExpression>
 			</image>
 			<staticText>
