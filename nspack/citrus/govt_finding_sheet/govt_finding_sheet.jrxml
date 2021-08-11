@@ -1067,7 +1067,7 @@ R  - Reject]]></text>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{pallet_number} != "" ? $F{destination_region_name} : ""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{destination_region_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="0" y="0" width="158" height="53" uuid="52dd8c53-98ab-46a1-a520-d59a138caa53"/>
