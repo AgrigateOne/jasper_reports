@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -14,6 +14,8 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="249"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="745"/>
 	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
 	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#FFFFFF" fontName="Arial" fontSize="12" isBold="true"/>
@@ -57,7 +59,7 @@
                 shifts.running_hours
             FROM
                 public.shifts
-               left JOIN shift_types ON shifts.shift_type_id = shift_types.id) AS s ON cartons.created_at BETWEEN s.start_date_time
+                JOIN shift_types ON shifts.shift_type_id = shift_types.id) AS s ON cartons.created_at BETWEEN s.start_date_time
                 AND s.end_date_time
                 AND s.plant_resource_id = carton_labels.production_line_id
         LEFT JOIN public.contract_workers ON (cartons.palletizer_contract_worker_id = contract_workers.id)
@@ -318,4 +320,22 @@ total_pallets as Total_Pallets,12 as Total_Earnings,palletizer_incentive_rate,pa
 			</textField>
 		</band>
 	</summary>
+	<noData>
+		<band height="50">
+			<staticText>
+				<reportElement x="1" y="0" width="289" height="30" uuid="bf6716d3-025e-4843-a231-805c8aa3f60e"/>
+				<textElement>
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[No data found for shift:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="300" y="0" width="73" height="30" uuid="363a27ba-9131-46d1-b11e-e45cc5a116bb"/>
+				<textElement>
+					<font size="24"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{shift_id}]]></textFieldExpression>
+			</textField>
+		</band>
+	</noData>
 </jasperReport>
