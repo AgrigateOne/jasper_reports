@@ -14,8 +14,8 @@
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["C:\\Huis\\dunbrody\\reports\\on_server\\incentive\\"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="FromDateTime" class="java.sql.Timestamp"/>
-	<parameter name="ToDateTime" class="java.sql.Timestamp"/>
+	<parameter name="FromDateTime" class="java.util.Date"/>
+	<parameter name="ToDateTime" class="java.util.Date"/>
 	<parameter name="WorkerIds" class="java.util.Collection"/>
 	<parameter name="user_name" class="java.lang.String">
 		<defaultValueExpression><![CDATA["UD"]]></defaultValueExpression>
@@ -373,13 +373,6 @@ sum(CASE WHEN incentive < 0 THEN
 	</columnFooter>
 	<pageFooter>
 		<band height="26" splitType="Stretch">
-			<textField pattern="EEEEE dd MMMMM yyyy">
-				<reportElement style="Column header" x="683" y="8" width="116" height="18" forecolor="#000000" uuid="a8a917d7-104b-444d-a6c3-37768dd7fb70"/>
-				<textElement textAlignment="Right">
-					<font fontName="SansSerif" size="10" isBold="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[ new java.sql.Timestamp]]></textFieldExpression>
-			</textField>
 			<textField>
 				<reportElement x="68" y="7" width="120" height="18" uuid="216b7452-1de7-49ac-95a9-9ca088e41894"/>
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
