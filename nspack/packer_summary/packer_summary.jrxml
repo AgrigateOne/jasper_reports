@@ -373,6 +373,16 @@ sum(CASE WHEN incentive < 0 THEN
 	</columnFooter>
 	<pageFooter>
 		<band height="26" splitType="Stretch">
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement style="Column header" x="680" y="8" width="116" height="15" forecolor="#000000" uuid="a8a917d7-104b-444d-a6c3-37768dd7fb70">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[java.util.Date]]></textFieldExpression>
+			</textField>
 			<textField>
 				<reportElement x="68" y="7" width="120" height="18" uuid="216b7452-1de7-49ac-95a9-9ca088e41894"/>
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
