@@ -140,32 +140,32 @@
 	<group name="Group1" keepTogether="true">
 		<groupExpression><![CDATA[$F{personnel_barcode_number}]]></groupExpression>
 		<groupHeader>
-			<band height="52">
+			<band height="58">
 				<printWhenExpression><![CDATA[$P{is_visible}]]></printWhenExpression>
 				<textField>
-					<reportElement x="7" y="0" width="100" height="17" uuid="0c773ecf-d137-4b8c-991d-b01dd893f427"/>
+					<reportElement x="7" y="4" width="100" height="17" uuid="0c773ecf-d137-4b8c-991d-b01dd893f427"/>
 					<textFieldExpression><![CDATA[$P{FromDateTime}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="125" y="0" width="100" height="17" uuid="1f42d7d7-7fe7-4042-8973-1ef597912e69"/>
+					<reportElement x="125" y="4" width="100" height="17" uuid="1f42d7d7-7fe7-4042-8973-1ef597912e69"/>
 					<textFieldExpression><![CDATA[$P{ToDateTime}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement style="Column header" x="420" y="18" width="130" height="30" forecolor="#000000" uuid="e0a50425-1eeb-431a-9e7f-3b9568d37125"/>
+					<reportElement style="Column header" x="420" y="22" width="130" height="30" forecolor="#000000" uuid="e0a50425-1eeb-431a-9e7f-3b9568d37125"/>
 					<textElement textAlignment="Center">
 						<font fontName="SansSerif" size="10" isBold="false"/>
 					</textElement>
 					<text><![CDATA[Total Fruit Qty]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="0" y="18" width="36" height="30" uuid="4ba77dab-cae3-4c68-a228-f7576ed28947"/>
+					<reportElement x="0" y="22" width="36" height="30" uuid="4ba77dab-cae3-4c68-a228-f7576ed28947"/>
 					<textElement>
 						<font fontName="SansSerif" size="10" isBold="false"/>
 					</textElement>
 					<text><![CDATA[PNo]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="270" y="18" width="32" height="30" uuid="83966cf5-fca9-4025-9472-1d7d0975864f">
+					<reportElement x="270" y="22" width="32" height="30" uuid="83966cf5-fca9-4025-9472-1d7d0975864f">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Left">
@@ -174,12 +174,12 @@
 					<text><![CDATA[Ctn]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="36" y="18" width="64" height="30" uuid="f12dc272-e8f3-4fa7-a754-3b7db9c77e6c"/>
+					<reportElement x="36" y="22" width="64" height="30" uuid="f12dc272-e8f3-4fa7-a754-3b7db9c77e6c"/>
 					<textElement textAlignment="Left"/>
 					<text><![CDATA[Name]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="676" y="18" width="100" height="30" uuid="86272df9-8908-4ce2-9239-086bc568d4db">
+					<reportElement x="676" y="22" width="100" height="30" uuid="86272df9-8908-4ce2-9239-086bc568d4db">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
@@ -187,7 +187,7 @@
 					<text><![CDATA[Total Earnings]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="550" y="18" width="40" height="30" uuid="b74061a0-90c3-401c-abd2-46cbfab690e7">
+					<reportElement x="550" y="22" width="40" height="30" uuid="b74061a0-90c3-401c-abd2-46cbfab690e7">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 					</reportElement>
@@ -195,7 +195,7 @@
 					<text><![CDATA[Inv]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="305" y="18" width="55" height="30" uuid="44ca44eb-8174-4f81-8be2-02630ade1d6c">
+					<reportElement x="305" y="22" width="55" height="30" uuid="44ca44eb-8174-4f81-8be2-02630ade1d6c">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
@@ -205,14 +205,14 @@
 					<text><![CDATA[Total Cartons]]></text>
 				</staticText>
 				<staticText>
-					<reportElement style="Column header" x="360" y="18" width="59" height="30" forecolor="#000000" uuid="0e09d3c0-01c1-4064-8311-726abcbff501"/>
+					<reportElement style="Column header" x="360" y="22" width="59" height="30" forecolor="#000000" uuid="0e09d3c0-01c1-4064-8311-726abcbff501"/>
 					<textElement textAlignment="Right">
 						<font fontName="SansSerif" size="10" isBold="false"/>
 					</textElement>
 					<text><![CDATA[Fruit Qty]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="590" y="18" width="85" height="30" uuid="0e502415-0588-4506-9f92-da972c57d1ed">
+					<reportElement x="590" y="22" width="85" height="30" uuid="0e502415-0588-4506-9f92-da972c57d1ed">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
@@ -220,28 +220,28 @@
 					<text><![CDATA[Cost]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="100" y="18" width="40" height="30" uuid="f14bb713-2c8d-4e1c-a6fd-17d0c176c20c">
+					<reportElement x="100" y="22" width="40" height="30" uuid="f14bb713-2c8d-4e1c-a6fd-17d0c176c20c">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Left"/>
 					<text><![CDATA[Comm]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="140" y="18" width="47" height="30" uuid="51608b17-64b7-42c5-9ff3-52dbb5d9a27a">
+					<reportElement x="140" y="22" width="47" height="30" uuid="51608b17-64b7-42c5-9ff3-52dbb5d9a27a">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Left"/>
 					<text><![CDATA[MarkVar]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="226" y="18" width="44" height="30" uuid="81cd1a5e-3161-4e4a-92d8-5dca41f031e9">
+					<reportElement x="226" y="22" width="44" height="30" uuid="81cd1a5e-3161-4e4a-92d8-5dca41f031e9">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Left"/>
 					<text><![CDATA[Actual Count]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="185" y="18" width="41" height="30" uuid="aa2438cf-155e-4980-8169-ee51de4ffa8f">
+					<reportElement x="185" y="22" width="41" height="30" uuid="aa2438cf-155e-4980-8169-ee51de4ffa8f">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Left"/>
