@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive_count" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SR_nspack.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
 	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
@@ -28,7 +28,7 @@
         day_night_or_custom AS shift_type_code,
         s.shift_type_id,
         contract_workers.id AS cw_id,
-        inventory_codes.fruit_item_incentive_rate,
+        t.cost as fruit_item_incentive_rate,
         commodities.code AS commodity_code,
         basic_pack_codes.basic_pack_code,
         standard_pack_codes.standard_pack_code,
@@ -36,10 +36,10 @@
         fruit_actual_counts_for_packs.actual_count_for_pack AS actual_count,
         marketing_varieties.marketing_variety_code,
         COALESCE(shift_exceptions.running_hours, s.running_hours, ((EXTRACT(EPOCH FROM end_date_time) - EXTRACT(EPOCH FROM start_date_time)) / 60 / 60)) AS running_hours,
-        string_agg(DISTINCT inventory_codes.inventory_code, ',' ORDER BY inventory_codes.inventory_code) AS inv_codes,
+        t.inv_codes,
         count(carton_labels.id) AS carton_qty,
         sum(fruit_actual_counts_for_packs.actual_count_for_pack) fruit_qty_cwi,
-        sum(fruit_actual_counts_for_packs.actual_count_for_pack * coalesce(inventory_codes.fruit_item_incentive_rate, 0)) fruit_rand_cwi,
+        sum(fruit_actual_counts_for_packs.actual_count_for_pack * coalesce(t.cost, 0)) fruit_rand_cwi,
         count(contract_workers.id) OVER (PARTITION BY s.id) AS packers_shift
     FROM
         cartons
@@ -62,7 +62,6 @@
         LEFT JOIN public.contract_workers ON (carton_labels.contract_worker_id = contract_workers.id)
         LEFT JOIN public.shift_exceptions ON (contract_workers.id = shift_exceptions.contract_worker_id)
             AND (s.id = shift_exceptions.shift_id)
-        LEFT JOIN public.inventory_codes ON inventory_codes.id = carton_labels.inventory_code_id
         JOIN cultivar_groups ON cultivar_groups.id = carton_labels.cultivar_group_id
         LEFT JOIN grades ON grades.id = carton_labels.grade_id
         LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
@@ -75,11 +74,22 @@
         JOIN basic_pack_codes ON basic_pack_codes.id = carton_labels.basic_pack_code_id
         JOIN standard_pack_codes ON standard_pack_codes.id = carton_labels.standard_pack_code_id
         JOIN marks ON marks.id = carton_labels.mark_id
+        LEFT  JOIN(
+			            select commodity_id,
+						inventory_codes.id as inventory_code_id,
+						coalesce(inventory_codes_packing_costs.packing_cost,inventory_codes.fruit_item_incentive_rate) as cost,
+			            string_agg(distinct inventory_codes.inventory_code,',' order by inventory_codes.inventory_code) as inv_codes
+						from inventory_codes
+						left join inventory_codes_packing_costs on inventory_codes_packing_costs.inventory_code_id = inventory_codes.id
+			            group by inventory_codes.id,inventory_codes_packing_costs.packing_cost,inventory_codes.fruit_item_incentive_rate,commodity_id
+                   ) AS t ON
+		          CASE WHEN t.commodity_id IS NOT NULL THEN t.inventory_code_id = carton_labels.inventory_code_id AND t.commodity_id = cultivar_groups.commodity_id
+		          ELSE t.inventory_code_id = carton_labels.inventory_code_id END
     WHERE
         s.id = $P{shift_id}
     GROUP BY
         s.id,
-        inventory_codes.fruit_item_incentive_rate,
+        t.cost,
         day_night_or_custom,
         s.shift_type_id,
         s.start_date_time,
@@ -93,7 +103,8 @@
         fruit_size_references.size_reference,
         fruit_actual_counts_for_packs.actual_count_for_pack,
         marketing_varieties.marketing_variety_code,
-        cvv.marketing_variety_code
+        cvv.marketing_variety_code,
+        t.inv_codes
     ORDER BY
         contract_workers.id DESC,
         s.start_date_time
