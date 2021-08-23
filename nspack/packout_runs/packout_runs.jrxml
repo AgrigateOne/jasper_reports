@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="packout_runs" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" uuid="c08c8ed1-c3fa-4b77-b7f2-d6e11642b1b0">
 	<property name="ireport.zoom" value="5.0"/>
 	<property name="ireport.x" value="0"/>
@@ -467,7 +467,7 @@ grade_code,std_size,inventory_code]]>
 				</reportElement>
 				<textFieldExpression><![CDATA[$F{started_at}]]></textFieldExpression>
 			</textField>
-			<textField pattern="d MMM h:mm a">
+			<textField pattern="d MMM h:mm a" isBlankWhenNull="true">
 				<reportElement x="92" y="78" width="90" height="13" uuid="7c07b186-caca-431c-8b5b-be12023c4c9e">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -578,7 +578,7 @@ grade_code,std_size,inventory_code]]>
 				<textFieldExpression><![CDATA[$F{total_bin_weight}.intValue()==0?0:
 ($P{use_packed_weight} ?$F{derived_nett_weight} : $F{nett_weight})/$F{total_bin_weight}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="193" y="0" width="43" height="13" uuid="468c2187-af8c-4216-9702-92c22b57a158">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
