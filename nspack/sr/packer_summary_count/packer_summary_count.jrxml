@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="packer_summary_count" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SR_nspack.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_ns_pack_sr"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="288"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="705"/>
@@ -14,6 +14,9 @@
 	<parameter name="WorkerIds" class="java.util.Collection"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["C:\\Huis\\dunbrody\\reports\\on_server\\incentive\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="is_visible" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[Boolean.FALSE]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[WITH base_sql AS (
@@ -134,6 +137,119 @@
 	<variable name="cw_id1" class="java.lang.Integer" calculation="DistinctCount">
 		<variableExpression><![CDATA[$F{cw_id}]]></variableExpression>
 	</variable>
+	<group name="Group1" keepTogether="true">
+		<groupExpression><![CDATA[$F{personnel_barcode_number}]]></groupExpression>
+		<groupHeader>
+			<band height="52">
+				<printWhenExpression><![CDATA[$P{is_visible}]]></printWhenExpression>
+				<textField>
+					<reportElement x="7" y="0" width="100" height="17" uuid="0c773ecf-d137-4b8c-991d-b01dd893f427"/>
+					<textFieldExpression><![CDATA[$P{FromDateTime}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="125" y="0" width="100" height="17" uuid="1f42d7d7-7fe7-4042-8973-1ef597912e69"/>
+					<textFieldExpression><![CDATA[$P{ToDateTime}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="Column header" x="420" y="18" width="130" height="30" forecolor="#000000" uuid="e0a50425-1eeb-431a-9e7f-3b9568d37125"/>
+					<textElement textAlignment="Center">
+						<font fontName="SansSerif" size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Total Fruit Qty]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="18" width="36" height="30" uuid="4ba77dab-cae3-4c68-a228-f7576ed28947"/>
+					<textElement>
+						<font fontName="SansSerif" size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[PNo]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="270" y="18" width="32" height="30" uuid="83966cf5-fca9-4025-9472-1d7d0975864f">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font fontName="SansSerif" size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Ctn]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="36" y="18" width="64" height="30" uuid="f12dc272-e8f3-4fa7-a754-3b7db9c77e6c"/>
+					<textElement textAlignment="Left"/>
+					<text><![CDATA[Name]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="676" y="18" width="100" height="30" uuid="86272df9-8908-4ce2-9239-086bc568d4db">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Right"/>
+					<text><![CDATA[Total Earnings]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="550" y="18" width="40" height="30" uuid="b74061a0-90c3-401c-abd2-46cbfab690e7">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Inv]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="305" y="18" width="55" height="30" uuid="44ca44eb-8174-4f81-8be2-02630ade1d6c">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font fontName="SansSerif" size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Total Cartons]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="360" y="18" width="59" height="30" forecolor="#000000" uuid="0e09d3c0-01c1-4064-8311-726abcbff501"/>
+					<textElement textAlignment="Right">
+						<font fontName="SansSerif" size="10" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Fruit Qty]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="590" y="18" width="85" height="30" uuid="0e502415-0588-4506-9f92-da972c57d1ed">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Cost]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="100" y="18" width="40" height="30" uuid="f14bb713-2c8d-4e1c-a6fd-17d0c176c20c">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left"/>
+					<text><![CDATA[Comm]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="140" y="18" width="47" height="30" uuid="51608b17-64b7-42c5-9ff3-52dbb5d9a27a">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left"/>
+					<text><![CDATA[MarkVar]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="226" y="18" width="44" height="30" uuid="81cd1a5e-3161-4e4a-92d8-5dca41f031e9">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left"/>
+					<text><![CDATA[Actual Count]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="185" y="18" width="41" height="30" uuid="aa2438cf-155e-4980-8169-ee51de4ffa8f">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left"/>
+					<text><![CDATA[Basic Pack]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
 	<title>
 		<band height="30" splitType="Stretch">
 			<staticText>
