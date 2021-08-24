@@ -466,7 +466,7 @@ grade_code,std_size,inventory_code]]>
 					<topPen lineWidth="1.0"/>
 					<leftPen lineWidth="1.0"/>
 				</box>
-				<imageExpression><![CDATA["/home/patie/nosoft_projects/crossbeams/jasper_reports/nspack/logos/hb_logo.png"]]></imageExpression>
+				<imageExpression><![CDATA["../logos/" +$P{client_code}  + "_logo.png"]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="92" y="70" width="242" height="12" uuid="b12ef1a7-afdf-49d3-b2b1-817ad6cff9e4"/>
@@ -597,11 +597,11 @@ grade_code,std_size,inventory_code]]>
 				<text><![CDATA[Fruit Type:]]></text>
 			</staticText>
 			<line>
-				<reportElement x="0" y="189" width="564" height="1" uuid="b6325791-4a3e-4ab4-9ac2-ef4813030145">
+				<reportElement x="0" y="189" width="565" height="1" uuid="b6325791-4a3e-4ab4-9ac2-ef4813030145">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 			</line>
 			<line>
@@ -617,11 +617,11 @@ grade_code,std_size,inventory_code]]>
 				</reportElement>
 			</line>
 			<line>
-				<reportElement x="0" y="150" width="564" height="1" uuid="2b62e11b-e37a-4cfb-bb52-7efea40d5844">
+				<reportElement x="0" y="150" width="565" height="1" uuid="2b62e11b-e37a-4cfb-bb52-7efea40d5844">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 			</line>
 			<line>
