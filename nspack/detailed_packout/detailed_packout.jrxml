@@ -526,7 +526,8 @@ grade_code,std_size,inventory_code]]>
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<imageExpression><![CDATA["/home/patie/nosoft_projects/crossbeams/jasper_reports/nspack/logos/hb_logo.png"]]></imageExpression>
+				<imageExpression><![CDATA["../logos/" +$P{client_code}  + "_logo.png"
+]]></imageExpression>
 			</image>
 			<line>
 				<reportElement x="0" y="83" width="564" height="1" uuid="89ba172d-00f4-48e7-b284-6d37cc13b62c">
@@ -949,7 +950,8 @@ grade_code,std_size,inventory_code]]>
 					<subreportParameterExpression><![CDATA[$F{implementation_owner_party_role_id}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["/home/patie/nosoft_projects/crossbeams/jasper_reports/nspack/shared/party_role_address.jrxml"]]></subreportExpression>
+				<subreportExpression><![CDATA["../shared/party_role_address.jasper"
+]]></subreportExpression>
 			</subreport>
 		</band>
 	</title>
