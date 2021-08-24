@@ -12,7 +12,7 @@
 	<parameter name="production_run_id" class="java.util.Collection" nestedType="java.lang.Integer"/>
 	<parameter name="dispatched_only" class="java.lang.Boolean"/>
 	<queryString language="SQL">
-		<![CDATA[			with bin_tipped as (
+		<![CDATA[with bin_tipped as (
 				select pr.cultivar_id ,pr.farm_id 
 				,sum(b.nett_weight::numeric(12,2)) AS total_bin_weight
 				FROM  production_runs pr
@@ -56,8 +56,7 @@
 			group by  
 			std_fruit_size_counts.size_count_value ,
 			fruit_size_references.size_reference ,
-			fruit_actual_counts_for_packs.actual_count_for_pack 
-		  ]]>
+			fruit_actual_counts_for_packs.actual_count_for_pack]]>
 	</queryString>
 	<field name="std_size" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="std_size"/>
@@ -81,6 +80,14 @@
 	<field name="carton_quantity" class="java.lang.Long">
 		<property name="com.jaspersoft.studio.field.name" value="carton_quantity"/>
 		<property name="com.jaspersoft.studio.field.label" value="carton_quantity"/>
+	</field>
+	<field name="derived_nett_weight" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="derived_nett_weight"/>
+		<property name="com.jaspersoft.studio.field.label" value="derived_nett_weight"/>
+	</field>
+	<field name="weight_percentage" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="weight_percentage"/>
+		<property name="com.jaspersoft.studio.field.label" value="weight_percentage"/>
 	</field>
 	<variable name="total_cartons" class="java.lang.Integer" calculation="Sum">
 		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
@@ -176,7 +183,7 @@
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[($F{carton_quantity}/2922) * 100]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{weight_percentage}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="0" y="1" width="25" height="13" uuid="2eff2c3c-7b05-4cc3-bb00-14e74ec7f296">
