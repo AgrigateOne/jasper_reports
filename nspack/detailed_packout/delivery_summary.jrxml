@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="delivery_summary" language="groovy" pageWidth="300" pageHeight="148" columnWidth="300" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cba47b92-bbda-40d5-b5d7-7f12c9f0b664">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="267"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="726"/>
+	<parameter name="production_run_id" class="java.util.Collection" nestedType="java.lang.Integer"/>
+	<parameter name="dispatched_only" class="java.lang.Boolean"/>
+	<queryString language="SQL">
+		<![CDATA[select
+b.rmt_delivery_id,
+orchards.orchard_code orchard,
+rmt_container_types.container_type_code,
+count(b.id) AS no_of_bins  
+,sum(b.nett_weight::numeric(12,2)) AS total_bin_weight
+FROM  production_runs pr
+left join rmt_bins b on pr.id=b.production_run_tipped_id
+LEFT JOIN cultivar_groups ON cultivar_groups.id = b.cultivar_group_id
+LEFT JOIN cultivars ON cultivars.id = b.cultivar_id
+left JOIN orchards ON orchards.id = b.orchard_id
+LEFT JOIN farms ON farms.id = b.farm_id
+Left join pucs on b.puc_id = pucs.id
+LEFT JOIN rmt_container_types ON rmt_container_types.id = b.rmt_container_type_id
+WHERE not  ( b.scrapped =true)  and $X{IN, pr.id , production_run_id}
+group by b.rmt_delivery_id,rmt_container_types.container_type_code,orchards.orchard_code]]>
+	</queryString>
+	<field name="rmt_delivery_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="rmt_delivery_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="rmt_delivery_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="rmt_bins"/>
+	</field>
+	<field name="orchard" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="orchard"/>
+		<property name="com.jaspersoft.studio.field.label" value="orchard"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="orchards"/>
+	</field>
+	<field name="container_type_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="container_type_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="container_type_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="rmt_container_types"/>
+	</field>
+	<field name="no_of_bins" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="no_of_bins"/>
+		<property name="com.jaspersoft.studio.field.label" value="no_of_bins"/>
+	</field>
+	<field name="total_bin_weight" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total_bin_weight"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_bin_weight"/>
+	</field>
+	<variable name="total_bin_qty" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{no_of_bins}]]></variableExpression>
+	</variable>
+	<variable name="total_bin_weight" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_bin_weight}]]></variableExpression>
+	</variable>
+	<variable name="avg_weight" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$V{total_bin_weight}/$V{total_bin_qty}]]></variableExpression>
+	</variable>
+	<variable name="total_bins" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{no_of_bins}]]></variableExpression>
+	</variable>
+	<variable name="total_weight" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_bin_weight}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="15" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="114" y="0" width="40" height="13" uuid="d88ef14d-4b61-4dfe-a569-48d6da5c48c1">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Kilograms]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="30" height="13" uuid="c35fcb63-7b27-4137-bad2-a9606fa94c33">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Del.No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="54" y="0" width="40" height="13" uuid="1f08622a-5da1-4f95-9305-7e75d68a4a7b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Orchard]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="224" y="0" width="30" height="13" uuid="75e0d10b-11b2-48b5-b972-432886787f79">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Qty]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="165" y="0" width="49" height="13" uuid="77cc9478-4ecc-4f4d-b949-08a06920e76b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Bin Type]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="12" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField pattern="#.00#;#.00#-">
+				<reportElement x="50" y="0" width="40" height="11" uuid="620a1348-318a-4336-9eca-d4d2a1234296">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{orchard}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="30" height="11" uuid="814e04ec-4f8f-4c9f-8cdb-c2da9656d625">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{rmt_delivery_id}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="110" y="0" width="40" height="11" uuid="1b261a61-e9a7-46af-9292-05c3d9da2393">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_bin_weight}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="165" y="0" width="40" height="11" uuid="0e02a99c-cb60-4ff8-b2a7-d684e5551af1"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{container_type_code}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="220" y="0" width="40" height="11" uuid="d9eb339d-295f-4a3d-960d-f5e244eb58e7">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{no_of_bins}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="17">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<line>
+				<reportElement x="0" y="0" width="290" height="1" uuid="d0974aa8-971e-4534-8f41-60070a473925">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<textField>
+				<reportElement x="220" y="1" width="45" height="13" uuid="b4fffe9c-1c12-4cbe-93d3-26f60c2053e0">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_bins}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="1" width="50" height="13" uuid="9c309fab-43b2-4af7-b83d-53e18b7f0671">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_weight}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="15" width="555" height="1" uuid="d0c332e4-169b-4027-9905-d7ecc2d16c3c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

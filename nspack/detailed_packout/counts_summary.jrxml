@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="delivery_summary" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cba47b92-bbda-40d5-b5d7-7f12c9f0b664">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="267"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="726"/>
+	<property name="com.jaspersoft.studio.report.description" value=""/>
+	<parameter name="production_run_id" class="java.util.Collection" nestedType="java.lang.Integer"/>
+	<parameter name="dispatched_only" class="java.lang.Boolean"/>
+	<queryString language="SQL">
+		<![CDATA[			with bin_tipped as (
+				select pr.cultivar_id ,pr.farm_id 
+				,sum(b.nett_weight::numeric(12,2)) AS total_bin_weight
+				FROM  production_runs pr
+				left join rmt_bins b on pr.id=b.production_run_tipped_id
+				LEFT JOIN cultivar_groups ON cultivar_groups.id = b.cultivar_group_id
+				LEFT JOIN cultivars ON cultivars.id = b.cultivar_id
+				left JOIN orchards ON orchards.id = b.orchard_id
+				LEFT JOIN farms ON farms.id = b.farm_id
+				Left join pucs on b.puc_id = pucs.id 
+               WHERE  not  ( b.scrapped =true)  and $X{IN, pr.id , production_run_id}
+				group by pr.cultivar_id ,pr.farm_id
+				)
+			select   
+			std_fruit_size_counts.size_count_value AS std_size,
+			fruit_size_references.size_reference AS size_ref,
+			fruit_actual_counts_for_packs.actual_count_for_pack AS actual_count,
+			sum(pallet_sequences.nett_weight::numeric(12,2)) AS nett_weight,
+			sum(pallet_sequences.carton_quantity)carton_quantity,
+			sum(standard_product_weights.nett_weight * pallet_sequences.carton_quantity::numeric) AS derived_nett_weight,
+		    (sum(pallet_sequences.nett_weight::numeric(12,2))/max(bin_tipped.total_bin_weight)) * 100 as weight_percentage
+			FROM pallet_sequences
+			join pallets on   pallet_sequences.pallet_id =pallets.id
+			JOIN production_runs ON production_runs.id = pallet_sequences.production_run_id
+			JOIN plant_resources packhouses ON packhouses.id = pallet_sequences.packhouse_resource_id
+			JOIN plant_resources lines ON lines.id = pallet_sequences.production_line_id
+			JOIN target_market_groups ON target_market_groups.id = pallet_sequences.packed_tm_group_id
+			left JOIN farms ON farms.id = (( SELECT rmt_bins.farm_id
+							  FROM rmt_bins
+							  WHERE rmt_bins.production_run_tipped_id = production_runs.id
+			LIMIT 1))
+			LEFT JOIN cultivars ON cultivars.id = pallet_sequences.cultivar_id
+		   JOIN cultivar_groups ON cultivar_groups.id = pallet_sequences.cultivar_group_id
+			LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
+			LEFT JOIN standard_pack_codes ON standard_pack_codes.id = pallet_sequences.standard_pack_code_id
+			LEFT JOIN standard_product_weights ON commodities.id = standard_product_weights.commodity_id AND standard_product_weights.standard_pack_id = standard_pack_codes.id
+			LEFT JOIN std_fruit_size_counts ON std_fruit_size_counts.id = pallet_sequences.std_fruit_size_count_id
+			LEFT JOIN fruit_size_references ON fruit_size_references.id = pallet_sequences.fruit_size_reference_id
+			LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = pallet_sequences.fruit_actual_counts_for_pack_id
+		    JOIN bin_tipped on bin_tipped.farm_id=production_runs.farm_id and production_runs.cultivar_id=bin_tipped.cultivar_id
+            WHERE case when    $P{dispatched_only}   = true then pallets.load_id is not null else true end and $X{IN, pallet_sequences.production_run_id, production_run_id}
+			group by  
+			std_fruit_size_counts.size_count_value ,
+			fruit_size_references.size_reference ,
+			fruit_actual_counts_for_packs.actual_count_for_pack 
+		  ]]>
+	</queryString>
+	<field name="std_size" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="std_size"/>
+		<property name="com.jaspersoft.studio.field.label" value="std_size"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="std_fruit_size_counts"/>
+	</field>
+	<field name="size_ref" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="size_ref"/>
+		<property name="com.jaspersoft.studio.field.label" value="size_ref"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="fruit_size_references"/>
+	</field>
+	<field name="actual_count" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="actual_count"/>
+		<property name="com.jaspersoft.studio.field.label" value="actual_count"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="fruit_actual_counts_for_packs"/>
+	</field>
+	<field name="nett_weight" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="nett_weight"/>
+		<property name="com.jaspersoft.studio.field.label" value="nett_weight"/>
+	</field>
+	<field name="carton_quantity" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="carton_quantity"/>
+		<property name="com.jaspersoft.studio.field.label" value="carton_quantity"/>
+	</field>
+	<variable name="total_cartons" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
+	</variable>
+	<variable name="total_percentage_ctns" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[($F{carton_quantity}/$V{total_cartons})]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="15" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="62" y="0" width="40" height="13" uuid="d88ef14d-4b61-4dfe-a569-48d6da5c48c1">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Std Size]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="57" height="13" uuid="1f08622a-5da1-4f95-9305-7e75d68a4a7b">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Count]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="108" y="0" width="40" height="13" uuid="75e0d10b-11b2-48b5-b972-432886787f79">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Qty]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="155" y="1" width="40" height="13" uuid="49bc4d5e-1721-45d3-adbd-7c136552bc97">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[%]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement x="62" y="0" width="40" height="11" uuid="1b261a61-e9a7-46af-9292-05c3d9da2393">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{std_size}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="108" y="0" width="40" height="11" uuid="d9eb339d-295f-4a3d-960d-f5e244eb58e7">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{carton_quantity}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="155" y="0" width="40" height="11" uuid="17ff0f1b-227c-4c9a-baad-0009e79862c4">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{carton_quantity}/2922) * 100]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="1" width="25" height="13" uuid="2eff2c3c-7b05-4cc3-bb00-14e74ec7f296">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{actual_count}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="26" y="1" width="5" height="13" uuid="533b16d4-c7d4-4702-adc8-1990dd5a755e">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[/]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="32" y="1" width="25" height="13" uuid="4be57fb6-6f45-4724-884b-f245355fc4af">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{size_ref}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="15">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<line>
+				<reportElement x="0" y="0" width="200" height="1" uuid="d0974aa8-971e-4534-8f41-60070a473925">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<textField>
+				<reportElement x="155" y="1" width="40" height="13" uuid="b4fffe9c-1c12-4cbe-93d3-26f60c2053e0">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_percentage_ctns}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="108" y="1" width="40" height="13" uuid="9c309fab-43b2-4af7-b83d-53e18b7f0671">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_cartons}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>
