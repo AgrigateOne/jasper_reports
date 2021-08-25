@@ -4,7 +4,7 @@
 	<property name="ireport.zoom" value="3.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack_ud"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="267"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="726"/>
@@ -93,7 +93,7 @@
 		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
 	</variable>
 	<variable name="total_percentage_ctns" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[($F{carton_quantity}/$V{total_cartons})]]></variableExpression>
+		<variableExpression><![CDATA[$F{weight_percentage}]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -109,7 +109,7 @@
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Std Size]]></text>
@@ -121,7 +121,7 @@
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Count]]></text>
@@ -132,7 +132,7 @@
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Qty]]></text>
@@ -144,7 +144,7 @@
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[%]]></text>
@@ -155,7 +155,7 @@
 		<band height="16" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="62" y="0" width="40" height="13" uuid="1b261a61-e9a7-46af-9292-05c3d9da2393">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -166,7 +166,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{std_size}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="108" y="0" width="40" height="13" uuid="d9eb339d-295f-4a3d-960d-f5e244eb58e7">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -177,7 +177,7 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{carton_quantity}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="155" y="0" width="40" height="13" uuid="17ff0f1b-227c-4c9a-baad-0009e79862c4">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -186,7 +186,7 @@
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{weight_percentage}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{weight_percentage}.setScale(2,RoundingMode.HALF_UP)]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="0" y="1" width="25" height="13" uuid="2eff2c3c-7b05-4cc3-bb00-14e74ec7f296">
@@ -225,7 +225,7 @@
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 			</line>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="155" y="1" width="40" height="13" uuid="b4fffe9c-1c12-4cbe-93d3-26f60c2053e0">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -235,7 +235,7 @@
 				<textElement textAlignment="Center">
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{total_percentage_ctns}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{total_percentage_ctns}.setScale(2,RoundingMode.HALF_UP)]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="108" y="1" width="40" height="13" uuid="9c309fab-43b2-4af7-b83d-53e18b7f0671">

@@ -24,8 +24,7 @@
 grade_code,
 sum(nett_weight) nett_weight,
 sum(derived_nett_weight) AS derived_nett_weight,
-sum(weight_percentage) weight_percentage,
-sum(carton_quantity) carton_quantity
+ROUND(sum(weight_percentage),2) weight_percentage,sum(carton_quantity) carton_quantity
 FROM
           (
 			with bin_tipped as (
@@ -144,11 +143,12 @@ rmt_class_code
 				</reportElement>
 			</line>
 			<staticText>
-				<reportElement x="150" y="1" width="48" height="13" uuid="d88ef14d-4b61-4dfe-a569-48d6da5c48c1">
+				<reportElement x="150" y="1" width="49" height="13" uuid="d88ef14d-4b61-4dfe-a569-48d6da5c48c1">
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
 					<font size="8"/>
@@ -212,7 +212,7 @@ rmt_class_code
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 			</line>
-			<textField pattern="#.00#;#.00#-">
+			<textField pattern="#.00#;#.00#-   ">
 				<reportElement x="150" y="1" width="49" height="11" uuid="e09dc5b0-92a7-43d5-8c37-9430a596293e">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
