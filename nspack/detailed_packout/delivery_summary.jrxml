@@ -136,7 +136,7 @@ group by b.rmt_delivery_id,rmt_container_types.container_type_code,orchards.orch
 		<band height="12" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<textField pattern="#.00#;#.00#-">
+			<textField pattern="#.00#;#.00#-" isBlankWhenNull="true">
 				<reportElement x="50" y="0" width="40" height="11" uuid="620a1348-318a-4336-9eca-d4d2a1234296">
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -147,7 +147,7 @@ group by b.rmt_delivery_id,rmt_container_types.container_type_code,orchards.orch
 				</textElement>
 				<textFieldExpression><![CDATA[$F{orchard}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="0" y="0" width="30" height="11" uuid="814e04ec-4f8f-4c9f-8cdb-c2da9656d625">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
@@ -156,7 +156,7 @@ group by b.rmt_delivery_id,rmt_container_types.container_type_code,orchards.orch
 				</textElement>
 				<textFieldExpression><![CDATA[$F{rmt_delivery_id}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.00">
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="165" y="0" width="40" height="11" uuid="1b261a61-e9a7-46af-9292-05c3d9da2393">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -166,7 +166,7 @@ group by b.rmt_delivery_id,rmt_container_types.container_type_code,orchards.orch
 				</textElement>
 				<textFieldExpression><![CDATA[$F{total_bin_weight}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.00">
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="100" y="0" width="49" height="11" uuid="0e02a99c-cb60-4ff8-b2a7-d684e5551af1">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -176,7 +176,7 @@ group by b.rmt_delivery_id,rmt_container_types.container_type_code,orchards.orch
 				</textElement>
 				<textFieldExpression><![CDATA[$F{container_type_code}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="224" y="0" width="40" height="11" uuid="d9eb339d-295f-4a3d-960d-f5e244eb58e7">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -199,7 +199,7 @@ group by b.rmt_delivery_id,rmt_container_types.container_type_code,orchards.orch
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 			</line>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="220" y="1" width="45" height="13" uuid="b4fffe9c-1c12-4cbe-93d3-26f60c2053e0">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -211,7 +211,7 @@ group by b.rmt_delivery_id,rmt_container_types.container_type_code,orchards.orch
 				</textElement>
 				<textFieldExpression><![CDATA[$V{total_bins}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="165" y="1" width="50" height="13" uuid="9c309fab-43b2-4af7-b83d-53e18b7f0671">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>

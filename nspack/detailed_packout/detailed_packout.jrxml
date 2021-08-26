@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="packout_runs" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" uuid="c08c8ed1-c3fa-4b77-b7f2-d6e11642b1b0">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="detailed_packout" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" uuid="c08c8ed1-c3fa-4b77-b7f2-d6e11642b1b0">
 	<property name="ireport.zoom" value="5.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -748,7 +748,7 @@ grade_code,std_size,inventory_code]]>
 						<subreportParameterExpression><![CDATA[$P{use_packed_weight}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression><![CDATA["delivery_summary.jrxml"]]></subreportExpression>
+					<subreportExpression><![CDATA["delivery_summary.jasper"]]></subreportExpression>
 				</subreport>
 				<textField pattern="#,##0.00">
 					<reportElement x="146" y="49" width="34" height="11" uuid="bc53ba43-5494-4814-a076-cebd8fea3321">
@@ -934,7 +934,7 @@ grade_code,std_size,inventory_code]]>
 						<subreportParameterExpression><![CDATA[$P{dispatched_only}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression><![CDATA["grade_summary.jrxml"]]></subreportExpression>
+					<subreportExpression><![CDATA["grade_summary.jasper"]]></subreportExpression>
 				</subreport>
 			</frame>
 			<staticText>
@@ -1320,7 +1320,7 @@ grade_code,std_size,inventory_code]]>
 					<subreportParameterExpression><![CDATA[$P{dispatched_only}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["rebins.jrxml"]]></subreportExpression>
+				<subreportExpression><![CDATA["rebins.jasper"]]></subreportExpression>
 			</subreport>
 			<line>
 				<reportElement x="0" y="22" width="565" height="1" uuid="6122d906-4bab-4546-9d7e-24637203674b">
@@ -1400,7 +1400,7 @@ grade_code,std_size,inventory_code]]>
 					<subreportParameterExpression><![CDATA[$P{production_run_id}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["counts_summary.jrxml"]]></subreportExpression>
+				<subreportExpression><![CDATA["counts_summary.jasper"]]></subreportExpression>
 			</subreport>
 			<staticText>
 				<reportElement x="2" y="51" width="132" height="15" uuid="c1aecfc2-18e5-41e5-9b37-4f7f45442557">

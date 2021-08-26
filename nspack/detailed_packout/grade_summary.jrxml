@@ -170,7 +170,7 @@ rmt_class_code
 		<band height="12" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="1" y="1" width="48" height="11" uuid="b4b41068-d50c-4edc-b706-6bb573b95427">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -179,7 +179,7 @@ rmt_class_code
 				</textElement>
 				<textFieldExpression><![CDATA[$F{grade_code}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#.00#;#.00#-">
+			<textField pattern="#.00#;#.00#-" isBlankWhenNull="true">
 				<reportElement x="150" y="1" width="49" height="11" uuid="620a1348-318a-4336-9eca-d4d2a1234296">
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -192,7 +192,7 @@ rmt_class_code
 				</textElement>
 				<textFieldExpression><![CDATA[$F{weight_percentage}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.00">
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="80" y="1" width="40" height="11" uuid="814e04ec-4f8f-4c9f-8cdb-c2da9656d625">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -213,7 +213,7 @@ rmt_class_code
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 			</line>
-			<textField pattern="#.00#;#.00#-   ">
+			<textField pattern="#.00#;#.00#-   " isBlankWhenNull="true">
 				<reportElement x="150" y="1" width="49" height="11" uuid="e09dc5b0-92a7-43d5-8c37-9430a596293e">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>

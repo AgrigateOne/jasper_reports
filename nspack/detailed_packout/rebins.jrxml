@@ -101,7 +101,7 @@ group by rmt_classes.rmt_class_code,rmt_classes.id,pr.cultivar_id ,pr.farm_id]]>
 		<band height="13" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<textField pattern="#.00#;#.00#-">
+			<textField pattern="#.00#;#.00#-" isBlankWhenNull="true">
 				<reportElement x="70" y="0" width="76" height="11" uuid="620a1348-318a-4336-9eca-d4d2a1234296">
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="local_mesure_unitx" value="pixel"/>
@@ -113,7 +113,7 @@ group by rmt_classes.rmt_class_code,rmt_classes.id,pr.cultivar_id ,pr.farm_id]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{rmt_class_code}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="0" y="0" width="50" height="11" uuid="814e04ec-4f8f-4c9f-8cdb-c2da9656d625">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -123,7 +123,7 @@ group by rmt_classes.rmt_class_code,rmt_classes.id,pr.cultivar_id ,pr.farm_id]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{rmt_class}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.00">
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="160" y="0" width="50" height="11" uuid="1b261a61-e9a7-46af-9292-05c3d9da2393">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
