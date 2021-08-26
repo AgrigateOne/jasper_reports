@@ -449,8 +449,7 @@ grade_code,std_size,inventory_code]]>
 		<variableExpression><![CDATA[$F{total_bin_weight}/$F{no_of_bins}]]></variableExpression>
 	</variable>
 	<variable name="total_percentage" class="java.math.BigDecimal" resetType="Group" resetGroup="grade_code" calculation="Sum">
-		<variableExpression><![CDATA[
-($P{use_packed_weight} ? ($F{nett_weight}/$F{total_bin_weight}) * 100 : ($F{derived_nett_weight}/$F{total_bin_weight}) * 100).setScale(2,RoundingMode.HALF_UP)]]></variableExpression>
+		<variableExpression><![CDATA[($P{use_packed_weight} ? ($F{nett_weight}/$F{total_bin_weight}) * 100 : ($F{derived_nett_weight}/$F{total_bin_weight}) * 100).setScale(2,RoundingMode.HALF_UP)]]></variableExpression>
 	</variable>
 	<group name="grade_code">
 		<groupExpression><![CDATA[$F{grade_code}]]></groupExpression>
@@ -640,7 +639,7 @@ grade_code,std_size,inventory_code]]>
 				<text><![CDATA[Actual Variety:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="334" y="173" width="130" height="13" uuid="0c537053-6c07-47cd-8413-86703a3f3fe3">
+				<reportElement x="334" y="173" width="146" height="13" uuid="0c537053-6c07-47cd-8413-86703a3f3fe3">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[$F{variety}]]></textFieldExpression>
@@ -1255,10 +1254,7 @@ grade_code,std_size,inventory_code]]>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textFieldExpression><![CDATA[
-($P{use_packed_weight} ? ($F{nett_weight}/$F{total_bin_weight}) * 100 : ($F{derived_nett_weight}/$F{total_bin_weight}) * 100).setScale(2,RoundingMode.HALF_UP)
-
-]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($P{use_packed_weight} ? ($F{nett_weight}/$F{total_bin_weight}) * 100 : ($F{derived_nett_weight}/$F{total_bin_weight}) * 100).setScale(2,RoundingMode.HALF_UP)]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="530" y="0" width="25" height="13" uuid="8ed5157a-aaa9-47c9-b846-25e84dce3c86">
