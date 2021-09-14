@@ -4,7 +4,6 @@
 	<property name="ireport.zoom" value="3.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Dunbrody_New_Framework"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
@@ -16,20 +15,61 @@
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="231"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="763"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="subgovt_inspection_sheet_id" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
 	</parameter>
 	<parameter name="paraminspecstatus" class="java.lang.String"/>
 	<queryString language="SQL">
-		<![CDATA[WITH plt_cnt AS(
-	select count(distinct pallet_number) as plt_qty,max(govt_inspection_sheet_id) as govt_inspection_sheet_id 
-	from vw_pallet_sequence_flat 
-   WHERE  govt_inspection_sheet_id= $P{subgovt_inspection_sheet_id}
+		<![CDATA[WITH scrapped_plt_cnt AS(
+select count(distinct pallet_number) as scrapped_plt_qty,max(govt_inspection_sheet_id) as govt_inspection_sheet_id 
+from vw_scrapped_pallet_sequence_flat 
+WHERE  govt_inspection_sheet_id= $P{subgovt_inspection_sheet_id}
+AND (  case when  $P{paraminspecstatus} ='passed' then govt_inspection_passed=true 
+       when       $P{paraminspecstatus} ='failed' then govt_inspection_passed=false end )
+),scrapped_plts AS(
+SELECT 
+p.last_govt_inspection_pallet_id,
+p.govt_inspection_sheet_id,
+p.commodity,
+p.marketing_variety,
+p.std_pack ,
+p.size_ref,
+p.grade,
+p.actual_count,
+sum(p.carton_quantity) as carton_quantity,
+max(scrapped_plt_cnt.scrapped_plt_qty) as scrapped_plt_qty,
+govt_inspection_passed,
+COALESCE(p.customer_variety, p.marketing_variety,'') as variety,
+count(distinct p.pallet_id) as each_plt_qty
+FROM vw_scrapped_pallet_sequence_flat p
+	join scrapped_plt_cnt on p.govt_inspection_sheet_id = scrapped_plt_cnt.govt_inspection_sheet_id
+    WHERE  p.govt_inspection_sheet_id= $P{subgovt_inspection_sheet_id}
     AND (  case when  $P{paraminspecstatus} ='passed' then govt_inspection_passed=true 
-                when  $P{paraminspecstatus} ='failed' then govt_inspection_passed=false end ))
-SELECT
- p.commodity,
+                when  $P{paraminspecstatus} ='failed' then govt_inspection_passed=false end )
+group by 
+p.govt_inspection_sheet_id,
+p.commodity,
  p.marketing_variety,
+p.size_ref,
+p.actual_count,
+p.std_pack ,
+p.grade,govt_inspection_passed,p.customer_variety,p.last_govt_inspection_pallet_id
+)
+,plt_cnt AS(
+select count(distinct pallet_number) as plt_qty,max(govt_inspection_sheet_id) as govt_inspection_sheet_id 
+from vw_pallet_sequence_flat 
+WHERE  govt_inspection_sheet_id= $P{subgovt_inspection_sheet_id}
+AND (  case when $P{paraminspecstatus} ='passed' then govt_inspection_passed=true 
+      when       $P{paraminspecstatus} ='failed' then govt_inspection_passed=false end )
+)
+,plts AS (
+	SELECT 
+p.last_govt_inspection_pallet_id,
+p.govt_inspection_sheet_id,
+p.commodity,
+p.marketing_variety,
 p.std_pack ,
 p.size_ref,
 p.grade,
@@ -39,18 +79,39 @@ max(plt_cnt.plt_qty) as plt_qty,
 govt_inspection_passed,
 COALESCE(p.customer_variety, p.marketing_variety,'') as variety,
 count(distinct p.pallet_id) as each_plt_qty
-FROM
-    public.vw_pallet_sequence_flat p
+FROM vw_pallet_sequence_flat p
 	join plt_cnt on p.govt_inspection_sheet_id = plt_cnt.govt_inspection_sheet_id
-WHERE  p.govt_inspection_sheet_id= $P{subgovt_inspection_sheet_id}
-  AND (  case when  $P{paraminspecstatus} ='passed' then govt_inspection_passed=true 
+    WHERE  p.govt_inspection_sheet_id= $P{subgovt_inspection_sheet_id}
+    AND (  case when  $P{paraminspecstatus} ='passed' then govt_inspection_passed=true 
                 when  $P{paraminspecstatus} ='failed' then govt_inspection_passed=false end )
-group by  p.commodity,
+group by 
+p.govt_inspection_sheet_id,
+p.commodity,
  p.marketing_variety,
 p.size_ref,
 p.actual_count,
 p.std_pack ,
-p.grade,govt_inspection_passed,p.customer_variety]]>
+p.grade,govt_inspection_passed,p.customer_variety,p.last_govt_inspection_pallet_id
+)
+SELECT
+distinct
+COALESCE(p.commodity,scrapped_plts.commodity) as commodity,
+COALESCE(p.marketing_variety,scrapped_plts.marketing_variety) as marketing_variety,
+COALESCE(p.std_pack ,scrapped_plts.std_pack) as std_pack,
+COALESCE(p.size_ref,scrapped_plts.size_ref) as size_ref,
+COALESCE(p.grade,scrapped_plts.grade) as grade,
+COALESCE(p.actual_count,scrapped_plts.actual_count) as actual_count,
+COALESCE(p.carton_quantity,scrapped_plts.carton_quantity) as carton_quantity,
+COALESCE(p.plt_qty,scrapped_plts.scrapped_plt_qty) as plt_qty,
+COALESCE(p.govt_inspection_passed,scrapped_plts.govt_inspection_passed) as  govt_inspection_passed,
+COALESCE(p.variety,scrapped_plts.variety) as variety,
+COALESCE(p.each_plt_qty,scrapped_plts.each_plt_qty) as each_plt_qty
+from govt_inspection_sheets
+LEFT JOIN govt_inspection_pallets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+LEFT JOIN plts p on govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
+LEFT JOIN scrapped_plts on govt_inspection_pallets.id =scrapped_plts.last_govt_inspection_pallet_id
+WHERE  govt_inspection_sheets.id= $P{subgovt_inspection_sheet_id}
+]]>
 	</queryString>
 	<field name="commodity" class="java.lang.String"/>
 	<field name="marketing_variety" class="java.lang.String"/>
@@ -75,7 +136,7 @@ p.grade,govt_inspection_passed,p.customer_variety]]>
 	<title>
 		<band height="30" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="6" width="110" height="20" uuid="5540cf67-45c7-4210-b9a0-39498f2ccbeb"/>
+				<reportElement x="0" y="6" width="144" height="20" uuid="5540cf67-45c7-4210-b9a0-39498f2ccbeb"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -155,28 +216,28 @@ p.grade,govt_inspection_passed,p.customer_variety]]>
 		<band height="12" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="0" y="0" width="48" height="11" uuid="bbc74be3-9650-43ff-9279-5351d102f771"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{commodity}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="48" y="0" width="48" height="11" uuid="42b6779a-1aed-4a5d-80d7-86903c188c14"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{variety}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="144" y="0" width="48" height="11" uuid="b4b41068-d50c-4edc-b706-6bb573b95427"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{grade}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="96" y="0" width="48" height="11" uuid="9e0b7d4a-6e69-4da7-b857-cb2921a6d4a2"/>
 				<textElement>
 					<font size="8"/>
@@ -199,14 +260,14 @@ p.grade,govt_inspection_passed,p.customer_variety]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{actual_count}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#0.##">
+			<textField pattern="#0.##" isBlankWhenNull="true">
 				<reportElement x="260" y="0" width="40" height="11" uuid="814e04ec-4f8f-4c9f-8cdb-c2da9656d625"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{carton_quantity}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#0.##">
+			<textField pattern="#0.##" isBlankWhenNull="true">
 				<reportElement x="300" y="0" width="40" height="11" uuid="8133eefe-a0ee-4140-aa66-57bd74ada831"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
