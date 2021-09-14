@@ -63,7 +63,7 @@ destination_regions.destination_region_name,
 coalesce(scrapped_pallet_number.carton_quantity,p.carton_quantity) as carton_quantity,
 case when p.gap_code is not null AND govt_inspection_sheets.created_at between p.gap_code_valid_from and p.gap_code_valid_until then 'global gap certified' else null end  gap_certification,
 ggn_validation.gap_code,
- case 	when not (govt_inspection_pallets.passed) then    p.pallet_id else null end fail_pallet_id,
+ case 	when not (govt_inspection_pallets.passed) then   govt_inspection_pallets.id  else null end fail_pallet_id,
 (SELECT pr.id
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) AS implementation_owner_party_role_id,
@@ -1187,7 +1187,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}
 			</subreport>
 			<textField evaluationTime="Report">
 				<reportElement x="322" y="183" width="82" height="13" uuid="e44d19c0-656f-4e54-aa9e-8767d601d467"/>
-				<textElement textAlignment="Right"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$V{fail_pallet_id1}]]></textFieldExpression>
 			</textField>
 			<staticText>
