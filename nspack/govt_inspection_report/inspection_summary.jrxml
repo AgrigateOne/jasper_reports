@@ -30,7 +30,7 @@ AND (  case when  $P{paraminspecstatus} ='passed' then govt_inspection_passed=tr
        when       $P{paraminspecstatus} ='failed' then govt_inspection_passed=false end )
 ),scrapped_plts AS(
 SELECT 
-p.last_govt_inspection_pallet_id,
+distinct
 p.govt_inspection_sheet_id,
 p.commodity,
 p.marketing_variety,
@@ -38,7 +38,7 @@ p.std_pack ,
 p.size_ref,
 p.grade,
 p.actual_count,
-sum(p.carton_quantity) as carton_quantity,
+sum(p.carton_quantity)  as carton_quantity,
 max(scrapped_plt_cnt.scrapped_plt_qty) as scrapped_plt_qty,
 govt_inspection_passed,
 COALESCE(p.customer_variety, p.marketing_variety,'') as variety,
@@ -55,7 +55,7 @@ p.commodity,
 p.size_ref,
 p.actual_count,
 p.std_pack ,
-p.grade,govt_inspection_passed,p.customer_variety,p.last_govt_inspection_pallet_id
+p.grade,govt_inspection_passed,p.customer_variety
 )
 ,plt_cnt AS(
 select count(distinct pallet_number) as plt_qty,max(govt_inspection_sheet_id) as govt_inspection_sheet_id 
@@ -66,7 +66,6 @@ AND (  case when $P{paraminspecstatus} ='passed' then govt_inspection_passed=tru
 )
 ,plts AS (
 	SELECT 
-p.last_govt_inspection_pallet_id,
 p.govt_inspection_sheet_id,
 p.commodity,
 p.marketing_variety,
@@ -91,7 +90,7 @@ p.commodity,
 p.size_ref,
 p.actual_count,
 p.std_pack ,
-p.grade,govt_inspection_passed,p.customer_variety,p.last_govt_inspection_pallet_id
+p.grade,govt_inspection_passed,p.customer_variety
 )
 SELECT
 distinct
@@ -108,9 +107,13 @@ COALESCE(p.variety,scrapped_plts.variety) as variety,
 COALESCE(p.each_plt_qty,scrapped_plts.each_plt_qty) as each_plt_qty
 from govt_inspection_sheets
 LEFT JOIN govt_inspection_pallets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
-LEFT JOIN plts p on govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
-LEFT JOIN scrapped_plts on govt_inspection_pallets.id =scrapped_plts.last_govt_inspection_pallet_id
-WHERE  govt_inspection_sheets.id= $P{subgovt_inspection_sheet_id}]]>
+LEFT JOIN plts p on govt_inspection_sheets.id = p.govt_inspection_sheet_id
+LEFT JOIN scrapped_plts on govt_inspection_sheets.id =scrapped_plts.govt_inspection_sheet_id
+WHERE  govt_inspection_sheets.id= $P{subgovt_inspection_sheet_id}
+AND      (  case when  $P{paraminspecstatus} ='passed' then COALESCE(p.govt_inspection_passed,scrapped_plts.govt_inspection_passed)=true 
+                when  $P{paraminspecstatus} ='failed' then COALESCE(p.govt_inspection_passed,scrapped_plts.govt_inspection_passed)=false end )
+                
+                ]]>
 	</queryString>
 	<field name="commodity" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="commodity"/>
