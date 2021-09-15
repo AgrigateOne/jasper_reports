@@ -160,7 +160,7 @@ AND      (  case when  $P{paraminspecstatus} ='passed' then COALESCE(p.govt_insp
 		<property name="com.jaspersoft.studio.field.label" value="each_plt_qty"/>
 	</field>
 	<variable name="plt_qty_1" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{plt_qty}]]></variableExpression>
+		<variableExpression><![CDATA[$F{each_plt_qty}]]></variableExpression>
 	</variable>
 	<variable name="ctn_qty1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
@@ -307,7 +307,7 @@ AND      (  case when  $P{paraminspecstatus} ='passed' then COALESCE(p.govt_insp
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{plt_qty}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{each_plt_qty}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -331,7 +331,7 @@ AND      (  case when  $P{paraminspecstatus} ='passed' then COALESCE(p.govt_insp
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{plt_qty}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{plt_qty_1}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>
