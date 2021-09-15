@@ -110,20 +110,52 @@ from govt_inspection_sheets
 LEFT JOIN govt_inspection_pallets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
 LEFT JOIN plts p on govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
 LEFT JOIN scrapped_plts on govt_inspection_pallets.id =scrapped_plts.last_govt_inspection_pallet_id
-WHERE  govt_inspection_sheets.id= $P{subgovt_inspection_sheet_id}
-]]>
+WHERE  govt_inspection_sheets.id= $P{subgovt_inspection_sheet_id}]]>
 	</queryString>
-	<field name="commodity" class="java.lang.String"/>
-	<field name="marketing_variety" class="java.lang.String"/>
-	<field name="size_ref" class="java.lang.String"/>
-	<field name="std_pack" class="java.lang.String"/>
-	<field name="grade" class="java.lang.String"/>
-	<field name="carton_quantity" class="java.lang.Long"/>
-	<field name="plt_qty" class="java.lang.Long"/>
-	<field name="actual_count" class="java.lang.Integer"/>
-	<field name="govt_inspection_passed" class="java.lang.Boolean"/>
-	<field name="variety" class="java.lang.String"/>
-	<field name="each_plt_qty" class="java.lang.Long"/>
+	<field name="commodity" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="commodity"/>
+		<property name="com.jaspersoft.studio.field.label" value="commodity"/>
+	</field>
+	<field name="marketing_variety" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="marketing_variety"/>
+		<property name="com.jaspersoft.studio.field.label" value="marketing_variety"/>
+	</field>
+	<field name="std_pack" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="std_pack"/>
+		<property name="com.jaspersoft.studio.field.label" value="std_pack"/>
+	</field>
+	<field name="size_ref" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="size_ref"/>
+		<property name="com.jaspersoft.studio.field.label" value="size_ref"/>
+	</field>
+	<field name="grade" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="grade"/>
+		<property name="com.jaspersoft.studio.field.label" value="grade"/>
+	</field>
+	<field name="actual_count" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="actual_count"/>
+		<property name="com.jaspersoft.studio.field.label" value="actual_count"/>
+	</field>
+	<field name="carton_quantity" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="carton_quantity"/>
+		<property name="com.jaspersoft.studio.field.label" value="carton_quantity"/>
+	</field>
+	<field name="plt_qty" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="plt_qty"/>
+		<property name="com.jaspersoft.studio.field.label" value="plt_qty"/>
+	</field>
+	<field name="govt_inspection_passed" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="govt_inspection_passed"/>
+		<property name="com.jaspersoft.studio.field.label" value="govt_inspection_passed"/>
+	</field>
+	<field name="variety" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="variety"/>
+		<property name="com.jaspersoft.studio.field.label" value="variety"/>
+	</field>
+	<field name="each_plt_qty" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="each_plt_qty"/>
+		<property name="com.jaspersoft.studio.field.label" value="each_plt_qty"/>
+	</field>
 	<variable name="plt_qty_1" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{plt_qty}]]></variableExpression>
 	</variable>
@@ -272,7 +304,7 @@ WHERE  govt_inspection_sheets.id= $P{subgovt_inspection_sheet_id}
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{each_plt_qty}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{plt_qty}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
