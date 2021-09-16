@@ -15,7 +15,7 @@
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="231"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="763"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SitrusRand Kirkwood Live"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="subgovt_inspection_sheet_id" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
@@ -24,7 +24,7 @@
 	<queryString language="SQL">
 		<![CDATA[WITH scrapped_plt_cnt AS(
 select count(distinct pallet_number) as scrapped_plt_qty,max(govt_inspection_sheet_id) as govt_inspection_sheet_id 
-from test_vw_scrapped_pallet_sequence_flat_test 
+from vw_scrapped_pallet_sequence_flat
 WHERE  govt_inspection_sheet_id= $P{subgovt_inspection_sheet_id}
 AND (  case when  $P{paraminspecstatus} ='passed' then govt_inspection_passed=true 
        when       $P{paraminspecstatus} ='failed' then govt_inspection_passed=false end )
@@ -43,7 +43,7 @@ max(scrapped_plt_cnt.scrapped_plt_qty) as scrapped_plt_qty,
 govt_inspection_passed,
 COALESCE(p.customer_variety, p.marketing_variety,'') as variety,
 count(distinct p.pallet_id) as each_plt_qty
-FROM test_vw_scrapped_pallet_sequence_flat_test  p
+FROM vw_scrapped_pallet_sequence_flat p
 	join scrapped_plt_cnt on p.govt_inspection_sheet_id = scrapped_plt_cnt.govt_inspection_sheet_id
     WHERE  p.govt_inspection_sheet_id= $P{subgovt_inspection_sheet_id}
     AND (  case when  $P{paraminspecstatus} ='passed' then govt_inspection_passed=true 
@@ -318,7 +318,7 @@ AND      (  case when  $P{paraminspecstatus} ='passed' then COALESCE(p.govt_insp
 				</reportElement>
 			</line>
 			<textField pattern="#0.##" isBlankWhenNull="true">
-				<reportElement x="260" y="1" width="40" height="14" uuid="473d10d1-a46b-4106-ad00-9d9b5077481e"/>
+				<reportElement x="257" y="1" width="43" height="14" uuid="473d10d1-a46b-4106-ad00-9d9b5077481e"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
