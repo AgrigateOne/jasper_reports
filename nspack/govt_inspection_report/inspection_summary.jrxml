@@ -15,7 +15,7 @@
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="231"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="763"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SitrusRand Kirkwood Live"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="subgovt_inspection_sheet_id" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
@@ -24,7 +24,7 @@
 	<queryString language="SQL">
 		<![CDATA[WITH scrapped_plt_cnt AS(
 select count(distinct pallet_number) as scrapped_plt_qty,max(govt_inspection_sheet_id) as govt_inspection_sheet_id 
-from vw_scrapped_pallet_sequence_flat 
+from test_vw_scrapped_pallet_sequence_flat_test 
 WHERE  govt_inspection_sheet_id= $P{subgovt_inspection_sheet_id}
 AND (  case when  $P{paraminspecstatus} ='passed' then govt_inspection_passed=true 
        when       $P{paraminspecstatus} ='failed' then govt_inspection_passed=false end )
@@ -43,7 +43,7 @@ max(scrapped_plt_cnt.scrapped_plt_qty) as scrapped_plt_qty,
 govt_inspection_passed,
 COALESCE(p.customer_variety, p.marketing_variety,'') as variety,
 count(distinct p.pallet_id) as each_plt_qty
-FROM vw_scrapped_pallet_sequence_flat p
+FROM test_vw_scrapped_pallet_sequence_flat_test  p
 	join scrapped_plt_cnt on p.govt_inspection_sheet_id = scrapped_plt_cnt.govt_inspection_sheet_id
     WHERE  p.govt_inspection_sheet_id= $P{subgovt_inspection_sheet_id}
     AND (  case when  $P{paraminspecstatus} ='passed' then govt_inspection_passed=true 
@@ -111,9 +111,7 @@ LEFT JOIN plts p on govt_inspection_sheets.id = p.govt_inspection_sheet_id
 LEFT JOIN scrapped_plts on govt_inspection_sheets.id =scrapped_plts.govt_inspection_sheet_id
 WHERE  govt_inspection_sheets.id= $P{subgovt_inspection_sheet_id}
 AND      (  case when  $P{paraminspecstatus} ='passed' then COALESCE(p.govt_inspection_passed,scrapped_plts.govt_inspection_passed)=true 
-                when  $P{paraminspecstatus} ='failed' then COALESCE(p.govt_inspection_passed,scrapped_plts.govt_inspection_passed)=false end )
-                
-                ]]>
+                when  $P{paraminspecstatus} ='failed' then COALESCE(p.govt_inspection_passed,scrapped_plts.govt_inspection_passed)=false end )]]>
 	</queryString>
 	<field name="commodity" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="commodity"/>
