@@ -169,7 +169,7 @@ AND      (  case when  $P{paraminspecstatus} ='passed' then COALESCE(p.govt_insp
 	<title>
 		<band height="30" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="6" width="144" height="20" uuid="5540cf67-45c7-4210-b9a0-39498f2ccbeb"/>
+				<reportElement x="0" y="6" width="160" height="20" uuid="5540cf67-45c7-4210-b9a0-39498f2ccbeb"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -318,7 +318,7 @@ AND      (  case when  $P{paraminspecstatus} ='passed' then COALESCE(p.govt_insp
 				</reportElement>
 			</line>
 			<textField pattern="#0.##" isBlankWhenNull="true">
-				<reportElement x="257" y="1" width="43" height="14" uuid="473d10d1-a46b-4106-ad00-9d9b5077481e"/>
+				<reportElement x="260" y="1" width="40" height="14" uuid="473d10d1-a46b-4106-ad00-9d9b5077481e"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
@@ -329,7 +329,7 @@ AND      (  case when  $P{paraminspecstatus} ='passed' then COALESCE(p.govt_insp
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{plt_qty_1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{plt_qty}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>
