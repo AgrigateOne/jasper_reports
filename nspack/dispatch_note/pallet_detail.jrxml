@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pallet_detail" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="57a0c595-5448-465f-8162-0e6517403bd3">
 	<property name="ireport.zoom" value="2.253944402704733"/>
 	<property name="ireport.x" value="0"/>
@@ -8,12 +8,14 @@
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44:80/jasperserver/services/repository"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SR_nspack.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
 	<parameter name="load_id" class="java.lang.Integer"/>
 	<parameter name="scartons_equals_pallets" class="java.lang.Boolean"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT
   pallets.pallet_number,
-  pallet_sequences.carton_quantity,
+  sum(pallet_sequences.carton_quantity)carton_quantity,
   fn_party_role_name(pallet_sequences.marketing_org_party_role_id) AS organization_code, -- ? OK?
   commodities.code AS commodity_code,
   coalesce(cvv.marketing_variety_code, marketing_varieties.marketing_variety_code) as variety_short_long,
@@ -25,20 +27,20 @@
   pallet_sequences.pick_ref AS encrypt_pick_ref,
   inventory_codes.inventory_code,
   target_market_groups.target_market_group_name AS  target_market_code,
-  CAST(pallet_sequences.carton_quantity AS numeric(5,1)) / CAST(pallets.carton_quantity AS numeric(5,1)) AS plt_qty,
+  sum(pallet_sequences.carton_quantity / pallets.carton_quantity)  AS plt_qty,
   pucs.puc_code AS puc,
   cargo_temperatures.temperature_code AS temp_tail,
   pallet_sequences.product_chars AS pt_product_characteristics,
   fruit_actual_counts_for_packs.actual_count_for_pack AS actual_size_count_code,
-  pallet_sequences.carton_quantity AS ctn_qty,
+  sum(pallet_sequences.carton_quantity) AS ctn_qty,
   pallet_sequences.sell_by_code,
   pallet_bases.pallet_base_code AS edi_out_pallet_base,
   organizations.long_description AS org_long,
   pallets.phc AS line_phc,
- CAST( pallets.nett_weight AS numeric(7,2))
+ sum( pallets.nett_weight)nett_weight
 ,pallets.gross_weight
 ,(select sum(gross_weight) from pallets p where p.load_id=pallets.load_id) load_gross_weight
-,pallet_sequences.nett_weight as seq_nett_weight,
+,sum(pallet_sequences.nett_weight) as seq_nett_weight,
 pallet_sequences.phyto_data
 FROM pallets
 JOIN pallet_sequences ON pallet_sequences.pallet_id = pallets.id
@@ -61,7 +63,29 @@ LEFT JOIN load_containers ON load_containers.load_id = pallets.load_id
 LEFT JOIN cargo_temperatures ON cargo_temperatures.id = load_containers.cargo_temperature_id
 LEFT JOIN pallet_formats ON pallet_formats.id = pallets.pallet_format_id
 LEFT JOIN pallet_bases ON pallet_bases.id = pallet_formats.pallet_base_id
-WHERE pallets.load_id = $P{load_id}
+ WHERE pallets.load_id = $P{load_id}
+group by pallets.pallet_number,pallets.load_id,
+  fn_party_role_name(pallet_sequences.marketing_org_party_role_id) , -- ? OK?
+  commodities.code ,
+  coalesce(cvv.marketing_variety_code, marketing_varieties.marketing_variety_code) ,
+  grades.grade_code,
+  fruit_size_references.size_reference,
+  basic_pack_codes.basic_pack_code,
+  marks.mark_code ,
+  pallet_sequences.pick_ref,
+  pallet_sequences.pick_ref ,
+  inventory_codes.inventory_code,
+  target_market_groups.target_market_group_name ,
+  pucs.puc_code ,
+  cargo_temperatures.temperature_code,
+  pallet_sequences.product_chars ,
+  fruit_actual_counts_for_packs.actual_count_for_pack ,
+  pallet_sequences.sell_by_code,
+  pallet_bases.pallet_base_code ,
+  organizations.long_description ,
+  pallets.phc ,
+pallets.gross_weight,
+pallet_sequences.phyto_data,  marketing_varieties.marketing_variety_code
 ORDER BY
   commodities.code,
   marketing_varieties.marketing_variety_code,
