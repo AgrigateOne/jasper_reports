@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_picklist" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_Dunbrody_NSPACK"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack_dev"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="113"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="879"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -102,7 +103,7 @@ vw_pallet_sequence_flat.basic_pack,
 vw_pallet_sequence_flat.size_ref,
 vw_pallet_sequence_flat.actual_count,
 vw_pallet_sequence_flat.grade,
-vw_pallet_sequence_flat.packed_tm_group,
+vw_pallet_sequence_flat.packed_tm_group,location,
 array_agg(public.vw_pallet_sequence_flat.pallet_id ) as pallet_ids
 from  public.vw_pallet_sequence_flat 
 join loads on  loads.id=vw_pallet_sequence_flat.load_id
@@ -181,75 +182,313 @@ vw_pallet_sequence_flat.size_ref,
 vw_pallet_sequence_flat.actual_count,
 vw_pallet_sequence_flat.grade,
 vw_pallet_sequence_flat.packed_tm_group,
-vw_pallet_sequence_flat.consignment_note_number]]>
+vw_pallet_sequence_flat.consignment_note_number,location]]>
 	</queryString>
-	<field name="customer_reference" class="java.lang.String"/>
-	<field name="booking_reference" class="java.lang.String"/>
-	<field name="exporter_certificate_code" class="java.lang.String"/>
-	<field name="memo_pad" class="java.lang.String"/>
-	<field name="voyage_id" class="java.lang.Integer"/>
-	<field name="vessel_id" class="java.lang.Integer"/>
-	<field name="voyage_description" class="java.lang.String"/>
-	<field name="voyage_code" class="java.lang.String"/>
-	<field name="voyage_number" class="java.lang.String"/>
-	<field name="vessel_code" class="java.lang.String"/>
-	<field name="owner_party_role_id" class="java.lang.Integer"/>
-	<field name="shipline_code" class="java.lang.String"/>
-	<field name="shipping_line_party_role_name" class="java.lang.String"/>
-	<field name="shipping_agent_party_role_name" class="java.lang.String"/>
-	<field name="shipper_party_role_name" class="java.lang.String"/>
-	<field name="export_party_role_name" class="java.lang.String"/>
-	<field name="vessel_owner_party_role_name" class="java.lang.String"/>
-	<field name="load_id" class="java.lang.Integer"/>
-	<field name="container_code" class="java.lang.String"/>
-	<field name="container_setting" class="java.lang.String"/>
-	<field name="container_vents" class="java.lang.String"/>
-	<field name="container_seal_code" class="java.lang.String"/>
-	<field name="container_temperature_rhine" class="java.lang.String"/>
-	<field name="container_temperature_rhine2" class="java.lang.String"/>
-	<field name="cto_consec_code" class="java.lang.String"/>
-	<field name="stack_type_code" class="java.lang.String"/>
-	<field name="internal_container_code" class="java.lang.String"/>
-	<field name="order_id" class="java.lang.Integer"/>
-	<field name="order_number" class="java.lang.String"/>
-	<field name="customer_memo_pad" class="java.lang.String"/>
-	<field name="customer_contact_name" class="java.lang.String"/>
-	<field name="customer_order_number" class="java.lang.String"/>
-	<field name="shipped_date_time" class="java.sql.Timestamp"/>
-	<field name="load_number" class="java.lang.Integer"/>
-	<field name="haulier_party_name" class="java.lang.String"/>
-	<field name="billing_party" class="java.lang.String"/>
-	<field name="consignee_party" class="java.lang.String"/>
-	<field name="customer_party" class="java.lang.String"/>
-	<field name="exporter_org_med" class="java.lang.String"/>
-	<field name="vehicle_number" class="java.lang.String"/>
-	<field name="vehicle_weight_out" class="java.math.BigDecimal"/>
-	<field name="remarks" class="java.lang.String"/>
-	<field name="file_name" class="java.lang.String"/>
-	<field name="port_name" class="java.lang.String"/>
-	<field name="depart_port_name" class="java.lang.String"/>
-	<field name="dispatch_consignment_note_number" class="java.lang.String"/>
-	<field name="depot_code" class="java.lang.String"/>
-	<field name="customer_party_id" class="java.lang.Integer"/>
-	<field name="customer_party_role_id" class="java.lang.Integer"/>
-	<field name="exporter_party_role_id" class="java.lang.Integer"/>
-	<field name="implementation_owner_party_role_id" class="java.lang.Integer"/>
-	<field name="driver_name" class="java.lang.String"/>
-	<field name="driver_cell_number" class="java.lang.String"/>
-	<field name="implementation_owner_name" class="java.lang.String"/>
-	<field name="commodity" class="java.lang.String"/>
-	<field name="marketing_variety" class="java.lang.String"/>
-	<field name="mark" class="java.lang.String"/>
-	<field name="basic_pack" class="java.lang.String"/>
-	<field name="size_ref" class="java.lang.String"/>
-	<field name="actual_count" class="java.lang.Integer"/>
-	<field name="grade" class="java.lang.String"/>
-	<field name="packed_tm_group" class="java.lang.String"/>
-	<field name="pallet_ids" class="java.sql.Array"/>
+	<field name="implementation_owner_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="implementation_owner_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="implementation_owner_name"/>
+	</field>
+	<field name="implementation_owner_party_role_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="implementation_owner_party_role_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="implementation_owner_party_role_id"/>
+	</field>
+	<field name="customer_reference" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="customer_reference"/>
+		<property name="com.jaspersoft.studio.field.label" value="customer_reference"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="loads"/>
+	</field>
+	<field name="booking_reference" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="booking_reference"/>
+		<property name="com.jaspersoft.studio.field.label" value="booking_reference"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_voyages"/>
+	</field>
+	<field name="exporter_certificate_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="exporter_certificate_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="exporter_certificate_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="loads"/>
+	</field>
+	<field name="memo_pad" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="memo_pad"/>
+		<property name="com.jaspersoft.studio.field.label" value="memo_pad"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_voyages"/>
+	</field>
+	<field name="voyage_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="voyage_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="voyage_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_voyages"/>
+	</field>
+	<field name="vessel_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="vessel_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="vessel_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="voyages"/>
+	</field>
+	<field name="voyage_description" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="voyage_description"/>
+		<property name="com.jaspersoft.studio.field.label" value="voyage_description"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="voyages"/>
+	</field>
+	<field name="voyage_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="voyage_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="voyage_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="voyages"/>
+	</field>
+	<field name="voyage_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="voyage_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="voyage_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="voyages"/>
+	</field>
+	<field name="vessel_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="vessel_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="vessel_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vessels"/>
+	</field>
+	<field name="owner_party_role_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="owner_party_role_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="owner_party_role_id"/>
+	</field>
+	<field name="shipline_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="shipline_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="shipline_code"/>
+	</field>
+	<field name="shipping_line_party_role_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="shipping_line_party_role_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="shipping_line_party_role_name"/>
+	</field>
+	<field name="shipping_agent_party_role_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="shipping_agent_party_role_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="shipping_agent_party_role_name"/>
+	</field>
+	<field name="shipper_party_role_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="shipper_party_role_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="shipper_party_role_name"/>
+	</field>
+	<field name="export_party_role_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="export_party_role_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="export_party_role_name"/>
+	</field>
+	<field name="vessel_owner_party_role_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="vessel_owner_party_role_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="vessel_owner_party_role_name"/>
+	</field>
+	<field name="load_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="load_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="load_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="loads"/>
+	</field>
+	<field name="container_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="container_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="container_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_containers"/>
+	</field>
+	<field name="container_setting" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="container_setting"/>
+		<property name="com.jaspersoft.studio.field.label" value="container_setting"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_containers"/>
+	</field>
+	<field name="container_vents" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="container_vents"/>
+		<property name="com.jaspersoft.studio.field.label" value="container_vents"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_containers"/>
+	</field>
+	<field name="container_seal_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="container_seal_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="container_seal_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_containers"/>
+	</field>
+	<field name="container_temperature_rhine" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="container_temperature_rhine"/>
+		<property name="com.jaspersoft.studio.field.label" value="container_temperature_rhine"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_containers"/>
+	</field>
+	<field name="container_temperature_rhine2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="container_temperature_rhine2"/>
+		<property name="com.jaspersoft.studio.field.label" value="container_temperature_rhine2"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_containers"/>
+	</field>
+	<field name="cto_consec_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cto_consec_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="cto_consec_code"/>
+	</field>
+	<field name="stack_type_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="stack_type_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="stack_type_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="container_stack_types"/>
+	</field>
+	<field name="internal_container_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="internal_container_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="internal_container_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_containers"/>
+	</field>
+	<field name="order_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="order_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="order_id"/>
+	</field>
+	<field name="order_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="order_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="order_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="loads"/>
+	</field>
+	<field name="customer_memo_pad" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="customer_memo_pad"/>
+		<property name="com.jaspersoft.studio.field.label" value="customer_memo_pad"/>
+	</field>
+	<field name="customer_contact_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="customer_contact_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="customer_contact_name"/>
+	</field>
+	<field name="customer_party_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="customer_party_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="customer_party_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="party_roles"/>
+	</field>
+	<field name="customer_order_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="customer_order_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="customer_order_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="loads"/>
+	</field>
+	<field name="shipped_date_time" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="shipped_date_time"/>
+		<property name="com.jaspersoft.studio.field.label" value="shipped_date_time"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="loads"/>
+	</field>
+	<field name="load_number" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="load_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="load_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="loads"/>
+	</field>
+	<field name="haulier_party_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="haulier_party_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="haulier_party_name"/>
+	</field>
+	<field name="depot_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="depot_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="depot_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="depots"/>
+	</field>
+	<field name="billing_party" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="billing_party"/>
+		<property name="com.jaspersoft.studio.field.label" value="billing_party"/>
+	</field>
+	<field name="consignee_party" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="consignee_party"/>
+		<property name="com.jaspersoft.studio.field.label" value="consignee_party"/>
+	</field>
+	<field name="customer_party" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="customer_party"/>
+		<property name="com.jaspersoft.studio.field.label" value="customer_party"/>
+	</field>
+	<field name="dispatch_consignment_note_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="dispatch_consignment_note_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="dispatch_consignment_note_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="exporter_org_med" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="exporter_org_med"/>
+		<property name="com.jaspersoft.studio.field.label" value="exporter_org_med"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="organizations"/>
+	</field>
+	<field name="vehicle_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="vehicle_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="vehicle_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_vehicles"/>
+	</field>
+	<field name="driver_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="driver_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="driver_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_vehicles"/>
+	</field>
+	<field name="driver_cell_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="driver_cell_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="driver_cell_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_vehicles"/>
+	</field>
+	<field name="vehicle_weight_out" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="vehicle_weight_out"/>
+		<property name="com.jaspersoft.studio.field.label" value="vehicle_weight_out"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_vehicles"/>
+	</field>
+	<field name="remarks" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="remarks"/>
+		<property name="com.jaspersoft.studio.field.label" value="remarks"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_voyages"/>
+	</field>
+	<field name="file_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="file_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="file_name"/>
+	</field>
+	<field name="port_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="port_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="port_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ports"/>
+	</field>
+	<field name="depart_port_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="depart_port_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="depart_port_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ports"/>
+	</field>
+	<field name="customer_party_role_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="customer_party_role_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="customer_party_role_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="loads"/>
+	</field>
+	<field name="exporter_party_role_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="exporter_party_role_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="exporter_party_role_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="loads"/>
+	</field>
+	<field name="commodity" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="commodity"/>
+		<property name="com.jaspersoft.studio.field.label" value="commodity"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="marketing_variety" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="marketing_variety"/>
+		<property name="com.jaspersoft.studio.field.label" value="marketing_variety"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="mark" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="mark"/>
+		<property name="com.jaspersoft.studio.field.label" value="mark"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="basic_pack" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="basic_pack"/>
+		<property name="com.jaspersoft.studio.field.label" value="basic_pack"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="size_ref" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="size_ref"/>
+		<property name="com.jaspersoft.studio.field.label" value="size_ref"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="actual_count" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="actual_count"/>
+		<property name="com.jaspersoft.studio.field.label" value="actual_count"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="grade" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="grade"/>
+		<property name="com.jaspersoft.studio.field.label" value="grade"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="packed_tm_group" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="packed_tm_group"/>
+		<property name="com.jaspersoft.studio.field.label" value="packed_tm_group"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="location" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="location"/>
+		<property name="com.jaspersoft.studio.field.label" value="location"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="pallet_ids" class="java.sql.Array">
+		<property name="com.jaspersoft.studio.field.name" value="pallet_ids"/>
+		<property name="com.jaspersoft.studio.field.label" value="pallet_ids"/>
+	</field>
 	<group name="load_id">
 		<groupExpression><![CDATA[$F{commodity}+$F{marketing_variety}+$F{grade}+$F{packed_tm_group}+$F{size_ref}+$F{actual_count}+$F{basic_pack}+$F{mark}]]></groupExpression>
 		<groupHeader>
-			<band height="23">
+			<band height="28">
 				<textField>
 					<reportElement x="1" y="3" width="47" height="20" uuid="13f599b1-da4e-43c8-8d91-707e9604c01e">
 						<property name="local_mesure_unitheight" value="pixel"/>
@@ -329,6 +568,16 @@ vw_pallet_sequence_flat.consignment_note_number]]>
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{packed_tm_group}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="467" y="3" width="78" height="20" uuid="4b4cac15-2fdf-4094-9bb7-88103dfd61ca">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{location}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
