@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_picklist" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
-	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack_dev"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_picklist" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="113"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="879"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -37,7 +44,7 @@
 	<parameter name="cartons_equals_pallets" class="java.lang.Boolean"/>
 	<parameter name="hide_dispatch_summary_gross" class="java.lang.Boolean"/>
 	<queryString language="SQL">
-		<![CDATA[SELECT distinct 
+		<![CDATA[SELECT  
 fn_party_role_name((SELECT pr.id
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1)) AS implementation_owner_name,
@@ -84,7 +91,6 @@ depots.depot_code,
 fn_party_role_name(loads.billing_client_party_role_id) AS billing_party,
 fn_party_role_name(loads.consignee_party_role_id) AS consignee_party,
 fn_party_role_name(loads.customer_party_role_id) AS customer_party,
-vw_pallet_sequence_flat.consignment_note_number AS dispatch_consignment_note_number, 
 exp_org.medium_description AS exporter_org_med,
 load_vehicles.vehicle_number,
 load_vehicles.driver_name,
@@ -96,15 +102,18 @@ pod_port.port_code AS port_name,
 pol_port.port_code AS depart_port_name,
 loads.customer_party_role_id,
 loads.exporter_party_role_id,
-vw_pallet_sequence_flat.commodity,
-vw_pallet_sequence_flat.marketing_variety,
-vw_pallet_sequence_flat.mark,
-vw_pallet_sequence_flat.basic_pack,
-vw_pallet_sequence_flat.size_ref,
-vw_pallet_sequence_flat.actual_count,
-vw_pallet_sequence_flat.grade,
-vw_pallet_sequence_flat.packed_tm_group,location,
-array_agg(public.vw_pallet_sequence_flat.pallet_id ) as pallet_ids
+vw_pallet_sequence_flat.consignment_note_number AS dispatch_consignment_note_number, 
+string_agg(distinct vw_pallet_sequence_flat.commodity,',')commodity,
+string_agg(distinct vw_pallet_sequence_flat.marketing_variety,',')marketing_variety,
+string_agg(distinct vw_pallet_sequence_flat.mark,',')mark,
+string_agg(distinct vw_pallet_sequence_flat.std_pack ,',')std_pack,
+string_agg(distinct vw_pallet_sequence_flat.size_ref,',')size_ref,
+string_agg(distinct vw_pallet_sequence_flat.actual_count::text,',')actual_count,
+string_agg(distinct vw_pallet_sequence_flat.grade,',')grade,
+string_agg(distinct vw_pallet_sequence_flat.packed_tm_group,',')packed_tm_group,
+vw_pallet_sequence_flat.pallet_number
+,vw_pallet_sequence_flat.location ,
+pallet_holdovers.buildup_remarks,holdover_quantity 
 from  public.vw_pallet_sequence_flat 
 join loads on  loads.id=vw_pallet_sequence_flat.load_id
 left join load_vehicles on load_vehicles.id=vw_pallet_sequence_flat.load_id
@@ -122,7 +131,7 @@ left join depots on depots.id=loads.depot_id
 LEFT JOIN party_roles cust_pr ON cust_pr.id = loads.customer_party_role_id
 LEFT JOIN party_roles exp_pr ON exp_pr.id = loads.exporter_party_role_id
 LEFT JOIN organizations exp_org ON exp_org.party_id = exp_pr.party_id
-
+left join pallet_holdovers on  vw_pallet_sequence_flat.pallet_id =pallet_holdovers.pallet_id 
 where vw_pallet_sequence_flat.load_id=  $P{load_id} 
 group by 
 fn_party_role_name((SELECT pr.id
@@ -174,15 +183,14 @@ pod_port.port_code ,
 pol_port.port_code ,
 loads.customer_party_role_id,
 loads.exporter_party_role_id,
-vw_pallet_sequence_flat.commodity,
-vw_pallet_sequence_flat.marketing_variety,
-vw_pallet_sequence_flat.mark,
-vw_pallet_sequence_flat.basic_pack,
-vw_pallet_sequence_flat.size_ref,
-vw_pallet_sequence_flat.actual_count,
-vw_pallet_sequence_flat.grade,
-vw_pallet_sequence_flat.packed_tm_group,
-vw_pallet_sequence_flat.consignment_note_number,location]]>
+vw_pallet_sequence_flat.consignment_note_number
+,vw_pallet_sequence_flat.pallet_number
+,vw_pallet_sequence_flat.location ,pallet_holdovers.buildup_remarks,holdover_quantity 
+
+
+
+
+]]>
 	</queryString>
 	<field name="implementation_owner_name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="implementation_owner_name"/>
@@ -377,11 +385,6 @@ vw_pallet_sequence_flat.consignment_note_number,location]]>
 		<property name="com.jaspersoft.studio.field.name" value="customer_party"/>
 		<property name="com.jaspersoft.studio.field.label" value="customer_party"/>
 	</field>
-	<field name="dispatch_consignment_note_number" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="dispatch_consignment_note_number"/>
-		<property name="com.jaspersoft.studio.field.label" value="dispatch_consignment_note_number"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
 	<field name="exporter_org_med" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="exporter_org_med"/>
 		<property name="com.jaspersoft.studio.field.label" value="exporter_org_med"/>
@@ -436,6 +439,11 @@ vw_pallet_sequence_flat.consignment_note_number,location]]>
 		<property name="com.jaspersoft.studio.field.label" value="exporter_party_role_id"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="loads"/>
 	</field>
+	<field name="dispatch_consignment_note_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="dispatch_consignment_note_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="dispatch_consignment_note_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
 	<field name="commodity" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="commodity"/>
 		<property name="com.jaspersoft.studio.field.label" value="commodity"/>
@@ -451,17 +459,16 @@ vw_pallet_sequence_flat.consignment_note_number,location]]>
 		<property name="com.jaspersoft.studio.field.label" value="mark"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
-	<field name="basic_pack" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="basic_pack"/>
-		<property name="com.jaspersoft.studio.field.label" value="basic_pack"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	<field name="std_pack" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="std_pack"/>
+		<property name="com.jaspersoft.studio.field.label" value="std_pack"/>
 	</field>
 	<field name="size_ref" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="size_ref"/>
 		<property name="com.jaspersoft.studio.field.label" value="size_ref"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
-	<field name="actual_count" class="java.lang.Integer">
+	<field name="actual_count" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="actual_count"/>
 		<property name="com.jaspersoft.studio.field.label" value="actual_count"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
@@ -476,142 +483,56 @@ vw_pallet_sequence_flat.consignment_note_number,location]]>
 		<property name="com.jaspersoft.studio.field.label" value="packed_tm_group"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
+	<field name="pallet_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pallet_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="pallet_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
 	<field name="location" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="location"/>
 		<property name="com.jaspersoft.studio.field.label" value="location"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
-	<field name="pallet_ids" class="java.sql.Array">
-		<property name="com.jaspersoft.studio.field.name" value="pallet_ids"/>
-		<property name="com.jaspersoft.studio.field.label" value="pallet_ids"/>
+	<field name="buildup_remarks" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="buildup_remarks"/>
+		<property name="com.jaspersoft.studio.field.label" value="buildup_remarks"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pallet_holdovers"/>
 	</field>
-	<group name="load_id">
-		<groupExpression><![CDATA[$F{commodity}+$F{marketing_variety}+$F{grade}+$F{packed_tm_group}+$F{size_ref}+$F{actual_count}+$F{basic_pack}+$F{mark}]]></groupExpression>
-		<groupHeader>
-			<band height="28">
-				<textField>
-					<reportElement x="1" y="3" width="47" height="20" uuid="13f599b1-da4e-43c8-8d91-707e9604c01e">
-						<property name="local_mesure_unitheight" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{commodity}]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement x="54" y="3" width="47" height="20" uuid="084070bc-8048-487f-88bf-ab64ead55129">
-						<property name="local_mesure_unitheight" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{marketing_variety}]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement x="120" y="3" width="47" height="20" uuid="9f715caf-1c75-49d2-868a-5c0d1d12adbe">
-						<property name="local_mesure_unitheight" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{grade}]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement x="185" y="3" width="47" height="20" uuid="468c9cb9-9b68-44e8-9a49-535fc3caca5b">
-						<property name="local_mesure_unitheight" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{mark}]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement x="240" y="3" width="47" height="20" uuid="ae2a39b6-30cf-46a3-8e11-f29ae11ad310">
-						<property name="local_mesure_unitheight" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{basic_pack}]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="307" y="3" width="47" height="20" uuid="4e8de1d6-4f03-496b-8d34-d79bbda046da">
-						<property name="local_mesure_unitheight" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{actual_count}]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement x="360" y="3" width="47" height="20" uuid="dc8eb549-a88b-4e24-af90-a4da48a610c5">
-						<property name="local_mesure_unitheight" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{size_ref}]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement x="420" y="3" width="47" height="20" uuid="1f42d759-2bdf-4161-8fdf-2f6370956b6f">
-						<property name="local_mesure_unitheight" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{packed_tm_group}]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement x="467" y="3" width="78" height="20" uuid="4b4cac15-2fdf-4094-9bb7-88103dfd61ca">
-						<property name="local_mesure_unitheight" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textElement>
-						<font size="8"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{location}]]></textFieldExpression>
-				</textField>
-			</band>
-		</groupHeader>
-	</group>
+	<field name="holdover_quantity" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="holdover_quantity"/>
+		<property name="com.jaspersoft.studio.field.label" value="holdover_quantity"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pallet_holdovers"/>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="141" splitType="Stretch">
+		<band height="123" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isBlankWhenNull="true">
-				<reportElement x="437" y="37" width="110" height="13" uuid="818fab86-ea78-49d9-b385-2373b50ca2d5"/>
+				<reportElement x="690" y="30" width="110" height="13" uuid="818fab86-ea78-49d9-b385-2373b50ca2d5"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{customer_order_number}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="7" y="88" width="65" height="13" uuid="868560cf-517d-468b-bd41-40754abb0adf"/>
+				<reportElement x="9" y="36" width="65" height="13" uuid="868560cf-517d-468b-bd41-40754abb0adf"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Customer:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="78" y="88" width="95" height="13" uuid="7e91ed80-cd9e-435a-8c22-d19a069aa97d"/>
+				<reportElement stretchType="RelativeToBandHeight" x="80" y="36" width="95" height="13" uuid="7e91ed80-cd9e-435a-8c22-d19a069aa97d"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{customer_contact_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="377" y="37" width="57" height="13" uuid="18b674ac-9548-456f-9a23-514b38546147"/>
+				<reportElement x="630" y="30" width="57" height="13" uuid="18b674ac-9548-456f-9a23-514b38546147"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
@@ -625,28 +546,28 @@ vw_pallet_sequence_flat.consignment_note_number,location]]>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="377" y="89" width="57" height="13" uuid="c6c0b016-68b1-45b3-a141-feaa0d8d2b9a"/>
+				<reportElement x="630" y="70" width="57" height="13" uuid="c6c0b016-68b1-45b3-a141-feaa0d8d2b9a"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Receive Depot:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="437" y="89" width="110" height="13" uuid="d118e85e-1bd9-4912-b064-f197c7bbf230"/>
+				<reportElement x="690" y="70" width="110" height="13" uuid="d118e85e-1bd9-4912-b064-f197c7bbf230"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{depot_code}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="481" y="0" width="56" height="20" uuid="8bbcd5a5-fda6-4c89-ae76-b193a2c8e55a"/>
+				<reportElement x="720" y="0" width="56" height="20" uuid="8bbcd5a5-fda6-4c89-ae76-b193a2c8e55a"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="537" y="0" width="18" height="20" uuid="c15c9a20-83c0-429b-8d74-54a1f9124af1"/>
+				<reportElement x="776" y="0" width="18" height="20" uuid="c15c9a20-83c0-429b-8d74-54a1f9124af1"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -670,63 +591,63 @@ vw_pallet_sequence_flat.consignment_note_number,location]]>
 				<reportElement x="0" y="29" width="555" height="1" uuid="6fc4d8bd-3226-452f-93a3-2c780ffafc6b"/>
 			</line>
 			<textField>
-				<reportElement x="244" y="63" width="112" height="13" uuid="6c251326-4a79-4e22-9edf-8fc2ecba228c"/>
+				<reportElement x="457" y="36" width="112" height="13" uuid="6c251326-4a79-4e22-9edf-8fc2ecba228c"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{exporter_org_med}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="187" y="63" width="54" height="13" uuid="23d17353-c12f-4d4e-acaa-6252be99dcc0"/>
+				<reportElement x="400" y="36" width="54" height="13" uuid="23d17353-c12f-4d4e-acaa-6252be99dcc0"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Exporter:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="244" y="76" width="112" height="13" uuid="876e2141-5775-4f50-b765-51133b66a41f"/>
+				<reportElement x="457" y="49" width="112" height="13" uuid="876e2141-5775-4f50-b765-51133b66a41f"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{billing_party}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="187" y="76" width="54" height="13" uuid="6631e84c-45d7-4596-b024-3816e182c6c5"/>
+				<reportElement x="400" y="49" width="54" height="13" uuid="6631e84c-45d7-4596-b024-3816e182c6c5"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Billing client:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="244" y="89" width="112" height="13" uuid="064eba7f-d4d2-49a6-99d3-3b507bc6a8c5"/>
+				<reportElement x="457" y="62" width="112" height="13" uuid="064eba7f-d4d2-49a6-99d3-3b507bc6a8c5"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{customer_party}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="187" y="89" width="54" height="13" uuid="493c7865-edba-47dd-8258-2de8db013414"/>
+				<reportElement x="400" y="62" width="54" height="13" uuid="493c7865-edba-47dd-8258-2de8db013414"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Customer:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="244" y="102" width="112" height="13" uuid="53cf85a2-1ba6-4545-b829-872fabd502f9"/>
+				<reportElement x="457" y="75" width="112" height="13" uuid="53cf85a2-1ba6-4545-b829-872fabd502f9"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{consignee_party}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="187" y="102" width="54" height="13" uuid="2b5d75cc-c43f-4bdf-8a8d-7b5102b47f78"/>
+				<reportElement x="400" y="75" width="54" height="13" uuid="2b5d75cc-c43f-4bdf-8a8d-7b5102b47f78"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Consignee:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="377" y="50" width="57" height="13" uuid="262a9f00-1104-4c48-9c1e-61b9655325de"/>
+				<reportElement x="630" y="43" width="57" height="13" uuid="262a9f00-1104-4c48-9c1e-61b9655325de"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -740,7 +661,7 @@ vw_pallet_sequence_flat.consignment_note_number,location]]>
 				<text><![CDATA[Voyage no:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="7" y="102" width="65" height="13" uuid="7ae644bb-1fd2-46ab-9775-1662e38447b7"/>
+				<reportElement x="9" y="50" width="65" height="13" uuid="7ae644bb-1fd2-46ab-9775-1662e38447b7"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -754,7 +675,7 @@ vw_pallet_sequence_flat.consignment_note_number,location]]>
 				<text><![CDATA[Export Party:]]></text>
 			</staticText>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement x="77" y="102" width="94" height="13" uuid="3cb19ece-6e6f-434b-b274-fb244fded92b"/>
+				<reportElement x="79" y="50" width="94" height="13" uuid="3cb19ece-6e6f-434b-b274-fb244fded92b"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -768,28 +689,28 @@ vw_pallet_sequence_flat.consignment_note_number,location]]>
 				<textFieldExpression><![CDATA[$F{export_party_role_name}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="77" y="115" width="94" height="13" uuid="ea97e593-8c15-4fb2-b6f8-2cdcaf309a2b"/>
+				<reportElement x="79" y="63" width="94" height="13" uuid="ea97e593-8c15-4fb2-b6f8-2cdcaf309a2b"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{booking_reference}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="7" y="115" width="65" height="13" uuid="41c8e148-71e3-4fde-b3c9-742ee35c6366"/>
+				<reportElement x="9" y="63" width="65" height="13" uuid="41c8e148-71e3-4fde-b3c9-742ee35c6366"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Booking Ref:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="7" y="50" width="65" height="13" uuid="89f5f6a2-25a9-479c-9dcc-f1fc9ab6e205"/>
+				<reportElement x="184" y="69" width="65" height="13" uuid="89f5f6a2-25a9-479c-9dcc-f1fc9ab6e205"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Vessel:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="77" y="50" width="95" height="13" uuid="7920f6dc-cc4d-4466-b017-43eedfcce149"/>
+				<reportElement x="254" y="69" width="95" height="13" uuid="7920f6dc-cc4d-4466-b017-43eedfcce149"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -803,40 +724,33 @@ vw_pallet_sequence_flat.consignment_note_number,location]]>
 				<textFieldExpression><![CDATA[$F{voyage_number}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="437" y="50" width="110" height="13" uuid="d0b00771-5207-4511-8bce-1ab00390d74a"/>
+				<reportElement x="690" y="43" width="110" height="13" uuid="d0b00771-5207-4511-8bce-1ab00390d74a"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{port_name}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="437" y="76" width="110" height="13" uuid="6c87201f-6f5c-49c6-9685-34608d98a3dc"/>
+				<reportElement x="690" y="57" width="110" height="13" uuid="6c87201f-6f5c-49c6-9685-34608d98a3dc"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{depart_port_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="377" y="76" width="57" height="13" uuid="84360773-537c-4cfa-bb25-65f121e3b139"/>
+				<reportElement x="630" y="57" width="57" height="13" uuid="84360773-537c-4cfa-bb25-65f121e3b139"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Depart Port:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="7" y="128" width="65" height="13" uuid="c23827b9-96b1-4858-8fb3-b68bc82cdf3d"/>
+				<reportElement x="7" y="88" width="793" height="31" uuid="c23827b9-96b1-4858-8fb3-b68bc82cdf3d"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Remark:]]></text>
 			</staticText>
-			<textField isBlankWhenNull="true">
-				<reportElement x="77" y="128" width="470" height="13" uuid="4e33796b-7c53-4ccf-b8b8-5449d200faba"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{remarks}]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement x="112" y="13" width="323" height="13" uuid="f2482e2a-5b68-4d3f-94e3-675a0b89e72d">
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
@@ -965,158 +879,112 @@ vw_pallet_sequence_flat.consignment_note_number,location]]>
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="20">
-			<subreport>
-				<reportElement x="0" y="0" width="555" height="20" uuid="82b8387d-eb56-4712-ab17-be1fcf935d53"/>
-				<subreportParameter name="paramcommodity">
-					<subreportParameterExpression><![CDATA[$F{commodity}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="paramgrade">
-					<subreportParameterExpression><![CDATA[$F{grade}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="parammarketing_variety">
-					<subreportParameterExpression><![CDATA[$F{marketing_variety}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="paramsize_ref">
-					<subreportParameterExpression><![CDATA[$F{size_ref}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="parambasic_pack">
-					<subreportParameterExpression><![CDATA[$F{basic_pack}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="parampacked_tm_group">
-					<subreportParameterExpression><![CDATA[$F{packed_tm_group}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="parammark">
-					<subreportParameterExpression><![CDATA[$F{mark}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="paramload_id">
-					<subreportParameterExpression><![CDATA[$F{load_id}]]></subreportParameterExpression>
-				</subreportParameter>
-				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["pallet_pickslip_detail.jasper"]]></subreportExpression>
-			</subreport>
+		<band height="16">
+			<textField>
+				<reportElement x="1" y="2" width="47" height="12" uuid="13f599b1-da4e-43c8-8d91-707e9604c01e">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{commodity}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="54" y="2" width="47" height="12" uuid="084070bc-8048-487f-88bf-ab64ead55129">
+					<property name="local_mesure_unitheight" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{marketing_variety}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="2" width="47" height="12" uuid="9f715caf-1c75-49d2-868a-5c0d1d12adbe">
+					<property name="local_mesure_unitheight" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{grade}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="185" y="2" width="47" height="12" uuid="468c9cb9-9b68-44e8-9a49-535fc3caca5b">
+					<property name="local_mesure_unitheight" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{mark}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="240" y="2" width="47" height="12" uuid="ae2a39b6-30cf-46a3-8e11-f29ae11ad310">
+					<property name="local_mesure_unitheight" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{std_pack}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="307" y="2" width="47" height="12" uuid="4e8de1d6-4f03-496b-8d34-d79bbda046da">
+					<property name="local_mesure_unitheight" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{actual_count}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="360" y="2" width="47" height="12" uuid="dc8eb549-a88b-4e24-af90-a4da48a610c5">
+					<property name="local_mesure_unitheight" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{size_ref}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="420" y="2" width="47" height="12" uuid="1f42d759-2bdf-4161-8fdf-2f6370956b6f">
+					<property name="local_mesure_unitheight" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{packed_tm_group}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="470" y="2" width="100" height="12" uuid="c93324a8-4605-419b-931b-9c28805a4b76">
+					<property name="local_mesure_unitheight" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{location}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="580" y="2" width="40" height="12" uuid="f46df3e7-647c-4666-9e1c-e2761b2fe33f">
+					<property name="local_mesure_unitheight" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{holdover_quantity}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="630" y="2" width="160" height="12" uuid="c0132064-e2e0-49a4-addd-48a3cefe1eba">
+					<property name="local_mesure_unitheight" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{buildup_remarks}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<columnFooter>
 		<band splitType="Stretch"/>
 	</columnFooter>
-	<pageFooter>
-		<band height="74">
-			<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
-			<textField pattern="d MMM yyyy h:MM a" isBlankWhenNull="true">
-				<reportElement x="267" y="0" width="165" height="13" uuid="f61083f7-321d-4725-a6d6-feebc27c95ec"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{shipped_date_time}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="169" y="0" width="98" height="13" uuid="177c6f13-4a20-463d-b8f4-e63eae6bd8cb"/>
-				<textElement>
-					<font size="8" isBold="false" isItalic="false"/>
-				</textElement>
-				<text><![CDATA[Shipped  Date Time:]]></text>
-			</staticText>
-			<rectangle>
-				<reportElement x="278" y="14" width="139" height="24" uuid="3d244db3-0b05-444b-b422-10fe70011a1b">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-			</rectangle>
-			<rectangle>
-				<reportElement x="416" y="14" width="139" height="24" uuid="b2d9612d-cef1-4aec-b7e9-e0e8534328e7">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-			</rectangle>
-			<staticText>
-				<reportElement x="286" y="14" width="100" height="20" uuid="fc4a01fc-dfd8-44d3-a059-85792492e284"/>
-				<textElement>
-					<font isItalic="false"/>
-				</textElement>
-				<text><![CDATA[Driver]]></text>
-			</staticText>
-			<rectangle>
-				<reportElement x="416" y="38" width="139" height="20" uuid="0fe0038b-4ea0-47d9-9951-93066e70c876">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-			</rectangle>
-			<rectangle>
-				<reportElement x="278" y="38" width="138" height="20" uuid="86d37362-89cd-49f4-85f2-a745bd71cec6">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-			</rectangle>
-			<rectangle>
-				<reportElement x="139" y="14" width="139" height="24" uuid="ceeb3340-4cb0-4ad5-ad94-48c26a558adc">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-			</rectangle>
-			<rectangle>
-				<reportElement x="0" y="14" width="139" height="24" uuid="ee44f49e-e9b4-458b-b38a-3edbb02158dc">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-			</rectangle>
-			<rectangle>
-				<reportElement x="0" y="38" width="139" height="36" uuid="a9debc5f-7eb7-43c4-9d3f-e92c0d176e6d">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-			</rectangle>
-			<staticText>
-				<reportElement x="10" y="39" width="100" height="22" uuid="cced2150-54ce-4eb0-b753-c6af371e640f"/>
-				<text><![CDATA[Signature]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="10" y="17" width="100" height="16" uuid="d44296d7-7c8f-4112-a49f-4ddaad382224"/>
-				<text><![CDATA[Approved by]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="286" y="39" width="97" height="12" uuid="e068d00a-b8fb-4db1-85c2-f76f833b17dd"/>
-				<text><![CDATA[Signature]]></text>
-			</staticText>
-			<textField isBlankWhenNull="true">
-				<reportElement x="420" y="17" width="127" height="17" uuid="578e4fc7-ab66-48f8-863a-3752542e0a23"/>
-				<textFieldExpression><![CDATA[$F{driver_name}]]></textFieldExpression>
-			</textField>
-			<rectangle>
-				<reportElement x="416" y="58" width="139" height="16" uuid="e7b9edda-7ed6-4ac7-ae11-6d823b3dc68e">
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-			</rectangle>
-			<textField isBlankWhenNull="true">
-				<reportElement x="420" y="60" width="131" height="12" uuid="707379c7-0edb-476f-ad4a-b0a0f0fa4b9b">
-					<property name="local_mesure_unity" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<textFieldExpression><![CDATA[$F{driver_cell_number}]]></textFieldExpression>
-			</textField>
-			<rectangle>
-				<reportElement x="278" y="58" width="138" height="16" uuid="59b1f77d-a684-46ff-8534-f4e8f270c4db">
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-			</rectangle>
-			<rectangle>
-				<reportElement x="139" y="38" width="139" height="36" uuid="a5cb5d8b-a83a-4f5e-b7cc-adf700b893bd">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-			</rectangle>
-			<staticText>
-				<reportElement x="286" y="60" width="108" height="13" uuid="e3b61d26-6671-40b3-8fbe-88075fb44b29"/>
-				<text><![CDATA[Driver cell]]></text>
-			</staticText>
-		</band>
-	</pageFooter>
 	<summary>
 		<band splitType="Stretch"/>
 	</summary>
