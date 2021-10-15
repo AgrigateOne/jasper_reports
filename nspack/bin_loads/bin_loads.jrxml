@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="bin_loads" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SR_nspack.xml"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -78,14 +78,16 @@ FROM
     bin_loads
     JOIN bin_load_products ON bin_load_products.bin_load_id = bin_loads.id
          left join rmt_bins on rmt_bins.bin_load_product_id=bin_load_products.id 
-    LEFT JOIN cultivar_groups ON cultivar_groups.id = bin_load_products.cultivar_group_id
-    LEFT JOIN cultivars ON cultivars.id = bin_load_products.cultivar_id
+  LEFT JOIN cultivars ON cultivars.id = rmt_bins.cultivar_id
+     LEFT JOIN cultivar_groups ON cultivar_groups.id = COALESCE(rmt_bins.cultivar_group_id, cultivars.cultivar_group_id)
+     LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
+  
     LEFT JOIN farms ON farms.id = bin_load_products.farm_id
     LEFT JOIN farm_groups ON farm_groups.id = farms.farm_group_id
     LEFT JOIN orchards ON orchards.id = bin_load_products.orchard_id
     LEFT JOIN pucs ON pucs.id = bin_load_products.puc_id
     LEFT JOIN rmt_classes ON rmt_classes.id = bin_load_products.rmt_class_id
-    LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
+
     LEFT JOIN rmt_container_material_types ON rmt_container_material_types.id = bin_load_products.rmt_container_material_type_id
 	left join depots on dest_depot_id = depots.id
  where bin_loads.id = $P{bin_load_id}
@@ -106,28 +108,110 @@ GROUP by depots.description,bin_loads.transporter_party_role_id,
     bin_load_products.bin_load_id,
     bin_load_products.qty_bins]]>
 	</queryString>
-	<field name="implementation_owner_party_role_id" class="java.lang.Integer"/>
-	<field name="implementation_owner_name" class="java.lang.String"/>
-	<field name="shipped" class="java.lang.Boolean"/>
-	<field name="cultivar_group_code" class="java.lang.String"/>
-	<field name="cultivar_name" class="java.lang.String"/>
-	<field name="cultivar_description" class="java.lang.String"/>
-	<field name="farm_group_code" class="java.lang.String"/>
-	<field name="farm_code" class="java.lang.String"/>
-	<field name="orchard_code" class="java.lang.String"/>
-	<field name="puc_code" class="java.lang.String"/>
-	<field name="rmt_class_code" class="java.lang.String"/>
-	<field name="bin_load_id" class="java.lang.Integer"/>
-	<field name="qty_bins" class="java.lang.Integer"/>
-	<field name="shipped_at" class="java.sql.Timestamp"/>
-	<field name="container_material_type_code" class="java.lang.String"/>
-	<field name="commodity" class="java.lang.String"/>
-	<field name="display_subreport" class="java.lang.Boolean"/>
-	<field name="customer" class="java.lang.String"/>
-	<field name="transporter" class="java.lang.String"/>
-	<field name="depot" class="java.lang.String"/>
-	<field name="customer_party_role_id" class="java.lang.Integer"/>
-	<field name="rmt_bin_qty" class="java.lang.Long"/>
+	<field name="shipped_at" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="shipped_at"/>
+		<property name="com.jaspersoft.studio.field.label" value="shipped_at"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="bin_loads"/>
+	</field>
+	<field name="implementation_owner_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="implementation_owner_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="implementation_owner_name"/>
+	</field>
+	<field name="implementation_owner_party_role_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="implementation_owner_party_role_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="implementation_owner_party_role_id"/>
+	</field>
+	<field name="shipped" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="shipped"/>
+		<property name="com.jaspersoft.studio.field.label" value="shipped"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="bin_loads"/>
+	</field>
+	<field name="display_subreport" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="display_subreport"/>
+		<property name="com.jaspersoft.studio.field.label" value="display_subreport"/>
+	</field>
+	<field name="cultivar_group_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cultivar_group_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="cultivar_group_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cultivar_groups"/>
+	</field>
+	<field name="cultivar_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cultivar_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="cultivar_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cultivars"/>
+	</field>
+	<field name="cultivar_description" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cultivar_description"/>
+		<property name="com.jaspersoft.studio.field.label" value="cultivar_description"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cultivars"/>
+	</field>
+	<field name="farm_group_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="farm_group_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="farm_group_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="farm_groups"/>
+	</field>
+	<field name="farm_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="farm_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="farm_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="farms"/>
+	</field>
+	<field name="orchard_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="orchard_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="orchard_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="orchards"/>
+	</field>
+	<field name="puc_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="puc_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="puc_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pucs"/>
+	</field>
+	<field name="rmt_class_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="rmt_class_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="rmt_class_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="rmt_classes"/>
+	</field>
+	<field name="bin_load_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="bin_load_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="bin_load_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="bin_load_products"/>
+	</field>
+	<field name="container_material_type_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="container_material_type_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="container_material_type_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="rmt_container_material_types"/>
+	</field>
+	<field name="qty_bins" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="qty_bins"/>
+		<property name="com.jaspersoft.studio.field.label" value="qty_bins"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="bin_load_products"/>
+	</field>
+	<field name="commodity" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="commodity"/>
+		<property name="com.jaspersoft.studio.field.label" value="commodity"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="commodities"/>
+	</field>
+	<field name="customer" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="customer"/>
+		<property name="com.jaspersoft.studio.field.label" value="customer"/>
+	</field>
+	<field name="transporter" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="transporter"/>
+		<property name="com.jaspersoft.studio.field.label" value="transporter"/>
+	</field>
+	<field name="depot" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="depot"/>
+		<property name="com.jaspersoft.studio.field.label" value="depot"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="depots"/>
+	</field>
+	<field name="customer_party_role_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="customer_party_role_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="customer_party_role_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="bin_loads"/>
+	</field>
+	<field name="rmt_bin_qty" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="rmt_bin_qty"/>
+		<property name="com.jaspersoft.studio.field.label" value="rmt_bin_qty"/>
+	</field>
 	<variable name="rmt_bin_qty1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{rmt_bin_qty}]]></variableExpression>
 	</variable>
