@@ -2,5 +2,6 @@
 *.zip
 *.svn
 log/*
+deploystats.sh
 # Temporary:
 /pack_materials/
