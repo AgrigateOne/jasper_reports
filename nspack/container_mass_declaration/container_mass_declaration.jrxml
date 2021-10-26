@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.3.final using JasperReports Library version 6.0.0  -->
-<!-- 2020-03-22T17:46:36 -->
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="container_mass_declaration" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="073de135-c25b-477c-8344-6e93c431bb70">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NSPACK"/>
 	<parameter name="load_container_id" class="java.lang.Integer"/>
 	<parameter name="user_name" class="java.lang.String"/>
+	<parameter name="pallets_weighed" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT 
 fn_party_role_name((SELECT pr.id
@@ -17,10 +19,20 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) AS implementation_owner_party_role_id
 ,
-  public.load_containers.container_code
-  , cast(public.load_containers.verified_gross_weight::int as text)||' KG' verified_gross_mass
-  ,  public.load_containers.verified_gross_weight_date as verified_gross_mass_date 
- ,cast((coalesce(load_containers.verified_gross_weight,0) - coalesce(load_containers.tare_weight,0))::int as text) ||' KG' as actual_payload
+  public.load_containers.container_code,
+
+     CASE WHEN $P{pallets_weighed}  then   cast(public.load_containers.verified_gross_weight::int as text)||' KG'
+	else	cast((coalesce(load_containers.actual_payload,0) + coalesce(load_containers.tare_weight,0))::int as text) ||' KG'
+   end verified_gross_mass,
+
+   CASE WHEN $P{pallets_weighed}  then   cast((coalesce(load_containers.verified_gross_weight,0) - coalesce(load_containers.tare_weight,0))::int as text) ||' KG'
+   else load_containers.actual_payload ||' KG'
+   end actual_payload,
+
+
+    public.load_containers.verified_gross_weight_date as verified_gross_mass_date
+
+
   ,cast(public.load_containers.max_payload::int as text)||' KG' max_payload
   ,cast(public.load_containers.tare_weight::int as text)||' KG' tare_weight
   ,cast(public.load_containers.max_gross_weight::int as text)||' KG' max_gross_mass
