@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="bin_loads" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Kromco"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -75,11 +75,11 @@
     bin_loads.customer_party_role_id,
     count(rmt_bins.id) as rmt_bin_qty
 FROM
-    bin_loads
+        bin_loads
     JOIN bin_load_products ON bin_load_products.bin_load_id = bin_loads.id
-         left join rmt_bins on rmt_bins.bin_load_product_id=bin_load_products.id 
-  LEFT JOIN cultivars ON cultivars.id = rmt_bins.cultivar_id
-     LEFT JOIN cultivar_groups ON cultivar_groups.id = COALESCE(rmt_bins.cultivar_group_id, cultivars.cultivar_group_id)
+	 LEFT JOIN rmt_bins on rmt_bins.bin_load_product_id=bin_load_products.id 
+    LEFT JOIN cultivars ON cultivars.id = bin_load_products.cultivar_id
+     LEFT JOIN cultivar_groups ON cultivar_groups.id = COALESCE(bin_load_products.cultivar_group_id, cultivars.cultivar_group_id)
      LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
   
     LEFT JOIN farms ON farms.id = bin_load_products.farm_id
@@ -89,7 +89,7 @@ FROM
     LEFT JOIN rmt_classes ON rmt_classes.id = bin_load_products.rmt_class_id
 
     LEFT JOIN rmt_container_material_types ON rmt_container_material_types.id = bin_load_products.rmt_container_material_type_id
-	left join depots on dest_depot_id = depots.id
+	LEFT JOIN depots on dest_depot_id = depots.id
  where bin_loads.id = $P{bin_load_id}
 GROUP by depots.description,bin_loads.transporter_party_role_id,
     bin_loads.customer_party_role_id,
@@ -232,6 +232,36 @@ GROUP by depots.description,bin_loads.transporter_party_role_id,
 			</band>
 		</groupHeader>
 	</group>
+	<group name="bin_load_id 2">
+		<groupExpression><![CDATA[$F{bin_load_id}]]></groupExpression>
+		<groupHeader>
+			<band height="15">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<printWhenExpression><![CDATA[$F{shipped}]]></printWhenExpression>
+				<subreport>
+					<reportElement isPrintRepeatedValues="false" x="110" y="5" width="200" height="8" uuid="7bb8912f-7d1c-4433-8013-e4d215c12748">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<printWhenExpression><![CDATA[$F{shipped}]]></printWhenExpression>
+					</reportElement>
+					<subreportParameter name="bin_load_id">
+						<subreportParameterExpression><![CDATA[$P{bin_load_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["bins_summary.jasper"]]></subreportExpression>
+				</subreport>
+				<staticText>
+					<reportElement x="0" y="0" width="60" height="10" uuid="3653b2ec-9ba3-456c-85a6-a09fbc1ac263">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement>
+						<font size="8"/>
+					</textElement>
+					<text><![CDATA[Summary:]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -350,20 +380,6 @@ GROUP by depots.description,bin_loads.transporter_party_role_id,
 				</textElement>
 				<text><![CDATA[NS Pack]]></text>
 			</staticText>
-			<subreport>
-				<reportElement x="5" y="27" width="100" height="95" uuid="260d3991-0655-4307-b6ee-97722454fc83">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<subreportParameter name="party_role_id">
-					<subreportParameterExpression><![CDATA[$F{implementation_owner_party_role_id}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="address_type">
-					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
-				</subreportParameter>
-				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
-			</subreport>
 			<componentElement>
 				<reportElement x="330" y="-6" width="175" height="26" uuid="4a864b43-2183-4d30-8a03-63772df42db7">
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -377,20 +393,6 @@ GROUP by depots.description,bin_loads.transporter_party_role_id,
 					<jr:codeExpression><![CDATA[$F{bin_load_id}]]></jr:codeExpression>
 				</jr:barbecue>
 			</componentElement>
-			<subreport>
-				<reportElement x="230" y="27" width="100" height="95" uuid="8aa248d9-044f-4bff-b07f-035007ce5912">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<subreportParameter name="party_role_id">
-					<subreportParameterExpression><![CDATA[$F{customer_party_role_id}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="address_type">
-					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
-				</subreportParameter>
-				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
-			</subreport>
 			<staticText>
 				<reportElement x="112" y="13" width="323" height="13" uuid="359feca1-7622-4585-8aca-4105271d7040">
 					<printWhenExpression><![CDATA[$F{display_subreport}]]></printWhenExpression>
@@ -473,6 +475,34 @@ GROUP by depots.description,bin_loads.transporter_party_role_id,
 				</textElement>
 				<textFieldExpression><![CDATA[$V{rmt_bin_qty1}]]></textFieldExpression>
 			</textField>
+			<subreport>
+				<reportElement x="5" y="27" width="100" height="95" uuid="e087c1c3-8810-4ba4-8be9-d510a23e3f4b">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="party_role_id">
+					<subreportParameterExpression><![CDATA[$F{implementation_owner_party_role_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="address_type">
+					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="230" y="27" width="100" height="95" uuid="f6878fa8-9f5d-4a9e-8cbe-079d15354afd">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="party_role_id">
+					<subreportParameterExpression><![CDATA[$F{customer_party_role_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="address_type">
+					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</title>
 	<pageHeader>
