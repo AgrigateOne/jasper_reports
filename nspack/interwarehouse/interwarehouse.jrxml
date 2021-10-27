@@ -418,7 +418,7 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<text><![CDATA[Gvt Insp]]></text>
+				<text><![CDATA[Passed]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
