@@ -774,14 +774,14 @@ Address:]]></text>
 						<text><![CDATA[Packhouse Person's Contact Details:]]></text>
 					</staticText>
 					<textField isBlankWhenNull="true">
-						<reportElement x="97" y="231" width="90" height="12" uuid="41aa5ed0-69a4-4074-a4b2-2a3b12d6c36b">
+						<reportElement x="97" y="231" width="105" height="12" uuid="41aa5ed0-69a4-4074-a4b2-2a3b12d6c36b">
 							<property name="net.sf.jasperreports.text.truncate.at.char" value="true"/>
 							<property name="local_mesure_unitx" value="pixel"/>
 							<property name="local_mesure_unity" value="pixel"/>
-							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<property name="com.jaspersoft.studio.unit.y" value="px"/>
 							<property name="com.jaspersoft.studio.unit.x" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						</reportElement>
 						<textElement verticalAlignment="Bottom">
 							<font size="10"/>
@@ -789,11 +789,11 @@ Address:]]></text>
 						<textFieldExpression><![CDATA[$F{magisterial_district}]]></textFieldExpression>
 					</textField>
 					<textField isBlankWhenNull="true">
-						<reportElement x="97" y="258" width="100" height="20" uuid="00888feb-1518-4a64-9dc0-cd6592aae12e">
+						<reportElement x="97" y="258" width="105" height="20" uuid="00888feb-1518-4a64-9dc0-cd6592aae12e">
 							<property name="local_mesure_unitwidth" value="pixel"/>
-							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.y" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						</reportElement>
 						<textElement verticalAlignment="Top">
 							<font size="9"/>
@@ -810,15 +810,15 @@ Address:]]></text>
 						<textElement textAlignment="Left" verticalAlignment="Bottom">
 							<font size="10"/>
 						</textElement>
-						<textFieldExpression><![CDATA[$F{phc_first_name} ]]></textFieldExpression>
+						<textFieldExpression><![CDATA[$F{phc_first_name}]]></textFieldExpression>
 					</textField>
 					<textField isBlankWhenNull="true">
-						<reportElement x="97" y="244" width="90" height="12" uuid="9b8906d3-2705-440a-bfa4-aed8144cd931">
+						<reportElement x="97" y="244" width="105" height="12" uuid="9b8906d3-2705-440a-bfa4-aed8144cd931">
 							<property name="local_mesure_unitx" value="pixel"/>
 							<property name="local_mesure_unitwidth" value="pixel"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
-							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.y" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						</reportElement>
 						<textElement verticalAlignment="Bottom">
 							<font size="10"/>
@@ -1039,11 +1039,11 @@ Address:]]></text>
 						<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
 					</subreport>
 					<textField isBlankWhenNull="true">
-						<reportElement x="97" y="296" width="100" height="12" uuid="cf81bb25-4ead-4d2b-992b-a508838552f7">
+						<reportElement x="97" y="296" width="105" height="12" uuid="cf81bb25-4ead-4d2b-992b-a508838552f7">
 							<property name="local_mesure_unitwidth" value="pixel"/>
-							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.y" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						</reportElement>
 						<textElement verticalAlignment="Bottom">
 							<font size="10"/>
