@@ -28,6 +28,27 @@
 	WHERE load_id = $P{load_id}
 	GROUP BY puc
 ),
+ph AS(
+		select $P{load_id} as load_id,string_agg(distinct p.packhouse,',')packhouse_code,string_agg(distinct p.phc,',')packhouse_code2
+	     from vw_pallet_sequence_flat p
+	    where load_id = $P{load_id}
+	
+)
+,
+packhouse_contact AS(
+        SELECT  $P{load_id}  as load_id ,people.first_name,people.surname ,contact_methods.contact_method_code, contact_method_types.contact_method_type
+        FROM party_contact_methods
+        JOIN contact_methods ON contact_methods.id = party_contact_methods.contact_method_id
+        JOIN contact_method_types ON contact_method_types.id = contact_methods.contact_method_type_id  
+		JOIN party_roles pr on party_contact_methods.party_id = pr.party_id
+		JOIN people on pr.person_id = people.id
+		WHERE pr.id in (
+		SELECT pr.id
+					FROM public.party_roles pr
+					WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'PACKHOUSE_CONTACT_PERSON') LIMIT 1
+		)	
+
+),
 totals AS(
 	select SUM(puc_totals.puc_total_ctns) as total_ctns,SUM(puc_total_plts) as total_pallets,load_id
 	from puc_totals	
@@ -71,8 +92,6 @@ p.carton_quantity,
 p.size_ref as count,
 p.inspected_dest_country as importing_country,
 p.exporter,
---govt_inspection_sheets.exporter_party_role_id,
-p.packhouse as packhouse_code,   
 DATE(COALESCE(p.govt_reinspection_at,p.govt_first_inspection_at)) as inspection_date,
 fn_party_role_name(inspectors.inspector_party_role_id) AS inspector,
 inspectors.inspector_code, 
@@ -84,8 +103,6 @@ i.address_line_3 as inspector_address_line_3,
 i.city as inspector_city,
 i.postal_code as inspector_postal_code,
 i.country as inspector_country,
-i.city  as magestrial_district,
-
 (SELECT pr.id
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'EXPORTER') LIMIT 1) AS exporter_party_role_id,
@@ -93,6 +110,10 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'EXPORTER') LIMIT 1) AS ex
 (SELECT pr.id
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) AS implementation_owner_party_role_id,
+
+(SELECT pr.id
+FROM public.party_roles pr
+WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'CUSTOMER_CONTACT_PERSON') LIMIT 1) AS packhouse_contact_person_party_role_id,
 
 'Daff_Seq_No' as daff_seq_no,
 'Packhouse_Person_Contact' as  packhouse_person_contact,
@@ -114,7 +135,14 @@ COALESCE(p.customer_variety,p.marketing_variety) as variety,
 ''  as exporter_tel_no_1,
 ''   as exporter_tel_no_2,
 p.edi_in_consignment_note_number,
-p.final_destination
+p.final_destination,
+packhouse_contact.first_name phc_first_name,
+packhouse_contact.surname as phc_surname,
+packhouse_contact.contact_method_code as phc_contact, 
+packhouse_contact.contact_method_type as phc_contact_method_type,
+depots.magisterial_district,
+ph.packhouse_code ,
+COALESCE(p.depot, $P{from_depot} ) as depot
 from vw_pallet_sequence_flat p
 LEFT JOIN govt_inspection_pallets ON govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
 LEFT JOIN govt_inspection_sheets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
@@ -125,6 +153,9 @@ left join parties on party_roles.party_id=parties.id
 left join puc_totals on p.puc = puc_totals.puc
 left join totals on p.load_id = totals.load_id
 left join inspector  i on inspectors.inspector_party_role_id = i.inspector_party_role_id
+left join packhouse_contact on  p.load_id = packhouse_contact.load_id
+left join depots on depots.depot_code = p.depot
+left join ph on  p.load_id = ph.load_id
 where p.load_id =  $P{load_id}]]>
 	</queryString>
 	<field name="puc_total_ctns" class="java.lang.Long">
@@ -201,11 +232,6 @@ where p.load_id =  $P{load_id}]]>
 		<property name="com.jaspersoft.studio.field.label" value="exporter"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
-	<field name="packhouse_code" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="packhouse_code"/>
-		<property name="com.jaspersoft.studio.field.label" value="packhouse_code"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
 	<field name="inspection_date" class="java.sql.Date">
 		<property name="com.jaspersoft.studio.field.name" value="inspection_date"/>
 		<property name="com.jaspersoft.studio.field.label" value="inspection_date"/>
@@ -257,11 +283,6 @@ where p.load_id =  $P{load_id}]]>
 		<property name="com.jaspersoft.studio.field.label" value="inspector_country"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="addresses"/>
 	</field>
-	<field name="magestrial_district" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="magestrial_district"/>
-		<property name="com.jaspersoft.studio.field.label" value="magestrial_district"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="addresses"/>
-	</field>
 	<field name="exporter_party_role_id" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="exporter_party_role_id"/>
 		<property name="com.jaspersoft.studio.field.label" value="exporter_party_role_id"/>
@@ -270,6 +291,10 @@ where p.load_id =  $P{load_id}]]>
 	<field name="implementation_owner_party_role_id" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="implementation_owner_party_role_id"/>
 		<property name="com.jaspersoft.studio.field.label" value="implementation_owner_party_role_id"/>
+	</field>
+	<field name="packhouse_contact_person_party_role_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="packhouse_contact_person_party_role_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="packhouse_contact_person_party_role_id"/>
 	</field>
 	<field name="daff_seq_no" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="daff_seq_no"/>
@@ -359,8 +384,47 @@ where p.load_id =  $P{load_id}]]>
 		<property name="com.jaspersoft.studio.field.name" value="exporter_tel_no_2"/>
 		<property name="com.jaspersoft.studio.field.label" value="exporter_tel_no_2"/>
 	</field>
-	<field name="edi_in_consignment_note_number" class="java.lang.String"/>
-	<field name="final_destination" class="java.lang.String"/>
+	<field name="edi_in_consignment_note_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="edi_in_consignment_note_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="edi_in_consignment_note_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="final_destination" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="final_destination"/>
+		<property name="com.jaspersoft.studio.field.label" value="final_destination"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="phc_first_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="phc_first_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="phc_first_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="people"/>
+	</field>
+	<field name="phc_surname" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="phc_surname"/>
+		<property name="com.jaspersoft.studio.field.label" value="phc_surname"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="people"/>
+	</field>
+	<field name="phc_contact" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="phc_contact"/>
+		<property name="com.jaspersoft.studio.field.label" value="phc_contact"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="contact_methods"/>
+	</field>
+	<field name="phc_contact_method_type" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="phc_contact_method_type"/>
+		<property name="com.jaspersoft.studio.field.label" value="phc_contact_method_type"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="contact_method_types"/>
+	</field>
+	<field name="magisterial_district" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="magisterial_district"/>
+		<property name="com.jaspersoft.studio.field.label" value="magisterial_district"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="depots"/>
+	</field>
+	<field name="packhouse_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="packhouse_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="packhouse_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="depot" class="java.lang.String"/>
 	<sortField name="row_number"/>
 	<group name="pucs_grp" isStartNewPage="true" minDetailsToStartFromTop="5">
 		<groupExpression><![CDATA[$F{puc}]]></groupExpression>
@@ -453,11 +517,11 @@ where p.load_id =  $P{load_id}]]>
 							<bottomPen lineWidth="1.0"/>
 						</box>
 						<staticText>
-							<reportElement x="0" y="0" width="79" height="90" uuid="eb708d1a-841f-43e1-9dc9-bf2cfa489a48">
-								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<reportElement x="0" y="0" width="91" height="90" uuid="eb708d1a-841f-43e1-9dc9-bf2cfa489a48">
 								<property name="com.jaspersoft.studio.unit.height" value="px"/>
 								<property name="com.jaspersoft.studio.unit.x" value="px"/>
 								<property name="com.jaspersoft.studio.unit.y" value="px"/>
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							</reportElement>
 							<box>
 								<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -473,10 +537,11 @@ where p.load_id =  $P{load_id}]]>
 contact details:]]></text>
 						</staticText>
 						<subreport>
-							<reportElement x="80" y="0" width="100" height="89" uuid="1b5d2858-888b-493e-a028-252b0b1fc63a">
+							<reportElement x="97" y="0" width="100" height="89" uuid="1b5d2858-888b-493e-a028-252b0b1fc63a">
 								<property name="local_mesure_unitheight" value="pixel"/>
 								<property name="com.jaspersoft.studio.unit.y" value="px"/>
 								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<property name="com.jaspersoft.studio.unit.x" value="px"/>
 							</reportElement>
 							<subreportParameter name="party_role_id">
 								<subreportParameterExpression><![CDATA[$F{exporter_party_role_id}]]></subreportParameterExpression>
@@ -514,7 +579,6 @@ contact details:]]></text>
 							<textElement textAlignment="Left">
 								<font size="9"/>
 							</textElement>
-							<textFieldExpression><![CDATA[$F{daff_seq_no}]]></textFieldExpression>
 						</textField>
 						<staticText>
 							<reportElement x="5" y="4" width="65" height="12" uuid="ef7b05f9-a8b3-4e71-980d-d9c44d2edfb6">
@@ -632,11 +696,11 @@ contact details:]]></text>
 						<text><![CDATA[PPECB Stamp]]></text>
 					</staticText>
 					<staticText>
-						<reportElement x="0" y="132" width="79" height="98" uuid="13f6cf81-65e2-4d9e-950e-b45e6bd2d1eb">
-							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<reportElement x="0" y="132" width="91" height="98" uuid="13f6cf81-65e2-4d9e-950e-b45e6bd2d1eb">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<property name="com.jaspersoft.studio.unit.y" value="px"/>
 							<property name="com.jaspersoft.studio.unit.x" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						</reportElement>
 						<box>
 							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -659,11 +723,12 @@ Address:]]></text>
 						</reportElement>
 					</line>
 					<staticText>
-						<reportElement x="6" y="270" width="85" height="15" uuid="dbbb118c-f802-485b-a1f3-895ac0652358">
+						<reportElement x="0" y="258" width="90" height="12" uuid="dbbb118c-f802-485b-a1f3-895ac0652358">
 							<property name="local_mesure_unitx" value="pixel"/>
 							<property name="com.jaspersoft.studio.unit.y" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						</reportElement>
 						<textElement verticalAlignment="Bottom">
 							<font size="9" isBold="false" isItalic="false"/>
@@ -671,11 +736,11 @@ Address:]]></text>
 						<text><![CDATA[Packhouse Code:]]></text>
 					</staticText>
 					<staticText>
-						<reportElement x="6" y="255" width="85" height="15" uuid="7ca01964-fd26-4b2d-af5e-9d57d29e7268">
+						<reportElement x="0" y="244" width="90" height="12" uuid="7ca01964-fd26-4b2d-af5e-9d57d29e7268">
 							<property name="local_mesure_unitx" value="pixel"/>
-							<property name="com.jaspersoft.studio.unit.y" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
-							<property name="com.jaspersoft.studio.unit.x" value="px"/>
+							<property name="com.jaspersoft.studio.unit.y" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						</reportElement>
 						<textElement verticalAlignment="Bottom">
 							<font size="9" isBold="false" isItalic="false"/>
@@ -683,9 +748,10 @@ Address:]]></text>
 						<text><![CDATA[Inspection Depot:]]></text>
 					</staticText>
 					<staticText>
-						<reportElement x="6" y="231" width="85" height="24" uuid="f0c26457-fb01-4e31-8989-56e011f59264">
+						<reportElement x="0" y="231" width="90" height="12" uuid="f0c26457-fb01-4e31-8989-56e011f59264">
 							<property name="local_mesure_unitx" value="pixel"/>
 							<property name="com.jaspersoft.studio.unit.y" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						</reportElement>
@@ -695,10 +761,12 @@ Address:]]></text>
 						<text><![CDATA[Magisterial District:]]></text>
 					</staticText>
 					<staticText>
-						<reportElement x="6" y="285" width="85" height="25" uuid="d80feb34-aefd-4c0f-9b51-c3c069bd33e3">
+						<reportElement x="0" y="282" width="90" height="25" uuid="d80feb34-aefd-4c0f-9b51-c3c069bd33e3">
 							<property name="local_mesure_unitx" value="pixel"/>
-							<property name="com.jaspersoft.studio.unit.y" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.y" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						</reportElement>
 						<textElement verticalAlignment="Bottom">
 							<font size="9" isBold="false" isItalic="false"/>
@@ -706,55 +774,56 @@ Address:]]></text>
 						<text><![CDATA[Packhouse Person's Contact Details:]]></text>
 					</staticText>
 					<textField isBlankWhenNull="true">
-						<reportElement x="96" y="230" width="101" height="15" uuid="41aa5ed0-69a4-4074-a4b2-2a3b12d6c36b">
+						<reportElement x="97" y="231" width="90" height="12" uuid="41aa5ed0-69a4-4074-a4b2-2a3b12d6c36b">
 							<property name="net.sf.jasperreports.text.truncate.at.char" value="true"/>
 							<property name="local_mesure_unitx" value="pixel"/>
 							<property name="local_mesure_unity" value="pixel"/>
-							<property name="com.jaspersoft.studio.unit.height" value="px"/>
-							<property name="com.jaspersoft.studio.unit.x" value="px"/>
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.y" value="px"/>
+							<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						</reportElement>
 						<textElement verticalAlignment="Bottom">
 							<font size="10"/>
 						</textElement>
-						<textFieldExpression><![CDATA[$F{magestrial_district}]]></textFieldExpression>
+						<textFieldExpression><![CDATA[$F{magisterial_district}]]></textFieldExpression>
 					</textField>
 					<textField isBlankWhenNull="true">
-						<reportElement x="99" y="270" width="100" height="15" uuid="00888feb-1518-4a64-9dc0-cd6592aae12e">
+						<reportElement x="97" y="258" width="100" height="20" uuid="00888feb-1518-4a64-9dc0-cd6592aae12e">
 							<property name="local_mesure_unitwidth" value="pixel"/>
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.y" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						</reportElement>
-						<textElement verticalAlignment="Bottom">
-							<font size="10"/>
+						<textElement verticalAlignment="Top">
+							<font size="9"/>
 						</textElement>
 						<textFieldExpression><![CDATA[$F{packhouse_code}]]></textFieldExpression>
 					</textField>
 					<textField isBlankWhenNull="true">
-						<reportElement x="99" y="285" width="100" height="25" uuid="65cfd188-c2db-42e3-afbf-ba36a079ef9d">
+						<reportElement x="97" y="282" width="51" height="13" uuid="65cfd188-c2db-42e3-afbf-ba36a079ef9d">
 							<property name="local_mesure_unitwidth" value="pixel"/>
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
-							<property name="com.jaspersoft.studio.unit.y" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						</reportElement>
-						<textElement verticalAlignment="Bottom">
+						<textElement textAlignment="Left" verticalAlignment="Bottom">
 							<font size="10"/>
 						</textElement>
-						<textFieldExpression><![CDATA[$F{importing_country}]]></textFieldExpression>
+						<textFieldExpression><![CDATA[$F{phc_first_name} ]]></textFieldExpression>
 					</textField>
 					<textField isBlankWhenNull="true">
-						<reportElement x="99" y="255" width="100" height="15" uuid="9b8906d3-2705-440a-bfa4-aed8144cd931">
+						<reportElement x="97" y="244" width="90" height="12" uuid="9b8906d3-2705-440a-bfa4-aed8144cd931">
 							<property name="local_mesure_unitx" value="pixel"/>
 							<property name="local_mesure_unitwidth" value="pixel"/>
-							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						</reportElement>
 						<textElement verticalAlignment="Bottom">
 							<font size="10"/>
 						</textElement>
-						<textFieldExpression><![CDATA[$P{from_depot}]]></textFieldExpression>
+						<textFieldExpression><![CDATA[$F{depot}]]></textFieldExpression>
 					</textField>
 					<line>
 						<reportElement x="204" y="141" width="349" height="1" uuid="d91add24-f127-45ce-a959-a0a09ffd7acb">
@@ -835,7 +904,7 @@ Address:]]></text>
 						<text><![CDATA[Total Pallets]]></text>
 					</staticText>
 					<staticText>
-						<reportElement x="205" y="295" width="106" height="14" uuid="90392f6b-aa17-4617-8191-5b41033069c6">
+						<reportElement x="205" y="295" width="106" height="15" uuid="90392f6b-aa17-4617-8191-5b41033069c6">
 							<property name="com.jaspersoft.studio.unit.x" value="px"/>
 							<property name="com.jaspersoft.studio.unit.y" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -849,7 +918,7 @@ Address:]]></text>
 						<text><![CDATA[TOTAL]]></text>
 					</staticText>
 					<staticText>
-						<reportElement x="312" y="295" width="63" height="14" uuid="c68ddc8d-b0aa-4e41-a21f-9acc2f0ae837">
+						<reportElement x="312" y="295" width="63" height="15" uuid="c68ddc8d-b0aa-4e41-a21f-9acc2f0ae837">
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.y" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -861,7 +930,7 @@ Address:]]></text>
 						<text><![CDATA[]]></text>
 					</staticText>
 					<textField>
-						<reportElement x="375" y="295" width="91" height="14" uuid="68744ec8-c2e7-4779-af14-d34143422617">
+						<reportElement x="375" y="295" width="91" height="15" uuid="68744ec8-c2e7-4779-af14-d34143422617">
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.x" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -873,7 +942,7 @@ Address:]]></text>
 						<textFieldExpression><![CDATA[$F{total_ctns}]]></textFieldExpression>
 					</textField>
 					<textField>
-						<reportElement x="466" y="295" width="85" height="14" uuid="6d1b6136-3f3e-4171-8fd2-2b269db7dad8">
+						<reportElement x="466" y="295" width="85" height="15" uuid="6d1b6136-3f3e-4171-8fd2-2b269db7dad8">
 							<property name="com.jaspersoft.studio.unit.x" value="px"/>
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -912,7 +981,7 @@ Address:]]></text>
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						</reportElement>
 					</line>
-					<textField>
+					<textField isBlankWhenNull="true">
 						<reportElement x="204" y="161" width="106" height="20" uuid="f77ea76e-ec42-48a8-ab25-f0af838b8dc4">
 							<property name="com.jaspersoft.studio.unit.x" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -954,10 +1023,11 @@ Address:]]></text>
 						<textFieldExpression><![CDATA[$F{commodity}]]></textFieldExpression>
 					</textField>
 					<subreport>
-						<reportElement x="81" y="136" width="100" height="91" uuid="a4176470-2306-4b19-8c0f-2c82eda356c6">
+						<reportElement x="97" y="136" width="100" height="91" uuid="a4176470-2306-4b19-8c0f-2c82eda356c6">
 							<property name="local_mesure_unitheight" value="pixel"/>
 							<property name="com.jaspersoft.studio.unit.y" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						</reportElement>
 						<subreportParameter name="party_role_id">
 							<subreportParameterExpression><![CDATA[$F{implementation_owner_party_role_id}]]></subreportParameterExpression>
@@ -968,6 +1038,38 @@ Address:]]></text>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 						<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
 					</subreport>
+					<textField isBlankWhenNull="true">
+						<reportElement x="97" y="296" width="100" height="12" uuid="cf81bb25-4ead-4d2b-992b-a508838552f7">
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.y" value="px"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</reportElement>
+						<textElement verticalAlignment="Bottom">
+							<font size="10"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{phc_contact}]]></textFieldExpression>
+					</textField>
+					<textField isBlankWhenNull="true">
+						<reportElement x="151" y="282" width="51" height="13" uuid="f774bb55-2183-4177-847a-07cd32eef479">
+							<property name="local_mesure_unitwidth" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						</reportElement>
+						<textElement textAlignment="Left" verticalAlignment="Bottom">
+							<font size="10"/>
+						</textElement>
+						<textFieldExpression><![CDATA[$F{phc_surname}]]></textFieldExpression>
+					</textField>
+					<line>
+						<reportElement x="91" y="231" width="1" height="80" uuid="49fcf7dc-bf48-48e3-8032-55ae70e5961e">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.y" value="px"/>
+							<property name="com.jaspersoft.studio.unit.x" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						</reportElement>
+					</line>
 				</frame>
 				<staticText>
 					<reportElement x="40" y="419" width="102" height="11" uuid="f250b34b-b46e-45a7-a20d-ab291a64ae14">
@@ -1074,7 +1176,7 @@ Address:]]></text>
 					<text><![CDATA[    DIRECTORATE: INSPECTION SERVICES]]></text>
 				</staticText>
 				<image>
-					<reportElement x="0" y="0" width="278" height="80" uuid="f3f531f6-6e50-4191-a33f-a5ad5affa6a1">
+					<reportElement x="0" y="0" width="278" height="80" uuid="1d7af1ac-4ac4-411e-a5c6-ffb9ef6a3c48">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1124,7 +1226,7 @@ Address:]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{block_number}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="486" y="1" width="86" height="12" uuid="4d057aa4-f90b-470c-87ec-374ecc2bfff9">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
