@@ -1011,7 +1011,7 @@ COALESCE(customer_variety,marketing_variety) as variety,
 					<textElement textAlignment="Center">
 						<font size="6"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{production_region}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{production_area}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="238" y="0" width="41" height="10" uuid="35ea5ab4-d0b2-45e8-8f9d-f0fed1b04a1e"/>
