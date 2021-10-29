@@ -23,7 +23,7 @@
 	<parameter name="from_depot" class="java.lang.String"/>
 	<queryString language="SQL">
 		<![CDATA[WITH puc_totals AS (
-	select puc,SUM(carton_quantity) as puc_total_ctns,COUNT(distinct pallet_number) as puc_total_plts,MAX(load_id) as load_id
+	select puc,SUM(carton_quantity) as puc_total_ctns,COUNT(distinct pallet_number) as puc_total_plts,MAX(load_id) as load_id,COUNT(distinct id) as num_of_seqs
 	from vw_pallet_sequence_flat 
 	WHERE load_id = $P{load_id}
 	GROUP BY puc
@@ -51,7 +51,7 @@ packhouse_contact AS(
 ),
 totals AS(
 		select 
-	SUM(carton_quantity) as total_ctns,COUNT(distinct pallet_number) as total_pallets,MAX(load_id) as load_id
+	SUM(carton_quantity) as total_ctns,COUNT(distinct pallet_number) as total_pallets,MAX(load_id) as load_id,COUNT(distinct id) as total_seqs 
 	from vw_pallet_sequence_flat 
 	where load_id = $P{load_id}
 ),
@@ -80,7 +80,7 @@ LEFT JOIN people on party_roles.person_id = people.id
 where v.load_id = $P{load_id}
 )
 select  
-puc_totals.puc_total_ctns,puc_totals.puc_total_plts,totals.total_ctns,totals.total_pallets,
+puc_totals.puc_total_ctns,puc_totals.puc_total_plts,totals.total_ctns,totals.total_pallets, totals.total_seqs ,puc_totals.num_of_seqs,
 ROW_NUMBER() OVER(ORDER BY p.puc DESC) AS row_number,
 p.load_id,
 '00' || CAST(p.load_id as text) as document_number,
@@ -433,6 +433,8 @@ order by p.puc,p.pallet_number]]>
 	<field name="seq_no" class="java.lang.Integer"/>
 	<field name="row_num" class="java.lang.Integer"/>
 	<field name="puc_seq" class="java.lang.Integer"/>
+	<field name="total_seqs" class="java.lang.Integer"/>
+	<field name="num_of_seqs" class="java.lang.Integer"/>
 	<sortField name="row_number"/>
 	<variable name="sq" class="java.lang.Integer">
 		<variableExpression><![CDATA[$F{puc_seq}]]></variableExpression>
@@ -548,7 +550,7 @@ order by p.puc,p.pallet_number]]>
 contact details:]]></text>
 						</staticText>
 						<subreport>
-							<reportElement x="90" y="2" width="100" height="89" uuid="d26dd7f2-3555-4605-aed6-9b25f8772982">
+							<reportElement x="90" y="2" width="100" height="89" uuid="9dee2ec1-d5d1-4adf-9cdb-7f7dd192666f">
 								<property name="local_mesure_unitheight" value="pixel"/>
 								<property name="com.jaspersoft.studio.unit.y" value="px"/>
 								<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -886,31 +888,35 @@ Address:]]></text>
 						<text><![CDATA[PUCs]]></text>
 					</staticText>
 					<staticText>
-						<reportElement x="375" y="141" width="91" height="20" uuid="7d65e62e-4146-422d-83c5-d100f1dc341b">
-							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<reportElement x="375" y="141" width="65" height="20" uuid="7d65e62e-4146-422d-83c5-d100f1dc341b">
 							<property name="com.jaspersoft.studio.unit.y" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						</reportElement>
 						<box>
 							<rightPen lineWidth="1.0"/>
 						</box>
-						<textElement textAlignment="Center" verticalAlignment="Middle"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="9"/>
+						</textElement>
 						<text><![CDATA[Total Cartons]]></text>
 					</staticText>
 					<staticText>
-						<reportElement x="466" y="141" width="85" height="20" uuid="6fa0cb47-0639-441b-a591-624b69ce6827">
-							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<reportElement x="441" y="142" width="60" height="20" uuid="6fa0cb47-0639-441b-a591-624b69ce6827">
 							<property name="com.jaspersoft.studio.unit.y" value="px"/>
 							<property name="com.jaspersoft.studio.unit.x" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						</reportElement>
 						<box>
 							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 						</box>
-						<textElement textAlignment="Center" verticalAlignment="Middle"/>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font size="9"/>
+						</textElement>
 						<text><![CDATA[Total Pallets]]></text>
 					</staticText>
 					<staticText>
@@ -941,7 +947,7 @@ Address:]]></text>
 						<text><![CDATA[]]></text>
 					</staticText>
 					<textField>
-						<reportElement x="375" y="295" width="91" height="15" uuid="68744ec8-c2e7-4779-af14-d34143422617">
+						<reportElement x="375" y="295" width="66" height="15" uuid="68744ec8-c2e7-4779-af14-d34143422617">
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.x" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -953,7 +959,7 @@ Address:]]></text>
 						<textFieldExpression><![CDATA[$F{total_ctns}]]></textFieldExpression>
 					</textField>
 					<textField>
-						<reportElement x="466" y="295" width="85" height="15" uuid="6d1b6136-3f3e-4171-8fd2-2b269db7dad8">
+						<reportElement x="442" y="296" width="59" height="15" uuid="6d1b6136-3f3e-4171-8fd2-2b269db7dad8">
 							<property name="com.jaspersoft.studio.unit.x" value="px"/>
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -963,10 +969,10 @@ Address:]]></text>
 						<textFieldExpression><![CDATA[$F{total_pallets}]]></textFieldExpression>
 					</textField>
 					<textField>
-						<reportElement x="375" y="160" width="91" height="20" uuid="5ff0a40e-5e45-4ec6-b648-d458f8bc16d8">
-							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<reportElement x="375" y="160" width="65" height="20" uuid="5ff0a40e-5e45-4ec6-b648-d458f8bc16d8">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<property name="com.jaspersoft.studio.unit.x" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						</reportElement>
 						<box>
 							<rightPen lineWidth="1.0"/>
@@ -975,12 +981,15 @@ Address:]]></text>
 						<textFieldExpression><![CDATA[$F{puc_total_ctns}]]></textFieldExpression>
 					</textField>
 					<textField>
-						<reportElement x="467" y="160" width="85" height="20" uuid="f40612a9-9a95-4dd8-92bc-0855448a8c33">
-							<property name="com.jaspersoft.studio.unit.x" value="px"/>
-							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<reportElement x="441" y="160" width="60" height="20" uuid="f40612a9-9a95-4dd8-92bc-0855448a8c33">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.y" value="px"/>
+							<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						</reportElement>
+						<box>
+							<rightPen lineWidth="1.0"/>
+						</box>
 						<textElement textAlignment="Center" verticalAlignment="Middle"/>
 						<textFieldExpression><![CDATA[$F{puc_total_plts}]]></textFieldExpression>
 					</textField>
@@ -1065,8 +1074,44 @@ Address:]]></text>
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						</reportElement>
 					</line>
+					<staticText>
+						<reportElement x="500" y="142" width="53" height="20" uuid="3072db96-f6ce-4769-89e8-219314fb6809">
+							<property name="com.jaspersoft.studio.unit.y" value="px"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+							<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						</box>
+						<textElement textAlignment="Right" verticalAlignment="Middle">
+							<font size="9"/>
+						</textElement>
+						<text><![CDATA[]]></text>
+					</staticText>
+					<textField>
+						<reportElement x="500" y="161" width="53" height="20" uuid="b0884b47-2c78-49fb-a586-0795e1333250">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.y" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						</reportElement>
+						<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					</textField>
+					<textField>
+						<reportElement x="500" y="296" width="53" height="15" uuid="114601ac-f539-4bb3-9cf7-5a9408a0b7a6">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.y" value="px"/>
+							<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						</reportElement>
+						<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					</textField>
 					<subreport>
-						<reportElement x="91" y="137" width="100" height="91" uuid="e81887bd-3748-49ec-9c62-2fae5ffa45fe">
+						<reportElement x="93" y="137" width="100" height="91" uuid="48f0971d-bf5c-4a6f-ae8e-f5bc22688405">
 							<property name="local_mesure_unitheight" value="pixel"/>
 							<property name="com.jaspersoft.studio.unit.y" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -1217,7 +1262,7 @@ Address:]]></text>
 					<text><![CDATA[    DIRECTORATE: INSPECTION SERVICES]]></text>
 				</staticText>
 				<image>
-					<reportElement x="0" y="0" width="278" height="80" uuid="793550af-becc-4298-ae08-fac121fe86e0">
+					<reportElement x="0" y="0" width="278" height="80" uuid="df450f9d-7596-4392-9ed8-c06d423139a4">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
