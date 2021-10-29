@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_picklist" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Kromco"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="113"/>
@@ -860,63 +860,63 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<text><![CDATA[Plt Number]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="135" y="15" width="28" height="13" uuid="f4b3f000-a70e-4ca9-b8d2-05f8aa7d9163"/>
+				<reportElement x="230" y="15" width="28" height="13" uuid="f4b3f000-a70e-4ca9-b8d2-05f8aa7d9163"/>
 				<textElement>
 					<font size="8" isBold="false" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[Com]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="163" y="15" width="28" height="13" uuid="67eb102e-4539-4baa-a511-fe72538a3b26"/>
+				<reportElement x="258" y="15" width="28" height="13" uuid="67eb102e-4539-4baa-a511-fe72538a3b26"/>
 				<textElement>
 					<font size="8" isBold="false" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[Var]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="191" y="15" width="28" height="13" uuid="a77cf0a7-7131-47d8-b647-b5e6d40ce7ac"/>
+				<reportElement x="286" y="15" width="28" height="13" uuid="a77cf0a7-7131-47d8-b647-b5e6d40ce7ac"/>
 				<textElement>
 					<font size="8" isBold="false" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[Grade]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="219" y="15" width="47" height="13" uuid="08bae30f-5c4e-45df-a1eb-cf7aade46494"/>
+				<reportElement x="314" y="15" width="47" height="13" uuid="08bae30f-5c4e-45df-a1eb-cf7aade46494"/>
 				<textElement>
 					<font size="8" isBold="false" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[Mark]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="266" y="15" width="46" height="13" uuid="e16d167c-42c0-4613-8b7d-b1cd2a296e6f"/>
+				<reportElement x="361" y="15" width="46" height="13" uuid="e16d167c-42c0-4613-8b7d-b1cd2a296e6f"/>
 				<textElement>
 					<font size="8" isBold="false" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[Pack]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="313" y="15" width="34" height="13" uuid="9bc29c79-a356-424b-9b82-5a1b3461e99e"/>
+				<reportElement x="408" y="15" width="34" height="13" uuid="9bc29c79-a356-424b-9b82-5a1b3461e99e"/>
 				<textElement>
 					<font size="8" isBold="false" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[Actl Cnt]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="361" y="15" width="46" height="13" uuid="ec7c8f18-2b10-48cf-b0dd-2ba3919a1c4f"/>
+				<reportElement x="456" y="15" width="46" height="13" uuid="ec7c8f18-2b10-48cf-b0dd-2ba3919a1c4f"/>
 				<textElement>
 					<font size="8" isBold="false" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[Size Ref]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="411" y="15" width="46" height="13" uuid="7a2dd6da-906c-4d1a-85d3-2fed66cebb6c"/>
+				<reportElement x="506" y="15" width="46" height="13" uuid="7a2dd6da-906c-4d1a-85d3-2fed66cebb6c"/>
 				<textElement>
 					<font size="8" isBold="false" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[TM Grp]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="524" y="15" width="98" height="13" uuid="37d53d80-2836-478d-bea5-faba5ebf47f8"/>
+				<reportElement x="131" y="15" width="98" height="13" uuid="37d53d80-2836-478d-bea5-faba5ebf47f8"/>
 				<textElement>
 					<font size="8" isBold="false" isItalic="false"/>
 				</textElement>
@@ -940,7 +940,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<text><![CDATA[Build Up Remarks]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="470" y="15" width="25" height="13" uuid="3da262e2-8417-492d-9b3c-f494b51c1cca">
+				<reportElement x="567" y="15" width="25" height="13" uuid="3da262e2-8417-492d-9b3c-f494b51c1cca">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<printWhenExpression><![CDATA[!$P{cartons_equals_pallets}]]></printWhenExpression>
 				</reportElement>
@@ -954,7 +954,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 	<detail>
 		<band height="16">
 			<textField>
-				<reportElement x="135" y="2" width="28" height="12" uuid="13f599b1-da4e-43c8-8d91-707e9604c01e">
+				<reportElement x="230" y="2" width="28" height="12" uuid="13f599b1-da4e-43c8-8d91-707e9604c01e">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -964,7 +964,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<textFieldExpression><![CDATA[$F{commodity}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="163" y="2" width="28" height="12" uuid="084070bc-8048-487f-88bf-ab64ead55129">
+				<reportElement x="258" y="2" width="28" height="12" uuid="084070bc-8048-487f-88bf-ab64ead55129">
 					<property name="local_mesure_unitheight" value="pixel"/>
 				</reportElement>
 				<textElement>
@@ -973,7 +973,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<textFieldExpression><![CDATA[$F{marketing_variety}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="191" y="2" width="28" height="12" uuid="9f715caf-1c75-49d2-868a-5c0d1d12adbe">
+				<reportElement x="286" y="2" width="28" height="12" uuid="9f715caf-1c75-49d2-868a-5c0d1d12adbe">
 					<property name="local_mesure_unitheight" value="pixel"/>
 				</reportElement>
 				<textElement>
@@ -982,7 +982,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<textFieldExpression><![CDATA[$F{grade}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="219" y="2" width="47" height="12" uuid="468c9cb9-9b68-44e8-9a49-535fc3caca5b">
+				<reportElement x="314" y="2" width="47" height="12" uuid="468c9cb9-9b68-44e8-9a49-535fc3caca5b">
 					<property name="local_mesure_unitheight" value="pixel"/>
 				</reportElement>
 				<textElement>
@@ -991,7 +991,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<textFieldExpression><![CDATA[$F{mark}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="266" y="2" width="47" height="12" uuid="ae2a39b6-30cf-46a3-8e11-f29ae11ad310">
+				<reportElement x="361" y="2" width="47" height="12" uuid="ae2a39b6-30cf-46a3-8e11-f29ae11ad310">
 					<property name="local_mesure_unitheight" value="pixel"/>
 				</reportElement>
 				<textElement>
@@ -1000,7 +1000,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<textFieldExpression><![CDATA[$F{std_pack}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="313" y="2" width="47" height="12" uuid="4e8de1d6-4f03-496b-8d34-d79bbda046da">
+				<reportElement x="408" y="2" width="47" height="12" uuid="4e8de1d6-4f03-496b-8d34-d79bbda046da">
 					<property name="local_mesure_unitheight" value="pixel"/>
 				</reportElement>
 				<textElement>
@@ -1009,7 +1009,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<textFieldExpression><![CDATA[$F{actual_count}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="360" y="2" width="47" height="12" uuid="dc8eb549-a88b-4e24-af90-a4da48a610c5">
+				<reportElement x="455" y="2" width="47" height="12" uuid="dc8eb549-a88b-4e24-af90-a4da48a610c5">
 					<property name="local_mesure_unitheight" value="pixel"/>
 				</reportElement>
 				<textElement>
@@ -1018,7 +1018,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<textFieldExpression><![CDATA[$F{size_ref}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="411" y="2" width="47" height="12" uuid="1f42d759-2bdf-4161-8fdf-2f6370956b6f">
+				<reportElement x="506" y="2" width="47" height="12" uuid="1f42d759-2bdf-4161-8fdf-2f6370956b6f">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -1029,7 +1029,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<textFieldExpression><![CDATA[$F{packed_tm_group}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="523" y="2" width="100" height="12" uuid="c93324a8-4605-419b-931b-9c28805a4b76">
+				<reportElement x="130" y="2" width="100" height="12" uuid="c93324a8-4605-419b-931b-9c28805a4b76">
 					<property name="local_mesure_unitheight" value="pixel"/>
 				</reportElement>
 				<textElement>
@@ -1068,7 +1068,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<textFieldExpression><![CDATA[$F{pallet_number}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#0.##" isBlankWhenNull="true">
-				<reportElement x="472" y="0" width="33" height="12" uuid="add7ba95-da51-4049-b519-d8ceceedca4f">
+				<reportElement x="567" y="0" width="33" height="12" uuid="add7ba95-da51-4049-b519-d8ceceedca4f">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<printWhenExpression><![CDATA[!$P{cartons_equals_pallets}]]></printWhenExpression>
