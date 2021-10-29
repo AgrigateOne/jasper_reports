@@ -8,6 +8,8 @@
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44:80/jasperserver/services/repository"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack_KR_Live"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="283"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="717"/>
 	<parameter name="load_id" class="java.lang.Integer"/>
 	<parameter name="user_name" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
@@ -17,7 +19,7 @@
 		<defaultValueExpression><![CDATA["CPT"]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
-		<![CDATA[select sq.load_id ,
+		<![CDATA[select 
   count(*) OVER (PARTITION BY sq.load_id) AS total_row,
 * 
 FROM 
@@ -25,37 +27,26 @@ FROM
 cast(sum(sequence_nett_weight) as dec(9,2)) as sequence_nett_weight,
  sum(carton_quantity)carton_quantity,
 COALESCE(customer_variety,marketing_variety) as variety,
-  pallet_number,production_area,
+  pallet_number,
+  production_area,
   puc,
-  orchard,
-  phc,
+   phc,
   region,
   commodity,
+  load_id,
   marketing_variety,
   coalesce(inspection_class,grade) grade,
   container,
-  pallet_number,
   shipped_at,
   govt_first_inspection_at,
-  load_id,
-  shipper,
-  exporter,
-  shipped_at,
-  puc,
-  orchard,
-  phyto_data,
-  phc,
-  production_region,
-  commodity,
-  container,
-  pallet_number,
-  inspection_date,
-  shipped_at,
-  addendum_manifest,
+    shipper,
+  exporter,    
+     production_region,
+      inspection_date,
+    addendum_manifest,
   inspection_point,
   country,
-  region,
-  exporter_certificate_code,
+    exporter_certificate_code,
   vessel,
   voyage_number,
   departure_date,
@@ -63,24 +54,13 @@ COALESCE(customer_variety,marketing_variety) as variety,
   pol,
   temp_code,
   booking_reference,
-  puc,
-  phc,
-  container,
-  pallet_number,
-  inspection_date,
-  commodity,
-  addendum_manifest,
-  inspection_point,
-  shipped_at,
-  orchard,
-  phyto_data,
-  production_region
+  case when orchard='DEPOT_UNKNOWN'then '' else orchard end orchard ,
+  phyto_data
   FROM vw_pallet_sequence_flat
   WHERE vw_pallet_sequence_flat.load_id=$P{load_id} 
   group by COALESCE(customer_variety,marketing_variety) ,
   pallet_number,
   puc,
-  orchard,
   phc,
   region,
   commodity,
@@ -93,11 +73,8 @@ COALESCE(customer_variety,marketing_variety) as variety,
   shipper,
   exporter,
   shipped_at,
-  puc,
-  orchard,
-  phyto_data,
-  phc,
-  production_region,
+      phyto_data,
+    production_region,
   commodity,
   coalesce(inspection_class,grade),
   container,
@@ -116,9 +93,7 @@ COALESCE(customer_variety,marketing_variety) as variety,
   pol,
   temp_code,
   booking_reference,
-  puc,
-  phc,
-  container,
+    container,
   pallet_number,
   inspection_date,
   commodity,
@@ -126,16 +101,11 @@ COALESCE(customer_variety,marketing_variety) as variety,
   inspection_point,
   shipped_at,
   coalesce(inspection_class,grade),
-  orchard,
+  case when orchard='DEPOT_UNKNOWN'then '' else orchard end,
   phyto_data,
   production_region,production_area
 )  AS sq]]>
 	</queryString>
-	<field name="load_id" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="load_id"/>
-		<property name="com.jaspersoft.studio.field.label" value="load_id"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
 	<field name="total_row" class="java.lang.Long">
 		<property name="com.jaspersoft.studio.field.name" value="total_row"/>
 		<property name="com.jaspersoft.studio.field.label" value="total_row"/>
@@ -168,11 +138,6 @@ COALESCE(customer_variety,marketing_variety) as variety,
 		<property name="com.jaspersoft.studio.field.label" value="puc"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
-	<field name="orchard" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="orchard"/>
-		<property name="com.jaspersoft.studio.field.label" value="orchard"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
 	<field name="phc" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="phc"/>
 		<property name="com.jaspersoft.studio.field.label" value="phc"/>
@@ -186,6 +151,11 @@ COALESCE(customer_variety,marketing_variety) as variety,
 	<field name="commodity" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="commodity"/>
 		<property name="com.jaspersoft.studio.field.label" value="commodity"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="load_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="load_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="load_id"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
 	<field name="marketing_variety" class="java.lang.String">
@@ -203,11 +173,6 @@ COALESCE(customer_variety,marketing_variety) as variety,
 		<property name="com.jaspersoft.studio.field.label" value="container"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
-	<field name="COLUMN_16" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="pallet_number"/>
-		<property name="com.jaspersoft.studio.field.label" value="pallet_number"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
 	<field name="shipped_at" class="java.sql.Timestamp">
 		<property name="com.jaspersoft.studio.field.name" value="shipped_at"/>
 		<property name="com.jaspersoft.studio.field.label" value="shipped_at"/>
@@ -216,11 +181,6 @@ COALESCE(customer_variety,marketing_variety) as variety,
 	<field name="govt_first_inspection_at" class="java.sql.Timestamp">
 		<property name="com.jaspersoft.studio.field.name" value="govt_first_inspection_at"/>
 		<property name="com.jaspersoft.studio.field.label" value="govt_first_inspection_at"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="COLUMN_19" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="load_id"/>
-		<property name="com.jaspersoft.studio.field.label" value="load_id"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
 	<field name="shipper" class="java.lang.String">
@@ -233,59 +193,14 @@ COALESCE(customer_variety,marketing_variety) as variety,
 		<property name="com.jaspersoft.studio.field.label" value="exporter"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
-	<field name="COLUMN_22" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.name" value="shipped_at"/>
-		<property name="com.jaspersoft.studio.field.label" value="shipped_at"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="COLUMN_23" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="puc"/>
-		<property name="com.jaspersoft.studio.field.label" value="puc"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="COLUMN_24" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="orchard"/>
-		<property name="com.jaspersoft.studio.field.label" value="orchard"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="phyto_data" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="phyto_data"/>
-		<property name="com.jaspersoft.studio.field.label" value="phyto_data"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="COLUMN_26" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="phc"/>
-		<property name="com.jaspersoft.studio.field.label" value="phc"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
 	<field name="production_region" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="production_region"/>
 		<property name="com.jaspersoft.studio.field.label" value="production_region"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
-	<field name="COLUMN_28" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="commodity"/>
-		<property name="com.jaspersoft.studio.field.label" value="commodity"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="COLUMN_29" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="container"/>
-		<property name="com.jaspersoft.studio.field.label" value="container"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="COLUMN_30" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="pallet_number"/>
-		<property name="com.jaspersoft.studio.field.label" value="pallet_number"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
 	<field name="inspection_date" class="java.sql.Date">
 		<property name="com.jaspersoft.studio.field.name" value="inspection_date"/>
 		<property name="com.jaspersoft.studio.field.label" value="inspection_date"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="COLUMN_32" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.name" value="shipped_at"/>
-		<property name="com.jaspersoft.studio.field.label" value="shipped_at"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
 	<field name="addendum_manifest" class="java.lang.String">
@@ -301,11 +216,6 @@ COALESCE(customer_variety,marketing_variety) as variety,
 	<field name="country" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="country"/>
 		<property name="com.jaspersoft.studio.field.label" value="country"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="COLUMN_36" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="region"/>
-		<property name="com.jaspersoft.studio.field.label" value="region"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
 	<field name="exporter_certificate_code" class="java.lang.String">
@@ -348,64 +258,14 @@ COALESCE(customer_variety,marketing_variety) as variety,
 		<property name="com.jaspersoft.studio.field.label" value="booking_reference"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
-	<field name="COLUMN_45" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="puc"/>
-		<property name="com.jaspersoft.studio.field.label" value="puc"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="COLUMN_46" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="phc"/>
-		<property name="com.jaspersoft.studio.field.label" value="phc"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="COLUMN_47" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="container"/>
-		<property name="com.jaspersoft.studio.field.label" value="container"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="COLUMN_48" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="pallet_number"/>
-		<property name="com.jaspersoft.studio.field.label" value="pallet_number"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="COLUMN_49" class="java.sql.Date">
-		<property name="com.jaspersoft.studio.field.name" value="inspection_date"/>
-		<property name="com.jaspersoft.studio.field.label" value="inspection_date"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="COLUMN_50" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="commodity"/>
-		<property name="com.jaspersoft.studio.field.label" value="commodity"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="COLUMN_51" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="addendum_manifest"/>
-		<property name="com.jaspersoft.studio.field.label" value="addendum_manifest"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="COLUMN_52" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="inspection_point"/>
-		<property name="com.jaspersoft.studio.field.label" value="inspection_point"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="COLUMN_53" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.name" value="shipped_at"/>
-		<property name="com.jaspersoft.studio.field.label" value="shipped_at"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="COLUMN_54" class="java.lang.String">
+	<field name="orchard" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="orchard"/>
 		<property name="com.jaspersoft.studio.field.label" value="orchard"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
-	<field name="COLUMN_55" class="java.lang.String">
+	<field name="phyto_data" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="phyto_data"/>
 		<property name="com.jaspersoft.studio.field.label" value="phyto_data"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="COLUMN_56" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="production_region"/>
-		<property name="com.jaspersoft.studio.field.label" value="production_region"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
 	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
