@@ -1092,7 +1092,7 @@ Address:]]></text>
 						</textElement>
 						<text><![CDATA[]]></text>
 					</staticText>
-					<textField>
+					<textField isBlankWhenNull="true">
 						<reportElement x="500" y="161" width="53" height="20" uuid="b0884b47-2c78-49fb-a586-0795e1333250">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -1101,7 +1101,7 @@ Address:]]></text>
 						</reportElement>
 						<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					</textField>
-					<textField>
+					<textField isBlankWhenNull="true">
 						<reportElement x="500" y="296" width="53" height="15" uuid="114601ac-f539-4bb3-9cf7-5a9408a0b7a6">
 							<property name="com.jaspersoft.studio.unit.width" value="px"/>
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
