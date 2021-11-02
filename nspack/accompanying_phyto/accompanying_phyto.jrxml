@@ -1306,7 +1306,7 @@ Address:]]></text>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{block_number}]]></textFieldExpression>
 			</textField>
@@ -1322,7 +1322,7 @@ Address:]]></text>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{count}]]></textFieldExpression>
 			</textField>
@@ -1338,7 +1338,7 @@ Address:]]></text>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{carton_quantity}]]></textFieldExpression>
 			</textField>
@@ -1354,7 +1354,7 @@ Address:]]></text>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center">
-					<font size="8"/>
+					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{sell_by_code}]]></textFieldExpression>
 			</textField>
@@ -1372,7 +1372,7 @@ Address:]]></text>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{variety}]]></textFieldExpression>
 			</textField>
@@ -1390,7 +1390,7 @@ Address:]]></text>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{puc}]]></textFieldExpression>
 			</textField>
