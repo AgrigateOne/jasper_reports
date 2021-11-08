@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="addendum" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="22c9f520-d5e9-4af2-ac4c-ad2be98d416a">
 	<property name="ireport.zoom" value="1.7524694974069637"/>
 	<property name="ireport.x" value="0"/>
@@ -26,7 +26,7 @@ FROM
 (SELECT  
 cast(sum(sequence_nett_weight) as dec(9,2)) as sequence_nett_weight,
  sum(carton_quantity)carton_quantity,
-COALESCE(customer_variety,marketing_variety) as variety,
+COALESCE(customer_variety,marketing_varieties.inspection_variety,marketing_variety) as variety,
   pallet_number,
   production_area,
   puc,
@@ -57,8 +57,9 @@ COALESCE(customer_variety,marketing_variety) as variety,
   case when orchard='DEPOT_UNKNOWN'then '' else orchard end orchard ,
   phyto_data
   FROM vw_pallet_sequence_flat
+  JOIN marketing_varieties ON marketing_varieties.marketing_variety_code = vw_pallet_sequence_flat.marketing_variety
   WHERE vw_pallet_sequence_flat.load_id=$P{load_id} 
-  group by COALESCE(customer_variety,marketing_variety) ,
+  group by COALESCE(customer_variety,marketing_varieties.inspection_variety,marketing_variety) ,
   pallet_number,
   puc,
   phc,
@@ -544,7 +545,7 @@ COALESCE(customer_variety,marketing_variety) as variety,
 						<font fontName="SansSerif" size="5"/>
 						<paragraph leftIndent="5"/>
 					</textElement>
-					<text><![CDATA[Date:]]></text>
+					<text><![CDATA[ Date:]]></text>
 				</staticText>
 				<rectangle>
 					<reportElement x="661" y="48" width="140" height="10" uuid="997cf102-ee2b-4ec9-a1e9-c21ae7b89195"/>
