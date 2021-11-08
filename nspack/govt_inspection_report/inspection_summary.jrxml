@@ -15,7 +15,7 @@
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="231"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="763"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="kr_nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="subgovt_inspection_sheet_id" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
@@ -33,7 +33,7 @@ SELECT
 distinct
 p.govt_inspection_sheet_id,
 p.commodity,
-p.marketing_variety,
+COALESCE(p.marketing_variety,marketing_varieties.inspection_variety) as marketing_variety,
 p.std_pack ,
 p.size_ref,
 p.grade,
@@ -41,18 +41,20 @@ p.actual_count,
 sum(p.carton_quantity)  as carton_quantity,
 max(scrapped_plt_cnt.scrapped_plt_qty) as scrapped_plt_qty,
 govt_inspection_passed,
-COALESCE(p.customer_variety, p.marketing_variety,'') as variety,
+COALESCE(p.customer_variety,marketing_varieties.inspection_variety, p.marketing_variety) as variety,
 count(distinct p.pallet_id) as each_plt_qty,
 1::double precision/ count(max(p.id)) OVER (PARTITION BY max(p.pallet_id))::double precision AS seq_perc_of_plt
 FROM vw_scrapped_pallet_sequence_flat p
-	join scrapped_plt_cnt on p.govt_inspection_sheet_id = scrapped_plt_cnt.govt_inspection_sheet_id
+	JOIN scrapped_plt_cnt on p.govt_inspection_sheet_id = scrapped_plt_cnt.govt_inspection_sheet_id
+	  LEFT JOIN marketing_varieties ON marketing_varieties.marketing_variety_code = p.marketing_variety
     WHERE  p.govt_inspection_sheet_id= $P{subgovt_inspection_sheet_id}
     AND (  case when  $P{paraminspecstatus} ='passed' then govt_inspection_passed=true 
                 when  $P{paraminspecstatus} ='failed' then govt_inspection_passed=false end )
 group by 
 p.govt_inspection_sheet_id,
 p.commodity,
- p.marketing_variety,
+ COALESCE(p.marketing_variety,marketing_varieties.inspection_variety),
+COALESCE(p.customer_variety,marketing_varieties.inspection_variety, p.marketing_variety),
 p.size_ref,
 p.actual_count,
 p.std_pack ,
@@ -69,7 +71,7 @@ AND (  case when $P{paraminspecstatus} ='passed' then govt_inspection_passed=tru
 	SELECT 
 p.govt_inspection_sheet_id,
 p.commodity,
-p.marketing_variety,
+COALESCE(p.marketing_variety,marketing_varieties.inspection_variety) as marketing_variety,
 p.std_pack ,
 p.size_ref,
 p.grade,
@@ -77,18 +79,20 @@ p.actual_count,
 sum(p.carton_quantity) as carton_quantity,
 max(plt_cnt.plt_qty) as plt_qty,
 govt_inspection_passed,
-COALESCE(p.customer_variety, p.marketing_variety,'') as variety,
+COALESCE(p.customer_variety,marketing_varieties.inspection_variety, p.marketing_variety) as variety,
 count(distinct p.pallet_id) as each_plt_qty,
 1::double precision/ count(max(p.id)) OVER (PARTITION BY max(p.pallet_id))::double precision AS seq_perc_of_plt
 FROM vw_pallet_sequence_flat p
-	join plt_cnt on p.govt_inspection_sheet_id = plt_cnt.govt_inspection_sheet_id
+	  JOIN plt_cnt on p.govt_inspection_sheet_id = plt_cnt.govt_inspection_sheet_id
+	  LEFT JOIN marketing_varieties ON marketing_varieties.marketing_variety_code = p.marketing_variety
     WHERE  p.govt_inspection_sheet_id= $P{subgovt_inspection_sheet_id}
     AND (  case when  $P{paraminspecstatus} ='passed' then govt_inspection_passed=true 
                 when  $P{paraminspecstatus} ='failed' then govt_inspection_passed=false end )
 group by 
 p.govt_inspection_sheet_id,
 p.commodity,
- p.marketing_variety,
+ COALESCE(p.marketing_variety,marketing_varieties.inspection_variety),
+COALESCE(p.customer_variety,marketing_varieties.inspection_variety, p.marketing_variety),
 p.size_ref,
 p.actual_count,
 p.std_pack ,
