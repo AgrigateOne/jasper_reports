@@ -1267,7 +1267,8 @@ Address:]]></text>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					</reportElement>
-					<imageExpression><![CDATA["../logos/sa_ministry_of_agric.png"]]></imageExpression>
+					<imageExpression><![CDATA["../../logos/sa_ministry_of_agric.png"
+]]></imageExpression>
 				</image>
 			</band>
 		</groupHeader>
