@@ -6,7 +6,7 @@
 	<property name="ireport.y" value="0"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/addendum"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44:80/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack_KR_Live"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Live Kromco"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="283"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="717"/>
@@ -545,7 +545,7 @@ COALESCE(customer_variety,marketing_varieties.inspection_variety,marketing_varie
 						<font fontName="SansSerif" size="5"/>
 						<paragraph leftIndent="5"/>
 					</textElement>
-					<text><![CDATA[ Date:]]></text>
+					<text><![CDATA[Date:]]></text>
 				</staticText>
 				<rectangle>
 					<reportElement x="661" y="48" width="140" height="10" uuid="997cf102-ee2b-4ec9-a1e9-c21ae7b89195"/>
