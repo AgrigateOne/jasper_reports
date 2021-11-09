@@ -1262,7 +1262,7 @@ Address:]]></text>
 					<text><![CDATA[    DIRECTORATE: INSPECTION SERVICES]]></text>
 				</staticText>
 				<image>
-					<reportElement x="0" y="0" width="278" height="80" uuid="df450f9d-7596-4392-9ed8-c06d423139a4">
+					<reportElement x="0" y="0" width="340" height="80" uuid="df450f9d-7596-4392-9ed8-c06d423139a4">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>

@@ -990,7 +990,7 @@ Address:]]></text>
 				<text><![CDATA[ACCOMPANYING DOCUMENT FOR PHYTOSANITARY INSPECTIONS FOR FRESH FRUIT]]></text>
 			</staticText>
 			<image>
-				<reportElement x="5" y="0" width="335" height="80" uuid="a078afa9-3df9-443e-821a-ed77adf2b117">
+				<reportElement x="5" y="0" width="395" height="80" uuid="a078afa9-3df9-443e-821a-ed77adf2b117">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
