@@ -441,11 +441,11 @@ order by row_num]]>
 Address:]]></text>
 				</staticText>
 				<line>
-					<reportElement x="0" y="115" width="203" height="1" uuid="663c3abb-3adc-43e4-bc94-42ce042493a0">
+					<reportElement x="0" y="116" width="203" height="1" uuid="663c3abb-3adc-43e4-bc94-42ce042493a0">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
-						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
 				</line>
 				<staticText>
@@ -990,7 +990,7 @@ Address:]]></text>
 				<text><![CDATA[ACCOMPANYING DOCUMENT FOR PHYTOSANITARY INSPECTIONS FOR FRESH FRUIT]]></text>
 			</staticText>
 			<image>
-				<reportElement x="5" y="0" width="395" height="80" uuid="a078afa9-3df9-443e-821a-ed77adf2b117">
+				<reportElement x="5" y="0" width="415" height="80" uuid="a078afa9-3df9-443e-821a-ed77adf2b117">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
