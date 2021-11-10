@@ -983,23 +983,23 @@ Address:]]></text>
 			</subreport>
 			<textField>
 				<reportElement x="455" y="45" width="50" height="11" uuid="13158174-ac56-4804-b143-2b2bc2ed65f6"/>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="510" y="43" width="26" height="11" uuid="d0f61a67-a381-419f-912e-ee1ddbbbf9a5">
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				<reportElement x="510" y="45" width="26" height="11" uuid="d0f61a67-a381-419f-912e-ee1ddbbbf9a5">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[" "+$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="10" y="5" width="415" height="80" uuid="e25b1a93-61c6-4f16-a70a-7b01a704e77b">
+				<reportElement x="10" y="5" width="415" height="80" uuid="3fdacba7-4038-4963-b540-a9978e8b5a30">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
