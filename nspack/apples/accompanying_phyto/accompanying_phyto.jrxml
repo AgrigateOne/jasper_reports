@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="accompanying_phyto" language="groovy" printOrder="Horizontal" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Empty" uuid="57a0c595-5448-465f-8162-0e6517403bd3">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="accompanying_phyto" language="groovy" printOrder="Horizontal" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="10" bottomMargin="10" whenResourceMissingType="Empty" uuid="57a0c595-5448-465f-8162-0e6517403bd3">
 	<property name="ireport.zoom" value="2.253944402704733"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -293,9 +293,6 @@ order by row_num asc]]>
 	<variable name="sq" class="java.lang.Integer">
 		<variableExpression><![CDATA[$F{puc_seq}]]></variableExpression>
 	</variable>
-	<group name="pucs_grp" isStartNewPage="true" minDetailsToStartFromTop="5">
-		<groupExpression><![CDATA[$F{puc}]]></groupExpression>
-	</group>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -527,15 +524,15 @@ Address:]]></text>
   Contact Details:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="110" y="278" width="108" height="12" uuid="c8eeca96-c587-4301-a18c-8d66b9050934">
+				<reportElement x="110" y="278" width="107" height="12" uuid="c8eeca96-c587-4301-a18c-8d66b9050934">
 					<property name="net.sf.jasperreports.text.truncate.at.char" value="true"/>
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="1.0"/>
@@ -549,12 +546,11 @@ Address:]]></text>
 				<textFieldExpression><![CDATA[$F{magisterial_district}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement x="110" y="304" width="108" height="12" uuid="b5087a5e-4f15-4b81-88ff-abc7a6d99c40">
+				<reportElement x="110" y="304" width="107" height="12" uuid="b5087a5e-4f15-4b81-88ff-abc7a6d99c40">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<box>
@@ -589,13 +585,13 @@ Address:]]></text>
 				<textFieldExpression><![CDATA[$F{phc_first_name}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="111" y="291" width="107" height="12" uuid="5f4b5de0-7131-41a9-82af-5c93180148bc">
+				<reportElement x="110" y="291" width="107" height="12" uuid="5f4b5de0-7131-41a9-82af-5c93180148bc">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<box>
 					<bottomPen lineWidth="1.0"/>
@@ -630,12 +626,12 @@ Address:]]></text>
 				<textFieldExpression><![CDATA[$F{commodity}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="110" y="331" width="108" height="14" uuid="ab124887-afad-40b9-8efd-5590dc526b94">
+				<reportElement x="110" y="331" width="107" height="14" uuid="ab124887-afad-40b9-8efd-5590dc526b94">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
 					<bottomPen lineWidth="1.0"/>
@@ -648,7 +644,7 @@ Address:]]></text>
 				<textFieldExpression><![CDATA[$F{phc_contact}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="165" y="317" width="53" height="14" uuid="56002464-0940-4294-9dcc-9dfa05292e4b">
+				<reportElement x="165" y="317" width="52" height="14" uuid="56002464-0940-4294-9dcc-9dfa05292e4b">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1000,7 +996,7 @@ Address:]]></text>
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="10" y="5" width="415" height="80" uuid="53bf18f5-4008-4ce5-a5cc-b1aa1ec0464b">
+				<reportElement x="10" y="5" width="415" height="80" uuid="2fc4123f-1411-45b4-bcb9-9393ac5a590e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -1273,11 +1269,11 @@ Address:]]></text>
 				</reportElement>
 			</line>
 			<line>
-				<reportElement x="9" y="40" width="563" height="1" uuid="a9c3b588-77ae-4579-bca7-7023a89c4d4e">
+				<reportElement x="8" y="40" width="563" height="1" uuid="a9c3b588-77ae-4579-bca7-7023a89c4d4e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 			</line>
 			<textField>
@@ -1333,7 +1329,7 @@ Address:]]></text>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
-				<text><![CDATA[ On Hold]]></text>
+				<text><![CDATA[  On Hold]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="9" y="0" width="160" height="12" uuid="2b0f2efb-e741-4cf6-9417-665c484edd13">
