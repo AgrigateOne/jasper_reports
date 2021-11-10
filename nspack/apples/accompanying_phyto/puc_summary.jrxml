@@ -10,14 +10,28 @@
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="726"/>
 	<parameter name="load_id" class="java.lang.Integer"/>
 	<queryString language="SQL">
-		<![CDATA[select edi_in_consignment_note_number as intake,pucs,sum(total_ctns)  ctns,sum(total_pallets) plts
+		<![CDATA[select intake,pucs,sum(total_ctns)  ctns,sum(total_pallets) plts
 from (
-select  edi_in_consignment_note_number,string_agg(distinct puc , ',') as pucs,SUM(carton_quantity) as total_ctns,COUNT(distinct pallet_number) as total_pallets
+select
+COALESCE (
+CASE
+WHEN NOT govt_inspection_passed THEN consignment_note_number || 'F'::text
+WHEN govt_inspection_passed THEN consignment_note_number
+ELSE ''::text
+END,edi_in_consignment_note_number)  AS intake
+,string_agg(distinct puc , ',') as pucs,SUM(carton_quantity) as total_ctns,COUNT(distinct pallet_number) as total_pallets
 from vw_pallet_sequence_flat
 where load_id = $P{load_id} 
-group by edi_in_consignment_note_number,pallet_number
+group by
+COALESCE (
+CASE
+WHEN NOT govt_inspection_passed THEN consignment_note_number || 'F'::text
+WHEN govt_inspection_passed THEN consignment_note_number
+ELSE ''::text
+END,edi_in_consignment_note_number)
+,pallet_number
 )as d 
-group by edi_in_consignment_note_number,pucs
+group by intake,pucs
 order by pucs desc]]>
 	</queryString>
 	<field name="intake" class="java.lang.String">
@@ -117,7 +131,7 @@ order by pucs desc]]>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[  PUC's]]></text>
+				<text><![CDATA[  PUC's ]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
