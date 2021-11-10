@@ -989,14 +989,17 @@ Address:]]></text>
 				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="511" y="45" width="26" height="11" uuid="d0f61a67-a381-419f-912e-ee1ddbbbf9a5"/>
-				<textElement verticalAlignment="Middle">
+				<reportElement x="510" y="43" width="26" height="11" uuid="d0f61a67-a381-419f-912e-ee1ddbbbf9a5">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[" "+$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="10" y="5" width="415" height="80" uuid="2fc4123f-1411-45b4-bcb9-9393ac5a590e">
+				<reportElement x="10" y="5" width="415" height="80" uuid="8519a8c4-6232-480e-a0e7-c84173731a83">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
