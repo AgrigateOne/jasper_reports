@@ -57,7 +57,7 @@ select  distinct
 commodities.commodity,
 p.load_id,
 '00' || CAST(p.load_id as text) as document_number,
-p.country as importing_country,
+p.inspected_dest_country  as importing_country,
 p.exporter,
 
 (SELECT pr.id
