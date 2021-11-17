@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_consignment" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -410,7 +410,9 @@ where loads.id = $P{load_id}]]>
 			<band height="13"/>
 			<band height="13">
 				<subreport>
-					<reportElement x="4" y="0" width="326" height="13" uuid="cb5d1f42-dc7d-4f62-ae21-23440f19315e"/>
+					<reportElement x="4" y="0" width="327" height="13" uuid="cb5d1f42-dc7d-4f62-ae21-23440f19315e">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
 					<subreportParameter name="load_id">
 						<subreportParameterExpression><![CDATA[$P{load_id}]]></subreportParameterExpression>
 					</subreportParameter>
