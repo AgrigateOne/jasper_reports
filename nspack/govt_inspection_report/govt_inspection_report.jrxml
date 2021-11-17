@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gov_inspection_sheet" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b276ed72-36fe-4eb1-8898-57bb00d5eee1">
 	<property name="ireport.zoom" value="1.7524694974069621"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="46"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/first_intake"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SR_nspack.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="kromco"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="158"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="831"/>
@@ -25,19 +25,20 @@
 	<queryString language="SQL">
 		<![CDATA[WITH ggn AS (
   SELECT DISTINCT
-    p.govt_inspection_sheet_id,
-    CASE WHEN gap_code IS NOT NULL
-      AND govt_inspection_sheets.created_at BETWEEN p.gap_code_valid_from AND p.gap_code_valid_until THEN
-      gap_code
+    govt_inspection_pallets.govt_inspection_sheet_id,
+    CASE WHEN pucs.gap_code IS NOT NULL
+      AND govt_inspection_sheets.created_at BETWEEN pucs.gap_code_valid_from AND pucs.gap_code_valid_until THEN
+      pucs.gap_code
     ELSE
       NULL
     END gap_code
-  FROM
-    public.vw_pallet_sequence_flat p
-    LEFT JOIN govt_inspection_pallets ON govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
-    LEFT JOIN govt_inspection_sheets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+  FROM pallets p
+  join pallet_sequences ps on ps.pallet_id=p.id
+     left join pucs ON pucs.id = ps.puc_id
+   left JOIN govt_inspection_pallets ON govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
+    left JOIN govt_inspection_sheets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
   WHERE
-    p.govt_inspection_sheet_id = $P{govt_inspection_sheet_id}
+    govt_inspection_pallets.govt_inspection_sheet_id = $P{govt_inspection_sheet_id}
 ),
 ggn_validation AS (
   SELECT
@@ -50,57 +51,154 @@ GROUP BY
 ),
 scrapped_pallet_number AS (
   SELECT DISTINCT
-    v.pallet_id AS scrapped_pallet_id,
-    v.pallet_number,
-    v.pallet_sequence_number,
-    v.govt_inspection_passed,
-    v.grade,
-    v.inspection_class,
-    v.carton_quantity,
-    v.pallet_size,
-    v.pallet_base,
-    v.phc,
-    v.farm,
-    v.puc,
-    v.orchard,
-    v.commodity,
-    v.cultivar_group,
-    v.cultivar,
-    COALESCE(v.marketing_variety,marketing_varieties.inspection_variety) as marketing_variety,
-    v.marketing_org,
-    v.packed_tm_group,
-    v.mark,
-    v.inventory_code,
-    v.customer_variety,
-    v.std_size,
-    v.size_ref,
-    v.actual_count,
-    v.basic_pack,
-    v.std_pack,
-    v.phyto_data,
-    v.inspection_tm,
-    COALESCE(v.customer_variety,marketing_varieties.inspection_variety, v.marketing_variety) AS variety,
-  v.inspection_point
-FROM
-  vw_scrapped_pallet_sequence_flat v
-  LEFT JOIN marketing_varieties ON marketing_varieties.marketing_variety_code = v.marketing_variety
-  WHERE
-    govt_inspection_sheet_id = $P{govt_inspection_sheet_id}
-    AND v.govt_inspection_passed IS FALSE
-)
-SELECT
-  COALESCE(scrapped_pallet_number.variety, p.customer_variety,marketing_varieties.inspection_variety, p.marketing_variety, '') AS variety,
-  coalesce(scrapped_pallet_number.pallet_number, p.pallet_number) AS pallet_number,
-  coalesce(scrapped_pallet_number.pallet_sequence_number, p.pallet_sequence_number) AS pallet_sequence_number,
-  govt_inspection_pallets.passed,
+	  govt_inspection_pallets.passed,
   destination_regions.destination_region_name,
-  coalesce(scrapped_pallet_number.carton_quantity, p.carton_quantity) AS carton_quantity,
-  CASE WHEN p.gap_code IS NOT NULL
-    AND govt_inspection_sheets.created_at BETWEEN p.gap_code_valid_from AND p.gap_code_valid_until THEN
+
+	  CASE WHEN pucs.gap_code IS NOT NULL
+    AND govt_inspection_sheets.created_at BETWEEN pucs.gap_code_valid_from AND pucs.gap_code_valid_until THEN
     'global gap certified'
   ELSE
     NULL
   END gap_certification,
+    COALESCE(marketing_varieties.marketing_variety_code,marketing_varieties.inspection_variety) as marketing_variety,
+    COALESCE(cvv.marketing_variety_code,marketing_varieties.inspection_variety, marketing_varieties.marketing_variety_code) AS variety,
+     p.id as scrapped_pallet_id,
+	 p.pallet_number,
+	ps.pallet_sequence_number,
+	fruit_actual_counts_for_packs.actual_count_for_pack AS actual_count,
+     farms.farm_code AS farm,
+     pucs.puc_code AS puc,
+     orchards.orchard_code AS orchard,
+     commodities.code AS commodity,
+     cultivar_groups.cultivar_group_code AS cultivar_group,
+     cultivars.cultivar_name AS cultivar,
+     fn_party_role_name(ps.marketing_org_party_role_id) AS marketing_org,
+     target_market_groups.target_market_group_name AS packed_tm_group,
+     target_markets.target_market_name AS target_market,
+     marks.mark_code AS mark,
+     pm_marks.packaging_marks,
+     inventory_codes.inventory_code,
+     cvv.marketing_variety_code AS customer_variety,
+    std_fruit_size_counts.size_count_value AS std_size,
+     fruit_size_references.size_reference AS size_ref,
+     basic_pack_codes.basic_pack_code AS basic_pack,
+     standard_pack_codes.standard_pack_code AS std_pack,
+     ps.product_resource_allocation_id AS resource_allocation_id,
+     ps.marketing_order_number AS order_number,
+     seasons.season_code AS season,
+     p.phc,
+     pallet_bases.pallet_base_code AS pallet_base,
+     pallet_stack_types.stack_type_code AS stack_type,
+     fn_pallet_verification_failed(p.id) AS pallet_verification_failed,
+     ps.verified,
+     ps.verification_passed,
+     pallet_verification_failure_reasons.reason AS verification_failure_reason,
+     ps.verification_result,
+     ps.verified_at,
+     ps.extended_columns,
+     ps.carton_quantity,
+     ps.scanned_from_carton_id AS scanned_carton,
+     ps.scrapped_at AS seq_scrapped_at,
+     ps.exit_ref AS seq_exit_ref,
+     ps.pick_ref,
+     p.carton_quantity AS pallet_carton_quantity,
+     ps.carton_quantity::numeric / p.carton_quantity::numeric AS pallet_size,
+     p.build_status,
+     grades.grade_code AS grade,
+     grades.rmt_grade,
+     grades.inspection_class,
+     ps.sell_by_code,
+     ps.product_chars,
+     govt_inspection_pallets.govt_inspection_sheet_id,
+     COALESCE(govt_inspection_sheets.inspection_point, p.edi_in_inspection_point) AS inspection_point,
+     inspected_dest_country.country_name AS inspected_dest_country,
+     p.last_govt_inspection_pallet_id,
+     p.depot_pallet,
+     p.edi_in_consignment_note_number,
+     COALESCE(p.govt_reinspection_at, p.govt_first_inspection_at)::date AS inspection_date,
+     p.repacked,
+     p.repacked_at,
+     p.repacked_at::date AS repacked_date,
+     ps.repacked_from_pallet_id,
+     repacked_from_pallets.pallet_number AS repacked_from_pallet_number,
+     ps.phyto_data,
+     ps.created_by,
+     ps.verified_by,
+     fruit_size_references.size_reference,
+     govt_inspection_sheets.consignment_note_number,
+     ps.gtin_code,
+     rmt_classes.rmt_class_code,
+     ps.tu_labour_product_id,
+     ps.ru_labour_product_id,
+     ps.fruit_sticker_ids,
+     ps.tu_sticker_ids,
+     pucs.gap_code,
+     pucs.gap_code_valid_from,
+    pucs.gap_code_valid_until,
+	CASE
+	WHEN target_markets.inspection_tm THEN target_markets.target_market_name
+	ELSE target_market_groups.target_market_group_name
+	END AS inspection_tm,
+	inspected_dest_country.iso_country_code,
+	fn_party_role_name (inspectors.inspector_party_role_id) AS inspector,
+	govt_inspection_sheets.created_at inspection_date_time,
+	govt_inspection_sheets.inspection_billing_party_role_id,
+	govt_inspection_sheets.exporter_party_role_id,
+	govt_inspection_sheets.upn
+    FROM pallets p
+     JOIN pallet_sequences ps ON p.id = ps.scrapped_from_pallet_id
+     LEFT JOIN pallets repacked_from_pallets ON repacked_from_pallets.id = ps.repacked_from_pallet_id
+     LEFT JOIN plant_resources plt_packhouses ON plt_packhouses.id = p.plt_packhouse_resource_id
+     LEFT JOIN plant_resources plt_lines ON plt_lines.id = p.plt_line_resource_id
+     LEFT JOIN plant_resources packhouses ON packhouses.id = ps.packhouse_resource_id
+     LEFT JOIN plant_resources lines ON lines.id = ps.production_line_id
+     LEFT JOIN plant_resources palletizing_bays ON palletizing_bays.id = p.palletizing_bay_resource_id
+     JOIN locations ON locations.id = p.location_id
+     JOIN farms ON farms.id = ps.farm_id
+     LEFT JOIN farm_groups ON farms.farm_group_id = farm_groups.id
+     JOIN production_regions ON production_regions.id = farms.pdn_region_id
+     JOIN pucs ON pucs.id = ps.puc_id
+     JOIN orchards ON orchards.id = ps.orchard_id
+     JOIN cultivar_groups ON cultivar_groups.id = ps.cultivar_group_id
+     LEFT JOIN cultivars ON cultivars.id = ps.cultivar_id
+     LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
+     JOIN marketing_varieties ON marketing_varieties.id = ps.marketing_variety_id
+     JOIN marks ON marks.id = ps.mark_id
+     LEFT JOIN pm_marks ON pm_marks.id = ps.pm_mark_id
+     JOIN inventory_codes ON inventory_codes.id = ps.inventory_code_id
+     JOIN target_market_groups ON target_market_groups.id = ps.packed_tm_group_id
+     LEFT JOIN target_markets ON target_markets.id = ps.target_market_id
+     JOIN grades ON grades.id = ps.grade_id
+     LEFT JOIN customer_varieties ON customer_varieties.id = ps.customer_variety_id
+     LEFT JOIN marketing_varieties cvv ON cvv.id = customer_varieties.variety_as_customer_variety_id
+     LEFT JOIN std_fruit_size_counts ON std_fruit_size_counts.id = ps.std_fruit_size_count_id
+     LEFT JOIN fruit_size_references ON fruit_size_references.id = ps.fruit_size_reference_id
+     LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = ps.fruit_actual_counts_for_pack_id
+     JOIN basic_pack_codes ON basic_pack_codes.id = ps.basic_pack_code_id
+     JOIN standard_pack_codes ON standard_pack_codes.id = ps.standard_pack_code_id
+     JOIN seasons ON seasons.id = ps.season_id
+     JOIN cartons_per_pallet ON cartons_per_pallet.id = ps.cartons_per_pallet_id
+     LEFT JOIN pallet_formats ON pallet_formats.id = p.pallet_format_id
+     LEFT JOIN pallet_bases ON pallet_bases.id = pallet_formats.pallet_base_id
+     LEFT JOIN pallet_stack_types ON pallet_stack_types.id = pallet_formats.pallet_stack_type_id
+     LEFT JOIN pallet_verification_failure_reasons ON pallet_verification_failure_reasons.id = ps.pallet_verification_failure_reason_id
+     LEFT JOIN govt_inspection_pallets ON govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
+     LEFT JOIN govt_inspection_sheets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+     LEFT JOIN destination_countries inspected_dest_country ON inspected_dest_country.id = govt_inspection_sheets.destination_country_id
+	  LEFT JOIN destination_regions ON destination_regions.id = govt_inspection_sheets.destination_region_id
+     LEFT JOIN edi_in_transactions ON edi_in_transactions.id = p.edi_in_transaction_id
+     LEFT JOIN standard_product_weights ON standard_product_weights.standard_pack_id = standard_pack_codes.id AND standard_product_weights.commodity_id = commodities.id
+     LEFT JOIN pucs marketing_pucs ON marketing_pucs.id = ps.marketing_puc_id
+     LEFT JOIN registered_orchards ON registered_orchards.id = ps.marketing_orchard_id
+     LEFT JOIN rmt_classes ON rmt_classes.id = ps.rmt_class_id
+	LEFT JOIN inspectors ON inspectors.id = govt_inspection_sheets.inspector_id
+  WHERE
+    govt_inspection_sheet_id = $P{govt_inspection_sheet_id}
+    AND p.govt_inspection_passed IS FALSE
+)
+SELECT
+
+
   ggn_validation.gap_code,
   CASE WHEN NOT (govt_inspection_pallets.passed) THEN
     govt_inspection_pallets.id
@@ -122,130 +220,49 @@ SELECT
           name = 'IMPLEMENTATION_OWNER')
       LIMIT 1) AS implementation_owner_party_role_id,
   p.id,
-  p.pallet_id,
-  plt_packhouse,
-  plt_line,
-  packhouse,
-  line,
-  LOCATION,
-  shipped,
-  in_stock,
-  p.inspected,
-  p.reinspected,
-  palletized,
-  partially_palletized,
-  allocated,
-  pallet_age,
-  inspection_age,
-  stock_age,
-  cold_age,
-  first_cold_storage_at,
-  ambient_age,
-  p.govt_inspection_passed,
-  govt_first_inspection_at,
-  govt_reinspection_at,
-  reinspection_age,
-  shipped_at,
-  p.created_at,
-  scrapped,
-  scrapped_at,
-  production_run_id,
-  coalesce(scrapped_pallet_number.farm, p.farm, '') AS farm,
-  coalesce(scrapped_pallet_number.puc, p.puc, ' ') AS puc,
-  coalesce(scrapped_pallet_number.orchard, p.orchard, ' ') AS orchard,
-  coalesce(scrapped_pallet_number.commodity, p.commodity, ' ') AS commodity,
-  coalesce(scrapped_pallet_number.cultivar_group, p.cultivar_group, ' ') AS cultivar_group,
-  coalesce(scrapped_pallet_number.cultivar, p.cultivar, ' ') AS cultivar,
-  coalesce(scrapped_pallet_number.marketing_variety,marketing_varieties.inspection_variety, p.marketing_variety, ' ') AS marketing_variety,
-  coalesce(scrapped_pallet_number.marketing_org, p.marketing_org, ' ') AS marketing_org,
-  coalesce(scrapped_pallet_number.packed_tm_group, p.packed_tm_group, ' ') AS packed_tm_group,
-  coalesce(scrapped_pallet_number.mark, p.mark, ' ') AS mark,
-  coalesce(scrapped_pallet_number.inventory_code, p.inventory_code, ' ') AS inventory_code,
-  coalesce(scrapped_pallet_number.customer_variety, p.customer_variety, ' ') AS customer_variety,
-  coalesce(scrapped_pallet_number.std_size, p.std_size) AS std_size,
-  coalesce(scrapped_pallet_number.size_ref, p.size_ref, ' ') AS size_ref,
-  coalesce(scrapped_pallet_number.actual_count, p.actual_count) AS actual_count,
-  coalesce(scrapped_pallet_number.basic_pack, p.basic_pack, ' ') AS basic_pack,
-  coalesce(scrapped_pallet_number.std_pack, p.std_pack, ' ') AS std_pack,
-  resource_allocation_id,
-  treatments,
-  client_size_ref,
-  client_product_code,
-  order_number,
-  season,
-  pm_subtype,
-  pm_type,
-  cpp,
-  fruit_sticker,
-  fruit_sticker_2,
-  gross_weight,
-  gross_weight_measured_at,
-  nett_weight,
-  sequence_nett_weight,
-  exit_ref,
-  coalesce(p.phc, scrapped_pallet_number.phc) AS phc,
-  stock_created_at,
-  intake_created_at,
-  palletized_at,
-  partially_palletized_at,
-  allocated_at,
-  coalesce(p.pallet_base, scrapped_pallet_number.pallet_base) AS pallet_base,
-  stack_type,
-  pallet_verification_failed,
-  verified,
-  verification_passed,
-  verification_failure_reason,
-  verification_result,
-  verified_at,
-  "bom",
-  extended_columns,
-  scanned_carton,
-  seq_scrapped_at,
-  seq_exit_ref,
-  pick_ref,
-  pallet_carton_quantity,
-  coalesce(p.pallet_size, scrapped_pallet_number.pallet_size) AS pallet_size,
-  build_status,
-  status,
-  sequence_status,
-  p.active,
-  load_id,
-  vessel,
-  voyage,
-  voyage_number,
-  container,
-  internal_container,
-  temp_code,
-  vehicle_number,
-  cooled,
-  pol,
-  pod,
-  final_destination,
-  customer,
-  consignee,
-  final_receiver,
-  exporter,
-  billing_client,
-  p.country,
-  coalesce(destination_countries.iso_country_code, '..') iso_country_code,
-  eta,
-  ata,
-  etd,
-  atd,
-  zero_load_id,
-  fruit_sticker_pm_product_id,
-  fruit_sticker_pm_product_2_id,
-  pallet_verification_failure_reason_id,
-  coalesce(scrapped_pallet_number.inspection_class, scrapped_pallet_number.grade, p.inspection_class, p.grade) AS grade,
-  sell_by_code,
-  product_chars,
-  colour_rule,
-  exporter_certificate_code,
-  p.booking_reference,
-  p.govt_inspection_sheet_id,
-  govt_inspection_sheets.created_at inspection_date_time,
-  fn_party_role_name (govt_inspection_sheets.inspection_billing_party_role_id) AS billing_party,
-  fn_party_role_name (inspectors.inspector_party_role_id) AS inspector,
+  p.id as pallet_id,
+    coalesce(scrapped_pallet_number.carton_quantity, p.carton_quantity) AS carton_quantity,
+  coalesce(scrapped_pallet_number.pallet_number, p.pallet_number) AS pallet_number,
+  coalesce(scrapped_pallet_number.pallet_sequence_number, ps.pallet_sequence_number) AS pallet_sequence_number,
+  coalesce(scrapped_pallet_number.farm, farms.farm_code) AS farm,
+  coalesce(scrapped_pallet_number.puc, pucs.puc_code) AS puc,
+  coalesce(scrapped_pallet_number.orchard, orchards.orchard_code) AS orchard,
+  coalesce(scrapped_pallet_number.commodity, commodities.code) AS commodity,
+  coalesce(scrapped_pallet_number.cultivar_group, cultivar_groups.cultivar_group_code) AS cultivar_group,
+  coalesce(scrapped_pallet_number.cultivar, cultivars.cultivar_name) AS cultivar,
+  coalesce(scrapped_pallet_number.marketing_org,fn_party_role_name(ps.marketing_org_party_role_id)) AS marketing_org,
+  coalesce(scrapped_pallet_number.packed_tm_group, target_market_groups.target_market_group_name) AS packed_tm_group,
+  coalesce(scrapped_pallet_number.mark, marks.mark_code) AS mark,
+  coalesce(scrapped_pallet_number.inventory_code, inventory_codes.inventory_code) AS inventory_code,
+  coalesce(scrapped_pallet_number.customer_variety, cvv.marketing_variety_code) AS customer_variety,
+  coalesce(scrapped_pallet_number.std_size, std_fruit_size_counts.size_count_value) AS std_size,
+  coalesce(scrapped_pallet_number.size_ref, fruit_size_references.size_reference) AS size_ref,
+  coalesce(scrapped_pallet_number.actual_count, fruit_actual_counts_for_packs.actual_count_for_pack) AS actual_count,
+  coalesce(scrapped_pallet_number.basic_pack, basic_pack_codes.basic_pack_code) AS basic_pack,
+  coalesce(scrapped_pallet_number.std_pack, standard_pack_codes.standard_pack_code) AS std_pack,
+  coalesce(scrapped_pallet_number.phc,p.phc) AS phc,
+  coalesce(scrapped_pallet_number.inspection_class, scrapped_pallet_number.grade, grades.inspection_class, grades.grade_code) AS grade,
+   coalesce(scrapped_pallet_number.iso_country_code,inspected_dest_country.iso_country_code) iso_country_code,
+
+coalesce(scrapped_pallet_number.verification_failure_reason,pallet_verification_failure_reasons.reason) as failure_reason,
+coalesce(scrapped_pallet_number.order_number,ps.marketing_order_number) AS order_number,
+coalesce(scrapped_pallet_number.inspector,fn_party_role_name (inspectors.inspector_party_role_id)) AS inspector,
+coalesce(scrapped_pallet_number.inspection_date_time,govt_inspection_sheets.created_at) inspection_date_time,
+coalesce(scrapped_pallet_number.inspection_billing_party_role_id,govt_inspection_sheets.inspection_billing_party_role_id) as inspection_billing_party_role_id,
+coalesce(scrapped_pallet_number.exporter_party_role_id,govt_inspection_sheets.exporter_party_role_id) as exporter_party_role_id,
+coalesce(scrapped_pallet_number.upn,govt_inspection_sheets.upn) as upn,
+coalesce(scrapped_pallet_number.destination_region_name,destination_regions.destination_region_name) as destination_region_name,
+coalesce(scrapped_pallet_number.pallet_size,ps.carton_quantity::numeric / p.carton_quantity::numeric) AS pallet_size,
+COALESCE(scrapped_pallet_number.variety,cvv.marketing_variety_code,marketing_varieties.inspection_variety, marketing_varieties.marketing_variety_code) AS variety,
+COALESCE(scrapped_pallet_number.pallet_base,pallet_bases.pallet_base_code ) AS pallet_base,
+coalesce(scrapped_pallet_number.gap_certification,
+	  CASE WHEN pucs.gap_code IS NOT NULL
+    AND govt_inspection_sheets.created_at BETWEEN pucs.gap_code_valid_from AND pucs.gap_code_valid_until THEN
+    'global gap certified'
+  ELSE
+    NULL
+  END ) as gap_certification,
+
   CASE WHEN NOT (govt_inspection_pallets.passed) THEN
     govt_inspection_sheets.consignment_note_number || 'F'
   WHEN (govt_inspection_pallets.passed) THEN
@@ -253,67 +270,67 @@ SELECT
   ELSE
     ''
   END consignment_note_number,
-  govt_inspection_sheets.inspection_billing_party_role_id,
-  govt_inspection_sheets.exporter_party_role_id,
-  inspection_failure_reasons.failure_reason,
-  target_market_groups.target_market_group_name,
-  govt_inspection_sheets.upn,
-  coalesce(scrapped_pallet_number.phyto_data, p.phyto_data) AS phyto_data,
-  coalesce(scrapped_pallet_number.inspection_tm, p.inspection_tm) AS inspection_tm,
+  coalesce(scrapped_pallet_number.phyto_data, ps.phyto_data) AS phyto_data,
+  coalesce(scrapped_pallet_number.inspection_tm,
+		    CASE
+            WHEN target_markets.inspection_tm THEN target_markets.target_market_name
+            ELSE target_market_groups.target_market_group_name
+        END
+		  ) AS inspection_tm,
   govt_inspection_sheets.inspection_point
-FROM
-  govt_inspection_sheets
-  LEFT JOIN govt_inspection_pallets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
-  LEFT JOIN public.vw_pallet_sequence_flat p ON govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
-  LEFT JOIN scrapped_pallet_number ON scrapped_pallet_number.scrapped_pallet_id = govt_inspection_pallets.pallet_id
-  LEFT JOIN destination_countries ON destination_countries.id = govt_inspection_sheets.destination_country_id
-  LEFT JOIN destination_regions ON destination_regions.id = govt_inspection_sheets.destination_region_id
-  LEFT JOIN inspectors ON inspectors.id = govt_inspection_sheets.inspector_id
-  LEFT JOIN party_roles ON inspectors.inspector_party_role_id = party_roles.id
-  LEFT JOIN parties ON party_roles.party_id = parties.id
-  LEFT JOIN inspection_failure_reasons ON inspection_failure_reasons.id = govt_inspection_pallets.failure_reason_id
-  LEFT JOIN target_market_groups ON govt_inspection_sheets.packed_tm_group_id = target_market_groups.id
-  LEFT JOIN target_market_group_types ON target_market_groups.target_market_group_type_id = target_market_group_types.id
-    AND target_market_group_type_code = 'PACKED'
-  LEFT JOIN ggn_validation ON p.govt_inspection_sheet_id = ggn_validation.govt_inspection_sheet_id
-  LEFT JOIN marketing_varieties ON marketing_varieties.marketing_variety_code = p.marketing_variety
-WHERE
+    FROM pallets p
+     JOIN pallet_sequences ps ON p.id = ps.pallet_id
+     LEFT JOIN pallets repacked_from_pallets ON repacked_from_pallets.id = ps.repacked_from_pallet_id
+     LEFT JOIN plant_resources plt_packhouses ON plt_packhouses.id = p.plt_packhouse_resource_id
+     LEFT JOIN plant_resources plt_lines ON plt_lines.id = p.plt_line_resource_id
+     LEFT JOIN plant_resources packhouses ON packhouses.id = ps.packhouse_resource_id
+     LEFT JOIN plant_resources lines ON lines.id = ps.production_line_id
+     LEFT JOIN plant_resources palletizing_bays ON palletizing_bays.id = p.palletizing_bay_resource_id
+     JOIN locations ON locations.id = p.location_id
+     JOIN farms ON farms.id = ps.farm_id
+     LEFT JOIN farm_groups ON farms.farm_group_id = farm_groups.id
+     JOIN production_regions ON production_regions.id = farms.pdn_region_id
+     JOIN pucs ON pucs.id = ps.puc_id
+     JOIN orchards ON orchards.id = ps.orchard_id
+     JOIN cultivar_groups ON cultivar_groups.id = ps.cultivar_group_id
+     LEFT JOIN cultivars ON cultivars.id = ps.cultivar_id
+     LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
+     JOIN marketing_varieties ON marketing_varieties.id = ps.marketing_variety_id
+     JOIN marks ON marks.id = ps.mark_id
+     LEFT JOIN pm_marks ON pm_marks.id = ps.pm_mark_id
+     JOIN inventory_codes ON inventory_codes.id = ps.inventory_code_id
+     JOIN target_market_groups ON target_market_groups.id = ps.packed_tm_group_id
+     LEFT JOIN target_markets ON target_markets.id = ps.target_market_id
+     JOIN grades ON grades.id = ps.grade_id
+     LEFT JOIN customer_varieties ON customer_varieties.id = ps.customer_variety_id
+     LEFT JOIN marketing_varieties cvv ON cvv.id = customer_varieties.variety_as_customer_variety_id
+     LEFT JOIN std_fruit_size_counts ON std_fruit_size_counts.id = ps.std_fruit_size_count_id
+     LEFT JOIN fruit_size_references ON fruit_size_references.id = ps.fruit_size_reference_id
+     LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = ps.fruit_actual_counts_for_pack_id
+     JOIN basic_pack_codes ON basic_pack_codes.id = ps.basic_pack_code_id
+     JOIN standard_pack_codes ON standard_pack_codes.id = ps.standard_pack_code_id
+     JOIN seasons ON seasons.id = ps.season_id
+     JOIN cartons_per_pallet ON cartons_per_pallet.id = ps.cartons_per_pallet_id
+     LEFT JOIN pallet_formats ON pallet_formats.id = p.pallet_format_id
+     LEFT JOIN pallet_bases ON pallet_bases.id = pallet_formats.pallet_base_id
+     LEFT JOIN pallet_stack_types ON pallet_stack_types.id = pallet_formats.pallet_stack_type_id
+     LEFT JOIN pallet_verification_failure_reasons ON pallet_verification_failure_reasons.id = ps.pallet_verification_failure_reason_id
+     LEFT JOIN govt_inspection_pallets ON govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
+     LEFT JOIN govt_inspection_sheets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+     LEFT JOIN destination_countries inspected_dest_country ON inspected_dest_country.id = govt_inspection_sheets.destination_country_id
+	  LEFT JOIN destination_regions ON destination_regions.id = govt_inspection_sheets.destination_region_id
+     LEFT JOIN edi_in_transactions ON edi_in_transactions.id = p.edi_in_transaction_id
+     LEFT JOIN standard_product_weights ON standard_product_weights.standard_pack_id = standard_pack_codes.id AND standard_product_weights.commodity_id = commodities.id
+     LEFT JOIN pucs marketing_pucs ON marketing_pucs.id = ps.marketing_puc_id
+     LEFT JOIN registered_orchards ON registered_orchards.id = ps.marketing_orchard_id
+     LEFT JOIN rmt_classes ON rmt_classes.id = ps.rmt_class_id
+     LEFT JOIN scrapped_pallet_number ON scrapped_pallet_number.scrapped_pallet_id = govt_inspection_pallets.pallet_id
+     LEFT JOIN ggn_validation ON govt_inspection_sheets.id = ggn_validation.govt_inspection_sheet_id
+	 LEFT JOIN inspectors ON inspectors.id = govt_inspection_sheets.inspector_id
+     WHERE
   govt_inspection_sheets.id = $P{govt_inspection_sheet_id}
   AND $P!{QueryCondition}]]>
 	</queryString>
-	<field name="variety" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="variety"/>
-		<property name="com.jaspersoft.studio.field.label" value="variety"/>
-	</field>
-	<field name="pallet_number" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="pallet_number"/>
-		<property name="com.jaspersoft.studio.field.label" value="pallet_number"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="pallet_sequence_number" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="pallet_sequence_number"/>
-		<property name="com.jaspersoft.studio.field.label" value="pallet_sequence_number"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="passed" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.name" value="passed"/>
-		<property name="com.jaspersoft.studio.field.label" value="passed"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="govt_inspection_pallets"/>
-	</field>
-	<field name="destination_region_name" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="destination_region_name"/>
-		<property name="com.jaspersoft.studio.field.label" value="destination_region_name"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="destination_regions"/>
-	</field>
-	<field name="carton_quantity" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="carton_quantity"/>
-		<property name="com.jaspersoft.studio.field.label" value="carton_quantity"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="gap_certification" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="gap_certification"/>
-		<property name="com.jaspersoft.studio.field.label" value="gap_certification"/>
-	</field>
 	<field name="gap_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="gap_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="gap_code"/>
@@ -329,146 +346,26 @@ WHERE
 	<field name="id" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="id"/>
 		<property name="com.jaspersoft.studio.field.label" value="id"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pallets"/>
 	</field>
 	<field name="pallet_id" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="pallet_id"/>
 		<property name="com.jaspersoft.studio.field.label" value="pallet_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pallets"/>
+	</field>
+	<field name="carton_quantity" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="carton_quantity"/>
+		<property name="com.jaspersoft.studio.field.label" value="carton_quantity"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
-	<field name="plt_packhouse" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="plt_packhouse"/>
-		<property name="com.jaspersoft.studio.field.label" value="plt_packhouse"/>
+	<field name="pallet_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pallet_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="pallet_number"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
-	<field name="plt_line" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="plt_line"/>
-		<property name="com.jaspersoft.studio.field.label" value="plt_line"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="packhouse" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="packhouse"/>
-		<property name="com.jaspersoft.studio.field.label" value="packhouse"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="line" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="line"/>
-		<property name="com.jaspersoft.studio.field.label" value="line"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="location" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="location"/>
-		<property name="com.jaspersoft.studio.field.label" value="location"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="shipped" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.name" value="shipped"/>
-		<property name="com.jaspersoft.studio.field.label" value="shipped"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="in_stock" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.name" value="in_stock"/>
-		<property name="com.jaspersoft.studio.field.label" value="in_stock"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="inspected" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.name" value="inspected"/>
-		<property name="com.jaspersoft.studio.field.label" value="inspected"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="reinspected" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.name" value="reinspected"/>
-		<property name="com.jaspersoft.studio.field.label" value="reinspected"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="palletized" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.name" value="palletized"/>
-		<property name="com.jaspersoft.studio.field.label" value="palletized"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="partially_palletized" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.name" value="partially_palletized"/>
-		<property name="com.jaspersoft.studio.field.label" value="partially_palletized"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="allocated" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.name" value="allocated"/>
-		<property name="com.jaspersoft.studio.field.label" value="allocated"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="pallet_age" class="java.lang.Double">
-		<property name="com.jaspersoft.studio.field.name" value="pallet_age"/>
-		<property name="com.jaspersoft.studio.field.label" value="pallet_age"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="inspection_age" class="java.lang.Double">
-		<property name="com.jaspersoft.studio.field.name" value="inspection_age"/>
-		<property name="com.jaspersoft.studio.field.label" value="inspection_age"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="stock_age" class="java.lang.Double">
-		<property name="com.jaspersoft.studio.field.name" value="stock_age"/>
-		<property name="com.jaspersoft.studio.field.label" value="stock_age"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="cold_age" class="java.lang.Double">
-		<property name="com.jaspersoft.studio.field.name" value="cold_age"/>
-		<property name="com.jaspersoft.studio.field.label" value="cold_age"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="first_cold_storage_at" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.name" value="first_cold_storage_at"/>
-		<property name="com.jaspersoft.studio.field.label" value="first_cold_storage_at"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="ambient_age" class="java.lang.Double">
-		<property name="com.jaspersoft.studio.field.name" value="ambient_age"/>
-		<property name="com.jaspersoft.studio.field.label" value="ambient_age"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="govt_inspection_passed" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.name" value="govt_inspection_passed"/>
-		<property name="com.jaspersoft.studio.field.label" value="govt_inspection_passed"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="govt_first_inspection_at" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.name" value="govt_first_inspection_at"/>
-		<property name="com.jaspersoft.studio.field.label" value="govt_first_inspection_at"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="govt_reinspection_at" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.name" value="govt_reinspection_at"/>
-		<property name="com.jaspersoft.studio.field.label" value="govt_reinspection_at"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="reinspection_age" class="java.lang.Double">
-		<property name="com.jaspersoft.studio.field.name" value="reinspection_age"/>
-		<property name="com.jaspersoft.studio.field.label" value="reinspection_age"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="shipped_at" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.name" value="shipped_at"/>
-		<property name="com.jaspersoft.studio.field.label" value="shipped_at"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="created_at" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.name" value="created_at"/>
-		<property name="com.jaspersoft.studio.field.label" value="created_at"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="scrapped" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.name" value="scrapped"/>
-		<property name="com.jaspersoft.studio.field.label" value="scrapped"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="scrapped_at" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.name" value="scrapped_at"/>
-		<property name="com.jaspersoft.studio.field.label" value="scrapped_at"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="production_run_id" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="production_run_id"/>
-		<property name="com.jaspersoft.studio.field.label" value="production_run_id"/>
+	<field name="pallet_sequence_number" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="pallet_sequence_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="pallet_sequence_number"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
 	<field name="farm" class="java.lang.String">
@@ -499,11 +396,6 @@ WHERE
 	<field name="cultivar" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="cultivar"/>
 		<property name="com.jaspersoft.studio.field.label" value="cultivar"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="marketing_variety" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="marketing_variety"/>
-		<property name="com.jaspersoft.studio.field.label" value="marketing_variety"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
 	<field name="marketing_org" class="java.lang.String">
@@ -556,348 +448,9 @@ WHERE
 		<property name="com.jaspersoft.studio.field.label" value="std_pack"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
-	<field name="resource_allocation_id" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="resource_allocation_id"/>
-		<property name="com.jaspersoft.studio.field.label" value="resource_allocation_id"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="treatments" class="java.sql.Array">
-		<property name="com.jaspersoft.studio.field.name" value="treatments"/>
-		<property name="com.jaspersoft.studio.field.label" value="treatments"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="client_size_ref" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="client_size_ref"/>
-		<property name="com.jaspersoft.studio.field.label" value="client_size_ref"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="client_product_code" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="client_product_code"/>
-		<property name="com.jaspersoft.studio.field.label" value="client_product_code"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="order_number" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="order_number"/>
-		<property name="com.jaspersoft.studio.field.label" value="order_number"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="season" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="season"/>
-		<property name="com.jaspersoft.studio.field.label" value="season"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="pm_subtype" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="pm_subtype"/>
-		<property name="com.jaspersoft.studio.field.label" value="pm_subtype"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="pm_type" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="pm_type"/>
-		<property name="com.jaspersoft.studio.field.label" value="pm_type"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="cpp" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="cpp"/>
-		<property name="com.jaspersoft.studio.field.label" value="cpp"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="fruit_sticker" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="fruit_sticker"/>
-		<property name="com.jaspersoft.studio.field.label" value="fruit_sticker"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="fruit_sticker_2" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="fruit_sticker_2"/>
-		<property name="com.jaspersoft.studio.field.label" value="fruit_sticker_2"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="gross_weight" class="java.math.BigDecimal">
-		<property name="com.jaspersoft.studio.field.name" value="gross_weight"/>
-		<property name="com.jaspersoft.studio.field.label" value="gross_weight"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="gross_weight_measured_at" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.name" value="gross_weight_measured_at"/>
-		<property name="com.jaspersoft.studio.field.label" value="gross_weight_measured_at"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="nett_weight" class="java.math.BigDecimal">
-		<property name="com.jaspersoft.studio.field.name" value="nett_weight"/>
-		<property name="com.jaspersoft.studio.field.label" value="nett_weight"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="sequence_nett_weight" class="java.math.BigDecimal">
-		<property name="com.jaspersoft.studio.field.name" value="sequence_nett_weight"/>
-		<property name="com.jaspersoft.studio.field.label" value="sequence_nett_weight"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="exit_ref" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="exit_ref"/>
-		<property name="com.jaspersoft.studio.field.label" value="exit_ref"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
 	<field name="phc" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="phc"/>
 		<property name="com.jaspersoft.studio.field.label" value="phc"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="stock_created_at" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.name" value="stock_created_at"/>
-		<property name="com.jaspersoft.studio.field.label" value="stock_created_at"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="intake_created_at" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.name" value="intake_created_at"/>
-		<property name="com.jaspersoft.studio.field.label" value="intake_created_at"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="palletized_at" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.name" value="palletized_at"/>
-		<property name="com.jaspersoft.studio.field.label" value="palletized_at"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="partially_palletized_at" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.name" value="partially_palletized_at"/>
-		<property name="com.jaspersoft.studio.field.label" value="partially_palletized_at"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="allocated_at" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.name" value="allocated_at"/>
-		<property name="com.jaspersoft.studio.field.label" value="allocated_at"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="pallet_base" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="pallet_base"/>
-		<property name="com.jaspersoft.studio.field.label" value="pallet_base"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="stack_type" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="stack_type"/>
-		<property name="com.jaspersoft.studio.field.label" value="stack_type"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="pallet_verification_failed" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.name" value="pallet_verification_failed"/>
-		<property name="com.jaspersoft.studio.field.label" value="pallet_verification_failed"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="verified" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.name" value="verified"/>
-		<property name="com.jaspersoft.studio.field.label" value="verified"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="verification_passed" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.name" value="verification_passed"/>
-		<property name="com.jaspersoft.studio.field.label" value="verification_passed"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="verification_failure_reason" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="verification_failure_reason"/>
-		<property name="com.jaspersoft.studio.field.label" value="verification_failure_reason"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="verification_result" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="verification_result"/>
-		<property name="com.jaspersoft.studio.field.label" value="verification_result"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="verified_at" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.name" value="verified_at"/>
-		<property name="com.jaspersoft.studio.field.label" value="verified_at"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="bom" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="bom"/>
-		<property name="com.jaspersoft.studio.field.label" value="bom"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="extended_columns" class="java.lang.Object">
-		<property name="com.jaspersoft.studio.field.name" value="extended_columns"/>
-		<property name="com.jaspersoft.studio.field.label" value="extended_columns"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="scanned_carton" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="scanned_carton"/>
-		<property name="com.jaspersoft.studio.field.label" value="scanned_carton"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="seq_scrapped_at" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.name" value="seq_scrapped_at"/>
-		<property name="com.jaspersoft.studio.field.label" value="seq_scrapped_at"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="seq_exit_ref" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="seq_exit_ref"/>
-		<property name="com.jaspersoft.studio.field.label" value="seq_exit_ref"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="pick_ref" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="pick_ref"/>
-		<property name="com.jaspersoft.studio.field.label" value="pick_ref"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="pallet_carton_quantity" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="pallet_carton_quantity"/>
-		<property name="com.jaspersoft.studio.field.label" value="pallet_carton_quantity"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="pallet_size" class="java.math.BigDecimal">
-		<property name="com.jaspersoft.studio.field.name" value="pallet_size"/>
-		<property name="com.jaspersoft.studio.field.label" value="pallet_size"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="build_status" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="build_status"/>
-		<property name="com.jaspersoft.studio.field.label" value="build_status"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="status" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="status"/>
-		<property name="com.jaspersoft.studio.field.label" value="status"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="sequence_status" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="sequence_status"/>
-		<property name="com.jaspersoft.studio.field.label" value="sequence_status"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="active" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.name" value="active"/>
-		<property name="com.jaspersoft.studio.field.label" value="active"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="load_id" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="load_id"/>
-		<property name="com.jaspersoft.studio.field.label" value="load_id"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="vessel" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="vessel"/>
-		<property name="com.jaspersoft.studio.field.label" value="vessel"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="voyage" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="voyage"/>
-		<property name="com.jaspersoft.studio.field.label" value="voyage"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="voyage_number" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="voyage_number"/>
-		<property name="com.jaspersoft.studio.field.label" value="voyage_number"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="container" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="container"/>
-		<property name="com.jaspersoft.studio.field.label" value="container"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="internal_container" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="internal_container"/>
-		<property name="com.jaspersoft.studio.field.label" value="internal_container"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="temp_code" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="temp_code"/>
-		<property name="com.jaspersoft.studio.field.label" value="temp_code"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="vehicle_number" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="vehicle_number"/>
-		<property name="com.jaspersoft.studio.field.label" value="vehicle_number"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="cooled" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.name" value="cooled"/>
-		<property name="com.jaspersoft.studio.field.label" value="cooled"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="pol" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="pol"/>
-		<property name="com.jaspersoft.studio.field.label" value="pol"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="pod" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="pod"/>
-		<property name="com.jaspersoft.studio.field.label" value="pod"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="final_destination" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="final_destination"/>
-		<property name="com.jaspersoft.studio.field.label" value="final_destination"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="customer" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="customer"/>
-		<property name="com.jaspersoft.studio.field.label" value="customer"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="consignee" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="consignee"/>
-		<property name="com.jaspersoft.studio.field.label" value="consignee"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="final_receiver" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="final_receiver"/>
-		<property name="com.jaspersoft.studio.field.label" value="final_receiver"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="exporter" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="exporter"/>
-		<property name="com.jaspersoft.studio.field.label" value="exporter"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="billing_client" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="billing_client"/>
-		<property name="com.jaspersoft.studio.field.label" value="billing_client"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="country" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="country"/>
-		<property name="com.jaspersoft.studio.field.label" value="country"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="iso_country_code" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="iso_country_code"/>
-		<property name="com.jaspersoft.studio.field.label" value="iso_country_code"/>
-	</field>
-	<field name="eta" class="java.sql.Date">
-		<property name="com.jaspersoft.studio.field.name" value="eta"/>
-		<property name="com.jaspersoft.studio.field.label" value="eta"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="ata" class="java.sql.Date">
-		<property name="com.jaspersoft.studio.field.name" value="ata"/>
-		<property name="com.jaspersoft.studio.field.label" value="ata"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="etd" class="java.sql.Date">
-		<property name="com.jaspersoft.studio.field.name" value="etd"/>
-		<property name="com.jaspersoft.studio.field.label" value="etd"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="atd" class="java.sql.Date">
-		<property name="com.jaspersoft.studio.field.name" value="atd"/>
-		<property name="com.jaspersoft.studio.field.label" value="atd"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="zero_load_id" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="zero_load_id"/>
-		<property name="com.jaspersoft.studio.field.label" value="zero_load_id"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="fruit_sticker_pm_product_id" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="fruit_sticker_pm_product_id"/>
-		<property name="com.jaspersoft.studio.field.label" value="fruit_sticker_pm_product_id"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="fruit_sticker_pm_product_2_id" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="fruit_sticker_pm_product_2_id"/>
-		<property name="com.jaspersoft.studio.field.label" value="fruit_sticker_pm_product_2_id"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="pallet_verification_failure_reason_id" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="pallet_verification_failure_reason_id"/>
-		<property name="com.jaspersoft.studio.field.label" value="pallet_verification_failure_reason_id"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
 	<field name="grade" class="java.lang.String">
@@ -905,78 +458,62 @@ WHERE
 		<property name="com.jaspersoft.studio.field.label" value="grade"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
-	<field name="sell_by_code" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="sell_by_code"/>
-		<property name="com.jaspersoft.studio.field.label" value="sell_by_code"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	<field name="iso_country_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="iso_country_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="iso_country_code"/>
 	</field>
-	<field name="product_chars" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="product_chars"/>
-		<property name="com.jaspersoft.studio.field.label" value="product_chars"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	<field name="failure_reason" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="failure_reason"/>
+		<property name="com.jaspersoft.studio.field.label" value="failure_reason"/>
 	</field>
-	<field name="colour_rule" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="colour_rule"/>
-		<property name="com.jaspersoft.studio.field.label" value="colour_rule"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="exporter_certificate_code" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="exporter_certificate_code"/>
-		<property name="com.jaspersoft.studio.field.label" value="exporter_certificate_code"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="booking_reference" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="booking_reference"/>
-		<property name="com.jaspersoft.studio.field.label" value="booking_reference"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="govt_inspection_sheet_id" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="govt_inspection_sheet_id"/>
-		<property name="com.jaspersoft.studio.field.label" value="govt_inspection_sheet_id"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="inspection_date_time" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.name" value="inspection_date_time"/>
-		<property name="com.jaspersoft.studio.field.label" value="inspection_date_time"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="govt_inspection_sheets"/>
-	</field>
-	<field name="billing_party" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="billing_party"/>
-		<property name="com.jaspersoft.studio.field.label" value="billing_party"/>
+	<field name="order_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="order_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="order_number"/>
 	</field>
 	<field name="inspector" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="inspector"/>
 		<property name="com.jaspersoft.studio.field.label" value="inspector"/>
 	</field>
-	<field name="consignment_note_number" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="consignment_note_number"/>
-		<property name="com.jaspersoft.studio.field.label" value="consignment_note_number"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	<field name="inspection_date_time" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="inspection_date_time"/>
+		<property name="com.jaspersoft.studio.field.label" value="inspection_date_time"/>
 	</field>
 	<field name="inspection_billing_party_role_id" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="inspection_billing_party_role_id"/>
 		<property name="com.jaspersoft.studio.field.label" value="inspection_billing_party_role_id"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="govt_inspection_sheets"/>
 	</field>
 	<field name="exporter_party_role_id" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="exporter_party_role_id"/>
 		<property name="com.jaspersoft.studio.field.label" value="exporter_party_role_id"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="govt_inspection_sheets"/>
-	</field>
-	<field name="failure_reason" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="failure_reason"/>
-		<property name="com.jaspersoft.studio.field.label" value="failure_reason"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="inspection_failure_reasons"/>
-	</field>
-	<field name="target_market_group_name" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="target_market_group_name"/>
-		<property name="com.jaspersoft.studio.field.label" value="target_market_group_name"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="target_market_groups"/>
 	</field>
 	<field name="upn" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="upn"/>
 		<property name="com.jaspersoft.studio.field.label" value="upn"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="govt_inspection_sheets"/>
+	</field>
+	<field name="destination_region_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="destination_region_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="destination_region_name"/>
+	</field>
+	<field name="pallet_size" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="pallet_size"/>
+		<property name="com.jaspersoft.studio.field.label" value="pallet_size"/>
+	</field>
+	<field name="variety" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="variety"/>
+		<property name="com.jaspersoft.studio.field.label" value="variety"/>
+	</field>
+	<field name="pallet_base" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pallet_base"/>
+		<property name="com.jaspersoft.studio.field.label" value="pallet_base"/>
+	</field>
+	<field name="gap_certification" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="gap_certification"/>
+		<property name="com.jaspersoft.studio.field.label" value="gap_certification"/>
+	</field>
+	<field name="consignment_note_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="consignment_note_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="consignment_note_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
 	<field name="phyto_data" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="phyto_data"/>
