@@ -6,7 +6,7 @@
 	<property name="ireport.y" value="0"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/dispatch_consignment"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44:80/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SR_nspack.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
@@ -21,7 +21,7 @@
   coalesce(cvv.marketing_variety_code, marketing_varieties.marketing_variety_code) as variety_short_long,
   grades.grade_code,
   fruit_size_references.size_reference AS size_count_code,
-  basic_pack_codes.basic_pack_code AS old_pack_code,
+   standard_pack_codes.standard_pack_code AS old_pack_code,
   marks.mark_code AS brand_code,
   pallet_sequences.pick_ref AS pick_reference,
   pallet_sequences.pick_ref AS encrypt_pick_ref,
@@ -53,6 +53,7 @@ JOIN marks ON marks.id = pallet_sequences.mark_id
 JOIN target_market_groups ON target_market_groups.id = pallet_sequences.packed_tm_group_id
 JOIN grades ON grades.id = pallet_sequences.grade_id
 JOIN basic_pack_codes ON basic_pack_codes.id = pallet_sequences.basic_pack_code_id
+ LEFT JOIN standard_pack_codes ON standard_pack_codes.id = pallet_sequences.standard_pack_code_id
 LEFT JOIN fruit_size_references ON fruit_size_references.id = pallet_sequences.fruit_size_reference_id
 LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = pallet_sequences.fruit_actual_counts_for_pack_id
 LEFT JOIN party_roles ON party_roles.id = pallet_sequences.marketing_org_party_role_id
@@ -70,7 +71,7 @@ group by pallets.pallet_number,pallets.load_id,
   coalesce(cvv.marketing_variety_code, marketing_varieties.marketing_variety_code) ,
   grades.grade_code,
   fruit_size_references.size_reference,
-  basic_pack_codes.basic_pack_code,
+   standard_pack_codes.standard_pack_code,
   marks.mark_code ,
   pallet_sequences.pick_ref,
   pallet_sequences.pick_ref ,
@@ -91,7 +92,7 @@ ORDER BY
   marketing_varieties.marketing_variety_code,
   grades.grade_code,
   fruit_size_references.size_reference,
-  basic_pack_codes.basic_pack_code,
+  standard_pack_codes.standard_pack_code,
   marks.mark_code]]>
 	</queryString>
 	<field name="pallet_number" class="java.lang.String">
@@ -99,7 +100,7 @@ ORDER BY
 		<property name="com.jaspersoft.studio.field.label" value="pallet_number"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="pallets"/>
 	</field>
-	<field name="carton_quantity" class="java.lang.Integer">
+	<field name="carton_quantity" class="java.lang.Long">
 		<property name="com.jaspersoft.studio.field.name" value="carton_quantity"/>
 		<property name="com.jaspersoft.studio.field.label" value="carton_quantity"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="pallet_sequences"/>
@@ -130,7 +131,7 @@ ORDER BY
 	<field name="old_pack_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="old_pack_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="old_pack_code"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="basic_pack_codes"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="standard_pack_codes"/>
 	</field>
 	<field name="brand_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="brand_code"/>
@@ -157,7 +158,7 @@ ORDER BY
 		<property name="com.jaspersoft.studio.field.label" value="target_market_code"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="target_market_groups"/>
 	</field>
-	<field name="plt_qty" class="java.math.BigDecimal">
+	<field name="plt_qty" class="java.lang.Long">
 		<property name="com.jaspersoft.studio.field.name" value="plt_qty"/>
 		<property name="com.jaspersoft.studio.field.label" value="plt_qty"/>
 	</field>
@@ -181,7 +182,7 @@ ORDER BY
 		<property name="com.jaspersoft.studio.field.label" value="actual_size_count_code"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="fruit_actual_counts_for_packs"/>
 	</field>
-	<field name="ctn_qty" class="java.lang.Integer">
+	<field name="ctn_qty" class="java.lang.Long">
 		<property name="com.jaspersoft.studio.field.name" value="ctn_qty"/>
 		<property name="com.jaspersoft.studio.field.label" value="ctn_qty"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="pallet_sequences"/>
@@ -245,10 +246,10 @@ ORDER BY
 		<band splitType="Stretch"/>
 	</background>
 	<columnHeader>
-		<band height="13" splitType="Stretch">
+		<band height="16" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
-				<reportElement x="175" y="0" width="20" height="13" uuid="f97a0554-b35a-40fc-9835-53113d9ec278">
+				<reportElement x="183" y="0" width="20" height="13" uuid="f97a0554-b35a-40fc-9835-53113d9ec278">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -258,7 +259,7 @@ ORDER BY
 				<text><![CDATA[Size]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="146" y="0" width="25" height="13" uuid="ea84ba02-ce39-4351-b6e8-d4146e083fa2">
+				<reportElement x="156" y="0" width="25" height="13" uuid="ea84ba02-ce39-4351-b6e8-d4146e083fa2">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -269,7 +270,7 @@ ORDER BY
 				<text><![CDATA[Grade]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="290" y="0" width="18" height="13" uuid="33f7e29d-785e-4ea7-8756-82eeb686a57a">
+				<reportElement x="293" y="0" width="18" height="13" uuid="33f7e29d-785e-4ea7-8756-82eeb686a57a">
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
 				<textElement>
@@ -287,7 +288,7 @@ ORDER BY
 				<text><![CDATA[Inv]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="120" y="0" width="25" height="13" uuid="c01dc3cb-fcb8-4a9d-b6d9-8bd8b8b6afd8">
+				<reportElement x="105" y="0" width="25" height="13" uuid="c01dc3cb-fcb8-4a9d-b6d9-8bd8b8b6afd8">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -306,7 +307,7 @@ ORDER BY
 				<text><![CDATA[Comm]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="55" y="0" width="25" height="13" uuid="ea214d68-7033-4e1b-a4d2-80c0c4fa6185">
+				<reportElement x="50" y="0" width="25" height="13" uuid="ea214d68-7033-4e1b-a4d2-80c0c4fa6185">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement>
@@ -315,7 +316,7 @@ ORDER BY
 				<text><![CDATA[Pack]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="30" y="0" width="25" height="13" uuid="c84f0135-2ea6-4797-9093-7dc7ec026682">
+				<reportElement x="25" y="0" width="25" height="13" uuid="c84f0135-2ea6-4797-9093-7dc7ec026682">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -325,7 +326,7 @@ ORDER BY
 				<text><![CDATA[Var]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="85" y="0" width="30" height="13" uuid="b2ae1bf7-2871-4933-84e5-9ed954e77758">
+				<reportElement x="75" y="0" width="30" height="13" uuid="b2ae1bf7-2871-4933-84e5-9ed954e77758">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -335,7 +336,7 @@ ORDER BY
 				<text><![CDATA[Mark]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="225" y="0" width="24" height="13" uuid="cd902a99-0472-4d5f-baea-4d25f140c924">
+				<reportElement x="232" y="0" width="24" height="13" uuid="cd902a99-0472-4d5f-baea-4d25f140c924">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement>
@@ -344,7 +345,7 @@ ORDER BY
 				<text><![CDATA[Nett]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="196" y="0" width="26" height="13" uuid="73d20789-9244-43b0-b62c-a2fe57bde3c6">
+				<reportElement x="204" y="0" width="26" height="13" uuid="73d20789-9244-43b0-b62c-a2fe57bde3c6">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -355,7 +356,7 @@ ORDER BY
 				<text><![CDATA[Count]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="465" y="0" width="76" height="13" uuid="139c2eb7-34a0-4179-9b52-0397d983e785">
+				<reportElement x="457" y="0" width="98" height="13" uuid="139c2eb7-34a0-4179-9b52-0397d983e785">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<box>
@@ -380,7 +381,7 @@ ORDER BY
 				<text><![CDATA[PUC]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="252" y="0" width="35" height="13" uuid="7224d875-64b4-466d-aed0-85006952e8f5">
+				<reportElement x="256" y="0" width="35" height="13" uuid="7224d875-64b4-466d-aed0-85006952e8f5">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
@@ -399,7 +400,7 @@ ORDER BY
 				<text><![CDATA[Ctns]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="438" y="0" width="25" height="13" uuid="5517ec36-82fa-4790-a51f-0dac405c0e76">
+				<reportElement x="438" y="0" width="19" height="13" uuid="5517ec36-82fa-4790-a51f-0dac405c0e76">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -415,7 +416,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$P{scartons_equals_pallets} ? "Bins" : "Plts"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="369" y="0" width="45" height="13" uuid="01944770-ced0-4b9d-8de7-f71877c543c3">
+				<reportElement x="367" y="0" width="44" height="13" uuid="01944770-ced0-4b9d-8de7-f71877c543c3">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -425,13 +426,24 @@ ORDER BY
 				</textElement>
 				<text><![CDATA[Phyto Data]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="130" y="0" width="25" height="13" uuid="d2e86a4d-19c8-4049-bd52-084ac7183e62">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Sell By]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="13" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isBlankWhenNull="true">
-				<reportElement x="146" y="0" width="25" height="12" uuid="de9932c2-c446-4757-b958-d0584900efba">
+				<reportElement x="156" y="0" width="25" height="12" uuid="de9932c2-c446-4757-b958-d0584900efba">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -441,7 +453,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{grade_code}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="175" y="0" width="20" height="12" uuid="9c731255-1902-476b-923d-a15baf50e179">
+				<reportElement x="183" y="0" width="20" height="12" uuid="9c731255-1902-476b-923d-a15baf50e179">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -451,7 +463,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{size_count_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="295" y="0" width="18" height="12" uuid="0eae09a3-de76-406a-889b-960d0d9447e4">
+				<reportElement x="293" y="0" width="18" height="12" uuid="0eae09a3-de76-406a-889b-960d0d9447e4">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement>
@@ -469,7 +481,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{inventory_code}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00" isBlankWhenNull="true">
-				<reportElement x="436" y="0" width="14" height="12" uuid="c40ef02a-6cbe-4349-baa2-b7b1bdef3821">
+				<reportElement x="438" y="0" width="19" height="12" uuid="c40ef02a-6cbe-4349-baa2-b7b1bdef3821">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -479,7 +491,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{plt_qty}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="120" y="0" width="25" height="12" uuid="b7d84869-99fe-4617-98bc-a5ba07906bdb">
+				<reportElement x="105" y="0" width="25" height="12" uuid="b7d84869-99fe-4617-98bc-a5ba07906bdb">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -489,7 +501,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{organization_code}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="85" y="0" width="35" height="12" uuid="53a09c84-7caf-4005-abcb-2186b53528a3">
+				<reportElement x="75" y="0" width="30" height="12" uuid="53a09c84-7caf-4005-abcb-2186b53528a3">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -499,7 +511,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{brand_code}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="55" y="0" width="25" height="12" uuid="7882e60d-a0be-42af-8421-b21a1b176e6e">
+				<reportElement x="50" y="0" width="25" height="12" uuid="7882e60d-a0be-42af-8421-b21a1b176e6e">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement>
@@ -517,7 +529,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{commodity_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="196" y="0" width="26" height="12" uuid="91ebec3a-b32e-4bc0-8dc2-bbeb64bb7083">
+				<reportElement x="204" y="0" width="26" height="12" uuid="91ebec3a-b32e-4bc0-8dc2-bbeb64bb7083">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -527,7 +539,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{actual_size_count_code}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement isPrintRepeatedValues="false" x="454" y="0" width="98" height="12" uuid="0804e167-2e0e-453b-b9d4-cb0d10a06dab">
+				<reportElement isPrintRepeatedValues="false" x="457" y="0" width="98" height="12" uuid="0804e167-2e0e-453b-b9d4-cb0d10a06dab">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -543,7 +555,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{pallet_number}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="30" y="0" width="25" height="12" uuid="1918c503-7845-492c-89e6-1142b721ee97">
+				<reportElement x="25" y="0" width="25" height="12" uuid="1918c503-7845-492c-89e6-1142b721ee97">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -553,7 +565,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{variety_short_long}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00" isBlankWhenNull="true">
-				<reportElement x="225" y="0" width="24" height="12" uuid="a3451f06-dded-4e0f-a608-643d24fecd15">
+				<reportElement x="232" y="0" width="24" height="12" uuid="a3451f06-dded-4e0f-a608-643d24fecd15">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left">
@@ -562,7 +574,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{seq_nett_weight}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="335" y="0" width="35" height="12" uuid="b17b0077-a9f2-4801-9fda-08d1e27a795c">
+				<reportElement x="335" y="0" width="30" height="12" uuid="b17b0077-a9f2-4801-9fda-08d1e27a795c">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement>
@@ -571,7 +583,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{puc}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00" isBlankWhenNull="true">
-				<reportElement x="252" y="0" width="35" height="12" uuid="b0e40b6d-ab68-4744-bc95-7b4e2384b52c">
+				<reportElement x="256" y="0" width="35" height="12" uuid="b0e40b6d-ab68-4744-bc95-7b4e2384b52c">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right">
@@ -580,7 +592,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{gross_weight}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#0.##" isBlankWhenNull="true">
-				<reportElement x="413" y="0" width="20" height="12" uuid="da421630-6238-4bec-bda3-daad0f2aa138">
+				<reportElement x="413" y="0" width="25" height="12" uuid="da421630-6238-4bec-bda3-daad0f2aa138">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<printWhenExpression><![CDATA[!$P{scartons_equals_pallets}]]></printWhenExpression>
@@ -591,7 +603,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{ctn_qty}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="370" y="0" width="44" height="12" uuid="03da3778-1617-48cb-83b7-a97bcdfe4fce">
+				<reportElement x="367" y="0" width="44" height="12" uuid="03da3778-1617-48cb-83b7-a97bcdfe4fce">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -601,6 +613,16 @@ ORDER BY
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{phyto_data}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="130" y="0" width="25" height="12" uuid="62fe8875-5889-44f4-bd0c-ee8740aedc58">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sell_by_code}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
