@@ -109,7 +109,7 @@ string_agg(distinct vw_pallet_sequence_flat.commodity,',')commodity,
 string_agg(distinct vw_pallet_sequence_flat.marketing_variety,',')marketing_variety,
 string_agg(distinct vw_pallet_sequence_flat.mark,',')mark,
 string_agg(distinct vw_pallet_sequence_flat.std_pack ,',')std_pack,
-string_agg(distinct case when vw_pallet_sequence_flat.size_ref='NOS'then ''else vw_pallet_sequence_flat.size_ref end ,',')size_ref,
+string_agg(distinct vw_pallet_sequence_flat.edi_size_count,',')size_ref,
 string_agg(distinct vw_pallet_sequence_flat.actual_count::text,',')actual_count,
 string_agg(distinct vw_pallet_sequence_flat.grade,',')grade,
 string_agg(distinct vw_pallet_sequence_flat.packed_tm_group,',')packed_tm_group,
@@ -896,7 +896,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 			</staticText>
 			<staticText>
 				<reportElement x="314" y="15" width="47" height="13" uuid="08bae30f-5c4e-45df-a1eb-cf7aade46494"/>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font size="8" isBold="false" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[Mark]]></text>
@@ -925,7 +925,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<text><![CDATA[Inspected]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="525" y="15" width="40" height="13" uuid="7a2dd6da-906c-4d1a-85d3-2fed66cebb6c">
+				<reportElement x="525" y="15" width="35" height="13" uuid="7a2dd6da-906c-4d1a-85d3-2fed66cebb6c">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -942,7 +942,10 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<text><![CDATA[Location]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="630" y="18" width="40" height="13" uuid="1295891f-21ee-4c91-8aff-c78f8caf9af0"/>
+				<reportElement x="635" y="15" width="40" height="13" uuid="1295891f-21ee-4c91-8aff-c78f8caf9af0">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
 				<textElement>
 					<font size="8" isBold="false" isItalic="false"/>
 				</textElement>
@@ -959,20 +962,32 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<text><![CDATA[Build Up Remarks]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="567" y="15" width="25" height="13" uuid="3da262e2-8417-492d-9b3c-f494b51c1cca">
+				<reportElement x="610" y="15" width="25" height="13" uuid="3da262e2-8417-492d-9b3c-f494b51c1cca">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<printWhenExpression><![CDATA[!$P{cartons_equals_pallets}]]></printWhenExpression>
 				</reportElement>
-				<textElement textAlignment="Center">
+				<textElement textAlignment="Left">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Ctns]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="570" y="15" width="35" height="13" uuid="c54b721a-9c4f-47c0-9b53-0deb41db1a08">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Size ref]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
 	<detail>
 		<band height="16">
-			<textField>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField isBlankWhenNull="true">
 				<reportElement x="230" y="2" width="28" height="12" uuid="13f599b1-da4e-43c8-8d91-707e9604c01e">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -982,7 +997,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				</textElement>
 				<textFieldExpression><![CDATA[$F{commodity}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="258" y="2" width="28" height="12" uuid="084070bc-8048-487f-88bf-ab64ead55129">
 					<property name="local_mesure_unitheight" value="pixel"/>
 				</reportElement>
@@ -991,7 +1006,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				</textElement>
 				<textFieldExpression><![CDATA[$F{marketing_variety}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="286" y="2" width="28" height="12" uuid="9f715caf-1c75-49d2-868a-5c0d1d12adbe">
 					<property name="local_mesure_unitheight" value="pixel"/>
 				</reportElement>
@@ -1000,7 +1015,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				</textElement>
 				<textFieldExpression><![CDATA[$F{grade}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="314" y="2" width="47" height="12" uuid="468c9cb9-9b68-44e8-9a49-535fc3caca5b">
 					<property name="local_mesure_unitheight" value="pixel"/>
 				</reportElement>
@@ -1009,7 +1024,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				</textElement>
 				<textFieldExpression><![CDATA[$F{mark}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="361" y="2" width="47" height="12" uuid="ae2a39b6-30cf-46a3-8e11-f29ae11ad310">
 					<property name="local_mesure_unitheight" value="pixel"/>
 				</reportElement>
@@ -1028,7 +1043,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				</textElement>
 				<textFieldExpression><![CDATA[$F{actual_count}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="445" y="2" width="80" height="12" uuid="dc8eb549-a88b-4e24-af90-a4da48a610c5">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1039,8 +1054,8 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				</textElement>
 				<textFieldExpression><![CDATA[$F{inspected_result}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="525" y="2" width="40" height="12" uuid="1f42d759-2bdf-4161-8fdf-2f6370956b6f">
+			<textField isBlankWhenNull="true">
+				<reportElement x="525" y="2" width="35" height="12" uuid="1f42d759-2bdf-4161-8fdf-2f6370956b6f">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -1051,7 +1066,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				</textElement>
 				<textFieldExpression><![CDATA[$F{packed_tm_group}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="130" y="2" width="100" height="12" uuid="c93324a8-4605-419b-931b-9c28805a4b76">
 					<property name="local_mesure_unitheight" value="pixel"/>
 				</reportElement>
@@ -1061,8 +1076,9 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<textFieldExpression><![CDATA[$F{location}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="630" y="2" width="40" height="12" uuid="f46df3e7-647c-4666-9e1c-e2761b2fe33f">
+				<reportElement x="635" y="2" width="40" height="12" uuid="f46df3e7-647c-4666-9e1c-e2761b2fe33f">
 					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement>
 					<font size="10"/>
@@ -1080,7 +1096,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				</textElement>
 				<textFieldExpression><![CDATA[$F{buildup_remarks}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="0" y="2" width="130" height="12" uuid="13b7c423-7404-43bd-9dc4-a63ce7473250">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -1091,15 +1107,28 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<textFieldExpression><![CDATA[$F{pallet_number}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#0.##" isBlankWhenNull="true">
-				<reportElement x="567" y="0" width="33" height="12" uuid="add7ba95-da51-4049-b519-d8ceceedca4f">
+				<reportElement x="610" y="2" width="33" height="12" uuid="add7ba95-da51-4049-b519-d8ceceedca4f">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<printWhenExpression><![CDATA[!$P{cartons_equals_pallets}]]></printWhenExpression>
 				</reportElement>
-				<textElement textAlignment="Center">
+				<textElement textAlignment="Left" verticalAlignment="Top">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ctn_qty}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="570" y="2" width="40" height="12" uuid="614119cc-8c07-41e5-84d5-16847a81f86f">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{size_ref}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
