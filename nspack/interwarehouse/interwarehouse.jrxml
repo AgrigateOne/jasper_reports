@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="interwarehouse" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Kromco"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="live_kromco_nspack"/>
 	<property name="ireport.zoom" value="1.771561000000001"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -60,7 +60,13 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 ,vehicle_jobs.loaded_at
 ,vehicle_jobs.offloaded_at
 ,locations.location_long_code
-,business_processes.process
+,business_processes.process,
+  CASE
+     WHEN vw_pallet_sequence_flat.inspected THEN
+                    CASE WHEN vw_pallet_sequence_flat.govt_inspection_passed THEN 'PASSED'
+                    ELSE 'FAILED'
+                    END
+					ELSE 'UNINSPECTED' END AS inspected_result
  from vehicle_jobs
  join vehicle_job_units on vehicle_job_units.vehicle_job_id =vehicle_jobs.id
 left join vw_pallet_sequence_flat  on pallet_id=stock_item_id
@@ -86,31 +92,120 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 ,vehicle_jobs.offloaded_at
 ,locations.location_long_code
 ,business_processes.process
-,govt_inspection_pallets.passed]]>
+,govt_inspection_pallets.passed
+,vw_pallet_sequence_flat.inspected
+,vw_pallet_sequence_flat.govt_inspection_passed]]>
 	</queryString>
-	<field name="pallet_number" class="java.lang.String"/>
-	<field name="id" class="java.lang.Integer"/>
-	<field name="marketing_varieties" class="java.lang.String"/>
-	<field name="packed_tm_groups" class="java.lang.String"/>
-	<field name="std_packs" class="java.lang.String"/>
-	<field name="size_refs" class="java.lang.String"/>
-	<field name="actual_counts" class="java.lang.String"/>
-	<field name="grades" class="java.lang.String"/>
-	<field name="carton_quantity" class="java.lang.Long"/>
-	<field name="implementation_owner_name" class="java.lang.String"/>
-	<field name="implementation_owner_party_role_id" class="java.lang.Integer"/>
-	<field name="stock_type_id" class="java.lang.Integer"/>
-	<field name="stock_item_id" class="java.lang.Integer"/>
-	<field name="vehicle_number" class="java.lang.String"/>
-	<field name="govt_inspection_sheet_id" class="java.lang.Integer"/>
-	<field name="planned_location_to_id" class="java.lang.Integer"/>
-	<field name="business_process_id" class="java.lang.Integer"/>
-	<field name="loaded_at" class="java.sql.Timestamp"/>
-	<field name="offloaded_at" class="java.sql.Timestamp"/>
-	<field name="location_long_code" class="java.lang.String"/>
-	<field name="process" class="java.lang.String"/>
-	<field name="plt_packhouse" class="java.lang.String"/>
-	<field name="gvt_inspection_passed" class="java.lang.Boolean"/>
+	<field name="gvt_inspection_passed" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="gvt_inspection_passed"/>
+		<property name="com.jaspersoft.studio.field.label" value="gvt_inspection_passed"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="govt_inspection_pallets"/>
+	</field>
+	<field name="plt_packhouse" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="plt_packhouse"/>
+		<property name="com.jaspersoft.studio.field.label" value="plt_packhouse"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="pallet_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pallet_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="pallet_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="id"/>
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vehicle_jobs"/>
+	</field>
+	<field name="marketing_varieties" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="marketing_varieties"/>
+		<property name="com.jaspersoft.studio.field.label" value="marketing_varieties"/>
+	</field>
+	<field name="packed_tm_groups" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="packed_tm_groups"/>
+		<property name="com.jaspersoft.studio.field.label" value="packed_tm_groups"/>
+	</field>
+	<field name="std_packs" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="std_packs"/>
+		<property name="com.jaspersoft.studio.field.label" value="std_packs"/>
+	</field>
+	<field name="size_refs" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="size_refs"/>
+		<property name="com.jaspersoft.studio.field.label" value="size_refs"/>
+	</field>
+	<field name="actual_counts" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="actual_counts"/>
+		<property name="com.jaspersoft.studio.field.label" value="actual_counts"/>
+	</field>
+	<field name="grades" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="grades"/>
+		<property name="com.jaspersoft.studio.field.label" value="grades"/>
+	</field>
+	<field name="carton_quantity" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="carton_quantity"/>
+		<property name="com.jaspersoft.studio.field.label" value="carton_quantity"/>
+	</field>
+	<field name="implementation_owner_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="implementation_owner_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="implementation_owner_name"/>
+	</field>
+	<field name="implementation_owner_party_role_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="implementation_owner_party_role_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="implementation_owner_party_role_id"/>
+	</field>
+	<field name="stock_type_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="stock_type_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="stock_type_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vehicle_job_units"/>
+	</field>
+	<field name="stock_item_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="stock_item_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="stock_item_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vehicle_job_units"/>
+	</field>
+	<field name="vehicle_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="vehicle_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="vehicle_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vehicle_jobs"/>
+	</field>
+	<field name="govt_inspection_sheet_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="govt_inspection_sheet_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="govt_inspection_sheet_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vehicle_jobs"/>
+	</field>
+	<field name="planned_location_to_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="planned_location_to_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="planned_location_to_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vehicle_jobs"/>
+	</field>
+	<field name="business_process_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="business_process_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="business_process_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vehicle_jobs"/>
+	</field>
+	<field name="loaded_at" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="loaded_at"/>
+		<property name="com.jaspersoft.studio.field.label" value="loaded_at"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vehicle_jobs"/>
+	</field>
+	<field name="offloaded_at" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="offloaded_at"/>
+		<property name="com.jaspersoft.studio.field.label" value="offloaded_at"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vehicle_jobs"/>
+	</field>
+	<field name="location_long_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="location_long_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="location_long_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="locations"/>
+	</field>
+	<field name="process" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="process"/>
+		<property name="com.jaspersoft.studio.field.label" value="process"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="business_processes"/>
+	</field>
+	<field name="inspected_result" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="inspected_result"/>
+		<property name="com.jaspersoft.studio.field.label" value="inspected_result"/>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -358,10 +453,10 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				<text><![CDATA[Pack]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="410" y="20" width="38" height="13" uuid="06d2722b-2835-4d64-80fd-5040eebaeb09">
+				<reportElement x="410" y="20" width="30" height="13" uuid="06d2722b-2835-4d64-80fd-5040eebaeb09">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8"/>
@@ -369,12 +464,12 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				<text><![CDATA[Grade]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="455" y="20" width="40" height="13" uuid="2a47feaa-00dc-4bdd-bccd-4ae85f2ffef4">
+				<reportElement x="445" y="20" width="40" height="13" uuid="2a47feaa-00dc-4bdd-bccd-4ae85f2ffef4">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center">
+				<textElement textAlignment="Left">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<text><![CDATA[Ctn Qty]]></text>
@@ -409,16 +504,16 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				<text><![CDATA[Actual Cnt]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="500" y="20" width="50" height="13" uuid="5f919338-221a-4252-ba66-ad71a59e8e68">
+				<reportElement x="485" y="20" width="70" height="13" uuid="5f919338-221a-4252-ba66-ad71a59e8e68">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<text><![CDATA[Passed]]></text>
+				<text><![CDATA[Gvt Inspection]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
@@ -462,10 +557,10 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				<textFieldExpression><![CDATA[$F{size_refs}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="410" y="3" width="38" height="13" uuid="acef8336-1258-4291-80d8-4ee7401286fb">
+				<reportElement x="410" y="3" width="30" height="13" uuid="acef8336-1258-4291-80d8-4ee7401286fb">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8"/>
@@ -473,7 +568,7 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				<textFieldExpression><![CDATA[$F{grades}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="455" y="3" width="40" height="13" uuid="c19e30b6-2529-4951-b1dc-cbe058609810">
+				<reportElement x="445" y="3" width="40" height="13" uuid="c19e30b6-2529-4951-b1dc-cbe058609810">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -503,16 +598,16 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				<textFieldExpression><![CDATA[$F{actual_counts}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="500" y="3" width="50" height="13" uuid="eff0deb0-181f-40e4-a2dd-be4d03d5387e">
+				<reportElement x="485" y="3" width="70" height="13" uuid="eff0deb0-181f-40e4-a2dd-be4d03d5387e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center">
+				<textElement textAlignment="Left">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{gvt_inspection_passed}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{inspected_result}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
