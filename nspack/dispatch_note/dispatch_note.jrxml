@@ -1180,7 +1180,7 @@ where loads.id = $P{load_id}]]>
 				<reportElement x="286" y="60" width="108" height="13" uuid="e3b61d26-6671-40b3-8fbe-88075fb44b29"/>
 				<text><![CDATA[Driver cell]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="290" y="0" width="261" height="13" uuid="857129b3-5e3b-4c47-84ff-7c436a61a5a6"/>
 				<textFieldExpression><![CDATA[$F{files}]]></textFieldExpression>
 			</textField>
