@@ -922,7 +922,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<textElement>
 					<font size="8" isBold="false" isItalic="false"/>
 				</textElement>
-				<text><![CDATA[Gvt Inspection]]></text>
+				<text><![CDATA[Inspection]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="525" y="15" width="35" height="13" uuid="7a2dd6da-906c-4d1a-85d3-2fed66cebb6c">

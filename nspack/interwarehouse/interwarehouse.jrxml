@@ -510,10 +510,10 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center">
+				<textElement textAlignment="Left">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<text><![CDATA[Gvt Inspection]]></text>
+				<text><![CDATA[Inspection]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
