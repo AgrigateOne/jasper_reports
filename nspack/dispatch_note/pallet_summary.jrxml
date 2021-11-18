@@ -333,7 +333,7 @@ ORDER BY
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$V{nett_weight_1}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0.00">
+			<textField pattern="###0.00" isBlankWhenNull="true">
 				<reportElement x="456" y="14" width="58" height="13" uuid="f1f79bf6-aaf9-4e0f-8075-03d6f57d941b"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{load_gross_weight}]]></textFieldExpression>

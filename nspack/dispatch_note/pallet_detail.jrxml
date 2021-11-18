@@ -270,7 +270,7 @@ ORDER BY
 				<text><![CDATA[Grade]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="293" y="0" width="18" height="13" uuid="33f7e29d-785e-4ea7-8756-82eeb686a57a">
+				<reportElement x="291" y="0" width="18" height="13" uuid="33f7e29d-785e-4ea7-8756-82eeb686a57a">
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
 				<textElement>
@@ -279,7 +279,7 @@ ORDER BY
 				<text><![CDATA[TM]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="312" y="0" width="21" height="13" uuid="1df34564-fa14-4587-b4bd-26aa6a70f779">
+				<reportElement x="309" y="0" width="21" height="13" uuid="1df34564-fa14-4587-b4bd-26aa6a70f779">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement>
@@ -371,7 +371,7 @@ ORDER BY
 				<text><![CDATA[Pallet Barcode]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="335" y="0" width="30" height="13" uuid="d4c4dabd-789a-4b7f-be5b-db7af907626e">
+				<reportElement x="331" y="0" width="30" height="13" uuid="d4c4dabd-789a-4b7f-be5b-db7af907626e">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -390,7 +390,7 @@ ORDER BY
 				<text><![CDATA[Gross]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="413" y="0" width="25" height="13" uuid="8849a077-2613-4c31-8a90-deedac2d3589">
+				<reportElement x="406" y="0" width="25" height="13" uuid="8849a077-2613-4c31-8a90-deedac2d3589">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<printWhenExpression><![CDATA[!$P{scartons_equals_pallets}]]></printWhenExpression>
 				</reportElement>
@@ -400,7 +400,7 @@ ORDER BY
 				<text><![CDATA[Ctns]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="438" y="0" width="19" height="13" uuid="5517ec36-82fa-4790-a51f-0dac405c0e76">
+				<reportElement x="432" y="0" width="25" height="13" uuid="5517ec36-82fa-4790-a51f-0dac405c0e76">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -416,7 +416,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$P{scartons_equals_pallets} ? "Bins" : "Plts"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="367" y="0" width="44" height="13" uuid="01944770-ced0-4b9d-8de7-f71877c543c3">
+				<reportElement x="361" y="0" width="44" height="13" uuid="01944770-ced0-4b9d-8de7-f71877c543c3">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -463,7 +463,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{size_count_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="293" y="0" width="18" height="12" uuid="0eae09a3-de76-406a-889b-960d0d9447e4">
+				<reportElement x="291" y="0" width="18" height="12" uuid="0eae09a3-de76-406a-889b-960d0d9447e4">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement>
@@ -472,7 +472,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{target_market_code}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="312" y="0" width="21" height="12" uuid="dea65c3d-a870-47d2-bb1e-c846a1163fc1">
+				<reportElement x="309" y="0" width="21" height="12" uuid="dea65c3d-a870-47d2-bb1e-c846a1163fc1">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement>
@@ -481,7 +481,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{inventory_code}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00" isBlankWhenNull="true">
-				<reportElement x="438" y="0" width="19" height="12" uuid="c40ef02a-6cbe-4349-baa2-b7b1bdef3821">
+				<reportElement x="432" y="0" width="25" height="12" uuid="c40ef02a-6cbe-4349-baa2-b7b1bdef3821">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -574,7 +574,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{seq_nett_weight}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="335" y="0" width="30" height="12" uuid="b17b0077-a9f2-4801-9fda-08d1e27a795c">
+				<reportElement x="331" y="0" width="30" height="12" uuid="b17b0077-a9f2-4801-9fda-08d1e27a795c">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement>
@@ -592,7 +592,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{gross_weight}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#0.##" isBlankWhenNull="true">
-				<reportElement x="413" y="0" width="25" height="12" uuid="da421630-6238-4bec-bda3-daad0f2aa138">
+				<reportElement x="406" y="0" width="25" height="12" uuid="da421630-6238-4bec-bda3-daad0f2aa138">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<printWhenExpression><![CDATA[!$P{scartons_equals_pallets}]]></printWhenExpression>
@@ -603,7 +603,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{ctn_qty}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="367" y="0" width="44" height="12" uuid="03da3778-1617-48cb-83b7-a97bcdfe4fce">
+				<reportElement x="361" y="0" width="44" height="12" uuid="03da3778-1617-48cb-83b7-a97bcdfe4fce">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -629,7 +629,7 @@ ORDER BY
 	<summary>
 		<band height="36" splitType="Stretch">
 			<textField pattern="###0.00">
-				<reportElement x="430" y="3" width="25" height="13" uuid="eafb0fde-cf16-4785-bf1c-2e291259339a">
+				<reportElement x="432" y="3" width="25" height="13" uuid="eafb0fde-cf16-4785-bf1c-2e291259339a">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
@@ -666,7 +666,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{load_gross_weight}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#0.##">
-				<reportElement x="402" y="3" width="25" height="13" uuid="d68028be-4c92-425b-a17f-ac1cd26250bf">
+				<reportElement x="406" y="3" width="25" height="13" uuid="d68028be-4c92-425b-a17f-ac1cd26250bf">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<printWhenExpression><![CDATA[!$P{scartons_equals_pallets}]]></printWhenExpression>
 				</reportElement>
