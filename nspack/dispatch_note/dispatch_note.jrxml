@@ -37,6 +37,12 @@
 	<parameter name="hide_dispatch_summary_gross" class="java.lang.Boolean"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT
+(select 
+array_to_string( 
+  ARRAY(SELECT eot.edi_out_filename
+from loads fl left join edi_out_transactions eot on fl.id =eot.record_id 
+where fl.id=loads.id and flow_type='PO'), ', ') )
+AS files,
 fn_party_role_name((SELECT pr.id
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1)) AS implementation_owner_name,
@@ -120,6 +126,10 @@ JOIN party_roles exp_role ON exp_role.id = loads.exporter_party_role_id
 LEFT JOIN party_roles cust_pr ON cust_pr.id = loads.customer_party_role_id
 where loads.id = $P{load_id}]]>
 	</queryString>
+	<field name="files" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="files"/>
+		<property name="com.jaspersoft.studio.field.label" value="files"/>
+	</field>
 	<field name="implementation_owner_name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="implementation_owner_name"/>
 		<property name="com.jaspersoft.studio.field.label" value="implementation_owner_name"/>
@@ -1056,21 +1066,21 @@ where loads.id = $P{load_id}]]>
 		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="74">
+		<band height="83">
 			<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 			<textField pattern="d MMM yyyy h:MM a" isBlankWhenNull="true">
-				<reportElement x="267" y="0" width="165" height="13" uuid="f61083f7-321d-4725-a6d6-feebc27c95ec"/>
+				<reportElement x="99" y="0" width="165" height="13" uuid="f61083f7-321d-4725-a6d6-feebc27c95ec"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{shipped_date_time}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="169" y="0" width="98" height="13" uuid="177c6f13-4a20-463d-b8f4-e63eae6bd8cb"/>
+				<reportElement x="265" y="0" width="25" height="13" uuid="177c6f13-4a20-463d-b8f4-e63eae6bd8cb"/>
 				<textElement>
 					<font size="8" isBold="false" isItalic="false"/>
 				</textElement>
-				<text><![CDATA[Shipped  Date Time:]]></text>
+				<text><![CDATA[Files:]]></text>
 			</staticText>
 			<rectangle>
 				<reportElement x="278" y="14" width="139" height="24" uuid="3d244db3-0b05-444b-b422-10fe70011a1b">
@@ -1169,6 +1179,17 @@ where loads.id = $P{load_id}]]>
 			<staticText>
 				<reportElement x="286" y="60" width="108" height="13" uuid="e3b61d26-6671-40b3-8fbe-88075fb44b29"/>
 				<text><![CDATA[Driver cell]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="290" y="0" width="261" height="13" uuid="857129b3-5e3b-4c47-84ff-7c436a61a5a6"/>
+				<textFieldExpression><![CDATA[$F{files}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="6" y="5" width="98" height="13" uuid="1321adea-7048-4113-a878-4f1cb9034b04"/>
+				<textElement>
+					<font size="8" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Shipped  Date Time:]]></text>
 			</staticText>
 		</band>
 	</pageFooter>
