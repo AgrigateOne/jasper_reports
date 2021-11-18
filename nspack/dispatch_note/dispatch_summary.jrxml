@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_summary" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cba47b92-bbda-40d5-b5d7-7f12c9f0b664">
 	<property name="ireport.zoom" value="3.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SR_nspack.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="267"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="726"/>
@@ -19,7 +19,7 @@
    fruit_size_references.size_reference AS size_count_code,
  marketing_varieties.marketing_variety_code as variety_short_long,
  grades.grade_code,
- basic_pack_codes.basic_pack_code as old_pack_code,
+ standard_pack_codes.standard_pack_code as old_pack_code,
  fruit_actual_counts_for_packs.actual_count_for_pack AS actual_size_count_code,
  SUM(pallet_sequences.carton_quantity) AS ctn_qty,
  SUM(pallets.nett_weight) AS nett_weight,
@@ -37,17 +37,18 @@ LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
 JOIN marketing_varieties ON marketing_varieties.id = pallet_sequences.marketing_variety_id
 JOIN grades ON grades.id = pallet_sequences.grade_id
 JOIN basic_pack_codes ON basic_pack_codes.id = pallet_sequences.basic_pack_code_id
+     LEFT JOIN standard_pack_codes ON standard_pack_codes.id = pallet_sequences.standard_pack_code_id
+
 LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = pallet_sequences.fruit_actual_counts_for_pack_id
 WHERE loads.id = $P{load_id}
 GROUP BY  commodities.code,
  marketing_varieties.marketing_variety_code,
  grades.grade_code,  fruit_size_references.size_reference,
- basic_pack_codes.basic_pack_code,
- fruit_actual_counts_for_packs.actual_count_for_pack,pallets.load_id
+standard_pack_codes.standard_pack_code, fruit_actual_counts_for_packs.actual_count_for_pack,pallets.load_id
 ORDER BY  commodities.code,
  marketing_varieties.marketing_variety_code,
  grades.grade_code,
- basic_pack_codes.basic_pack_code,
+ standard_pack_codes.standard_pack_code,
  fruit_actual_counts_for_packs.actual_count_for_pack]]>
 	</queryString>
 	<field name="commodity_code" class="java.lang.String"/>

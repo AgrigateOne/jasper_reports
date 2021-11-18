@@ -573,7 +573,7 @@ ORDER BY
 				</textElement>
 				<textFieldExpression><![CDATA[$F{seq_nett_weight}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="335" y="0" width="30" height="12" uuid="b17b0077-a9f2-4801-9fda-08d1e27a795c">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -602,7 +602,7 @@ ORDER BY
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ctn_qty}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="367" y="0" width="44" height="12" uuid="03da3778-1617-48cb-83b7-a97bcdfe4fce">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
