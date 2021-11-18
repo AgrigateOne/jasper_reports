@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_picklist" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Kromco"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="live_kromco_nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="113"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="879"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -115,7 +115,13 @@ string_agg(distinct vw_pallet_sequence_flat.grade,',')grade,
 string_agg(distinct vw_pallet_sequence_flat.packed_tm_group,',')packed_tm_group,
 vw_pallet_sequence_flat.pallet_number
 ,vw_pallet_sequence_flat.location ,
-pallet_holdovers.buildup_remarks,holdover_quantity 
+pallet_holdovers.buildup_remarks,holdover_quantity ,
+  CASE
+     WHEN vw_pallet_sequence_flat.inspected THEN
+                    CASE WHEN vw_pallet_sequence_flat.govt_inspection_passed THEN 'PASSED'
+                    ELSE 'FAILED'
+                    END
+					ELSE 'UNINSPECTED' END AS inspected_result
 from  public.vw_pallet_sequence_flat 
 join loads on  loads.id=vw_pallet_sequence_flat.load_id
 left join load_vehicles on load_vehicles.id=vw_pallet_sequence_flat.load_id
@@ -187,9 +193,14 @@ loads.customer_party_role_id,
 loads.exporter_party_role_id,
 vw_pallet_sequence_flat.consignment_note_number
 ,vw_pallet_sequence_flat.pallet_number
-,vw_pallet_sequence_flat.location ,pallet_holdovers.buildup_remarks,holdover_quantity
+,vw_pallet_sequence_flat.location ,pallet_holdovers.buildup_remarks,holdover_quantity,
+vw_pallet_sequence_flat.inspected,vw_pallet_sequence_flat.govt_inspection_passed
 order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number]]>
 	</queryString>
+	<field name="ctn_qty" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="ctn_qty"/>
+		<property name="com.jaspersoft.studio.field.label" value="ctn_qty"/>
+	</field>
 	<field name="implementation_owner_name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="implementation_owner_name"/>
 		<property name="com.jaspersoft.studio.field.label" value="implementation_owner_name"/>
@@ -501,7 +512,10 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 		<property name="com.jaspersoft.studio.field.label" value="holdover_quantity"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="pallet_holdovers"/>
 	</field>
-	<field name="ctn_qty" class="java.lang.Integer"/>
+	<field name="inspected_result" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="inspected_result"/>
+		<property name="com.jaspersoft.studio.field.label" value="inspected_result"/>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -902,15 +916,20 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<text><![CDATA[Actl Cnt]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="456" y="15" width="46" height="13" uuid="ec7c8f18-2b10-48cf-b0dd-2ba3919a1c4f"/>
+				<reportElement x="456" y="15" width="60" height="13" uuid="ec7c8f18-2b10-48cf-b0dd-2ba3919a1c4f">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement>
 					<font size="8" isBold="false" isItalic="false"/>
 				</textElement>
-				<text><![CDATA[Size Ref]]></text>
+				<text><![CDATA[Inspected]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="506" y="15" width="46" height="13" uuid="7a2dd6da-906c-4d1a-85d3-2fed66cebb6c"/>
-				<textElement>
+				<reportElement x="525" y="15" width="40" height="13" uuid="7a2dd6da-906c-4d1a-85d3-2fed66cebb6c">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
 					<font size="8" isBold="false" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[TM Grp]]></text>
@@ -1000,8 +1019,9 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<textFieldExpression><![CDATA[$F{std_pack}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="408" y="2" width="47" height="12" uuid="4e8de1d6-4f03-496b-8d34-d79bbda046da">
+				<reportElement x="408" y="2" width="40" height="12" uuid="4e8de1d6-4f03-496b-8d34-d79bbda046da">
 					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement>
 					<font size="10"/>
@@ -1009,21 +1029,24 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<textFieldExpression><![CDATA[$F{actual_count}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="455" y="2" width="47" height="12" uuid="dc8eb549-a88b-4e24-af90-a4da48a610c5">
+				<reportElement x="445" y="2" width="80" height="12" uuid="dc8eb549-a88b-4e24-af90-a4da48a610c5">
 					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement>
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{size_ref}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{inspected_result}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="506" y="2" width="47" height="12" uuid="1f42d759-2bdf-4161-8fdf-2f6370956b6f">
+				<reportElement x="525" y="2" width="40" height="12" uuid="1f42d759-2bdf-4161-8fdf-2f6370956b6f">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{packed_tm_group}]]></textFieldExpression>

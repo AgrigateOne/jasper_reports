@@ -194,7 +194,7 @@ scrapped_pallet_number AS (
 	LEFT JOIN inspectors ON inspectors.id = govt_inspection_sheets.inspector_id
   WHERE
     govt_inspection_sheet_id = $P{govt_inspection_sheet_id}
-    AND p.govt_inspection_passed IS FALSE
+    AND $P!{QueryCondition}
 )
 SELECT
 
