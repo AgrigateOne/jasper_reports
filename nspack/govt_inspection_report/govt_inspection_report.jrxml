@@ -221,7 +221,7 @@ SELECT
       LIMIT 1) AS implementation_owner_party_role_id,
   p.id,
   p.id as pallet_id,
-    coalesce(scrapped_pallet_number.carton_quantity, p.carton_quantity) AS carton_quantity,
+    coalesce(scrapped_pallet_number.carton_quantity, ps.carton_quantity) AS carton_quantity,
   coalesce(scrapped_pallet_number.pallet_number, p.pallet_number) AS pallet_number,
   coalesce(scrapped_pallet_number.pallet_sequence_number, ps.pallet_sequence_number) AS pallet_sequence_number,
   coalesce(scrapped_pallet_number.farm, farms.farm_code) AS farm,
@@ -776,7 +776,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement x="420" y="56" width="131" height="95" uuid="49c58c05-e219-42f4-b9de-643127f72fd8">
+				<reportElement x="413" y="56" width="138" height="95" uuid="49c58c05-e219-42f4-b9de-643127f72fd8">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
