@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="container_mass_declaration" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="073de135-c25b-477c-8344-6e93c431bb70">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NSPACK"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="load_container_id" class="java.lang.Integer"/>
 	<parameter name="user_name" class="java.lang.String"/>
 	<parameter name="pallets_weighed" class="java.lang.Boolean">
@@ -44,7 +45,7 @@ load_containers.container_seal_code,
         vessels.vessel_code AS vessel,
     voyages.voyage_code AS voyage,
     voyages.voyage_number
-    
+    ,load_voyages.booking_reference
 FROM
  public.load_containers 
  
@@ -62,23 +63,88 @@ FROM
  
      where public.load_containers.id=$P{load_container_id}]]>
 	</queryString>
-	<field name="container_code" class="java.lang.String"/>
-	<field name="verified_gross_mass" class="java.lang.String"/>
-	<field name="actual_payload" class="java.lang.String"/>
-	<field name="max_payload" class="java.lang.String"/>
-	<field name="tare_weight" class="java.lang.String"/>
-	<field name="max_gross_mass" class="java.lang.String"/>
-	<field name="id" class="java.lang.Integer"/>
-	<field name="container_seal_code" class="java.lang.String"/>
-	<field name="implementation_owner_name" class="java.lang.String"/>
-	<field name="implementation_owner_party_role_id" class="java.lang.Integer"/>
-	<field name="verified_gross_mass_date" class="java.sql.Timestamp"/>
-	<field name="pol" class="java.lang.String"/>
-	<field name="pod" class="java.lang.String"/>
-	<field name="vessel" class="java.lang.String"/>
-	<field name="voyage" class="java.lang.String"/>
-	<field name="voyage_number" class="java.lang.String"/>
-	<field name="exporter" class="java.lang.String"/>
+	<field name="exporter" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="exporter"/>
+		<property name="com.jaspersoft.studio.field.label" value="exporter"/>
+	</field>
+	<field name="implementation_owner_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="implementation_owner_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="implementation_owner_name"/>
+	</field>
+	<field name="implementation_owner_party_role_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="implementation_owner_party_role_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="implementation_owner_party_role_id"/>
+	</field>
+	<field name="container_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="container_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="container_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_containers"/>
+	</field>
+	<field name="verified_gross_mass" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="verified_gross_mass"/>
+		<property name="com.jaspersoft.studio.field.label" value="verified_gross_mass"/>
+	</field>
+	<field name="actual_payload" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="actual_payload"/>
+		<property name="com.jaspersoft.studio.field.label" value="actual_payload"/>
+	</field>
+	<field name="verified_gross_mass_date" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="verified_gross_mass_date"/>
+		<property name="com.jaspersoft.studio.field.label" value="verified_gross_mass_date"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_containers"/>
+	</field>
+	<field name="max_payload" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="max_payload"/>
+		<property name="com.jaspersoft.studio.field.label" value="max_payload"/>
+	</field>
+	<field name="tare_weight" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="tare_weight"/>
+		<property name="com.jaspersoft.studio.field.label" value="tare_weight"/>
+	</field>
+	<field name="max_gross_mass" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="max_gross_mass"/>
+		<property name="com.jaspersoft.studio.field.label" value="max_gross_mass"/>
+	</field>
+	<field name="id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="id"/>
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_containers"/>
+	</field>
+	<field name="container_seal_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="container_seal_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="container_seal_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_containers"/>
+	</field>
+	<field name="pol" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pol"/>
+		<property name="com.jaspersoft.studio.field.label" value="pol"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ports"/>
+	</field>
+	<field name="pod" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pod"/>
+		<property name="com.jaspersoft.studio.field.label" value="pod"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ports"/>
+	</field>
+	<field name="vessel" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="vessel"/>
+		<property name="com.jaspersoft.studio.field.label" value="vessel"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vessels"/>
+	</field>
+	<field name="voyage" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="voyage"/>
+		<property name="com.jaspersoft.studio.field.label" value="voyage"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="voyages"/>
+	</field>
+	<field name="voyage_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="voyage_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="voyage_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="voyages"/>
+	</field>
+	<field name="booking_reference" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="booking_reference"/>
+		<property name="com.jaspersoft.studio.field.label" value="booking_reference"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_voyages"/>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -328,6 +394,17 @@ FROM
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
 			</subreport>
+			<staticText>
+				<reportElement x="255" y="150" width="230" height="30" uuid="3e8bb95d-21b3-4bcf-8267-1b2d2e34cd56"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Booking Reference:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="255" y="180" width="230" height="30" uuid="783716f3-3527-4db8-90b5-f52af8008fc6"/>
+				<textFieldExpression><![CDATA[$F{booking_reference}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 </jasperReport>
