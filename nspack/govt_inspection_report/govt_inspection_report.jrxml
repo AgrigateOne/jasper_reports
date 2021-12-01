@@ -6,7 +6,7 @@
 	<property name="ireport.y" value="46"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/first_intake"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="kromco"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="live_kromco_nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="158"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="831"/>
@@ -144,7 +144,8 @@ scrapped_pallet_number AS (
 	govt_inspection_sheets.created_at inspection_date_time,
 	govt_inspection_sheets.inspection_billing_party_role_id,
 	govt_inspection_sheets.exporter_party_role_id,
-	govt_inspection_sheets.upn
+	govt_inspection_sheets.upn,
+	fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack) AS edi_size_count
     FROM pallets p
      JOIN pallet_sequences ps ON p.id = ps.scrapped_from_pallet_id
      LEFT JOIN pallets repacked_from_pallets ON repacked_from_pallets.id = ps.repacked_from_pallet_id
@@ -277,7 +278,13 @@ coalesce(scrapped_pallet_number.gap_certification,
             ELSE target_market_groups.target_market_group_name
         END
 		  ) AS inspection_tm,
-  govt_inspection_sheets.inspection_point
+  govt_inspection_sheets.inspection_point,
+  coalesce(scrapped_pallet_number.edi_size_count,
+		  fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi,
+		  commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, 
+		  fruit_size_references.size_reference,
+		  fruit_actual_counts_for_packs.actual_count_for_pack)
+		  )  AS edi_size_count
     FROM pallets p
      JOIN pallet_sequences ps ON p.id = ps.pallet_id
      LEFT JOIN pallets repacked_from_pallets ON repacked_from_pallets.id = ps.repacked_from_pallet_id
@@ -529,6 +536,10 @@ coalesce(scrapped_pallet_number.gap_certification,
 		<property name="com.jaspersoft.studio.field.name" value="inspection_point"/>
 		<property name="com.jaspersoft.studio.field.label" value="inspection_point"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="govt_inspection_sheets"/>
+	</field>
+	<field name="edi_size_count" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="edi_size_count"/>
+		<property name="com.jaspersoft.studio.field.label" value="edi_size_count"/>
 	</field>
 	<sortField name="pallet_number"/>
 	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
@@ -1085,7 +1096,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{actual_count}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{edi_size_count}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="24" y="0" width="23" height="11" uuid="278427f5-157d-4fd2-98f4-235ebe92df29"/>
@@ -1197,7 +1208,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{size_ref}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{edi_size_count}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -1289,7 +1300,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<text><![CDATA[Total Pallets:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="304" y="11" width="100" height="20" uuid="dad05585-7db3-4c6f-9a38-6c16a0f80e7e"/>
+				<reportElement x="304" y="11" width="113" height="20" uuid="dad05585-7db3-4c6f-9a38-6c16a0f80e7e"/>
 				<textFieldExpression><![CDATA[$V{pallet_number_1}]]></textFieldExpression>
 			</textField>
 			<subreport>
