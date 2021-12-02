@@ -531,14 +531,14 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<textFieldExpression><![CDATA[$F{customer_order_number}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="9" y="30" width="65" height="13" uuid="868560cf-517d-468b-bd41-40754abb0adf"/>
+				<reportElement x="5" y="30" width="65" height="13" uuid="868560cf-517d-468b-bd41-40754abb0adf"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Customer:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="80" y="30" width="95" height="13" uuid="7e91ed80-cd9e-435a-8c22-d19a069aa97d"/>
+				<reportElement stretchType="RelativeToBandHeight" x="79" y="30" width="132" height="13" uuid="7e91ed80-cd9e-435a-8c22-d19a069aa97d"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
@@ -669,70 +669,70 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<text><![CDATA[Port Name:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="184" y="43" width="57" height="13" uuid="4bfebe7a-c26c-436a-b2b6-3373e556cce8"/>
+				<reportElement x="221" y="43" width="65" height="13" uuid="4bfebe7a-c26c-436a-b2b6-3373e556cce8"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Voyage no:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="9" y="43" width="65" height="13" uuid="7ae644bb-1fd2-46ab-9775-1662e38447b7"/>
+				<reportElement x="5" y="43" width="65" height="13" uuid="7ae644bb-1fd2-46ab-9775-1662e38447b7"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Shipper:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="184" y="30" width="57" height="13" uuid="458cff24-978e-4626-b21b-33068eca41d6"/>
+				<reportElement x="221" y="30" width="65" height="13" uuid="458cff24-978e-4626-b21b-33068eca41d6"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Export Party:]]></text>
 			</staticText>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement x="79" y="43" width="94" height="13" uuid="3cb19ece-6e6f-434b-b274-fb244fded92b"/>
+				<reportElement x="79" y="43" width="132" height="13" uuid="3cb19ece-6e6f-434b-b274-fb244fded92b"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{shipper_party_role_name}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="246" y="30" width="110" height="13" uuid="059225d3-105e-4c1a-a78e-94446165fef4"/>
+				<reportElement x="288" y="30" width="110" height="13" uuid="059225d3-105e-4c1a-a78e-94446165fef4"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{export_party_role_name}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="79" y="57" width="94" height="13" uuid="ea97e593-8c15-4fb2-b6f8-2cdcaf309a2b"/>
+				<reportElement x="79" y="57" width="132" height="13" uuid="ea97e593-8c15-4fb2-b6f8-2cdcaf309a2b"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{booking_reference}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="9" y="57" width="65" height="13" uuid="41c8e148-71e3-4fde-b3c9-742ee35c6366"/>
+				<reportElement x="5" y="57" width="65" height="13" uuid="41c8e148-71e3-4fde-b3c9-742ee35c6366"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Booking Ref:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="184" y="57" width="65" height="13" uuid="89f5f6a2-25a9-479c-9dcc-f1fc9ab6e205"/>
+				<reportElement x="221" y="57" width="65" height="13" uuid="89f5f6a2-25a9-479c-9dcc-f1fc9ab6e205"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Vessel:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="254" y="57" width="95" height="13" uuid="7920f6dc-cc4d-4466-b017-43eedfcce149"/>
+				<reportElement x="288" y="57" width="110" height="13" uuid="7920f6dc-cc4d-4466-b017-43eedfcce149"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{vessel_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="246" y="43" width="110" height="13" uuid="18e321c3-9167-452a-b6d1-c96d257a7636"/>
+				<reportElement x="288" y="43" width="110" height="13" uuid="18e321c3-9167-452a-b6d1-c96d257a7636"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -790,7 +790,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<text><![CDATA[Picklist]]></text>
 			</staticText>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement x="67" y="70" width="121" height="13" uuid="dd403948-df16-4c79-9183-fe6a4adf8d6e">
+				<reportElement x="79" y="70" width="213" height="13" uuid="dd403948-df16-4c79-9183-fe6a4adf8d6e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -800,14 +800,14 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<textFieldExpression><![CDATA[$F{shipping_line_party_role_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="8" y="70" width="59" height="13" uuid="35ccc114-5f2f-40b3-b3a3-9ec2c36f04b1"/>
+				<reportElement x="5" y="70" width="59" height="13" uuid="35ccc114-5f2f-40b3-b3a3-9ec2c36f04b1"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Shipping Line:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="75" y="84" width="470" height="13" uuid="560b80a0-33c2-497a-a9f7-080047d0ed80">
+				<reportElement x="79" y="84" width="470" height="13" uuid="560b80a0-33c2-497a-a9f7-080047d0ed80">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement>
