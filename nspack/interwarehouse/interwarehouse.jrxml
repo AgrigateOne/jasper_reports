@@ -34,20 +34,24 @@
 	</parameter>
 	<parameter name="vehicle_job_id" class="java.lang.Integer"/>
 	<queryString language="SQL">
-		<![CDATA[select
+		<![CDATA[select distinct
 govt_inspection_pallets.passed as gvt_inspection_passed,
- vw_pallet_sequence_flat.plt_packhouse,pallet_number, vehicle_jobs.id
-,string_agg(distinct vw_pallet_sequence_flat.marketing_variety,',')marketing_varieties
-,string_agg(distinct vw_pallet_sequence_flat.packed_tm_group,',')packed_tm_groups
+ plt_packhouses.plant_resource_code AS plt_packhouse
+ ,pallets.pallet_number, vehicle_jobs.id
 
-,string_agg(distinct std_pack,',')std_packs
-,string_agg(distinct size_ref,',')size_refs
-,string_agg(distinct actual_count::text,',')actual_counts
+,string_agg(distinct marketing_varieties.marketing_variety_code,',')marketing_varieties
+,string_agg(distinct target_market_groups.target_market_group_name,',')packed_tm_groups
 
-,string_agg(distinct grade,',')grades,sum(carton_quantity) carton_quantity
-,fn_party_role_name((SELECT pr.id
-FROM public.party_roles pr
-WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1)) AS implementation_owner_name,
+
+,string_agg(distinct standard_pack_codes.standard_pack_code,',')std_packs
+,string_agg(distinct fruit_size_references.size_reference ,',')size_refs
+,string_agg(distinct fruit_actual_counts_for_packs.actual_count_for_pack::text,',')actual_counts
+,string_agg(distinct grades.grade_code,',')grades,
+sum(ps.carton_quantity) carton_quantity,
+
+fn_party_role_name((SELECT pr.id
+                     FROM public.party_roles pr
+                      WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1)) AS implementation_owner_name,
 (SELECT pr.id
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) AS implementation_owner_party_role_id
@@ -62,20 +66,32 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 ,locations.location_long_code
 ,business_processes.process,
   CASE
-     WHEN vw_pallet_sequence_flat.inspected THEN
-                    CASE WHEN vw_pallet_sequence_flat.govt_inspection_passed THEN 'PASSED'
+     WHEN pallets.inspected THEN
+                    CASE WHEN pallets.govt_inspection_passed THEN 'PASSED'
                     ELSE 'FAILED'
                     END
 					ELSE 'UNINSPECTED' END AS inspected_result
  from vehicle_jobs
  join vehicle_job_units on vehicle_job_units.vehicle_job_id =vehicle_jobs.id
-left join vw_pallet_sequence_flat  on pallet_id=stock_item_id
+ join pallets  on pallets.id=stock_item_id
 left join business_processes on business_processes.id=vehicle_jobs.business_process_id
 left join locations on locations.id=vehicle_jobs.planned_location_to_id
-left join govt_inspection_sheets ON govt_inspection_sheets.id = vehicle_jobs.govt_inspection_sheet_id 
-left join govt_inspection_pallets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+left join govt_inspection_sheets ON govt_inspection_sheets.id = vehicle_jobs.govt_inspection_sheet_id
+left join govt_inspection_pallets
+           ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id and
+		   pallets.last_govt_inspection_pallet_id = govt_inspection_pallets.id
+left join plant_resources plt_packhouses ON plt_packhouses.id = pallets.plt_packhouse_resource_id
+left join pallet_sequences ps on ps.pallet_id = pallets.id
+left join marketing_varieties ON marketing_varieties.id = ps.marketing_variety_id
+left join target_market_groups ON target_market_groups.id = ps.packed_tm_group_id
+
+left join  standard_pack_codes ON standard_pack_codes.id = ps.standard_pack_code_id
+left join fruit_size_references ON fruit_size_references.id = ps.fruit_size_reference_id
+left join fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = ps.fruit_actual_counts_for_pack_id
+left join  grades ON grades.id = ps.grade_id
+
 where vehicle_job_units.vehicle_job_id =  $P{vehicle_job_id}
-group by vw_pallet_sequence_flat.plt_packhouse,stock_item_id,vehicle_jobs.id,pallet_number
+group by plt_packhouses.plant_resource_code,stock_item_id,vehicle_jobs.id,pallets.pallet_number
 ,fn_party_role_name((SELECT pr.id
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1)) ,
@@ -93,8 +109,9 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 ,locations.location_long_code
 ,business_processes.process
 ,govt_inspection_pallets.passed
-,vw_pallet_sequence_flat.inspected
-,vw_pallet_sequence_flat.govt_inspection_passed]]>
+,pallets.inspected
+,pallets.govt_inspection_passed
+order by pallets.pallet_number]]>
 	</queryString>
 	<field name="gvt_inspection_passed" class="java.lang.Boolean">
 		<property name="com.jaspersoft.studio.field.name" value="gvt_inspection_passed"/>
