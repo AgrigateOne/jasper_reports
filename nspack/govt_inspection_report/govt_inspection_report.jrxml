@@ -26,19 +26,18 @@
 		<![CDATA[WITH ggn AS (
   SELECT DISTINCT
     govt_inspection_pallets.govt_inspection_sheet_id,
-    CASE WHEN pucs.gap_code IS NOT NULL
-      AND govt_inspection_sheets.created_at BETWEEN pucs.gap_code_valid_from AND pucs.gap_code_valid_until THEN
+    CASE WHEN pucs.gap_code IS NOT NULL AND govt_inspection_sheets.created_at BETWEEN pucs.gap_code_valid_from AND pucs.gap_code_valid_until THEN
       pucs.gap_code
     ELSE
       NULL
     END gap_code
-  FROM pallets p
-  join pallet_sequences ps on ps.pallet_id=p.id
-     left join pucs ON pucs.id = ps.puc_id
-   left JOIN govt_inspection_pallets ON govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
-    left JOIN govt_inspection_sheets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+	from govt_inspection_sheets
+    left join govt_inspection_pallets  ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+    left join pallets p on govt_inspection_pallets.pallet_id =p.id
+    join pallet_sequences ps on ps.pallet_id=p.id
+    left join pucs ON pucs.id = ps.puc_id
   WHERE
-    govt_inspection_pallets.govt_inspection_sheet_id = $P{govt_inspection_sheet_id}
+    govt_inspection_sheets.id = $P{govt_inspection_sheet_id}
 ),
 ggn_validation AS (
   SELECT
@@ -146,8 +145,12 @@ scrapped_pallet_number AS (
 	govt_inspection_sheets.exporter_party_role_id,
 	govt_inspection_sheets.upn,
 	fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack) AS edi_size_count
-    FROM pallets p
-     JOIN pallet_sequences ps ON p.id = ps.scrapped_from_pallet_id
+
+	from govt_inspection_sheets
+    left join govt_inspection_pallets  ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+    left join pallets p on govt_inspection_pallets.pallet_id =p.id
+    join pallet_sequences ps on p.id=ps.scrapped_from_pallet_id
+
      LEFT JOIN pallets repacked_from_pallets ON repacked_from_pallets.id = ps.repacked_from_pallet_id
      LEFT JOIN plant_resources plt_packhouses ON plt_packhouses.id = p.plt_packhouse_resource_id
      LEFT JOIN plant_resources plt_lines ON plt_lines.id = p.plt_line_resource_id
@@ -183,8 +186,6 @@ scrapped_pallet_number AS (
      LEFT JOIN pallet_bases ON pallet_bases.id = pallet_formats.pallet_base_id
      LEFT JOIN pallet_stack_types ON pallet_stack_types.id = pallet_formats.pallet_stack_type_id
      LEFT JOIN pallet_verification_failure_reasons ON pallet_verification_failure_reasons.id = ps.pallet_verification_failure_reason_id
-     LEFT JOIN govt_inspection_pallets ON govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
-     LEFT JOIN govt_inspection_sheets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
      LEFT JOIN destination_countries inspected_dest_country ON inspected_dest_country.id = govt_inspection_sheets.destination_country_id
 	  LEFT JOIN destination_regions ON destination_regions.id = govt_inspection_sheets.destination_region_id
      LEFT JOIN edi_in_transactions ON edi_in_transactions.id = p.edi_in_transaction_id
@@ -281,12 +282,15 @@ coalesce(scrapped_pallet_number.gap_certification,
   govt_inspection_sheets.inspection_point,
   coalesce(scrapped_pallet_number.edi_size_count,
 		  fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi,
-		  commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, 
+		  commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code,
 		  fruit_size_references.size_reference,
 		  fruit_actual_counts_for_packs.actual_count_for_pack)
 		  )  AS edi_size_count
-    FROM pallets p
-     JOIN pallet_sequences ps ON p.id = ps.pallet_id
+
+	from govt_inspection_sheets
+    left join govt_inspection_pallets  ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+    left join pallets p on govt_inspection_pallets.pallet_id =p.id
+    join pallet_sequences ps on ps.pallet_id=p.id
      LEFT JOIN pallets repacked_from_pallets ON repacked_from_pallets.id = ps.repacked_from_pallet_id
      LEFT JOIN plant_resources plt_packhouses ON plt_packhouses.id = p.plt_packhouse_resource_id
      LEFT JOIN plant_resources plt_lines ON plt_lines.id = p.plt_line_resource_id
@@ -322,8 +326,6 @@ coalesce(scrapped_pallet_number.gap_certification,
      LEFT JOIN pallet_bases ON pallet_bases.id = pallet_formats.pallet_base_id
      LEFT JOIN pallet_stack_types ON pallet_stack_types.id = pallet_formats.pallet_stack_type_id
      LEFT JOIN pallet_verification_failure_reasons ON pallet_verification_failure_reasons.id = ps.pallet_verification_failure_reason_id
-     LEFT JOIN govt_inspection_pallets ON govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
-     LEFT JOIN govt_inspection_sheets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
      LEFT JOIN destination_countries inspected_dest_country ON inspected_dest_country.id = govt_inspection_sheets.destination_country_id
 	  LEFT JOIN destination_regions ON destination_regions.id = govt_inspection_sheets.destination_region_id
      LEFT JOIN edi_in_transactions ON edi_in_transactions.id = p.edi_in_transaction_id
