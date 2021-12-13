@@ -22,21 +22,7 @@
 	</parameter>
 	<parameter name="paraminspecstatus" class="java.lang.String"/>
 	<queryString language="SQL">
-		<![CDATA[select 
-commodity,
-marketing_variety,
-std_pack,
-size_ref,
-grade,
-actual_count,
-govt_inspection_passed,
-variety,
-edi_size_count,
-sum(carton_quantity) as carton_quantity,
-max(plt_qty) as plt_qty
-from 
-(
-WITH scrapped_plt_cnt AS(
+		<![CDATA[WITH scrapped_plt_cnt AS(
 select count(distinct pallet_number) as scrapped_plt_qty,max(govt_inspection_sheet_id) as govt_inspection_sheet_id 
 from vw_scrapped_pallet_sequence_flat
 WHERE  govt_inspection_sheet_id= $P{subgovt_inspection_sheet_id}
@@ -45,6 +31,7 @@ AND (  case when  $P{paraminspecstatus} ='passed' then govt_inspection_passed=tr
 ),scrapped_plts AS(
 SELECT 
 distinct
+count(distinct p.id) as each_plt_qty,
 govt_inspection_pallets.govt_inspection_sheet_id,
 commodities.code AS commodity,
 COALESCE(marketing_varieties.marketing_variety_code,marketing_varieties.inspection_variety) as marketing_variety,
@@ -110,6 +97,7 @@ AND (  case when $P{paraminspecstatus} ='passed' then govt_inspection_passed=tru
 ,plts AS (
 SELECT 
 distinct
+count(distinct p.id) as each_plt_qty,
 govt_inspection_pallets.govt_inspection_sheet_id,
 commodities.code AS commodity,
 COALESCE(marketing_varieties.marketing_variety_code,marketing_varieties.inspection_variety) as marketing_variety,
@@ -161,6 +149,7 @@ fruit_size_references.edi_out_code
 )
 SELECT
 distinct
+COALESCE(p.each_plt_qty,scrapped_plts.each_plt_qty) as each_plt_qty,
 COALESCE(p.edi_size_count,scrapped_plts.edi_size_count ) as edi_size_count,
 COALESCE(p.commodity,scrapped_plts.commodity) as commodity,
 COALESCE(p.marketing_variety,scrapped_plts.marketing_variety) as marketing_variety,
@@ -179,17 +168,16 @@ LEFT JOIN scrapped_plts on govt_inspection_sheets.id =scrapped_plts.govt_inspect
 WHERE  govt_inspection_sheets.id= $P{subgovt_inspection_sheet_id}
 AND      (  case when  $P{paraminspecstatus} ='passed' then COALESCE(p.govt_inspection_passed,scrapped_plts.govt_inspection_passed)=true 
                 when  $P{paraminspecstatus} ='failed' then COALESCE(p.govt_inspection_passed,scrapped_plts.govt_inspection_passed)=false end )
-) as d 
-group by commodity,
-marketing_variety,
-std_pack,
-size_ref,
-grade,
-actual_count,
-govt_inspection_passed,
-variety,
-edi_size_count]]>
+]]>
 	</queryString>
+	<field name="each_plt_qty" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="each_plt_qty"/>
+		<property name="com.jaspersoft.studio.field.label" value="each_plt_qty"/>
+	</field>
+	<field name="edi_size_count" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="edi_size_count"/>
+		<property name="com.jaspersoft.studio.field.label" value="edi_size_count"/>
+	</field>
 	<field name="commodity" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="commodity"/>
 		<property name="com.jaspersoft.studio.field.label" value="commodity"/>
@@ -214,6 +202,14 @@ edi_size_count]]>
 		<property name="com.jaspersoft.studio.field.name" value="actual_count"/>
 		<property name="com.jaspersoft.studio.field.label" value="actual_count"/>
 	</field>
+	<field name="carton_quantity" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="carton_quantity"/>
+		<property name="com.jaspersoft.studio.field.label" value="carton_quantity"/>
+	</field>
+	<field name="plt_qty" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="plt_qty"/>
+		<property name="com.jaspersoft.studio.field.label" value="plt_qty"/>
+	</field>
 	<field name="govt_inspection_passed" class="java.lang.Boolean">
 		<property name="com.jaspersoft.studio.field.name" value="govt_inspection_passed"/>
 		<property name="com.jaspersoft.studio.field.label" value="govt_inspection_passed"/>
@@ -221,18 +217,6 @@ edi_size_count]]>
 	<field name="variety" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="variety"/>
 		<property name="com.jaspersoft.studio.field.label" value="variety"/>
-	</field>
-	<field name="edi_size_count" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="edi_size_count"/>
-		<property name="com.jaspersoft.studio.field.label" value="edi_size_count"/>
-	</field>
-	<field name="carton_quantity" class="java.math.BigDecimal">
-		<property name="com.jaspersoft.studio.field.name" value="carton_quantity"/>
-		<property name="com.jaspersoft.studio.field.label" value="carton_quantity"/>
-	</field>
-	<field name="plt_qty" class="java.lang.Long">
-		<property name="com.jaspersoft.studio.field.name" value="plt_qty"/>
-		<property name="com.jaspersoft.studio.field.label" value="plt_qty"/>
 	</field>
 	<variable name="ctn_qty1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
@@ -379,6 +363,16 @@ edi_size_count]]>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{carton_quantity}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.##" isBlankWhenNull="true">
+				<reportElement x="300" y="0" width="40" height="11" uuid="c8b05f2c-acb2-452e-9942-add9de5e01b7">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{each_plt_qty}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
