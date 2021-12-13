@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="packout_runs" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" uuid="c08c8ed1-c3fa-4b77-b7f2-d6e11642b1b0">
 	<property name="ireport.zoom" value="5.0"/>
 	<property name="ireport.x" value="0"/>
@@ -17,7 +17,9 @@
 	<parameter name="client_code" class="java.lang.String"/>
 	<queryString language="plsql">
 		<![CDATA[with bin_tipped as (
-select pr.cultivar_id ,pr.farm_id ,
+select
+pr.id as production_run_id,
+pr.cultivar_id ,pr.farm_id ,
 string_agg(distinct farms.farm_code::text, '; '   order by farms.farm_code::text )farms,
 string_agg(distinct pucs.puc_code::text, '; '   order by pucs.puc_code ::text)pucs,
 string_agg(distinct orchards.orchard_code::text, '; '   order by orchards.orchard_code::text )orchards,
@@ -34,10 +36,12 @@ left JOIN orchards ON orchards.id = b.orchard_id
 LEFT JOIN farms ON farms.id = b.farm_id
 Left join pucs on b.puc_id = pucs.id
 WHERE not  ( b.scrapped =true)  and $X{IN, pr.id , production_run_id}
-group by pr.cultivar_id ,pr.farm_id
+group by pr.cultivar_id ,pr.farm_id,pr.id
 ),
 run_attrib as (
-SELECT  pr.cultivar_id ,pr.farm_id ,cultivars.cultivar_name,
+SELECT
+pr.id as production_run_id,
+pr.cultivar_id ,pr.farm_id ,cultivars.cultivar_name,
 string_agg(distinct farms.farm_code, '; '   order by farms.farm_code )farms,
 string_agg(distinct pucs.puc_code, '; '   order by pucs.puc_code )pucs
 ,string_agg(DISTINCT p.production_run_id::text, '; '   order by p.production_run_id::text  ) runs
@@ -52,11 +56,14 @@ LEFT JOIN cultivars ON cultivars.id = pr.cultivar_id
 LEFT JOIN farms ON farms.id = pr.farm_id
 LEFT JOIN pucs ON pucs.id = pr.puc_id
 left JOIN orchards ON orchards.id = pr.orchard_id
-where  $X{IN, p.production_run_id, production_run_id}
-group by  pr.cultivar_id ,pr.farm_id ,cultivars.cultivar_name,farms.farm_code,pucs.puc_code
+where   $X{IN, p.production_run_id, production_run_id}
+group by  pr.cultivar_id ,pr.farm_id ,cultivars.cultivar_name,farms.farm_code,pucs.puc_code,pr.id
 )
+-------------packout details--------------------------------
 , packout_details as (
-select   production_runs.cultivar_id ,production_runs.farm_id ,   COALESCE(cultivars.cultivar_name, cultivar_groups.cultivar_group_code) AS cultivar,
+select
+production_runs.id as production_run_id,
+production_runs.cultivar_id ,production_runs.farm_id ,   COALESCE(cultivars.cultivar_name, cultivar_groups.cultivar_group_code) AS cultivar,
 marketing_varieties.marketing_variety_code,
 grades.grade_code,basic_pack_codes.basic_pack_code as basic_pack,
 std_fruit_size_counts.size_count_value AS std_size,
@@ -104,8 +111,11 @@ fruit_size_references.size_reference ,
 fruit_actual_counts_for_packs.actual_count_for_pack ,
 inventory_codes.inventory_code
 ,cvv.marketing_variety_code
-,target_market_groups.target_market_group_name
-), output_r as (  SELECT
+,target_market_groups.target_market_group_name,production_runs.id
+)
+, output_r as (
+	SELECT
+production_run_id,
 cultivar_id ,
 farm_id ,
 'Cartons' AS record_type,
@@ -138,9 +148,11 @@ actual_count,
 inventory_code,
 packhouses,
 variety,
-packed_tm_group
+packed_tm_group,
+production_run_id
 UNION ALL
 select
+production_run_rebin_id,
 cultivar_id ,
 farm_id ,
 'Rebins' AS record_type,
@@ -168,11 +180,11 @@ cultivar,
 coalesce(cultivar_name, cultivar_group_code),
 rmt_class_code,
 packhouses,
-packed_tm_group
-ORDER BY
-record_type,
-grade_code)
+packed_tm_group,
+production_run_rebin_id
+)
 SELECT
+run_attrib.runs,
 run_attrib.pack_weeks,
 output_r.packhouses,
 coalesce(bin_tipped.farms,run_attrib.farms) farms,
@@ -193,15 +205,15 @@ output_r.carton_quantity,
 output_r.variety,
 output_r.packed_tm_group,
 coalesce(bin_tipped.cultivars,run_attrib.cultivar_name)cultivars
-,bin_tipped.no_of_bins,bin_tipped.total_bin_weight
+,bin_tipped.no_of_bins
+,bin_tipped.total_bin_weight
 ,bin_tipped.orchards as orchards
-,coalesce(bin_tipped.runs,run_attrib.runs) runs
 ,bin_tipped.deliveries
 ,run_attrib.started_at
 ,run_attrib.completed_at
 FROM run_attrib
-full join bin_tipped on bin_tipped.farm_id=run_attrib.farm_id and bin_tipped.cultivar_id=run_attrib.cultivar_id
-full join output_r on run_attrib.farm_id=output_r.farm_id and run_attrib.cultivar_id=output_r.cultivar_id
+left join bin_tipped on bin_tipped.production_run_id=run_attrib.production_run_id
+left join output_r on run_attrib.farm_id=output_r.farm_id and run_attrib.production_run_id=output_r.production_run_id
 ORDER BY
 record_type,
 grade_code,std_size,inventory_code]]>
@@ -275,8 +287,9 @@ grade_code,std_size,inventory_code]]>
 					<text><![CDATA[Weight]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="410" y="13" width="52" height="15" uuid="b56fa57e-d05c-467c-bb26-2c063cf1eba8">
+					<reportElement x="410" y="11" width="52" height="15" uuid="b56fa57e-d05c-467c-bb26-2c063cf1eba8">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Right"/>
 					<text><![CDATA[Total Cartons]]></text>
