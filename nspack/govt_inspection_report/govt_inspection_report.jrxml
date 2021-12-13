@@ -78,7 +78,7 @@ scrapped_pallet_number AS (
      pm_marks.packaging_marks,
      inventory_codes.inventory_code,
      cvv.marketing_variety_code AS customer_variety,
-    std_fruit_size_counts.size_count_value AS std_size,
+      std_fruit_size_counts.size_count_value AS std_size,
      fruit_size_references.size_reference AS size_ref,
      basic_pack_codes.basic_pack_code AS basic_pack,
      standard_pack_codes.standard_pack_code AS std_pack,

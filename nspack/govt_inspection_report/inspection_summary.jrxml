@@ -31,6 +31,7 @@ grade,
 actual_count,
 govt_inspection_passed,
 variety,
+edi_size_count,
 sum(carton_quantity) as carton_quantity,
 max(plt_qty) as plt_qty
 from 
@@ -160,6 +161,7 @@ fruit_size_references.edi_out_code
 )
 SELECT
 distinct
+COALESCE(p.edi_size_count,scrapped_plts.edi_size_count ) as edi_size_count,
 COALESCE(p.commodity,scrapped_plts.commodity) as commodity,
 COALESCE(p.marketing_variety,scrapped_plts.marketing_variety) as marketing_variety,
 COALESCE(p.std_pack ,scrapped_plts.std_pack) as std_pack,
@@ -185,7 +187,8 @@ size_ref,
 grade,
 actual_count,
 govt_inspection_passed,
-variety]]>
+variety,
+edi_size_count]]>
 	</queryString>
 	<field name="commodity" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="commodity"/>
@@ -211,14 +214,6 @@ variety]]>
 		<property name="com.jaspersoft.studio.field.name" value="actual_count"/>
 		<property name="com.jaspersoft.studio.field.label" value="actual_count"/>
 	</field>
-	<field name="carton_quantity" class="java.lang.Long">
-		<property name="com.jaspersoft.studio.field.name" value="carton_quantity"/>
-		<property name="com.jaspersoft.studio.field.label" value="carton_quantity"/>
-	</field>
-	<field name="plt_qty" class="java.lang.Long">
-		<property name="com.jaspersoft.studio.field.name" value="plt_qty"/>
-		<property name="com.jaspersoft.studio.field.label" value="plt_qty"/>
-	</field>
 	<field name="govt_inspection_passed" class="java.lang.Boolean">
 		<property name="com.jaspersoft.studio.field.name" value="govt_inspection_passed"/>
 		<property name="com.jaspersoft.studio.field.label" value="govt_inspection_passed"/>
@@ -226,6 +221,18 @@ variety]]>
 	<field name="variety" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="variety"/>
 		<property name="com.jaspersoft.studio.field.label" value="variety"/>
+	</field>
+	<field name="edi_size_count" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="edi_size_count"/>
+		<property name="com.jaspersoft.studio.field.label" value="edi_size_count"/>
+	</field>
+	<field name="carton_quantity" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="carton_quantity"/>
+		<property name="com.jaspersoft.studio.field.label" value="carton_quantity"/>
+	</field>
+	<field name="plt_qty" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="plt_qty"/>
+		<property name="com.jaspersoft.studio.field.label" value="plt_qty"/>
 	</field>
 	<variable name="ctn_qty1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
@@ -263,7 +270,9 @@ variety]]>
 				<text><![CDATA[Variety]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="144" y="0" width="48" height="13" uuid="da5d9292-dba0-4c6e-ba22-142cff0c3eab"/>
+				<reportElement x="144" y="0" width="44" height="13" uuid="da5d9292-dba0-4c6e-ba22-142cff0c3eab">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -290,8 +299,8 @@ variety]]>
 				</reportElement>
 			</line>
 			<staticText>
-				<reportElement x="200" y="0" width="26" height="13" uuid="f8cc392f-f97c-4e92-b84f-f295958eec9f"/>
-				<textElement>
+				<reportElement x="188" y="0" width="38" height="13" uuid="f8cc392f-f97c-4e92-b84f-f295958eec9f"/>
+				<textElement textAlignment="Left">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Size]]></text>
@@ -331,7 +340,9 @@ variety]]>
 				<textFieldExpression><![CDATA[$F{variety}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="144" y="0" width="48" height="11" uuid="b4b41068-d50c-4edc-b706-6bb573b95427"/>
+				<reportElement x="144" y="0" width="44" height="11" uuid="b4b41068-d50c-4edc-b706-6bb573b95427">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -345,11 +356,13 @@ variety]]>
 				<textFieldExpression><![CDATA[$F{std_pack}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="200" y="0" width="26" height="11" uuid="2d66686b-d513-4e1c-a03e-c38e3aa824c5"/>
-				<textElement>
+				<reportElement x="188" y="0" width="26" height="11" uuid="2d66686b-d513-4e1c-a03e-c38e3aa824c5">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{size_ref}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{edi_size_count}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="231" y="0" width="26" height="12" uuid="d059d582-b982-4b73-bb25-b808f75cf068">
