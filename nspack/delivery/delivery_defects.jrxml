@@ -16,7 +16,7 @@ left join qc_tests on qc_defect_measurements.qc_test_id =qc_tests.id
 left join fruit_defects on qc_defect_measurements.fruit_defect_id =fruit_defects.id
 left join qc_samples on qc_tests.qc_sample_id =qc_samples.id
 left join  rmt_deliveries on qc_samples.rmt_delivery_id = rmt_deliveries.id
-where rmt_deliveries.id=  $P{delivery_id} ]]>
+where rmt_deliveries.id=  $P{delivery_id}]]>
 	</queryString>
 	<field name="short_description" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="short_description"/>
@@ -49,7 +49,7 @@ where rmt_deliveries.id=  $P{delivery_id} ]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center">
-					<font size="11" isBold="false"/>
+					<font size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Short Description]]></text>
 			</staticText>
@@ -67,7 +67,7 @@ where rmt_deliveries.id=  $P{delivery_id} ]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center">
-					<font size="11" isBold="false"/>
+					<font size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Qty Class 2]]></text>
 			</staticText>
@@ -81,7 +81,7 @@ where rmt_deliveries.id=  $P{delivery_id} ]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center">
-					<font size="11" isBold="false"/>
+					<font size="11" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Qty Class 3]]></text>
 			</staticText>
