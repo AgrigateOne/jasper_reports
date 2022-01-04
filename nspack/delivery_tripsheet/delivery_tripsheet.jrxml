@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="delivery_tripsheet" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="live_kromco_nspack"/>
 	<property name="ireport.zoom" value="1.771561000000001"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -10,6 +9,7 @@
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="115"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="880"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack_dev"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -40,7 +40,7 @@ o.orchard_code,f.farm_code,p.puc_code,d.reference_number,d.id as delivery_id,
 rmt_bins.id as rmt_bin_id,
 COALESCE(rmt_bins.bin_asset_number, rmt_bins.tipped_asset_number, rmt_bins.shipped_asset_number, rmt_bins.scrapped_bin_asset_number) AS asset_number,
 COALESCE(cultivars.cultivar_name,cultivar_groups.cultivar_group_code) as cultivar,
-rmt_bins.legacy_data ->> 'track_slms_indicator_1_code' AS rmt_code,
+rc.rmt_code ,
 rmt_sizes.size_code AS rmt_size_code,
 rmt_classes.rmt_class_code,
 extract('day' from date_trunc('day',now() - rmt_bins.created_at::date)) as age,
@@ -66,6 +66,7 @@ from vehicle_jobs
 join vehicle_job_units on vehicle_job_units.vehicle_job_id =vehicle_jobs.id
 left join stock_types on vehicle_job_units.stock_item_id = stock_types.id and stock_types.stock_type_code = 'BIN'
 left join rmt_bins   on rmt_bins.id=vehicle_job_units.stock_item_id
+left join rmt_codes rc on rmt_bins.rmt_code_id =rc.id
 left join cultivars on rmt_bins.cultivar_id = cultivars.id
 left join cultivar_groups on rmt_bins.cultivar_group_id = cultivar_groups.id
 left join rmt_sizes on rmt_sizes.id = rmt_bins.rmt_size_id
@@ -121,6 +122,7 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 	<field name="rmt_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="rmt_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="rmt_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="rmt_codes"/>
 	</field>
 	<field name="rmt_size_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="rmt_size_code"/>
