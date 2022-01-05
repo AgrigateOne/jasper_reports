@@ -36,7 +36,7 @@
 	<parameter name="vehicle_job_id" class="java.lang.Integer"/>
 	<queryString language="SQL">
 		<![CDATA[select 
-o.orchard_code,f.farm_code,p.puc_code,d.reference_number,d.id as delivery_id,
+o.orchard_code,p.puc_code,d.reference_number,d.id as delivery_id,
 rmt_bins.id as rmt_bin_id,
 COALESCE(rmt_bins.bin_asset_number, rmt_bins.tipped_asset_number, rmt_bins.shipped_asset_number, rmt_bins.scrapped_bin_asset_number) AS asset_number,
 COALESCE(cultivars.cultivar_name,cultivar_groups.cultivar_group_code) as cultivar,
@@ -78,7 +78,6 @@ left join business_processes on business_processes.id=vehicle_jobs.business_proc
 left join locations on locations.id=vehicle_jobs.planned_location_to_id
 left join rmt_deliveries d on vehicle_jobs.rmt_delivery_id = d.id
 left join orchards o on d.orchard_id = o.id
-left join farms f on d.farm_id = f.id
 left join pucs p on d.puc_id = p.id
 where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 	</queryString>
@@ -86,11 +85,6 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 		<property name="com.jaspersoft.studio.field.name" value="orchard_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="orchard_code"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="orchards"/>
-	</field>
-	<field name="farm_code" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="farm_code"/>
-		<property name="com.jaspersoft.studio.field.label" value="farm_code"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="farms"/>
 	</field>
 	<field name="puc_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="puc_code"/>
@@ -139,7 +133,7 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 		<property name="com.jaspersoft.studio.field.name" value="age"/>
 		<property name="com.jaspersoft.studio.field.label" value="age"/>
 	</field>
-	<field name="COLUMN_13" class="java.lang.String">
+	<field name="farm_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="farm_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="farm_code"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="farms"/>
