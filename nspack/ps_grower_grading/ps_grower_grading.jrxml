@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="presort_grading_pool_id" language="groovy" columnCount="5" printOrder="Horizontal" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="156" columnSpacing="7" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" uuid="945d24dc-a46b-4d12-918e-0ac2ec6f4b2a">
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="378"/>
@@ -8,7 +8,7 @@
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44/jasperserver-pro/"/>
 	<property name="ireport.jasperserver.user" value="superuser"/>
 	<property name="ireport.jasperserver.report.resource" value="/organizations/organization_1/reports/MES/Presort/ps_grower_grading_files/ps_grower_grading_"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="kr"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
 	<property name="com.jaspersoft.studio.report.unit.description" value="Audience:  MES User.  Output:  PDF.  MES:  Grower Grading done per Lot."/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="268"/>
@@ -16,7 +16,7 @@
 	<style name="Crosstab Data Text" hTextAlign="Center" hImageAlign="Center"/>
 	<subDataset name="ctab" uuid="639358b5-0490-4698-aada-739ded4da318">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="kr"/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
 		<parameter name="presort_grading_pool_id" class="java.lang.Integer" isForPrompting="false">
 			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 		</parameter>
@@ -29,7 +29,7 @@ gradesort, colour_sort
 from
 (
 SELECT
-class.rmt_class_code as graded_class,treatments.treatment_code as graded_colour,b.maf_article_count,sum(b.rmt_bin_weight)graded_weight,pool.rmt_bin_weight,
+class.rmt_class_code as graded_class,cp.colour_percentage as graded_colour,b.maf_article_count,sum(b.rmt_bin_weight)graded_weight,pool.rmt_bin_weight,
 sum(b.rmt_bin_weight::numeric*1) as graded_weight_detail,
 sum(b.rmt_bin_weight::numeric*1::numeric/pool.rmt_bin_weight::numeric*100) as graded_weight_perc,
 case b.maf_article_count
@@ -56,10 +56,10 @@ FROM
 presort_grower_grading_pools pool
 left join presort_grower_grading_bins b on b.presort_grower_grading_pool_id = pool.id
 left join rmt_classes class on b.rmt_class_id = class.id
-left join treatments  on  b.treatment_id = treatments.id
+left join colour_percentages cp  on  b.colour_percentage_id = cp.id
 LEFT join grades on grades.grade_code = class.rmt_class_code
   where pool.id = $P{presort_grading_pool_id}
-group by class.rmt_class_code,treatments.treatment_code,b.maf_article_count,pool.rmt_bin_weight,grades.qa_level,colour_sort
+group by class.rmt_class_code,cp.colour_percentage,b.maf_article_count,pool.rmt_bin_weight,grades.qa_level,colour_sort
 order by b.maf_article_count asc
 )   sq
 group by gradesort||'_'||graded_class , colour_sort||'_'||graded_colour , maf_article_count,
