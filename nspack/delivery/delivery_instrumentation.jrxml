@@ -26,7 +26,7 @@ join kromco_mes.instruments_rfm_sessions r on rm.instruments_rfm_session_id =r.i
 where scale_type ='Brix' and measurement between 0.5 and 30
 group by r.transaction_id 
 )
-select transaction_id,mtype,m_values from fi where transaction_id ='48181']]>
+select transaction_id,mtype,m_values from fi where transaction_id =$P{transaction_id}]]>
 	</queryString>
 	<field name="transaction_id" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="transaction_id"/>
@@ -65,24 +65,17 @@ select transaction_id,mtype,m_values from fi where transaction_id ='48181']]>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="42" splitType="Stretch">
+		<band height="25" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<line>
-				<reportElement x="0" y="11" width="480" height="1" uuid="ae43eb93-3c46-4503-a9a4-9940ec0bc4ed">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-			</line>
 			<textField>
-				<reportElement x="27" y="10" width="100" height="30" uuid="6b5eb207-7638-4d60-ad82-ba1b8ccee180">
+				<reportElement x="27" y="3" width="100" height="20" uuid="6b5eb207-7638-4d60-ad82-ba1b8ccee180">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e39ef0fe-6c9d-4eca-a58f-8527c869e17e"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[$F{mtype}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="137" y="10" width="100" height="30" uuid="6e4fec3e-685e-4093-961b-53bdc9c0e6df">
+				<reportElement x="137" y="3" width="100" height="20" uuid="6e4fec3e-685e-4093-961b-53bdc9c0e6df">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1a74576b-1345-4d14-9620-aeb051c6cc13"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
