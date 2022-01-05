@@ -33,7 +33,7 @@
     commodities.code AS commodity,
         rmt_container_material_types.container_material_type_code,
 rmt_bins.shipped_asset_number,
-rmt_bins.id
+rmt_bins.id,rmt_bins.nett_weight::int
  from bin_loads
  join bin_load_products on bin_load_products.bin_load_id=bin_loads.id
      left join rmt_bins on rmt_bins.bin_load_product_id=bin_load_products.id 
@@ -107,6 +107,10 @@ rmt_bins.id
 		<property name="com.jaspersoft.studio.field.label" value="id"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="rmt_bins"/>
 	</field>
+	<field name="nett_weight" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="nett_weight"/>
+		<property name="com.jaspersoft.studio.field.label" value="nett_weight"/>
+	</field>
 	<variable name="id1" class="java.lang.Integer" calculation="Count">
 		<variableExpression><![CDATA[$F{id}]]></variableExpression>
 	</variable>
@@ -114,7 +118,7 @@ rmt_bins.id
 		<band splitType="Stretch"/>
 	</background>
 	<columnHeader>
-		<band height="14" splitType="Stretch">
+		<band height="18" splitType="Stretch">
 			<staticText>
 				<reportElement x="40" y="1" width="40" height="13" uuid="139c2eb7-34a0-4179-9b52-0397d983e785">
 					<property name="local_mesure_unitheight" value="pixel"/>
@@ -128,7 +132,7 @@ rmt_bins.id
 				<text><![CDATA[Asset No]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="80" y="1" width="35" height="13" uuid="005dc8f8-efb3-42ce-808b-630d206faa1b">
+				<reportElement x="80" y="1" width="20" height="13" uuid="005dc8f8-efb3-42ce-808b-630d206faa1b">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -137,10 +141,10 @@ rmt_bins.id
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<text><![CDATA[Comm]]></text>
+				<text><![CDATA[Com]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="115" y="1" width="35" height="13" uuid="d3a01a7b-be71-4346-b035-57eabe8d2c65">
+				<reportElement x="101" y="1" width="25" height="13" uuid="d3a01a7b-be71-4346-b035-57eabe8d2c65">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -150,7 +154,7 @@ rmt_bins.id
 				<text><![CDATA[Cult]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="150" y="1" width="25" height="13" uuid="11795f9d-22d8-44b6-9080-37e837d77f41">
+				<reportElement x="129" y="1" width="25" height="13" uuid="11795f9d-22d8-44b6-9080-37e837d77f41">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -160,7 +164,7 @@ rmt_bins.id
 				<text><![CDATA[Cls]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="175" y="1" width="25" height="13" uuid="b08e204b-b38d-4577-b345-1d53302c5b67">
+				<reportElement x="154" y="1" width="25" height="13" uuid="b08e204b-b38d-4577-b345-1d53302c5b67">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -170,7 +174,7 @@ rmt_bins.id
 				<text><![CDATA[Puc]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="200" y="1" width="27" height="13" uuid="11698453-210b-4515-997e-981e10648dc4">
+				<reportElement x="179" y="1" width="27" height="13" uuid="11698453-210b-4515-997e-981e10648dc4">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -181,7 +185,7 @@ rmt_bins.id
 				<text><![CDATA[Orchrd]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="227" y="1" width="35" height="13" uuid="9a737f64-7076-45e3-8acd-75242b277fec">
+				<reportElement x="206" y="1" width="35" height="13" uuid="9a737f64-7076-45e3-8acd-75242b277fec">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -200,12 +204,22 @@ rmt_bins.id
 				</textElement>
 				<text><![CDATA[ID]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="240" y="1" width="35" height="13" uuid="bf2edab0-2fb0-44db-ba4c-025522315e41">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Nett W]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="11" splitType="Stretch">
+		<band height="15" splitType="Stretch">
 			<textField isBlankWhenNull="true">
-				<reportElement x="80" y="1" width="35" height="10" uuid="2a371e57-c19c-43ce-8b2f-1a68be06d819">
+				<reportElement x="80" y="1" width="20" height="10" uuid="2a371e57-c19c-43ce-8b2f-1a68be06d819">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -217,7 +231,7 @@ rmt_bins.id
 				<textFieldExpression><![CDATA[$F{commodity}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="115" y="1" width="35" height="10" uuid="290e7ae2-69ca-4713-8c13-d6eae42c3797">
+				<reportElement x="101" y="1" width="25" height="10" uuid="290e7ae2-69ca-4713-8c13-d6eae42c3797">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -227,7 +241,7 @@ rmt_bins.id
 				<textFieldExpression><![CDATA[$F{cultivar_name}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="150" y="1" width="25" height="10" uuid="b8e54af1-39b5-4ff8-9f7a-c7367f345d4a">
+				<reportElement x="129" y="1" width="25" height="10" uuid="b8e54af1-39b5-4ff8-9f7a-c7367f345d4a">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -237,7 +251,7 @@ rmt_bins.id
 				<textFieldExpression><![CDATA[$F{rmt_class_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="175" y="1" width="25" height="10" uuid="8068e8ba-17ce-4014-8a8d-6d80a28555a2">
+				<reportElement x="154" y="1" width="25" height="10" uuid="8068e8ba-17ce-4014-8a8d-6d80a28555a2">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -247,7 +261,7 @@ rmt_bins.id
 				<textFieldExpression><![CDATA[$F{puc_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="200" y="1" width="27" height="10" uuid="7b20b47f-bb10-4c49-84d5-8f0d778ea0a0">
+				<reportElement x="179" y="1" width="27" height="10" uuid="7b20b47f-bb10-4c49-84d5-8f0d778ea0a0">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -257,7 +271,7 @@ rmt_bins.id
 				<textFieldExpression><![CDATA[$F{orchard_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="227" y="1" width="35" height="10" uuid="b2a6d133-e22a-4ecf-abbc-6376b137faa7">
+				<reportElement x="206" y="1" width="35" height="10" uuid="b2a6d133-e22a-4ecf-abbc-6376b137faa7">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -289,6 +303,16 @@ rmt_bins.id
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="241" y="1" width="34" height="10" uuid="b975b0d1-ee56-4e92-af99-a92d4960319f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nett_weight}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
