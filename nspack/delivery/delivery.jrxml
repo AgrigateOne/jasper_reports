@@ -4,7 +4,7 @@
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="live_kromco_nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="199"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="794"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -39,7 +39,7 @@
 ,(SELECT pr.id
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) AS implementation_owner_party_role_id
-,a.reference_number
+,a.reference_number,rmt_codes.rmt_code
 FROM
     rmt_deliveries a
     LEFT JOIN rmt_delivery_destinations d ON d.id = a.rmt_delivery_destination_id
@@ -61,7 +61,7 @@ LEFT JOIN public.rmt_bins j ON (a.id = j.rmt_delivery_id)
   LEFT JOIN cultivars i ON i.id = j.cultivar_id
      LEFT JOIN cultivar_groups ON cultivar_groups.id = COALESCE(j.cultivar_group_id, i.cultivar_group_id)
      LEFT JOIN commodities m ON m.id = cultivar_groups.commodity_id
-  
+    LEFT JOIN rmt_codes ON rmt_codes.id = j.rmt_code_id
     
     where a.id=$P{delivery_id}
 group by     a.id,j.rmt_delivery_id,
@@ -77,7 +77,7 @@ group by     a.id,j.rmt_delivery_id,
     to_char(a.date_picked, 'WW'),
     a.truck_registration_number,
     i.description ,
-    m.code ,j.bin_fullness,
+    m.code ,j.bin_fullness,rmt_codes.rmt_code,
     d.delivery_destination_code,c.container_material_type_code]]>
 	</queryString>
 	<field name="del_id" class="java.lang.String">
@@ -205,9 +205,85 @@ group by     a.id,j.rmt_delivery_id,
 		<property name="com.jaspersoft.studio.field.label" value="reference_number"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="rmt_deliveries"/>
 	</field>
+	<field name="rmt_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="rmt_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="rmt_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="rmt_codes"/>
+	</field>
 	<variable name="bin_qty1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{bin_qty}]]></variableExpression>
 	</variable>
+	<group name="Group1">
+		<groupExpression><![CDATA[$F{rmt_delivery_id}]]></groupExpression>
+		<groupFooter>
+			<band height="50">
+				<textField>
+					<reportElement x="229" y="2" width="50" height="30" uuid="52a3fd88-8cd2-494d-993f-8b2071c6919e"/>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font size="12"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{bin_qty1}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="0" width="100" height="30" uuid="4627dd1c-81f1-4de0-8501-646b3ec3f11b"/>
+					<textElement verticalAlignment="Top">
+						<font size="12"/>
+					</textElement>
+					<text><![CDATA[Total Bins]]></text>
+				</staticText>
+			</band>
+			<band height="33">
+				<subreport>
+					<reportElement x="1" y="20" width="553" height="8" uuid="3470acd3-dc4e-4f81-92cd-234b2f7b8d48">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<subreportParameter name="transaction_id">
+						<subreportParameterExpression><![CDATA[$F{reference_number}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["delivery_instrumentation.jasper"]]></subreportExpression>
+				</subreport>
+				<staticText>
+					<reportElement x="0" y="0" width="552" height="15" uuid="0dca8708-16c4-4e67-8bdb-17c6e536408f">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Other Measurements]]></text>
+				</staticText>
+			</band>
+			<band height="33">
+				<subreport>
+					<reportElement x="1" y="20" width="553" height="8" uuid="ec8f62f3-9886-4972-afc0-2c9607bb60df">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<subreportParameter name="delivery_id">
+						<subreportParameterExpression><![CDATA[$P{delivery_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["delivery_defects.jasper"]]></subreportExpression>
+				</subreport>
+				<staticText>
+					<reportElement x="0" y="0" width="552" height="15" uuid="db5139d8-8c93-4d6d-9959-df8c8181780e">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Defects]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -260,7 +336,7 @@ group by     a.id,j.rmt_delivery_id,
 		</band>
 	</title>
 	<pageHeader>
-		<band height="298" splitType="Stretch">
+		<band height="524" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="0" width="23" height="20" uuid="a5498d95-8dbc-45e5-8eb2-86388e90e5f8"/>
 				<textElement>
@@ -393,7 +469,7 @@ group by     a.id,j.rmt_delivery_id,
 				<textFieldExpression><![CDATA[$F{bin_groups}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="227" width="110" height="20" uuid="f087dcf8-b858-4cb0-b255-b78f55936e77"/>
+				<reportElement x="0" y="252" width="110" height="20" uuid="f087dcf8-b858-4cb0-b255-b78f55936e77"/>
 				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="12" isBold="true"/>
 				</textElement>
@@ -407,14 +483,14 @@ group by     a.id,j.rmt_delivery_id,
 				<text><![CDATA[VARIETY:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="207" width="110" height="20" uuid="cbd32ccc-1442-4a28-871a-78b49e8b0237"/>
+				<reportElement x="0" y="232" width="110" height="20" uuid="cbd32ccc-1442-4a28-871a-78b49e8b0237"/>
 				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[PUC:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="128" y="227" width="162" height="20" uuid="05df0631-2b2a-409b-bb9a-77df1ee9e6a1">
+				<reportElement x="128" y="252" width="162" height="20" uuid="05df0631-2b2a-409b-bb9a-77df1ee9e6a1">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -424,7 +500,7 @@ group by     a.id,j.rmt_delivery_id,
 				<textFieldExpression><![CDATA[$F{gap}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="1" y="274" width="289" height="20" uuid="0b0f78df-37b6-41cb-ab18-edd2b1a7c1e3">
+				<reportElement x="1" y="293" width="289" height="20" uuid="0b0f78df-37b6-41cb-ab18-edd2b1a7c1e3">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -442,14 +518,14 @@ group by     a.id,j.rmt_delivery_id,
 				<textFieldExpression><![CDATA[$F{commodity_code}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="187" width="110" height="20" uuid="ee113091-aa43-45ee-a7cb-8f375938d834"/>
+				<reportElement x="0" y="212" width="110" height="20" uuid="ee113091-aa43-45ee-a7cb-8f375938d834"/>
 				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[ORCHARD:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="128" y="247" width="162" height="20" uuid="49e6974e-fcd9-4336-9159-b487e0c6b33e">
+				<reportElement x="128" y="272" width="162" height="20" uuid="49e6974e-fcd9-4336-9159-b487e0c6b33e">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -473,7 +549,7 @@ group by     a.id,j.rmt_delivery_id,
 				<textFieldExpression><![CDATA[$F{qty_damaged_bins}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="128" y="207" width="162" height="20" uuid="4ebf0623-cbf6-4bc7-8c61-3a9a65994e98">
+				<reportElement x="128" y="232" width="162" height="20" uuid="4ebf0623-cbf6-4bc7-8c61-3a9a65994e98">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -483,7 +559,7 @@ group by     a.id,j.rmt_delivery_id,
 				<textFieldExpression><![CDATA[$F{puc_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="128" y="187" width="162" height="20" uuid="237e8e03-e290-4f89-9c30-f5f4ff22462a"/>
+				<reportElement x="128" y="212" width="162" height="20" uuid="237e8e03-e290-4f89-9c30-f5f4ff22462a"/>
 				<textElement>
 					<font fontName="SansSerif" size="12" isBold="true"/>
 				</textElement>
@@ -532,7 +608,7 @@ group by     a.id,j.rmt_delivery_id,
 				<textFieldExpression><![CDATA[$F{reference_number}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="247" width="110" height="20" uuid="0e1140cf-2636-4b82-bb09-49201a5f776c">
+				<reportElement x="0" y="272" width="110" height="20" uuid="0e1140cf-2636-4b82-bb09-49201a5f776c">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -550,6 +626,20 @@ group by     a.id,j.rmt_delivery_id,
 					<font size="10"/>
 				</textElement>
 				<text><![CDATA[FARM:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="128" y="190" width="162" height="20" uuid="fa2087a1-c722-4472-a605-8ba5fc17b8f6"/>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{rmt_code}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="190" width="110" height="20" uuid="52cbaf2e-07d8-40e0-95f8-6262a574ae64"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RMT Code:]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
@@ -657,74 +747,8 @@ group by     a.id,j.rmt_delivery_id,
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="110">
+		<band height="34">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<textField>
-				<reportElement x="230" y="2" width="50" height="30" uuid="52a3fd88-8cd2-494d-993f-8b2071c6919e"/>
-				<textElement textAlignment="Center" verticalAlignment="Top">
-					<font size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{bin_qty1}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="1" y="0" width="100" height="30" uuid="4627dd1c-81f1-4de0-8501-646b3ec3f11b"/>
-				<textElement verticalAlignment="Top">
-					<font size="12"/>
-				</textElement>
-				<text><![CDATA[Total Bins]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="31" width="555" height="15" uuid="dee4fd71-8abb-4eeb-b27f-836f196abe16">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="1.0"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="12" isBold="true"/>
-				</textElement>
-				<text><![CDATA[DEFECTS:]]></text>
-			</staticText>
-			<subreport>
-				<reportElement x="2" y="50" width="555" height="8" uuid="ec8f62f3-9886-4972-afc0-2c9607bb60df">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<subreportParameter name="delivery_id">
-					<subreportParameterExpression><![CDATA[$P{delivery_id}]]></subreportParameterExpression>
-				</subreportParameter>
-				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["delivery_defects.jasper"]]></subreportExpression>
-			</subreport>
-			<subreport>
-				<reportElement x="0" y="94" width="555" height="8" uuid="3470acd3-dc4e-4f81-92cd-234b2f7b8d48">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<subreportParameter name="transaction_id">
-					<subreportParameterExpression><![CDATA[$F{reference_number}]]></subreportParameterExpression>
-				</subreportParameter>
-				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["delivery_instrumentation.jasper"]]></subreportExpression>
-			</subreport>
-			<staticText>
-				<reportElement x="0" y="72" width="555" height="15" uuid="a271a5ee-9cf4-453c-8f59-f039dbbaa761">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="1.0"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="12" isBold="true"/>
-				</textElement>
-				<text><![CDATA[MEASUREMENTS:]]></text>
-			</staticText>
 		</band>
 	</summary>
 </jasperReport>
