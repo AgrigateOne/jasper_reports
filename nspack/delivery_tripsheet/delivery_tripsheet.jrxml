@@ -9,7 +9,7 @@
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="115"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="880"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack_dev"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -46,15 +46,15 @@ rmt_classes.rmt_class_code,
 extract('day' from date_trunc('day',now() - rmt_bins.created_at::date)) as age,
 farms.farm_code,
 rmt_bins.legacy_data ->> 'cold_store_type' AS regime,
-rmt_bins.nett_weight,
+rmt_bins.nett_weight::int,
 rmt_container_material_types.container_material_type_code,
 locations.location_long_code as location,
 vehicle_jobs.vehicle_number,
-vehicle_jobs.id as vehicle_job_id,
+vehicle_jobs.id as vehicle_job_id,rmt_bins.bin_fullness ,rmt_bins.sample_bin , 
 vehicle_jobs.loaded_at,
 vehicle_jobs.offloaded_at,
 '' plt_packhouse,
-business_processes.process,
+business_processes.process,cp.colour_percentage ,
 vehicle_jobs.business_process_id,
 fn_party_role_name((SELECT pr.id
 FROM public.party_roles pr
@@ -67,6 +67,7 @@ join vehicle_job_units on vehicle_job_units.vehicle_job_id =vehicle_jobs.id
 left join stock_types on vehicle_job_units.stock_item_id = stock_types.id and stock_types.stock_type_code = 'BIN'
 left join rmt_bins   on rmt_bins.id=vehicle_job_units.stock_item_id
 left join rmt_codes rc on rmt_bins.rmt_code_id =rc.id
+left join colour_percentages cp on rmt_bins.colour_percentage_id =cp.id
 left join cultivars on rmt_bins.cultivar_id = cultivars.id
 left join cultivar_groups on rmt_bins.cultivar_group_id = cultivar_groups.id
 left join rmt_sizes on rmt_sizes.id = rmt_bins.rmt_size_id
@@ -147,7 +148,7 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 		<property name="com.jaspersoft.studio.field.name" value="regime"/>
 		<property name="com.jaspersoft.studio.field.label" value="regime"/>
 	</field>
-	<field name="nett_weight" class="java.math.BigDecimal">
+	<field name="nett_weight" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="nett_weight"/>
 		<property name="com.jaspersoft.studio.field.label" value="nett_weight"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="rmt_bins"/>
@@ -172,6 +173,16 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 		<property name="com.jaspersoft.studio.field.label" value="vehicle_job_id"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vehicle_jobs"/>
 	</field>
+	<field name="bin_fullness" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="bin_fullness"/>
+		<property name="com.jaspersoft.studio.field.label" value="bin_fullness"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="rmt_bins"/>
+	</field>
+	<field name="sample_bin" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="sample_bin"/>
+		<property name="com.jaspersoft.studio.field.label" value="sample_bin"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="rmt_bins"/>
+	</field>
 	<field name="loaded_at" class="java.sql.Timestamp">
 		<property name="com.jaspersoft.studio.field.name" value="loaded_at"/>
 		<property name="com.jaspersoft.studio.field.label" value="loaded_at"/>
@@ -190,6 +201,11 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 		<property name="com.jaspersoft.studio.field.name" value="process"/>
 		<property name="com.jaspersoft.studio.field.label" value="process"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="business_processes"/>
+	</field>
+	<field name="colour_percentage" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="colour_percentage"/>
+		<property name="com.jaspersoft.studio.field.label" value="colour_percentage"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="colour_percentages"/>
 	</field>
 	<field name="business_process_id" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="business_process_id"/>
@@ -222,7 +238,7 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="481" y="0" width="64" height="20" uuid="8bbcd5a5-fda6-4c89-ae76-b193a2c8e55a"/>
+				<reportElement x="450" y="0" width="94" height="20" uuid="8bbcd5a5-fda6-4c89-ae76-b193a2c8e55a"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
@@ -472,7 +488,7 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="18" splitType="Stretch">
+		<band height="19" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<line>
 				<reportElement x="0" y="1" width="555" height="1" uuid="dc4d9cf4-a191-48ec-bacf-0a8b1edcc987">
@@ -480,7 +496,7 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 				</reportElement>
 			</line>
 			<staticText>
-				<reportElement x="0" y="2" width="80" height="13" uuid="f89947df-e4d3-44b8-b543-c8331eebf546">
+				<reportElement x="0" y="2" width="60" height="13" uuid="f89947df-e4d3-44b8-b543-c8331eebf546">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -492,7 +508,7 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 				<text><![CDATA[Bin Number]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="83" y="2" width="35" height="13" uuid="039ba0bf-1938-49c1-bf4d-403fb1b3ab4c">
+				<reportElement x="59" y="2" width="35" height="13" uuid="039ba0bf-1938-49c1-bf4d-403fb1b3ab4c">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -504,7 +520,7 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 				<text><![CDATA[Cultivar]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="164" y="2" width="35" height="13" uuid="c1702a23-a3bd-42bb-bebb-3f8d2d46f7f0">
+				<reportElement x="119" y="2" width="35" height="13" uuid="c1702a23-a3bd-42bb-bebb-3f8d2d46f7f0">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -516,7 +532,7 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 				<text><![CDATA[Size]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="284" y="2" width="47" height="13" uuid="06d2722b-2835-4d64-80fd-5040eebaeb09">
+				<reportElement x="255" y="2" width="47" height="13" uuid="06d2722b-2835-4d64-80fd-5040eebaeb09">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -527,7 +543,7 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 				<text><![CDATA[Farm]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="335" y="2" width="47" height="13" uuid="2a47feaa-00dc-4bdd-bccd-4ae85f2ffef4">
+				<reportElement x="302" y="2" width="35" height="13" uuid="2a47feaa-00dc-4bdd-bccd-4ae85f2ffef4">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -538,31 +554,29 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 				<text><![CDATA[Regime]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="202" y="2" width="35" height="13" uuid="d7bec463-9e18-4bf0-ba4c-ee45112d3ac4">
+				<reportElement x="182" y="2" width="33" height="13" uuid="d7bec463-9e18-4bf0-ba4c-ee45112d3ac4">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<text><![CDATA[Class]]></text>
+				<text><![CDATA[Colour]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="122" y="2" width="40" height="13" uuid="b5b143a9-0379-4ce5-bcab-f31c4c512387">
+				<reportElement x="94" y="2" width="25" height="13" uuid="b5b143a9-0379-4ce5-bcab-f31c4c512387">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<text><![CDATA[Rmt Code]]></text>
+				<text><![CDATA[Rmt]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="240" y="2" width="40" height="13" uuid="3e4438fe-3426-4286-b9ec-1f03eeaed294">
+				<reportElement x="215" y="2" width="40" height="13" uuid="3e4438fe-3426-4286-b9ec-1f03eeaed294">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -574,7 +588,7 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 				<text><![CDATA[Age]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="385" y="2" width="40" height="13" uuid="f97c50f2-d5d6-46bb-99e0-dfe5a09cebf4">
+				<reportElement x="337" y="2" width="30" height="13" uuid="f97c50f2-d5d6-46bb-99e0-dfe5a09cebf4">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -605,13 +619,46 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 				</textElement>
 				<text><![CDATA[Location]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="367" y="2" width="30" height="13" uuid="d94969af-a8ad-4e9d-b54b-cd5dcec5ed3d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Full]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="397" y="2" width="30" height="13" uuid="a2ed2e24-411b-4d1e-95f2-5bdd3587f5d7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Sample]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="155" y="2" width="27" height="13" uuid="9351818c-f140-4e51-951c-2986d17fcf76">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Class]]></text>
+			</staticText>
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="15" splitType="Stretch">
+		<band height="17" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isBlankWhenNull="true">
-				<reportElement x="0" y="0" width="80" height="13" uuid="3685f158-6339-4e45-a224-aeacd7d46ff9">
+				<reportElement x="0" y="0" width="60" height="13" uuid="3685f158-6339-4e45-a224-aeacd7d46ff9">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -622,7 +669,7 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 				<textFieldExpression><![CDATA[$F{asset_number}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="83" y="0" width="35" height="13" uuid="b17c37c8-c219-484f-a327-e29c203ca59a">
+				<reportElement x="60" y="0" width="35" height="13" uuid="b17c37c8-c219-484f-a327-e29c203ca59a">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -634,7 +681,7 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 				<textFieldExpression><![CDATA[$F{cultivar}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="164" y="0" width="35" height="13" uuid="7b0281ba-c65c-4113-9289-c12b8cbba417">
+				<reportElement x="120" y="0" width="35" height="13" uuid="7b0281ba-c65c-4113-9289-c12b8cbba417">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -646,19 +693,19 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 				<textFieldExpression><![CDATA[$F{rmt_size_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="202" y="0" width="35" height="13" uuid="d3eef899-2627-45b4-a633-f8ace00b441e">
+				<reportElement x="182" y="0" width="33" height="13" uuid="d3eef899-2627-45b4-a633-f8ace00b441e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{rmt_class_code}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{colour_percentage}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="284" y="0" width="47" height="13" uuid="acef8336-1258-4291-80d8-4ee7401286fb">
+				<reportElement x="255" y="0" width="47" height="13" uuid="acef8336-1258-4291-80d8-4ee7401286fb">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -668,11 +715,11 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 				<textFieldExpression><![CDATA[$F{farm_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="122" y="0" width="40" height="13" uuid="3399a57d-aa00-4f3f-8120-2d70ddd9a355">
+				<reportElement x="95" y="0" width="25" height="13" uuid="3399a57d-aa00-4f3f-8120-2d70ddd9a355">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8"/>
@@ -680,7 +727,7 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 				<textFieldExpression><![CDATA[$F{rmt_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="240" y="0" width="40" height="13" uuid="6fb645e7-8b96-4a96-bc81-f2786819c959">
+				<reportElement x="215" y="0" width="40" height="13" uuid="6fb645e7-8b96-4a96-bc81-f2786819c959">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -703,7 +750,7 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 				<textFieldExpression><![CDATA[$F{location}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="385" y="0" width="40" height="13" uuid="8240d16c-5208-464e-8ba0-9f0b30b56f74">
+				<reportElement x="337" y="0" width="30" height="13" uuid="8240d16c-5208-464e-8ba0-9f0b30b56f74">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -727,7 +774,7 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 				<textFieldExpression><![CDATA[$F{container_material_type_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="335" y="0" width="47" height="13" uuid="33feb003-62e9-4fc3-80b1-257dc3e5a3bd">
+				<reportElement x="302" y="0" width="35" height="13" uuid="33feb003-62e9-4fc3-80b1-257dc3e5a3bd">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -737,6 +784,43 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{regime}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="367" y="0" width="30" height="13" uuid="5eca6813-d79a-41fc-8d17-51c214989230">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bin_fullness}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="397" y="0" width="30" height="13" uuid="c72ae702-2af0-4fe3-9890-8a86a4d467bb">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[$F{sample_bin}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sample_bin}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="155" y="0" width="27" height="13" uuid="fe122fd9-bdfa-454f-90b9-e3bea5709803">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{rmt_class_code}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
