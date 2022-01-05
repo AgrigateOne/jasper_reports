@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="bin asset " pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="7e3aaf77-d546-4751-a978-9cc728d86554">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="kr"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="234"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="755"/>
+	<parameter name="bin_asset_transaction_item_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT 
 from_locations.location_long_code AS from_location
@@ -29,7 +32,7 @@ LEFT JOIN business_processes ON business_processes.id = bin_asset_transactions.b
 LEFT JOIN rmt_deliveries  rd on bin_asset_transactions.fruit_reception_delivery_id = rd.id        
 LEFT JOIN orchards o on rd.orchard_id = o.id       
 LEFT JOIN farms f on o.farm_id = f.id
-where  to_locations.location_long_code = '11A'
+where  bin_asset_transaction_items.id=$P{bin_asset_transaction_item_id}
 group by 
 from_locations.location_long_code,to_locations.location_long_code,rcmt.container_material_type_code,business_processes.process]]>
 	</queryString>
@@ -110,23 +113,13 @@ from_locations.location_long_code,to_locations.location_long_code,rcmt.container
 				</textElement>
 				<textFieldExpression><![CDATA[$F{implementation_owner_name}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="460" y="0" width="80" height="20" uuid="97015071-2145-4a7e-be74-2abe8492d46f">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Right">
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement x="70" y="40" width="130" height="20" uuid="8bd778ed-0c07-4dd9-b601-5f5406588d92">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<textElement>
-					<font size="12"/>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="12"/>
 				</textElement>
 				<text><![CDATA[Date & Time Issued:]]></text>
 			</staticText>
@@ -137,8 +130,9 @@ from_locations.location_long_code,to_locations.location_long_code,rcmt.container
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement>
-					<font size="8"/>
+					<font size="12"/>
 				</textElement>
+				<textFieldExpression><![CDATA[$F{created_at}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="70" y="70" width="130" height="20" uuid="9e2d5564-fa05-489c-98fc-75ae3f94fe7e">
@@ -147,8 +141,8 @@ from_locations.location_long_code,to_locations.location_long_code,rcmt.container
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement>
-					<font size="12"/>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="12"/>
 				</textElement>
 				<text><![CDATA[From Location:]]></text>
 			</staticText>
@@ -168,8 +162,8 @@ from_locations.location_long_code,to_locations.location_long_code,rcmt.container
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement>
-					<font size="12"/>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="12"/>
 				</textElement>
 				<text><![CDATA[To Producer:]]></text>
 			</staticText>
@@ -185,12 +179,17 @@ from_locations.location_long_code,to_locations.location_long_code,rcmt.container
 				<textFieldExpression><![CDATA[$F{to_location}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="5" y="34" width="555" height="1" uuid="c827c2bf-7b55-45b4-b4e1-fb57482c77c6"/>
+				<reportElement x="5" y="40" width="555" height="1" uuid="c827c2bf-7b55-45b4-b4e1-fb57482c77c6"/>
 			</line>
+			<textField>
+				<reportElement x="500" y="0" width="55" height="20" uuid="5223a9fd-a189-4d25-a079-579b7ecacd53"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$P{bin_asset_transaction_item_id}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="22">
+		<band height="35">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
 				<reportElement x="70" y="2" width="130" height="20" uuid="0982cf99-1e30-411b-b7cb-40a8c99ed11a">
@@ -199,22 +198,10 @@ from_locations.location_long_code,to_locations.location_long_code,rcmt.container
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center">
-					<font size="12"/>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="12"/>
 				</textElement>
 				<text><![CDATA[Bin Type:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="240" y="0" width="130" height="20" uuid="c159cf7e-1d1b-4f23-9669-f9f1fe2edd90">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Left">
-					<font size="12"/>
-				</textElement>
-				<text><![CDATA[Quantity]]></text>
 			</staticText>
 			<line>
 				<reportElement x="0" y="19" width="555" height="1" uuid="93dfa176-30a1-4d0f-b45f-f298664f7074">
@@ -227,13 +214,13 @@ from_locations.location_long_code,to_locations.location_long_code,rcmt.container
 		<band height="20" splitType="Immediate">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isBlankWhenNull="true">
-				<reportElement x="240" y="0" width="130" height="20" uuid="694a3516-91b8-480e-b9e0-35d894448f9c">
+				<reportElement x="240" y="0" width="39" height="20" uuid="694a3516-91b8-480e-b9e0-35d894448f9c">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Left">
+				<textElement textAlignment="Right">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{total_qty_bins}]]></textFieldExpression>
@@ -245,30 +232,29 @@ from_locations.location_long_code,to_locations.location_long_code,rcmt.container
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center">
-					<font size="12"/>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{container_material_type_code}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
-	<columnFooter>
-		<band height="60" splitType="Prevent">
-			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+	<summary>
+		<band height="83">
 			<staticText>
-				<reportElement x="60" y="40" width="150" height="20" uuid="ce67b560-20da-47d6-a109-b52b3ed959d0">
+				<reportElement x="70" y="40" width="150" height="20" uuid="ce67b560-20da-47d6-a109-b52b3ed959d0">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center">
-					<font size="12"/>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="12"/>
 				</textElement>
 				<text><![CDATA[Signed on behalf of]]></text>
 			</staticText>
 			<line>
-				<reportElement x="230" y="55" width="250" height="1" uuid="2996500e-00eb-480d-996a-da7615635450">
+				<reportElement x="220" y="55" width="250" height="1" uuid="2996500e-00eb-480d-996a-da7615635450">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
@@ -280,23 +266,23 @@ from_locations.location_long_code,to_locations.location_long_code,rcmt.container
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center">
-					<font size="12"/>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="12"/>
 				</textElement>
 				<text><![CDATA[Total bins:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="240" y="0" width="130" height="20" uuid="4ec8f971-14a7-40d3-9cd6-f28c4b3e6cce">
+				<reportElement x="240" y="0" width="39" height="20" uuid="4ec8f971-14a7-40d3-9cd6-f28c4b3e6cce">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Left">
+				<textElement textAlignment="Right">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{total_bins}]]></textFieldExpression>
 			</textField>
 		</band>
-	</columnFooter>
+	</summary>
 </jasperReport>
