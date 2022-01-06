@@ -6,7 +6,7 @@
 	<property name="ireport.y" value="0"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/dispatch_consignment"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44:80/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="kromco"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack_KR_Live"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
@@ -57,7 +57,7 @@ select  distinct
 commodities.commodity,
 p.load_id,
 '00' || CAST(p.load_id as text) as document_number,
-p.inspected_dest_country  as importing_country,
+destination_countries.description  as importing_country,
 p.exporter,
 
 (SELECT pr.id
@@ -199,7 +199,7 @@ order by row_num asc]]>
 	<field name="importing_country" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="importing_country"/>
 		<property name="com.jaspersoft.studio.field.label" value="importing_country"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="destination_countries"/>
 	</field>
 	<field name="exporter" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="exporter"/>
