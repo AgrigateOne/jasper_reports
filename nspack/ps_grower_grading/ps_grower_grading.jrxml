@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="presort_grading_pool_id" language="groovy" columnCount="5" printOrder="Horizontal" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="156" columnSpacing="7" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" uuid="945d24dc-a46b-4d12-918e-0ac2ec6f4b2a">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="presort_grading_pool_id" language="groovy" columnCount="5" printOrder="Horizontal" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="156" columnSpacing="7" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" uuid="945d24dc-a46b-4d12-918e-0ac2ec6f4b2a">
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="378"/>
 	<property name="ireport.y" value="0"/>
@@ -805,4 +805,15 @@ group by pool.maf_lot_number, seasons.season_code, pool.rmt_bin_count, pool.rmt_
 			</crosstab>
 		</band>
 	</summary>
+	<noData>
+		<band height="56">
+			<staticText>
+				<reportElement x="60" y="0" width="700" height="30" uuid="6a8e9d1b-7ca0-4e5d-892b-f1b5d83ef39d"/>
+				<textElement textAlignment="Center">
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[no data]]></text>
+			</staticText>
+		</band>
+	</noData>
 </jasperReport>
