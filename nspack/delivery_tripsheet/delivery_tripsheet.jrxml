@@ -325,7 +325,7 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 				<text><![CDATA[NS Pack]]></text>
 			</staticText>
 			<componentElement>
-				<reportElement x="219" y="32" width="131" height="64" uuid="4a864b43-2183-4d30-8a03-63772df42db7">
+				<reportElement x="190" y="32" width="159" height="72" uuid="4a864b43-2183-4d30-8a03-63772df42db7">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="local_mesure_unitbarWidth" value="pixel"/>
@@ -334,7 +334,7 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 					<property name="com.jaspersoft.studio.unit.barHeight" value="px"/>
 					<printWhenExpression><![CDATA[true]]></printWhenExpression>
 				</reportElement>
-				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barWidth="1" barHeight="70" evaluationGroup="">
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="true" checksumRequired="false" barWidth="1" barHeight="70" evaluationGroup="">
 					<jr:codeExpression><![CDATA[$P{vehicle_job_id}]]></jr:codeExpression>
 				</jr:barbecue>
 			</componentElement>
