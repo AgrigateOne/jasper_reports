@@ -17,6 +17,8 @@
 	<subDataset name="ctab" uuid="639358b5-0490-4698-aada-739ded4da318">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
+		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="130"/>
+		<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="864"/>
 		<parameter name="presort_grading_pool_id" class="java.lang.Integer" isForPrompting="false">
 			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 		</parameter>
@@ -29,7 +31,7 @@ gradesort, colour_sort
 from
 (
 SELECT
-class.rmt_class_code as graded_class,cp.colour_percentage as graded_colour,b.maf_article_count,sum(b.rmt_bin_weight)graded_weight,pool.rmt_bin_weight,
+case when class.rmt_class_code='W' then 'WASTE' else class.rmt_class_code END as graded_class ,cp.colour_percentage as graded_colour,b.maf_article_count,sum(b.rmt_bin_weight)graded_weight,pool.rmt_bin_weight,
 sum(b.rmt_bin_weight::numeric*1) as graded_weight_detail,
 sum(b.rmt_bin_weight::numeric*1::numeric/pool.rmt_bin_weight::numeric*100) as graded_weight_perc,
 case b.maf_article_count
@@ -47,7 +49,7 @@ else
    when char_length(b.maf_article_count) = 4 then cast(b.maf_article_count as integer)+60000
    else cast(b.maf_article_count as integer)+1000 end
 end as isn,
-case class.rmt_class_code when 'SA' THEN '1' when '1A' then '2' when '1L' then '3' when '2L' then '4' when '3' then '5'  when 'ALL' then '6' when 'WASTE' THEN '7'
+case class.rmt_class_code when 'SA' THEN '1' when '1A' then '2' when '1L' then '3' when '2L' then '4' when '3' then '5'  when 'ALL' then '6' when 'W' THEN '7'
 else grades.qa_level end
  as gradesort,
  '' as colour_sort
