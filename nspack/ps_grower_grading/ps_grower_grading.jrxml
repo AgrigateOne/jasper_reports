@@ -117,7 +117,7 @@ order by colour_sort, gradesort, isn]]>
 		<![CDATA[SELECT pool.maf_lot_number, seasons.season_code, pool.rmt_bin_count, pool.rmt_bin_weight
 ,bins.maf_total_lot_weight,bins.maf_tipped_quantity
 ,farms.farm_code
-,pool.track_slms_indicator_code
+,string_agg(distinct rc.rmt_code,',')track_slms_indicator_code
 ,rmt_bins.legacy_data ->> 'track_slms_indicator_description' as track_slms_indicator_description
 ,array_to_string(array_agg(distinct rmt_bins.legacy_data ->> 'ripe_point_code'), ';') AS ripe_point_code
 ,rmt_bins.legacy_data ->> 'rmt_variety_code' as rmt_variety_code
@@ -141,45 +141,52 @@ left join rmt_bins on rmt_bins.presort_tip_lot_number = pool.maf_lot_number
 left join cultivars ON cultivars.id = rmt_bins.cultivar_id
 left join cultivar_groups ON cultivar_groups.id = COALESCE(rmt_bins.cultivar_group_id, cultivars.cultivar_group_id)
 left join commodities ON commodities.id = cultivar_groups.commodity_id
+left join rmt_codes rc on rc.id = any(pool.rmt_code_ids)
 left join rmt_deliveries ON rmt_deliveries.id = rmt_bins.rmt_delivery_id
 left join party_roles on farms.owner_party_role_id = party_roles.id
 left join party_addresses ON party_addresses.party_id = party_roles.party_id
 left join addresses ON addresses.id = party_addresses.address_id
 where pool.id = $P{presort_grading_pool_id}
 group by pool.maf_lot_number, seasons.season_code, pool.rmt_bin_count, pool.rmt_bin_weight,bins.maf_total_lot_weight,bins.maf_tipped_quantity
-  ,farms.farm_code  ,pool.track_slms_indicator_code  ,rmt_bins.legacy_data ->> 'track_slms_indicator_description'
+  ,farms.farm_code  ,rmt_bins.legacy_data ->> 'track_slms_indicator_description'
   ,rmt_bins.legacy_data ->> 'rmt_variety_code'  ,commodities.code,rmt_bins.legacy_data ->> 'delivery_number_preprinted'
   ,rmt_deliveries.created_at,rmt_bins.legacy_data ->> 'product_class_code',farms.owner_party_role_id
-   ,addresses.address_line_1,addresses.address_line_2,addresses.city,addresses.postal_code
-]]>
+   ,addresses.address_line_1,addresses.address_line_2,addresses.city,addresses.postal_code]]>
 	</queryString>
 	<field name="maf_lot_number" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="maf_lot_number"/>
 		<property name="com.jaspersoft.studio.field.label" value="maf_lot_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="presort_grower_grading_pools"/>
 	</field>
 	<field name="season_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="season_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="season_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="seasons"/>
 	</field>
 	<field name="rmt_bin_count" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="rmt_bin_count"/>
 		<property name="com.jaspersoft.studio.field.label" value="rmt_bin_count"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="presort_grower_grading_pools"/>
 	</field>
 	<field name="rmt_bin_weight" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="rmt_bin_weight"/>
 		<property name="com.jaspersoft.studio.field.label" value="rmt_bin_weight"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="presort_grower_grading_pools"/>
 	</field>
 	<field name="maf_total_lot_weight" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="maf_total_lot_weight"/>
 		<property name="com.jaspersoft.studio.field.label" value="maf_total_lot_weight"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="presort_grower_grading_bins"/>
 	</field>
 	<field name="maf_tipped_quantity" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="maf_tipped_quantity"/>
 		<property name="com.jaspersoft.studio.field.label" value="maf_tipped_quantity"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="presort_grower_grading_bins"/>
 	</field>
 	<field name="farm_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="farm_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="farm_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="farms"/>
 	</field>
 	<field name="track_slms_indicator_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="track_slms_indicator_code"/>
@@ -200,6 +207,7 @@ group by pool.maf_lot_number, seasons.season_code, pool.rmt_bin_count, pool.rmt_
 	<field name="commodity_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="commodity_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="commodity_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="commodities"/>
 	</field>
 	<field name="delivery_number_preprinted" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="delivery_number_preprinted"/>
