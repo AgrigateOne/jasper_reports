@@ -4,7 +4,7 @@
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_Badlands_NSPACK"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="199"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="794"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -239,6 +239,7 @@ group by     a.id,j.rmt_delivery_id,
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<printWhenExpression><![CDATA[$P{client_code}.equals("kr")]]></printWhenExpression>
 					</reportElement>
 					<subreportParameter name="transaction_id">
 						<subreportParameterExpression><![CDATA[$F{reference_number}]]></subreportParameterExpression>
@@ -307,23 +308,6 @@ group by     a.id,j.rmt_delivery_id,
 			<line>
 				<reportElement x="1" y="0" width="555" height="1" uuid="69c10a66-7d49-452e-860a-adca56bf55bf"/>
 			</line>
-			<subreport>
-				<reportElement x="128" y="35" width="125" height="92" uuid="972561c5-3248-49ca-b6ab-263b3ec2c896">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<subreportParameter name="party_role_id">
-					<subreportParameterExpression><![CDATA[$F{implementation_owner_party_role_id}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="address_type">
-					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
-				</subreportParameter>
-				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
-			</subreport>
 			<image scaleImage="FillFrame">
 				<reportElement x="1" y="34" width="125" height="98" uuid="51a0da34-ea8a-49e9-8cbb-d162ad9a24e1">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
