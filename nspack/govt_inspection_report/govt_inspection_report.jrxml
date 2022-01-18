@@ -861,17 +861,19 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<text><![CDATA[Pack]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="72" y="45" width="22" height="13" uuid="6d343af3-e8e4-4116-b4a5-4d638475461e">
+				<reportElement x="72" y="45" width="26" height="13" uuid="6d343af3-e8e4-4116-b4a5-4d638475461e">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Cls]]></text>
+				<text><![CDATA[Class]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="94" y="45" width="18" height="13" uuid="49671f40-2934-4733-b6af-9288b50b3e3d">
+				<reportElement x="99" y="45" width="17" height="13" uuid="49671f40-2934-4733-b6af-9288b50b3e3d">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
@@ -1001,7 +1003,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<text><![CDATA[Phyto Data]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="115" y="45" width="21" height="13" uuid="0012db30-c291-415f-9bd3-86edde986d60">
+				<reportElement x="117" y="45" width="21" height="13" uuid="0012db30-c291-415f-9bd3-86edde986d60">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -1091,7 +1093,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[$F{inventory_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="94" y="0" width="18" height="11" uuid="eff04fd7-2c38-48fd-8900-aafe80cf4e43">
+				<reportElement x="99" y="0" width="18" height="11" uuid="eff04fd7-2c38-48fd-8900-aafe80cf4e43">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -1157,7 +1159,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[$F{pallet_number}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="72" y="0" width="22" height="11" uuid="18db69d1-d385-4a82-b0ab-be689c54569a">
+				<reportElement x="72" y="0" width="26" height="11" uuid="18db69d1-d385-4a82-b0ab-be689c54569a">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -1206,7 +1208,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[$F{phyto_data}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="115" y="0" width="21" height="11" uuid="5131c5cb-cb79-407a-842f-929c57266a71"/>
+				<reportElement x="117" y="0" width="21" height="11" uuid="5131c5cb-cb79-407a-842f-929c57266a71"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
