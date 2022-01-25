@@ -6,7 +6,7 @@
 	<property name="ireport.y" value="46"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/first_intake"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="live_kromco_nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="158"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="831"/>
@@ -198,7 +198,7 @@ scrapped_pallet_number AS (
     govt_inspection_sheet_id = $P{govt_inspection_sheet_id}
     AND $P!{QueryCondition}
 )
-SELECT
+SELECT row_number () OVER (partition by p.id ORDER by ps.id )as seq_no,case when (row_number () OVER (partition by p.id ORDER by ps.id ))=1 then true else false end as print_barcode,
 
 
   ggn_validation.gap_code,
@@ -340,6 +340,14 @@ coalesce(scrapped_pallet_number.gap_certification,
   govt_inspection_sheets.id = $P{govt_inspection_sheet_id}
   AND $P!{QueryCondition}]]>
 	</queryString>
+	<field name="seq_no" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="seq_no"/>
+		<property name="com.jaspersoft.studio.field.label" value="seq_no"/>
+	</field>
+	<field name="print_barcode" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="print_barcode"/>
+		<property name="com.jaspersoft.studio.field.label" value="print_barcode"/>
+	</field>
 	<field name="gap_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="gap_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="gap_code"/>
@@ -1070,7 +1078,8 @@ coalesce(scrapped_pallet_number.gap_certification,
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="11" splitType="Stretch">
+		<band height="13" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isBlankWhenNull="true">
 				<reportElement x="280" y="0" width="21" height="11" uuid="a87ae22d-9134-43d0-8703-72800411e360"/>
 				<textElement textAlignment="Center">
@@ -1214,6 +1223,15 @@ coalesce(scrapped_pallet_number.gap_certification,
 				</textElement>
 				<textFieldExpression><![CDATA[$F{edi_size_count}]]></textFieldExpression>
 			</textField>
+		</band>
+		<band height="20">
+			<printWhenExpression><![CDATA[$F{print_barcode}]]></printWhenExpression>
+			<componentElement>
+				<reportElement x="454" y="0" width="100" height="20" uuid="5ea27a85-40a9-4caf-88b1-907cd0b2fa4f"/>
+				<jr:Code128 xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" textPosition="none">
+					<jr:codeExpression><![CDATA[$F{pallet_number}]]></jr:codeExpression>
+				</jr:Code128>
+			</componentElement>
 		</band>
 	</detail>
 	<pageFooter>
