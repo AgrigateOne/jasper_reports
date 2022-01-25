@@ -1227,10 +1227,10 @@ coalesce(scrapped_pallet_number.gap_certification,
 		<band height="20">
 			<printWhenExpression><![CDATA[$F{print_barcode}]]></printWhenExpression>
 			<componentElement>
-				<reportElement x="454" y="0" width="100" height="20" uuid="5ea27a85-40a9-4caf-88b1-907cd0b2fa4f"/>
-				<jr:Code128 xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" textPosition="none">
+				<reportElement x="355" y="0" width="200" height="20" uuid="bf7b56b0-ed6e-472f-b006-eedfaf557c3b"/>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false">
 					<jr:codeExpression><![CDATA[$F{pallet_number}]]></jr:codeExpression>
-				</jr:Code128>
+				</jr:barbecue>
 			</componentElement>
 		</band>
 	</detail>
