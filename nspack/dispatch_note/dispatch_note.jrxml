@@ -446,7 +446,7 @@ where loads.id = $P{load_id}]]>
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isBlankWhenNull="true">
-				<reportElement x="446" y="128" width="99" height="13" uuid="818fab86-ea78-49d9-b385-2373b50ca2d5"/>
+				<reportElement x="453" y="128" width="99" height="13" uuid="818fab86-ea78-49d9-b385-2373b50ca2d5"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
@@ -467,7 +467,7 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{customer_contact_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="388" y="128" width="57" height="13" uuid="18b674ac-9548-456f-9a23-514b38546147"/>
+				<reportElement x="395" y="128" width="57" height="13" uuid="18b674ac-9548-456f-9a23-514b38546147"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
@@ -495,14 +495,14 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{dispatch_consignment_note_number}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="388" y="184" width="57" height="13" uuid="c6c0b016-68b1-45b3-a141-feaa0d8d2b9a"/>
+				<reportElement x="395" y="184" width="57" height="13" uuid="c6c0b016-68b1-45b3-a141-feaa0d8d2b9a"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Receive Depot:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="446" y="184" width="99" height="13" uuid="d118e85e-1bd9-4912-b064-f197c7bbf230"/>
+				<reportElement x="453" y="184" width="99" height="13" uuid="d118e85e-1bd9-4912-b064-f197c7bbf230"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
@@ -549,14 +549,14 @@ where loads.id = $P{load_id}]]>
 				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="446" y="156" width="99" height="13" uuid="9210f583-3358-4d7e-b278-203f24856515"/>
+				<reportElement x="453" y="156" width="99" height="13" uuid="9210f583-3358-4d7e-b278-203f24856515"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{file_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="388" y="156" width="57" height="13" uuid="47276c9e-25ce-494c-b030-5e504eba5055"/>
+				<reportElement x="395" y="156" width="57" height="13" uuid="47276c9e-25ce-494c-b030-5e504eba5055"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
@@ -619,14 +619,14 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[Consignee:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="388" y="142" width="57" height="13" uuid="262a9f00-1104-4c48-9c1e-61b9655325de"/>
+				<reportElement x="395" y="142" width="57" height="13" uuid="262a9f00-1104-4c48-9c1e-61b9655325de"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Port Name:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="206" y="142" width="59" height="13" uuid="4bfebe7a-c26c-436a-b2b6-3373e556cce8"/>
+				<reportElement x="206" y="142" width="66" height="13" uuid="4bfebe7a-c26c-436a-b2b6-3373e556cce8"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -640,7 +640,7 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[Shipper:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="206" y="128" width="59" height="13" uuid="458cff24-978e-4626-b21b-33068eca41d6"/>
+				<reportElement x="206" y="128" width="66" height="13" uuid="458cff24-978e-4626-b21b-33068eca41d6"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -657,7 +657,7 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{shipper_party_role_name}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="265" y="128" width="121" height="13" uuid="059225d3-105e-4c1a-a78e-94446165fef4"/>
+				<reportElement x="272" y="128" width="121" height="13" uuid="059225d3-105e-4c1a-a78e-94446165fef4"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -696,28 +696,28 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{vessel_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="265" y="142" width="121" height="13" uuid="18e321c3-9167-452a-b6d1-c96d257a7636"/>
+				<reportElement x="272" y="142" width="121" height="13" uuid="18e321c3-9167-452a-b6d1-c96d257a7636"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{voyage_number}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="446" y="142" width="99" height="13" uuid="d0b00771-5207-4511-8bce-1ab00390d74a"/>
+				<reportElement x="453" y="142" width="99" height="13" uuid="d0b00771-5207-4511-8bce-1ab00390d74a"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{port_name}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="446" y="170" width="99" height="13" uuid="6c87201f-6f5c-49c6-9685-34608d98a3dc"/>
+				<reportElement x="453" y="170" width="99" height="13" uuid="6c87201f-6f5c-49c6-9685-34608d98a3dc"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{depart_port_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="388" y="170" width="57" height="13" uuid="84360773-537c-4cfa-bb25-65f121e3b139"/>
+				<reportElement x="395" y="170" width="57" height="13" uuid="84360773-537c-4cfa-bb25-65f121e3b139"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -733,7 +733,7 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[Remark:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="" positionType="Float" x="206" y="184" width="59" height="13" uuid="d2e8fb7f-4f5b-48ee-aa21-1627423ac42d">
+				<reportElement key="" positionType="Float" x="206" y="184" width="66" height="13" uuid="d2e8fb7f-4f5b-48ee-aa21-1627423ac42d">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -746,7 +746,7 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[Vehicle Wgt:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="265" y="170" width="121" height="13" uuid="4b2c38e1-bd71-4e4c-bdf8-da06f9330ff5">
+				<reportElement x="272" y="170" width="121" height="13" uuid="4b2c38e1-bd71-4e4c-bdf8-da06f9330ff5">
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -764,7 +764,7 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{remarks}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement key="" x="206" y="170" width="59" height="13" uuid="4fbe32c4-1bb8-40bf-b8b6-b177d1b33c62">
+				<reportElement key="" x="206" y="170" width="66" height="13" uuid="4fbe32c4-1bb8-40bf-b8b6-b177d1b33c62">
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -773,7 +773,7 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[Vehicle Reg:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="265" y="184" width="121" height="13" uuid="abea4367-961b-4ac4-a0f4-f935037cdc91">
+				<reportElement x="272" y="184" width="121" height="13" uuid="abea4367-961b-4ac4-a0f4-f935037cdc91">
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -782,7 +782,7 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{vehicle_weight_out}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement key="" x="206" y="156" width="59" height="13" uuid="28e0ede2-4eb6-4c0c-8533-c7f6dc619f13">
+				<reportElement key="" x="206" y="156" width="66" height="13" uuid="28e0ede2-4eb6-4c0c-8533-c7f6dc619f13">
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -791,7 +791,7 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[Haulier]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="265" y="156" width="121" height="13" uuid="e721b826-a8e8-4ac2-bb9b-abf23d595dfe">
+				<reportElement x="272" y="156" width="121" height="13" uuid="e721b826-a8e8-4ac2-bb9b-abf23d595dfe">
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -809,7 +809,7 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{container_seal_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="265" y="212" width="121" height="13" uuid="a8d50e84-d891-4700-80a0-2f1b3850313b">
+				<reportElement x="272" y="212" width="121" height="13" uuid="a8d50e84-d891-4700-80a0-2f1b3850313b">
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -827,16 +827,16 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[Container Seal:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement key="" x="206" y="212" width="59" height="13" uuid="874ec3ad-adc7-4755-a16f-d22683025feb">
+				<reportElement key="" x="206" y="212" width="66" height="13" uuid="874ec3ad-adc7-4755-a16f-d22683025feb">
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Container:]]></text>
+				<text><![CDATA[Container Temp:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="446" y="198" width="99" height="13" uuid="f973921a-80e6-48aa-96b1-1ccda2b1797c">
+				<reportElement x="453" y="198" width="99" height="13" uuid="f973921a-80e6-48aa-96b1-1ccda2b1797c">
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -854,7 +854,7 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[Container Code:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="446" y="212" width="99" height="13" uuid="8f1b9357-dd69-4cb8-8ada-73f0d99bec3a">
+				<reportElement x="453" y="212" width="99" height="13" uuid="8f1b9357-dd69-4cb8-8ada-73f0d99bec3a">
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -863,7 +863,7 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{container_temperature_rhine2}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="388" y="198" width="57" height="13" uuid="0f896c28-43c6-44ba-a8a9-00d700047180">
+				<reportElement x="395" y="198" width="57" height="13" uuid="0f896c28-43c6-44ba-a8a9-00d700047180">
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -872,7 +872,7 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[Temp rhine:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="388" y="212" width="57" height="13" uuid="d2bcdb1a-9073-4221-bca3-1d4ed43fb5d4">
+				<reportElement x="395" y="212" width="57" height="13" uuid="d2bcdb1a-9073-4221-bca3-1d4ed43fb5d4">
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -978,14 +978,14 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{implementation_owner_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="206" y="198" width="59" height="13" uuid="e6004f9d-5c6b-443a-b8f9-fde0c9c14d8c"/>
+				<reportElement x="206" y="198" width="66" height="13" uuid="e6004f9d-5c6b-443a-b8f9-fde0c9c14d8c"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Shipping Line:]]></text>
 			</staticText>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement x="265" y="198" width="121" height="13" uuid="bfd26096-dd76-4e2d-bb4e-b96c38af8db7">
+				<reportElement x="272" y="198" width="121" height="13" uuid="bfd26096-dd76-4e2d-bb4e-b96c38af8db7">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
