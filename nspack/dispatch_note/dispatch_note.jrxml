@@ -68,7 +68,7 @@ fn_party_role_name(loads.exporter_party_role_id) AS export_party_role_name,
 'NOTYET' AS vessel_owner_party_role_name,
 loads.id AS load_id,
 load_containers.container_code,
-load_containers.internal_container_code AS container_setting ,
+coalesce(load_containers.internal_container_code,'') AS container_setting ,
 load_containers.container_vents,
 load_containers.container_seal_code,
 load_containers.container_temperature_rhine,
@@ -100,7 +100,7 @@ loads.edi_file_name as file_name,
 pod_port.port_code AS port_name,
 pol_port.port_code AS depart_port_name,
 loads.customer_party_role_id,
-loads.exporter_party_role_id,pcs.pucs
+loads.exporter_party_role_id,pcs.pucs,coalesce(cargo_temperatures.temperature_code ,'')cargo_temp
 FROM loads
 join 
 (select  pallets.load_id ,string_agg(distinct pucs.puc_code,',') pucs
@@ -117,6 +117,7 @@ JOIN ports pod_port ON pod_port.id = pod_voyage_ports.port_id
 JOIN voyages ON pol_voyage_ports.voyage_id = voyages.id
 LEFT JOIN vessels ON voyages.vessel_id = vessels.id
 LEFT JOIN load_containers ON loads.id = load_containers.load_id
+left join cargo_temperatures on load_containers.cargo_temperature_id =cargo_temperatures.id
 LEFT JOIN load_voyages ON loads.id = load_voyages.load_id
 LEFT JOIN load_vehicles ON loads.id = load_vehicles.load_id
 LEFT JOIN container_stack_types ON container_stack_types.id = load_containers.stack_type_id
@@ -385,6 +386,10 @@ where loads.id = $P{load_id}]]>
 	<field name="pucs" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="pucs"/>
 		<property name="com.jaspersoft.studio.field.label" value="pucs"/>
+	</field>
+	<field name="cargo_temp" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cargo_temp"/>
+		<property name="com.jaspersoft.studio.field.label" value="cargo_temp"/>
 	</field>
 	<group name="load_id">
 		<groupExpression><![CDATA[$F{load_id}]]></groupExpression>
@@ -809,13 +814,13 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{container_seal_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="272" y="212" width="121" height="13" uuid="a8d50e84-d891-4700-80a0-2f1b3850313b">
+				<reportElement x="206" y="212" width="185" height="13" uuid="a8d50e84-d891-4700-80a0-2f1b3850313b">
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{container_setting}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[CONCATENATE("Temp Settings:",$F{container_setting},",",$F{cargo_temp})]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="5" y="170" width="65" height="13" uuid="5f36e453-b160-492d-8512-b8287b750dda">
@@ -825,15 +830,6 @@ where loads.id = $P{load_id}]]>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Container Seal:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement key="" x="206" y="212" width="66" height="13" uuid="874ec3ad-adc7-4755-a16f-d22683025feb">
-					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
-				</reportElement>
-				<textElement>
-					<font size="8" isBold="false"/>
-				</textElement>
-				<text><![CDATA[Container Temp:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement x="453" y="198" width="99" height="13" uuid="f973921a-80e6-48aa-96b1-1ccda2b1797c">
