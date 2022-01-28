@@ -5,7 +5,7 @@
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="234"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="755"/>
-	<parameter name="bin_asset_transaction_item_id" class="java.lang.Integer">
+	<parameter name="bin_asset_transaction_id" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
 	</parameter>
 	<queryString>
@@ -21,10 +21,11 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 ,(SELECT pr.id
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) AS implementation_owner_party_role_id
-FROM bin_asset_transaction_items        
+FROM bin_asset_transactions 
+LEFT JOIN bin_asset_transaction_items         ON bin_asset_transactions.id = bin_asset_transaction_items.bin_asset_transaction_id  
 LEFT JOIN locations from_locations ON from_locations.id = bin_asset_transaction_items.bin_asset_from_location_id
 LEFT JOIN locations to_locations ON to_locations.id = bin_asset_transaction_items.bin_asset_to_location_id
-LEFT JOIN bin_asset_transactions ON bin_asset_transactions.id = bin_asset_transaction_items.bin_asset_transaction_id        
+      
 LEFT JOIN asset_transaction_types ON asset_transaction_types.id = bin_asset_transactions.asset_transaction_type_id
 LEFT JOIN rmt_container_material_owners ON rmt_container_material_owners.id = bin_asset_transaction_items.rmt_container_material_owner_id         
 LEFT JOIN rmt_container_material_types rcmt on rmt_container_material_owners.rmt_container_material_type_id= rcmt.id         
@@ -32,7 +33,7 @@ LEFT JOIN business_processes ON business_processes.id = bin_asset_transactions.b
 LEFT JOIN rmt_deliveries  rd on bin_asset_transactions.fruit_reception_delivery_id = rd.id        
 LEFT JOIN orchards o on rd.orchard_id = o.id       
 LEFT JOIN farms f on o.farm_id = f.id
-where  bin_asset_transaction_items.id=$P{bin_asset_transaction_item_id}
+where  bin_asset_transaction_items.id=$P{bin_asset_transaction_id}
 group by 
 from_locations.location_long_code,to_locations.location_long_code,rcmt.container_material_type_code,business_processes.process]]>
 	</queryString>
@@ -184,7 +185,7 @@ from_locations.location_long_code,to_locations.location_long_code,rcmt.container
 			<textField>
 				<reportElement x="500" y="0" width="55" height="20" uuid="5223a9fd-a189-4d25-a079-579b7ecacd53"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$P{bin_asset_transaction_item_id}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{bin_asset_transaction_id}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
