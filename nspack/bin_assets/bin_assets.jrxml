@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="bin assets" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="7e3aaf77-d546-4751-a978-9cc728d86554">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="live_kromco_nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="234"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="755"/>
@@ -34,7 +34,7 @@ LEFT JOIN business_processes ON business_processes.id = bin_asset_transactions.b
 LEFT JOIN rmt_deliveries  rd on bin_asset_transactions.fruit_reception_delivery_id = rd.id        
 LEFT JOIN orchards o on rd.orchard_id = o.id       
 LEFT JOIN farms f on o.farm_id = f.id
-where  bin_asset_transaction_items.id=$P{bin_asset_transaction_id}
+where  bin_asset_transactions.id=$P{bin_asset_transaction_id}
 group by 
 from_locations.location_long_code,to_locations.location_long_code,rcmt.container_material_type_code,business_processes.process]]>
 	</queryString>
@@ -256,7 +256,7 @@ from_locations.location_long_code,to_locations.location_long_code,rcmt.container
 				<text><![CDATA[Signed on behalf of]]></text>
 			</staticText>
 			<line>
-				<reportElement x="220" y="55" width="250" height="1" uuid="2996500e-00eb-480d-996a-da7615635450">
+				<reportElement x="220" y="55" width="252" height="1" uuid="2996500e-00eb-480d-996a-da7615635450">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
