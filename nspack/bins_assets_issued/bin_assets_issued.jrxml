@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="bin assets" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="7e3aaf77-d546-4751-a978-9cc728d86554">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="kr_nspack"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="234"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="755"/>
+	<property name="com.jaspersoft.studio.report.description" value=""/>
+	<parameter name="bin_asset_transaction_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 
+coalesce(max(issued_to_farm.total_issued_to_farm ),0)- coalesce(max(received_from_farm.total_received_from_farm),0) as total_bins_at_farm,
+max(issued_to_farm.total_issued_to_farm )as total_issued_to_farm,
+to_locations.id as  to_location,
+issued_to_farm.location_id,
+max(received_from_farm.total_received_from_farm) as total_received_from_farm,
+sum(bin_asset_transaction_items.quantity_bins) total_qty_bins,
+from_locations.location_long_code AS from_location
+,to_locations.location_long_code AS to_location
+,rcmt.container_material_type_code
+,string_agg(distinct date(bin_asset_transactions.created_at)::text, '; '   order by date(bin_asset_transactions.created_at)::text ) as created_at
+,fn_party_role_name((SELECT pr.id
+FROM public.party_roles pr
+WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1)) AS implementation_owner_name
+,(SELECT pr.id
+FROM public.party_roles pr
+WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) AS implementation_owner_party_role_id
+FROM bin_asset_transactions 
+LEFT JOIN bin_asset_transaction_items         ON bin_asset_transactions.id = bin_asset_transaction_items.bin_asset_transaction_id  
+LEFT JOIN locations from_locations ON from_locations.id = bin_asset_transaction_items.bin_asset_from_location_id
+LEFT JOIN locations to_locations ON to_locations.id = bin_asset_transaction_items.bin_asset_to_location_id
+LEFT JOIN asset_transaction_types ON asset_transaction_types.id = bin_asset_transactions.asset_transaction_type_id
+LEFT JOIN rmt_container_material_owners ON rmt_container_material_owners.id = bin_asset_transaction_items.rmt_container_material_owner_id         
+LEFT JOIN rmt_container_material_types rcmt on rmt_container_material_owners.rmt_container_material_type_id= rcmt.id         
+LEFT JOIN business_processes ON business_processes.id = bin_asset_transactions.business_process_id     
+LEFT JOIN rmt_deliveries  rd on bin_asset_transactions.fruit_reception_delivery_id = rd.id        
+LEFT JOIN orchards o on rd.orchard_id = o.id       
+LEFT JOIN farms f on o.farm_id = f.id
+LEFT JOIN (			
+			select 
+	         SUM(ai.quantity_bins)as total_issued_to_farm,
+	         to_locations.id as location_id ,to_locations.location_long_code
+			from bin_asset_transaction_items ai
+			join bin_asset_transactions a on ai.bin_asset_transaction_id =a.id
+	        left join locations to_locations ON to_locations.id = ai.bin_asset_to_location_id	
+	        join  asset_transaction_types  att ON att.id = a.asset_transaction_type_id
+	        where
+	        att.transaction_type_code = 'ISSUE_BINS' 
+	        group by to_locations.id,to_locations.location_long_code
+           ) issued_to_farm ON issued_to_farm.location_id = to_locations.id
+LEFT JOIN (			
+			select 
+	         SUM(ai.quantity_bins)as total_received_from_farm,
+	         from_locations.id as location_id ,from_locations.location_long_code
+			from bin_asset_transaction_items ai
+			join bin_asset_transactions a on ai.bin_asset_transaction_id =a.id
+	        left join locations from_locations ON from_locations.id = ai.bin_asset_from_location_id	
+	        join  asset_transaction_types  att ON att.id = a.asset_transaction_type_id
+	        where
+	        att.transaction_type_code = 'RECEIVE_BINS' 
+	        group by from_locations.id,from_locations.location_long_code
+           ) received_from_farm ON received_from_farm.location_id = to_locations.id
+where  bin_asset_transactions.id=$P{bin_asset_transaction_id}
+group by 
+from_locations.location_long_code,to_locations.location_long_code,rcmt.container_material_type_code,business_processes.process
+,to_locations.id 
+,issued_to_farm.location_id]]>
+	</queryString>
+	<field name="total_bins_at_farm" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="total_bins_at_farm"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_bins_at_farm"/>
+	</field>
+	<field name="total_issued_to_farm" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="total_issued_to_farm"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_issued_to_farm"/>
+	</field>
+	<field name="to_location" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="to_location"/>
+		<property name="com.jaspersoft.studio.field.label" value="to_location"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="locations"/>
+	</field>
+	<field name="location_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="location_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="location_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="locations"/>
+	</field>
+	<field name="total_received_from_farm" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="total_received_from_farm"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_received_from_farm"/>
+	</field>
+	<field name="total_qty_bins" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="total_qty_bins"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_qty_bins"/>
+	</field>
+	<field name="from_location" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="from_location"/>
+		<property name="com.jaspersoft.studio.field.label" value="from_location"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="locations"/>
+	</field>
+	<field name="COLUMN_8" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="to_location"/>
+		<property name="com.jaspersoft.studio.field.label" value="to_location"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="locations"/>
+	</field>
+	<field name="container_material_type_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="container_material_type_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="container_material_type_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="rmt_container_material_types"/>
+	</field>
+	<field name="created_at" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="created_at"/>
+		<property name="com.jaspersoft.studio.field.label" value="created_at"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_offsite_bin_asset_transactions"/>
+	</field>
+	<field name="implementation_owner_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="implementation_owner_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="implementation_owner_name"/>
+	</field>
+	<field name="implementation_owner_party_role_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="implementation_owner_party_role_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="implementation_owner_party_role_id"/>
+	</field>
+	<variable name="total_bins" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_qty_bins}]]></variableExpression>
+	</variable>
+	<background>
+		<band height="1" splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="125" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="5" y="0" width="41" height="12" isPrintWhenDetailOverflows="true" uuid="cbe60a70-4ea1-4ee1-ab75-e27899ece65b"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Print Date:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy h.mm a">
+				<reportElement x="48" y="0" width="74" height="13" uuid="a634dd06-1857-4ce3-b11b-a01633c4b48b"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="112" y="20" width="323" height="13" uuid="cd48128a-b5b6-4c14-89b3-7b82fea2d804">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BINS ISSUED]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="" x="5" y="13" width="96" height="13" uuid="e9ca76c2-9d43-4048-adc2-54a644147f6c"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NS Pack]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="149" y="0" width="248" height="12" uuid="7819d58f-4ed8-427c-8717-3f7dec0e219e">
+					<printWhenExpression><![CDATA[true]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{implementation_owner_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="70" y="40" width="130" height="20" uuid="8bd778ed-0c07-4dd9-b601-5f5406588d92">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<text><![CDATA[Date & Time Issued:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="240" y="40" width="114" height="20" uuid="71383eee-8a5b-47c0-9691-92f127d844e3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{created_at}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="70" y="70" width="130" height="20" uuid="9e2d5564-fa05-489c-98fc-75ae3f94fe7e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<text><![CDATA[From Location:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="240" y="70" width="315" height="20" uuid="3c3956a7-0e8e-4d6e-a202-4aa0dc95ba24">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{from_location}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="70" y="100" width="130" height="20" uuid="0a1d2114-595d-4438-b65e-bb00c4f5ef48">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<text><![CDATA[To Producer:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="240" y="100" width="315" height="20" uuid="f5cd1293-bbbf-4aea-bce2-c3063ea81547">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{to_location}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="5" y="40" width="555" height="1" uuid="c827c2bf-7b55-45b4-b4e1-fb57482c77c6"/>
+			</line>
+			<textField>
+				<reportElement x="490" y="0" width="55" height="20" uuid="5223a9fd-a189-4d25-a079-579b7ecacd53">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$P{bin_asset_transaction_id}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="70" y="40" width="130" height="20" uuid="813ac55e-7404-4e96-b35d-8e1b5310489a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<text><![CDATA[Date & Time Received]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="24">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="70" y="2" width="130" height="17" uuid="0982cf99-1e30-411b-b7cb-40a8c99ed11a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<text><![CDATA[Bin Type:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="19" width="555" height="1" uuid="93dfa176-30a1-4d0f-b45f-f298664f7074">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="240" y="2" width="180" height="17" uuid="58c8cd7f-c163-466b-b8cd-ff328ce1b415">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<text><![CDATA[Number Of Bins Issued:]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="30" splitType="Immediate">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField isBlankWhenNull="true">
+				<reportElement x="240" y="0" width="39" height="20" uuid="694a3516-91b8-480e-b9e0-35d894448f9c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_qty_bins}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="70" y="0" width="130" height="20" uuid="b86e5455-0c95-48ac-91b8-78a2ced07b74">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{container_material_type_code}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="83">
+			<staticText>
+				<reportElement x="70" y="40" width="150" height="20" uuid="ce67b560-20da-47d6-a109-b52b3ed959d0">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<text><![CDATA[Signed on behalf of]]></text>
+			</staticText>
+			<line>
+				<reportElement x="220" y="55" width="254" height="1" uuid="2996500e-00eb-480d-996a-da7615635450">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="70" y="0" width="130" height="20" uuid="11546f2e-c40e-4e83-bc1b-d04cd93d5768">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<text><![CDATA[# Bins Now On farm]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="240" y="0" width="39" height="20" uuid="4ec8f971-14a7-40d3-9cd6-f28c4b3e6cce">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_bins_at_farm}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>
