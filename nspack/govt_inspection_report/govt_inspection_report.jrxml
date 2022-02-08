@@ -24,7 +24,7 @@
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[WITH ggn AS (
-    govt_inspection_pallets.govt_inspection_sheet_id
+    Select distinct govt_inspection_pallets.govt_inspection_sheet_id
 	,p.id
    ,CASE WHEN COALESCE(pucs.gap_code,pcs.gap_code) IS NOT NULL AND govt_inspection_sheets.created_at
 	            BETWEEN COALESCE(pucs.gap_code_valid_from,pcs.gap_code_valid_from) AND COALESCE(pucs.gap_code_valid_until,pcs.gap_code_valid_until) THEN
