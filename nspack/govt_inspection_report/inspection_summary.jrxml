@@ -49,10 +49,10 @@ sum(ps.carton_quantity) carton_quantity,
 max(scrapped_plt_cnt.scrapped_plt_qty) as scrapped_plt_qty,
 p.govt_inspection_passed
 from govt_inspection_sheets
-left join govt_inspection_pallets  ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
-left join pallets p on govt_inspection_pallets.pallet_id =p.id
-join pallet_sequences ps on p.id=ps.scrapped_from_pallet_id
-JOIN scrapped_plt_cnt on govt_inspection_sheets.id = scrapped_plt_cnt.govt_inspection_sheet_id
+LEFT join govt_inspection_pallets  ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+LEFT join pallets p on govt_inspection_pallets.pallet_id =p.id
+ join pallet_sequences ps on p.id=ps.scrapped_from_pallet_id
+LEFT JOIN scrapped_plt_cnt on govt_inspection_sheets.id = scrapped_plt_cnt.govt_inspection_sheet_id
 LEFT JOIN cultivar_groups ON cultivar_groups.id = ps.cultivar_group_id
 LEFT JOIN cultivars ON cultivars.id = ps.cultivar_id
 LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
@@ -115,10 +115,10 @@ sum(ps.carton_quantity) carton_quantity,
 max(plt_cnt.plt_qty) as plt_qty,
 p.govt_inspection_passed
 from govt_inspection_sheets
-left join govt_inspection_pallets  ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
-left join pallets p on govt_inspection_pallets.pallet_id =p.id
+LEFT join govt_inspection_pallets  ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+LEFT join pallets p on govt_inspection_pallets.pallet_id =p.id
 join pallet_sequences ps on p.id=ps.pallet_id
-JOIN plt_cnt on govt_inspection_pallets.govt_inspection_sheet_id = plt_cnt.govt_inspection_sheet_id
+LEFT JOIN plt_cnt on govt_inspection_pallets.govt_inspection_sheet_id = plt_cnt.govt_inspection_sheet_id
 LEFT JOIN cultivar_groups ON cultivar_groups.id = ps.cultivar_group_id
 LEFT JOIN cultivars ON cultivars.id = ps.cultivar_id
 LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id

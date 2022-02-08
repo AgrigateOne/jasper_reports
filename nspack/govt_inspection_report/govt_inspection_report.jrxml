@@ -290,7 +290,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 	from govt_inspection_sheets
     left join govt_inspection_pallets  ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
     left join pallets p on govt_inspection_pallets.pallet_id =p.id
-    join pallet_sequences ps on ps.pallet_id=p.id
+    LEFT join pallet_sequences ps on ps.pallet_id=p.id
      LEFT JOIN pallets repacked_from_pallets ON repacked_from_pallets.id = ps.repacked_from_pallet_id
      LEFT JOIN plant_resources plt_packhouses ON plt_packhouses.id = p.plt_packhouse_resource_id
      LEFT JOIN plant_resources plt_lines ON plt_lines.id = p.plt_line_resource_id
