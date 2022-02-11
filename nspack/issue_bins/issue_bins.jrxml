@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="bin assets" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="7e3aaf77-d546-4751-a978-9cc728d86554">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="kr_nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="live_kromco_nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="234"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="755"/>
@@ -13,7 +13,7 @@
 		<![CDATA[SELECT 
 coalesce(max(issued_to_farm.total_issued_to_farm ),0)- coalesce(max(received_from_farm.total_received_from_farm),0) as total_bins_at_farm,
 max(issued_to_farm.total_issued_to_farm )as total_issued_to_farm,
-to_locations.id as  to_location,
+to_locations.id as  to_location_id,
 issued_to_farm.location_id,
 max(received_from_farm.total_received_from_farm) as total_received_from_farm,
 sum(bin_asset_transaction_items.quantity_bins) total_qty_bins,
@@ -80,9 +80,9 @@ from_locations.location_long_code,to_locations.location_long_code,rcmt.container
 		<property name="com.jaspersoft.studio.field.name" value="total_issued_to_farm"/>
 		<property name="com.jaspersoft.studio.field.label" value="total_issued_to_farm"/>
 	</field>
-	<field name="to_location" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="to_location"/>
-		<property name="com.jaspersoft.studio.field.label" value="to_location"/>
+	<field name="to_location_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="to_location_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="to_location_id"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="locations"/>
 	</field>
 	<field name="location_id" class="java.lang.Integer">
@@ -103,7 +103,7 @@ from_locations.location_long_code,to_locations.location_long_code,rcmt.container
 		<property name="com.jaspersoft.studio.field.label" value="from_location"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="locations"/>
 	</field>
-	<field name="COLUMN_8" class="java.lang.String">
+	<field name="to_location" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="to_location"/>
 		<property name="com.jaspersoft.studio.field.label" value="to_location"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="locations"/>
@@ -327,7 +327,7 @@ from_locations.location_long_code,to_locations.location_long_code,rcmt.container
 				<text><![CDATA[Signed on behalf of]]></text>
 			</staticText>
 			<line>
-				<reportElement x="220" y="55" width="254" height="1" uuid="2996500e-00eb-480d-996a-da7615635450">
+				<reportElement x="220" y="55" width="255" height="1" uuid="2996500e-00eb-480d-996a-da7615635450">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
