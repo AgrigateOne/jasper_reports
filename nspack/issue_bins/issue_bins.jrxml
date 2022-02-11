@@ -327,7 +327,7 @@ from_locations.location_long_code,to_locations.location_long_code,rcmt.container
 				<text><![CDATA[Signed on behalf of]]></text>
 			</staticText>
 			<line>
-				<reportElement x="220" y="55" width="255" height="1" uuid="2996500e-00eb-480d-996a-da7615635450">
+				<reportElement x="220" y="55" width="256" height="1" uuid="2996500e-00eb-480d-996a-da7615635450">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
