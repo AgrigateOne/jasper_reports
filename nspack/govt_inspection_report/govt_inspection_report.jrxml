@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gov_inspection_sheet" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b276ed72-36fe-4eb1-8898-57bb00d5eee1">
 	<property name="ireport.zoom" value="1.7524694974069621"/>
 	<property name="ireport.x" value="0"/>
@@ -24,18 +24,21 @@
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[WITH ggn AS (
-  SELECT DISTINCT
-    govt_inspection_pallets.govt_inspection_sheet_id,
-    CASE WHEN pucs.gap_code IS NOT NULL AND govt_inspection_sheets.created_at BETWEEN pucs.gap_code_valid_from AND pucs.gap_code_valid_until THEN
-      pucs.gap_code
+    Select distinct govt_inspection_pallets.govt_inspection_sheet_id
+	,p.id
+   ,CASE WHEN COALESCE(pucs.gap_code,pcs.gap_code) IS NOT NULL AND govt_inspection_sheets.created_at
+	            BETWEEN COALESCE(pucs.gap_code_valid_from,pcs.gap_code_valid_from) AND COALESCE(pucs.gap_code_valid_until,pcs.gap_code_valid_until) THEN
+      COALESCE(pucs.gap_code,pcs.gap_code)
     ELSE
       NULL
     END gap_code
 	from govt_inspection_sheets
     left join govt_inspection_pallets  ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
     left join pallets p on govt_inspection_pallets.pallet_id =p.id
-    join pallet_sequences ps on ps.pallet_id=p.id
+    left join pallet_sequences ps on ps.pallet_id=p.id
+	left join pallet_sequences sps on ps.scrapped_from_pallet_id=p.id
     left join pucs ON pucs.id = ps.puc_id
+	left join pucs pcs on pcs.id = sps.puc_id
   WHERE
     govt_inspection_sheets.id = $P{govt_inspection_sheet_id}
 ),
@@ -288,54 +291,54 @@ coalesce(scrapped_pallet_number.gap_certification,
 		  )  AS edi_size_count
 
 	from govt_inspection_sheets
-    left join govt_inspection_pallets  ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
-    left join pallets p on govt_inspection_pallets.pallet_id =p.id
-    join pallet_sequences ps on ps.pallet_id=p.id
-     LEFT JOIN pallets repacked_from_pallets ON repacked_from_pallets.id = ps.repacked_from_pallet_id
-     LEFT JOIN plant_resources plt_packhouses ON plt_packhouses.id = p.plt_packhouse_resource_id
-     LEFT JOIN plant_resources plt_lines ON plt_lines.id = p.plt_line_resource_id
-     LEFT JOIN plant_resources packhouses ON packhouses.id = ps.packhouse_resource_id
-     LEFT JOIN plant_resources lines ON lines.id = ps.production_line_id
-     LEFT JOIN plant_resources palletizing_bays ON palletizing_bays.id = p.palletizing_bay_resource_id
-     JOIN locations ON locations.id = p.location_id
-     JOIN farms ON farms.id = ps.farm_id
-     LEFT JOIN farm_groups ON farms.farm_group_id = farm_groups.id
-     JOIN production_regions ON production_regions.id = farms.pdn_region_id
-     JOIN pucs ON pucs.id = ps.puc_id
-     JOIN orchards ON orchards.id = ps.orchard_id
-     JOIN cultivar_groups ON cultivar_groups.id = ps.cultivar_group_id
-     LEFT JOIN cultivars ON cultivars.id = ps.cultivar_id
-     LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
-     JOIN marketing_varieties ON marketing_varieties.id = ps.marketing_variety_id
-     JOIN marks ON marks.id = ps.mark_id
-     LEFT JOIN pm_marks ON pm_marks.id = ps.pm_mark_id
-     JOIN inventory_codes ON inventory_codes.id = ps.inventory_code_id
-     JOIN target_market_groups ON target_market_groups.id = ps.packed_tm_group_id
-     LEFT JOIN target_markets ON target_markets.id = ps.target_market_id
-     JOIN grades ON grades.id = ps.grade_id
-     LEFT JOIN customer_varieties ON customer_varieties.id = ps.customer_variety_id
-     LEFT JOIN marketing_varieties cvv ON cvv.id = customer_varieties.variety_as_customer_variety_id
-     LEFT JOIN std_fruit_size_counts ON std_fruit_size_counts.id = ps.std_fruit_size_count_id
-     LEFT JOIN fruit_size_references ON fruit_size_references.id = ps.fruit_size_reference_id
-     LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = ps.fruit_actual_counts_for_pack_id
-     JOIN basic_pack_codes ON basic_pack_codes.id = ps.basic_pack_code_id
-     JOIN standard_pack_codes ON standard_pack_codes.id = ps.standard_pack_code_id
-     JOIN seasons ON seasons.id = ps.season_id
-     JOIN cartons_per_pallet ON cartons_per_pallet.id = ps.cartons_per_pallet_id
-     LEFT JOIN pallet_formats ON pallet_formats.id = p.pallet_format_id
-     LEFT JOIN pallet_bases ON pallet_bases.id = pallet_formats.pallet_base_id
-     LEFT JOIN pallet_stack_types ON pallet_stack_types.id = pallet_formats.pallet_stack_type_id
-     LEFT JOIN pallet_verification_failure_reasons ON pallet_verification_failure_reasons.id = ps.pallet_verification_failure_reason_id
-     LEFT JOIN destination_countries inspected_dest_country ON inspected_dest_country.id = govt_inspection_sheets.destination_country_id
-	  LEFT JOIN destination_regions ON destination_regions.id = govt_inspection_sheets.destination_region_id
-     LEFT JOIN edi_in_transactions ON edi_in_transactions.id = p.edi_in_transaction_id
-     LEFT JOIN standard_product_weights ON standard_product_weights.standard_pack_id = standard_pack_codes.id AND standard_product_weights.commodity_id = commodities.id
-     LEFT JOIN pucs marketing_pucs ON marketing_pucs.id = ps.marketing_puc_id
-     LEFT JOIN registered_orchards ON registered_orchards.id = ps.marketing_orchard_id
-     LEFT JOIN rmt_classes ON rmt_classes.id = ps.rmt_class_id
-     LEFT JOIN scrapped_pallet_number ON scrapped_pallet_number.scrapped_pallet_id = govt_inspection_pallets.pallet_id
-     LEFT JOIN ggn_validation ON govt_inspection_sheets.id = ggn_validation.govt_inspection_sheet_id
-	 LEFT JOIN inspectors ON inspectors.id = govt_inspection_sheets.inspector_id
+	LEFT join govt_inspection_pallets  ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+	LEFT join pallets p on govt_inspection_pallets.pallet_id =p.id
+	LEFT join pallet_sequences ps on ps.pallet_id=p.id
+	LEFT JOIN pallets repacked_from_pallets ON repacked_from_pallets.id = ps.repacked_from_pallet_id
+	LEFT JOIN plant_resources plt_packhouses ON plt_packhouses.id = p.plt_packhouse_resource_id
+	LEFT JOIN plant_resources plt_lines ON plt_lines.id = p.plt_line_resource_id
+	LEFT JOIN plant_resources packhouses ON packhouses.id = ps.packhouse_resource_id
+	LEFT JOIN plant_resources lines ON lines.id = ps.production_line_id
+	LEFT JOIN plant_resources palletizing_bays ON palletizing_bays.id = p.palletizing_bay_resource_id
+	LEFT JOIN locations ON locations.id = p.location_id
+	LEFT JOIN farms ON farms.id = ps.farm_id
+	LEFT JOIN farm_groups ON farms.farm_group_id = farm_groups.id
+	LEFT JOIN production_regions ON production_regions.id = farms.pdn_region_id
+	LEFT JOIN pucs ON pucs.id = ps.puc_id
+	LEFT JOIN orchards ON orchards.id = ps.orchard_id
+	LEFT JOIN cultivar_groups ON cultivar_groups.id = ps.cultivar_group_id
+	LEFT JOIN cultivars ON cultivars.id = ps.cultivar_id
+	LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
+	LEFT JOIN marketing_varieties ON marketing_varieties.id = ps.marketing_variety_id
+	LEFT JOIN marks ON marks.id = ps.mark_id
+	LEFT JOIN pm_marks ON pm_marks.id = ps.pm_mark_id
+	LEFT JOIN inventory_codes ON inventory_codes.id = ps.inventory_code_id
+	LEFT JOIN target_market_groups ON target_market_groups.id = ps.packed_tm_group_id
+	LEFT JOIN target_markets ON target_markets.id = ps.target_market_id
+	LEFT  JOIN grades ON grades.id = ps.grade_id
+	LEFT JOIN customer_varieties ON customer_varieties.id = ps.customer_variety_id
+	LEFT JOIN marketing_varieties cvv ON cvv.id = customer_varieties.variety_as_customer_variety_id
+	LEFT JOIN std_fruit_size_counts ON std_fruit_size_counts.id = ps.std_fruit_size_count_id
+	LEFT JOIN fruit_size_references ON fruit_size_references.id = ps.fruit_size_reference_id
+	LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = ps.fruit_actual_counts_for_pack_id
+	LEFT JOIN basic_pack_codes ON basic_pack_codes.id = ps.basic_pack_code_id
+	LEFT JOIN standard_pack_codes ON standard_pack_codes.id = ps.standard_pack_code_id
+	LEFT JOIN seasons ON seasons.id = ps.season_id
+	LEFT JOIN cartons_per_pallet ON cartons_per_pallet.id = ps.cartons_per_pallet_id
+	LEFT JOIN pallet_formats ON pallet_formats.id = p.pallet_format_id
+	LEFT JOIN pallet_bases ON pallet_bases.id = pallet_formats.pallet_base_id
+	LEFT JOIN pallet_stack_types ON pallet_stack_types.id = pallet_formats.pallet_stack_type_id
+	LEFT JOIN pallet_verification_failure_reasons ON pallet_verification_failure_reasons.id = ps.pallet_verification_failure_reason_id
+	LEFT JOIN destination_countries inspected_dest_country ON inspected_dest_country.id = govt_inspection_sheets.destination_country_id
+	LEFT JOIN destination_regions ON destination_regions.id = govt_inspection_sheets.destination_region_id
+	LEFT JOIN edi_in_transactions ON edi_in_transactions.id = p.edi_in_transaction_id
+	LEFT JOIN standard_product_weights ON standard_product_weights.standard_pack_id = standard_pack_codes.id AND standard_product_weights.commodity_id = commodities.id
+	LEFT JOIN pucs marketing_pucs ON marketing_pucs.id = ps.marketing_puc_id
+	LEFT JOIN registered_orchards ON registered_orchards.id = ps.marketing_orchard_id
+	LEFT JOIN rmt_classes ON rmt_classes.id = ps.rmt_class_id
+	LEFT JOIN scrapped_pallet_number ON scrapped_pallet_number.scrapped_pallet_id = govt_inspection_pallets.pallet_id
+	LEFT JOIN ggn_validation ON govt_inspection_sheets.id = ggn_validation.govt_inspection_sheet_id
+	LEFT JOIN inspectors ON inspectors.id = govt_inspection_sheets.inspector_id
      WHERE
   govt_inspection_sheets.id = $P{govt_inspection_sheet_id}
   AND $P!{QueryCondition}]]>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="finding_sheet" language="groovy" printOrder="Horizontal" pageWidth="595" pageHeight="842" columnWidth="579" leftMargin="8" rightMargin="8" topMargin="8" bottomMargin="8" uuid="3e015a3f-e95b-45af-822d-5984fdad92cf">
 	<property name="ireport.zoom" value="1.7715610000000015"/>
 	<property name="ireport.x" value="0"/>
@@ -37,7 +37,8 @@
     grades.grade_code                                                       AS grade,
     fn_party_role_name(govt_inspection_sheets.exporter_party_role_id) AS exporter,
     destination_regions.destination_region_name,
-   	govt_inspection_sheets.consignment_note_number
+   	govt_inspection_sheets.consignment_note_number,
+   	govt_inspection_sheets.inspection_point
 FROM
 govt_inspection_sheets
 LEFT JOIN govt_inspection_pallets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
@@ -71,6 +72,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 	<field name="row_number" class="java.lang.Long"/>
 	<field name="seq_no" class="java.lang.Long"/>
 	<field name="consignment_note_number" class="java.lang.String"/>
+	<field name="inspection_point" class="java.lang.String"/>
 	<variable name="puc_var" class="java.lang.String" resetType="Page" incrementType="Page"/>
 	<variable name="pallet_number1" class="java.lang.Integer" calculation="DistinctCount">
 		<variableExpression><![CDATA[$F{pallet_number}]]></variableExpression>
@@ -339,13 +341,6 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				</box>
 				<text><![CDATA[]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="284" y="95" width="47" height="16" uuid="37df87ac-4131-421a-a9a0-519eb6ae9cd0"/>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font size="9"/>
-				</textElement>
-				<text><![CDATA[3112]]></text>
-			</staticText>
 			<textField>
 				<reportElement x="269" y="80" width="62" height="14" uuid="ce3d3d61-2a2e-469d-b44a-6a5162916c85"/>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
@@ -393,7 +388,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[MELONS INSPECTION FINDING SHEET]]></text>
+				<text><![CDATA[ INSPECTION FINDING SHEET]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="1" width="579" height="53" uuid="317ab1f8-3f13-4892-a85e-7c24cd08e14e"/>
@@ -477,6 +472,18 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				</box>
 				<textElement verticalAlignment="Bottom"/>
 				<textFieldExpression><![CDATA[$F{consignment_note_number}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="284" y="95" width="47" height="16" uuid="dd657f1b-a260-4d92-96aa-3a44fefd162c">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{inspection_point}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
