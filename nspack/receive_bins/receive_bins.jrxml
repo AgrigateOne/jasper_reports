@@ -48,7 +48,7 @@ LEFT JOIN (
 			SELECT material_owner, container_material_type_code, to_location, sum(quantity_bins) AS total_issued_to_farm
 	               ,rmt_container_material_type_id,rmt_container_material_owner_id,to_location_id
 	        FROM vw_offsite_bin_asset_transactions
-			WHERE transaction_type_code NOT IN ('BIN SALES','RMT DELIVERIES','RECEIVE_BINS') --and to_location = '57A'
+			WHERE transaction_type_code NOT IN ('BIN SALES','RMT DELIVERIES','RECEIVE_BINS')
 			GROUP BY
 			material_owner, container_material_type_code, to_location,rmt_container_material_type_id,rmt_container_material_owner_id,to_location_id
           ) issued_to_farm ON  issued_to_farm.to_location_id = from_locations.id AND
