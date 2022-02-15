@@ -10,15 +10,15 @@
 		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT 
-coalesce(max(issued_to_farm.total_issued_to_farm ),0)- coalesce(max(received_from_farm.total_received_from_farm),0) as total_bins_at_farm,
+		<![CDATA[SELECT
+to_locations.id as to_location_id ,to_locations.location_long_code as to_location
+,from_locations.id as from_location_id ,from_locations.location_long_code as from_location
+,coalesce(max(issued_to_farm.total_issued_to_farm ),0) - (
+	    coalesce(max(received_from_farm.total_received_from_farm),0) + coalesce(max(rmt_deliveries.total_received),0) )as total_bins_at_farm,
 max(issued_to_farm.total_issued_to_farm )as total_issued_to_farm,
-to_locations.id as  to_location_id,
-issued_to_farm.location_id,
 max(received_from_farm.total_received_from_farm) as total_received_from_farm,
-sum(bin_asset_transaction_items.quantity_bins) total_qty_bins,
-from_locations.location_long_code AS from_location
-,to_locations.location_long_code AS to_location
+max(rmt_deliveries.total_received) as total_received_from_deliveries,
+sum(bin_asset_transaction_items.quantity_bins) total_qty_bins
 ,rcmt.container_material_type_code
 ,string_agg(distinct date(bin_asset_transactions.created_at)::text, '; '   order by date(bin_asset_transactions.created_at)::text ) as created_at
 ,fn_party_role_name((SELECT pr.id
@@ -27,50 +27,47 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 ,(SELECT pr.id
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) AS implementation_owner_party_role_id
-FROM bin_asset_transactions 
-LEFT JOIN bin_asset_transaction_items         ON bin_asset_transactions.id = bin_asset_transaction_items.bin_asset_transaction_id  
-LEFT JOIN locations from_locations ON from_locations.id = bin_asset_transaction_items.bin_asset_from_location_id
-LEFT JOIN locations to_locations ON to_locations.id = bin_asset_transaction_items.bin_asset_to_location_id
+FROM bin_asset_transactions
+JOIN bin_asset_transaction_items         ON bin_asset_transactions.id = bin_asset_transaction_items.bin_asset_transaction_id
+JOIN locations to_locations ON to_locations.id = bin_asset_transaction_items.bin_asset_to_location_id
+JOIN locations from_locations ON from_locations.id = bin_asset_transaction_items.bin_asset_from_location_id
 LEFT JOIN asset_transaction_types ON asset_transaction_types.id = bin_asset_transactions.asset_transaction_type_id
-LEFT JOIN rmt_container_material_owners ON rmt_container_material_owners.id = bin_asset_transaction_items.rmt_container_material_owner_id         
-LEFT JOIN rmt_container_material_types rcmt on rmt_container_material_owners.rmt_container_material_type_id= rcmt.id         
-LEFT JOIN business_processes ON business_processes.id = bin_asset_transactions.business_process_id     
-LEFT JOIN rmt_deliveries  rd on bin_asset_transactions.fruit_reception_delivery_id = rd.id        
-LEFT JOIN orchards o on rd.orchard_id = o.id       
-LEFT JOIN farms f on o.farm_id = f.id
-LEFT JOIN (			
-			select 
-	         SUM(ai.quantity_bins)as total_issued_to_farm,
-	         to_locations.id as location_id ,to_locations.location_long_code
-			from bin_asset_transaction_items ai
-			join bin_asset_transactions a on ai.bin_asset_transaction_id =a.id
-	        left join locations to_locations ON to_locations.id = ai.bin_asset_to_location_id	
-	        join  asset_transaction_types  att ON att.id = a.asset_transaction_type_id
-	        left join rmt_container_material_owners ON rmt_container_material_owners.id = ai.rmt_container_material_owner_id
-	        left join rmt_container_material_types rcmt on rmt_container_material_owners.rmt_container_material_type_id= rcmt.id
-	        where
-	        att.transaction_type_code = 'ISSUE_BINS'  AND rcmt.container_material_type_code IN ('PLASTIC','KROMC')
-	        group by to_locations.id,to_locations.location_long_code
-           ) issued_to_farm ON issued_to_farm.location_id = to_locations.id
-LEFT JOIN (			
-			select 
-	         SUM(ai.quantity_bins)as total_received_from_farm,
-	         from_locations.id as location_id ,from_locations.location_long_code
-			from bin_asset_transaction_items ai
-			join bin_asset_transactions a on ai.bin_asset_transaction_id =a.id
-	        left join locations from_locations ON from_locations.id = ai.bin_asset_from_location_id	
-	        join  asset_transaction_types  att ON att.id = a.asset_transaction_type_id
-	        left join rmt_container_material_owners ON rmt_container_material_owners.id = ai.rmt_container_material_owner_id
-	        left join rmt_container_material_types rcmt on rmt_container_material_owners.rmt_container_material_type_id= rcmt.id
-	        where
-	        att.transaction_type_code = 'RECEIVE_BINS'  AND rcmt.container_material_type_code IN ('PLASTIC','KROMC')
-	        group by from_locations.id,from_locations.location_long_code
-           ) received_from_farm ON received_from_farm.location_id = to_locations.id
+LEFT JOIN rmt_container_material_owners ON rmt_container_material_owners.id = bin_asset_transaction_items.rmt_container_material_owner_id
+LEFT JOIN rmt_container_material_types rcmt on rmt_container_material_owners.rmt_container_material_type_id= rcmt.id
+LEFT JOIN business_processes ON business_processes.id = bin_asset_transactions.business_process_id
+LEFT JOIN (
+			SELECT material_owner, container_material_type_code, to_location, sum(quantity_bins) AS total_issued_to_farm
+	               ,rmt_container_material_type_id,rmt_container_material_owner_id,to_location_id
+	        FROM vw_offsite_bin_asset_transactions
+			WHERE transaction_type_code NOT IN ('BIN SALES','RMT DELIVERIES', 'RECEIVE_BINS' ) and to_location='57A'
+			GROUP BY
+			material_owner, container_material_type_code, to_location,rmt_container_material_type_id,rmt_container_material_owner_id,to_location_id
+          ) issued_to_farm ON  issued_to_farm.to_location_id = to_locations.id AND
+		    issued_to_farm.rmt_container_material_owner_id= rmt_container_material_owners.id
+            AND issued_to_farm.rmt_container_material_type_id =rcmt.id
+LEFT JOIN (
+			SELECT material_owner, container_material_type_code, from_location, sum(quantity_bins) AS total_received_from_farm,
+	        from_location_id,rmt_container_material_type_id,rmt_container_material_owner_id
+			FROM vw_offsite_bin_asset_transactions
+			WHERE transaction_type_code = 'RECEIVE_BINS' and from_location='57A'
+			GROUP BY material_owner, container_material_type_code, from_location,from_location_id,rmt_container_material_type_id,rmt_container_material_owner_id
+          ) received_from_farm ON received_from_farm.from_location_id = to_locations.id AND
+		    received_from_farm.rmt_container_material_owner_id= rmt_container_material_owners.id
+            AND received_from_farm.rmt_container_material_type_id =rcmt.id
+LEFT JOIN (
+			SELECT material_owner, container_material_type_code, from_location, sum(quantity_bins) AS total_received,from_location_id,
+	        rmt_container_material_type_id,rmt_container_material_owner_id
+			FROM vw_offsite_bin_asset_transactions
+			WHERE transaction_type_code = 'RMT DELIVERIES'
+			GROUP BY material_owner, container_material_type_code, from_location,from_location_id,rmt_container_material_type_id,rmt_container_material_owner_id
+           ) rmt_deliveries ON rmt_deliveries.from_location_id = to_locations.id AND
+		    rmt_deliveries.rmt_container_material_owner_id= rmt_container_material_owners.id
+            AND rmt_deliveries.rmt_container_material_type_id =rcmt.id
 where  bin_asset_transactions.id=$P{bin_asset_transaction_id}
-group by 
+group by
 from_locations.location_long_code,to_locations.location_long_code,rcmt.container_material_type_code,business_processes.process
-,to_locations.id 
-,issued_to_farm.location_id]]>
+,to_locations.id,from_locations.id
+]]>
 	</queryString>
 	<field name="total_bins_at_farm" class="java.lang.Long">
 		<property name="com.jaspersoft.studio.field.name" value="total_bins_at_farm"/>
@@ -83,11 +80,6 @@ from_locations.location_long_code,to_locations.location_long_code,rcmt.container
 	<field name="to_location_id" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="to_location_id"/>
 		<property name="com.jaspersoft.studio.field.label" value="to_location_id"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="locations"/>
-	</field>
-	<field name="location_id" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="location_id"/>
-		<property name="com.jaspersoft.studio.field.label" value="location_id"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="locations"/>
 	</field>
 	<field name="total_received_from_farm" class="java.lang.Long">
