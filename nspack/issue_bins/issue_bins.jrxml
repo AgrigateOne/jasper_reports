@@ -28,7 +28,7 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 ,max(bin_sales.total_issued_by_bin_sales) as total_issued_by_bin_sales
 ,(coalesce(max(issued_to_farm.total_issued_to_farm ),0) + coalesce(max(bin_sales.total_issued_by_bin_sales),0)) - (
 	     coalesce(max(received_from_farm.total_received_from_farm),0) + coalesce(max(rmt_deliveries.total_received_from_deliveries),0) )as total_bins_at_farm
-,sum(bin_asset_transaction_items.quantity_bins) transaction_qty_bins
+,max(bin_asset_transaction_items.quantity_bins) transaction_qty_bins
 FROM bin_asset_transactions
 JOIN bin_asset_transaction_items         ON bin_asset_transactions.id = bin_asset_transaction_items.bin_asset_transaction_id
 JOIN locations to_locations ON to_locations.id = bin_asset_transaction_items.bin_asset_to_location_id
