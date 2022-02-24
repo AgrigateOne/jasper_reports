@@ -115,12 +115,14 @@ order by colour_sort, gradesort, isn]]>
 	<queryString>
 		<![CDATA[WITH mkt_varieties AS (
 select string_agg(distinct var.marketing_variety_code,',')as marketing_variety,production_runs.id  production_run_id
+,sum(grower_grading_cartons.carton_quantity) as total_carton_qty
 from production_runs
 left join marketing_varieties_for_cultivars mrk_for_cultivars ON mrk_for_cultivars.cultivar_id = production_runs.cultivar_id
 left join marketing_varieties var ON  mrk_for_cultivars.marketing_variety_id = var.id
 join grower_grading_pools ON  production_runs.id = grower_grading_pools.production_run_id 
-where grower_grading_pools.id = 3
-group by production_runs.id
+join grower_grading_cartons on grower_grading_cartons.grower_grading_pool_id = grower_grading_pools.id
+where grower_grading_pools.id = $P{grower_grading_pool_id} 
+group by production_runs.id,grower_grading_pools.id 
 )
 SELECT 
 grower_grading_pools.nett_weight as input_weight,
@@ -138,6 +140,7 @@ grower_grading_pool_details.graded_rmt_class_id
 ,seasons.season_code
 ,rmt_codes.rmt_code
 ,mkt_varieties.marketing_variety
+, mkt_varieties.total_carton_qty
 FROM grower_grading_pool_details 
 JOIN grower_grading_pools ON grower_grading_pools.id = grower_grading_pool_details.grower_grading_pool_id 
 LEFT JOIN rmt_classes ON rmt_classes.id = grower_grading_pool_details.graded_rmt_class_id 
@@ -228,11 +231,15 @@ grower_grading_pool_details.graded_rmt_class_id
 		<property name="com.jaspersoft.studio.field.name" value="marketing_variety"/>
 		<property name="com.jaspersoft.studio.field.label" value="marketing_variety"/>
 	</field>
+	<field name="total_carton_qty" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="total_carton_qty"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_carton_qty"/>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<pageHeader>
-		<band height="88">
+		<band height="93">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
 				<reportElement x="0" y="0" width="248" height="16" uuid="d3a618b6-9db3-4d37-9ce2-2f8b5e555070"/>
@@ -338,8 +345,9 @@ grower_grading_pool_details.graded_rmt_class_id
 				<textFieldExpression><![CDATA[$F{season_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="360" y="56" width="100" height="13" uuid="4abd5782-ded4-4808-bfda-68ebbbd1b507">
+				<reportElement x="360" y="51" width="100" height="12" uuid="4abd5782-ded4-4808-bfda-68ebbbd1b507">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
 					<font size="9"/>
@@ -347,7 +355,7 @@ grower_grading_pool_details.graded_rmt_class_id
 				<textFieldExpression><![CDATA[$F{rmt_code}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="276" y="42" width="84" height="12" uuid="5e418de9-13be-41e5-8695-e23d980ff920">
+				<reportElement x="276" y="40" width="84" height="12" uuid="5e418de9-13be-41e5-8695-e23d980ff920">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement>
@@ -356,7 +364,7 @@ grower_grading_pool_details.graded_rmt_class_id
 				<text><![CDATA[Season:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="276" y="56" width="84" height="12" uuid="5e418de9-13be-41e5-8695-e23d980ff920">
+				<reportElement x="276" y="51" width="84" height="12" uuid="5e418de9-13be-41e5-8695-e23d980ff920">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement>
@@ -376,7 +384,7 @@ grower_grading_pool_details.graded_rmt_class_id
 				<text><![CDATA[Marketing Variety:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="276" y="70" width="84" height="12" uuid="55ac523e-3a16-4957-bcec-0391498068fb">
+				<reportElement x="276" y="64" width="84" height="12" uuid="55ac523e-3a16-4957-bcec-0391498068fb">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement>
@@ -385,9 +393,10 @@ grower_grading_pool_details.graded_rmt_class_id
 				<text><![CDATA[Prodution Run:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="360" y="70" width="100" height="13" uuid="e89a99c1-8f5d-4748-8975-89880d01c908">
+				<reportElement x="360" y="64" width="100" height="12" uuid="e89a99c1-8f5d-4748-8975-89880d01c908">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
 					<font size="9"/>
@@ -404,6 +413,27 @@ grower_grading_pool_details.graded_rmt_class_id
 				</textElement>
 				<textFieldExpression><![CDATA[$F{marketing_variety}]]></textFieldExpression>
 			</textField>
+			<textField pattern="#,##0.###;#,##0.###-" isBlankWhenNull="true">
+				<reportElement x="364" y="76" width="85" height="12" uuid="60e2be7d-d71c-48d0-aa7e-0e32e7670bd3">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_carton_qty}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="275" y="76" width="85" height="12" uuid="fe619461-1e3a-4a6a-a940-a859fad2a4e0">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Total Cartons:]]></text>
+			</staticText>
 		</band>
 	</pageHeader>
 	<columnHeader>
