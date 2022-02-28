@@ -1087,12 +1087,13 @@ coalesce(scrapped_pallet_number.gap_certification,
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<printWhenExpression><![CDATA[$F{print_barcode}]]></printWhenExpression>
 			<componentElement>
-				<reportElement x="453" y="0" width="100" height="15" uuid="bf7b56b0-ed6e-472f-b006-eedfaf557c3b">
+				<reportElement x="465" y="0" width="90" height="15" uuid="bf7b56b0-ed6e-472f-b006-eedfaf557c3b">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.barHeight" value="px"/>
 					<property name="com.jaspersoft.studio.unit.barWidth" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barHeight="60">
 					<jr:codeExpression><![CDATA[$F{pallet_number}]]></jr:codeExpression>
@@ -1100,8 +1101,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 			</componentElement>
 			<staticText>
 				<reportElement x="1" y="0" width="46" height="13" uuid="7c669dd4-3de7-4714-9bff-113b8cf21da4">
-					<printWhenExpression><![CDATA[   $F{govt_inspection_pallets_passed} != true
-]]></printWhenExpression>
+					<printWhenExpression><![CDATA[$F{govt_inspection_pallets_passed} != true]]></printWhenExpression>
 				</reportElement>
 				<textElement>
 					<font size="10"/>
@@ -1112,7 +1112,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<reportElement x="47" y="0" width="205" height="13" uuid="ff318fb9-4118-44bb-8ba2-231372c5ae1f">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[   $F{govt_inspection_pallets_passed} != true]]></printWhenExpression>
+					<printWhenExpression><![CDATA[$F{govt_inspection_pallets_passed} != true]]></printWhenExpression>
 				</reportElement>
 				<textFieldExpression><![CDATA[$F{failure_reason}]]></textFieldExpression>
 			</textField>
