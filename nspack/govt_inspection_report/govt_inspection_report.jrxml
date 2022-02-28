@@ -6,7 +6,7 @@
 	<property name="ireport.y" value="46"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/first_intake"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="live_kromco_nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="158"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="831"/>
@@ -53,7 +53,7 @@ GROUP BY
 ),
 scrapped_pallet_number AS (
   SELECT DISTINCT
-	  govt_inspection_pallets.passed,
+	  govt_inspection_pallets.passed as govt_inspection_pallets_passed,
   destination_regions.destination_region_name,
 
 	  CASE WHEN pucs.gap_code IS NOT NULL
@@ -148,7 +148,7 @@ scrapped_pallet_number AS (
 	govt_inspection_sheets.exporter_party_role_id,
 	govt_inspection_sheets.upn,
 	fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack) AS edi_size_count
-
+    ,inspection_failure_reasons.failure_reason
 	from govt_inspection_sheets
     left join govt_inspection_pallets  ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
     left join pallets p on govt_inspection_pallets.pallet_id =p.id
@@ -197,6 +197,8 @@ scrapped_pallet_number AS (
      LEFT JOIN registered_orchards ON registered_orchards.id = ps.marketing_orchard_id
      LEFT JOIN rmt_classes ON rmt_classes.id = ps.rmt_class_id
 	LEFT JOIN inspectors ON inspectors.id = govt_inspection_sheets.inspector_id
+    LEFT JOIN inspection_failure_reasons  on inspection_failure_reasons.id = govt_inspection_pallets.failure_reason_id
+
   WHERE
     govt_inspection_sheet_id = $P{govt_inspection_sheet_id}
     AND $P!{QueryCondition}
@@ -249,7 +251,9 @@ SELECT row_number () OVER (partition by p.id ORDER by ps.id )as seq_no,case when
   coalesce(scrapped_pallet_number.inspection_class, scrapped_pallet_number.grade, grades.inspection_class, grades.grade_code) AS grade,
    coalesce(scrapped_pallet_number.iso_country_code,inspected_dest_country.iso_country_code) iso_country_code,
 
-coalesce(scrapped_pallet_number.verification_failure_reason,pallet_verification_failure_reasons.reason) as failure_reason,
+coalesce(scrapped_pallet_number.verification_failure_reason,pallet_verification_failure_reasons.reason) as pallet_verification_failure_reason,
+coalesce(scrapped_pallet_number.failure_reason,inspection_failure_reasons.failure_reason) as failure_reason,
+
 coalesce(scrapped_pallet_number.order_number,ps.marketing_order_number) AS order_number,
 coalesce(scrapped_pallet_number.inspector,fn_party_role_name (inspectors.inspector_party_role_id)) AS inspector,
 coalesce(scrapped_pallet_number.inspection_date_time,govt_inspection_sheets.created_at) inspection_date_time,
@@ -260,6 +264,9 @@ coalesce(scrapped_pallet_number.destination_region_name,destination_regions.dest
 coalesce(scrapped_pallet_number.pallet_size,ps.carton_quantity::numeric / p.carton_quantity::numeric) AS pallet_size,
 COALESCE(scrapped_pallet_number.variety,cvv.marketing_variety_code,marketing_varieties.inspection_variety, marketing_varieties.marketing_variety_code) AS variety,
 COALESCE(scrapped_pallet_number.pallet_base,pallet_bases.pallet_base_code ) AS pallet_base,
+COALESCE(scrapped_pallet_number.govt_inspection_pallets_passed,govt_inspection_pallets.passed ) AS govt_inspection_pallets_passed,
+
+
 coalesce(scrapped_pallet_number.gap_certification,
 	  CASE WHEN pucs.gap_code IS NOT NULL
     AND govt_inspection_sheets.created_at BETWEEN pucs.gap_code_valid_from AND pucs.gap_code_valid_until THEN
@@ -339,6 +346,8 @@ coalesce(scrapped_pallet_number.gap_certification,
 	LEFT JOIN scrapped_pallet_number ON scrapped_pallet_number.scrapped_pallet_id = govt_inspection_pallets.pallet_id
 	LEFT JOIN ggn_validation ON govt_inspection_sheets.id = ggn_validation.govt_inspection_sheet_id
 	LEFT JOIN inspectors ON inspectors.id = govt_inspection_sheets.inspector_id
+	LEFT JOIN inspection_failure_reasons  on inspection_failure_reasons.id = govt_inspection_pallets.failure_reason_id
+
      WHERE
   govt_inspection_sheets.id = $P{govt_inspection_sheet_id}
   AND $P!{QueryCondition}]]>
@@ -482,6 +491,10 @@ coalesce(scrapped_pallet_number.gap_certification,
 		<property name="com.jaspersoft.studio.field.name" value="iso_country_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="iso_country_code"/>
 	</field>
+	<field name="pallet_verification_failure_reason" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pallet_verification_failure_reason"/>
+		<property name="com.jaspersoft.studio.field.label" value="pallet_verification_failure_reason"/>
+	</field>
 	<field name="failure_reason" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="failure_reason"/>
 		<property name="com.jaspersoft.studio.field.label" value="failure_reason"/>
@@ -525,6 +538,10 @@ coalesce(scrapped_pallet_number.gap_certification,
 	<field name="pallet_base" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="pallet_base"/>
 		<property name="com.jaspersoft.studio.field.label" value="pallet_base"/>
+	</field>
+	<field name="govt_inspection_pallets_passed" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="govt_inspection_pallets_passed"/>
+		<property name="com.jaspersoft.studio.field.label" value="govt_inspection_pallets_passed"/>
 	</field>
 	<field name="gap_certification" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="gap_certification"/>
@@ -573,25 +590,6 @@ coalesce(scrapped_pallet_number.gap_certification,
 	</group>
 	<group name="fail_reason">
 		<groupExpression><![CDATA[$F{failure_reason}]]></groupExpression>
-		<groupHeader>
-			<band height="13">
-				<printWhenExpression><![CDATA[new Boolean($F{failure_reason} != null)]]></printWhenExpression>
-				<textField>
-					<reportElement x="57" y="0" width="195" height="13" uuid="8859159c-b37a-4019-b974-26306c5edcb1">
-						<property name="local_mesure_unitheight" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					</reportElement>
-					<textFieldExpression><![CDATA[$F{failure_reason}]]></textFieldExpression>
-				</textField>
-				<staticText>
-					<reportElement x="1" y="0" width="56" height="13" uuid="56df44c9-4a50-4e8c-9b3d-7b7735d147b0"/>
-					<textElement>
-						<font size="10"/>
-					</textElement>
-					<text><![CDATA[Reason:]]></text>
-				</staticText>
-			</band>
-		</groupHeader>
 	</group>
 	<background>
 		<band splitType="Stretch"/>
@@ -1085,6 +1083,40 @@ coalesce(scrapped_pallet_number.gap_certification,
 		</band>
 	</pageHeader>
 	<detail>
+		<band height="15">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[$F{print_barcode}]]></printWhenExpression>
+			<componentElement>
+				<reportElement x="453" y="0" width="100" height="15" uuid="bf7b56b0-ed6e-472f-b006-eedfaf557c3b">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.barHeight" value="px"/>
+					<property name="com.jaspersoft.studio.unit.barWidth" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barHeight="60">
+					<jr:codeExpression><![CDATA[$F{pallet_number}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+			<staticText>
+				<reportElement x="1" y="0" width="46" height="13" uuid="7c669dd4-3de7-4714-9bff-113b8cf21da4">
+					<printWhenExpression><![CDATA[   $F{govt_inspection_pallets_passed} != true
+]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Reason:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="47" y="0" width="205" height="13" uuid="ff318fb9-4118-44bb-8ba2-231372c5ae1f">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[   $F{govt_inspection_pallets_passed} != true]]></printWhenExpression>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{failure_reason}]]></textFieldExpression>
+			</textField>
+		</band>
 		<band height="12" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isBlankWhenNull="true">
@@ -1230,22 +1262,6 @@ coalesce(scrapped_pallet_number.gap_certification,
 				</textElement>
 				<textFieldExpression><![CDATA[$F{edi_size_count}]]></textFieldExpression>
 			</textField>
-		</band>
-		<band height="15">
-			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<printWhenExpression><![CDATA[$F{print_barcode}]]></printWhenExpression>
-			<componentElement>
-				<reportElement x="453" y="0" width="100" height="15" uuid="bf7b56b0-ed6e-472f-b006-eedfaf557c3b">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.barHeight" value="px"/>
-					<property name="com.jaspersoft.studio.unit.barWidth" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barHeight="60">
-					<jr:codeExpression><![CDATA[$F{pallet_number}]]></jr:codeExpression>
-				</jr:barbecue>
-			</componentElement>
 		</band>
 	</detail>
 	<pageFooter>
