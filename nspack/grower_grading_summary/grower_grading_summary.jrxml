@@ -37,7 +37,7 @@ from
 SELECT
 case when rmt_classes.rmt_class_code='W' then 'WASTE' else rmt_classes.rmt_class_code END as graded_class 
 ,'' as graded_colour
-,rmt_sizes.size_code as maf_article_count
+,std_fruit_size_counts.size_count_value as maf_article_count
 ,sum(b.graded_weight) graded_weight
 ,pool.nett_weight rmt_bin_weight
 ,sum(b.graded_weight::numeric*1) as graded_weight_detail,
@@ -51,16 +51,16 @@ FROM
 grower_grading_pools pool
 left join grower_grading_pool_details b on b.grower_grading_pool_id = pool.id
 join (
-	   select grower_grading_pool_id ,sum(graded_weight) out_weight 
-	   from grower_grading_pool_details 
+	   select grower_grading_pool_id ,sum(graded_weight) out_weight
+	   from grower_grading_pool_details
 	   group by grower_grading_pool_id
      ) sb on sb.grower_grading_pool_id= pool.id
 left join rmt_classes  on b.graded_rmt_class_id = rmt_classes.id
 left join grades on grades.grade_code = rmt_classes.rmt_class_code
-left join rmt_sizes ON rmt_sizes.id = b.graded_size_count_id 
+left join std_fruit_size_counts ON std_fruit_size_counts.id = b.graded_size_count_id
   where pool.id =  $P{grower_grading_pool_id} 
-group by rmt_classes.rmt_class_code,rmt_sizes.size_code ,pool.nett_weight
-order by rmt_sizes.size_code  asc
+group by rmt_classes.rmt_class_code,std_fruit_size_counts.size_count_value ,pool.nett_weight
+order by std_fruit_size_counts.size_count_value  asc
 )   sq
 group by graded_class , colour_sort||'_'||graded_colour , maf_article_count,
 isn,
@@ -125,11 +125,11 @@ where grower_grading_pools.id = $P{grower_grading_pool_id}
 group by production_runs.id,grower_grading_pools.id 
 )
 SELECT 
-grower_grading_pools.nett_weight as input_weight,
-grower_grading_pool_details.graded_rmt_class_id
+rmt_classes.rmt_class_code
+,std_fruit_size_counts.size_count_value AS rmt_size_code
+,grower_grading_pools.nett_weight as input_weight
+,grower_grading_pool_details.graded_rmt_class_id
 , grower_grading_pool_details.graded_size_count_id
-,rmt_classes.rmt_class_code
-,rmt_sizes.size_code AS rmt_size_code
 ,grower_grading_pool_details.graded_weight
 ,grower_grading_pool_details.weight_percentage
 ,farms.farm_code as grower
@@ -141,10 +141,10 @@ grower_grading_pool_details.graded_rmt_class_id
 ,rmt_codes.rmt_code
 ,mkt_varieties.marketing_variety
 , mkt_varieties.total_carton_qty
-FROM grower_grading_pool_details 
-JOIN grower_grading_pools ON grower_grading_pools.id = grower_grading_pool_details.grower_grading_pool_id 
-LEFT JOIN rmt_classes ON rmt_classes.id = grower_grading_pool_details.graded_rmt_class_id 
-LEFT JOIN rmt_sizes ON rmt_sizes.id = grower_grading_pool_details.graded_size_count_id 
+from grower_grading_pool_details
+JOIN grower_grading_pools ON grower_grading_pools.id = grower_grading_pool_details.grower_grading_pool_id
+LEFT JOIN rmt_classes ON rmt_classes.id = grower_grading_pool_details.graded_rmt_class_id
+LEFT JOIN std_fruit_size_counts ON std_fruit_size_counts.id = grower_grading_pool_details.graded_size_count_id
 LEFT JOIN production_runs ON production_runs.id = grower_grading_pools.production_run_id 
 JOIN commodities ON commodities.id = grower_grading_pools.commodity_id 
 JOIN cultivar_groups ON cultivar_groups.id = grower_grading_pools.cultivar_group_id
@@ -592,6 +592,7 @@ grower_grading_pool_details.graded_rmt_class_id
 					</crosstabColumnHeader>
 					<crosstabTotalColumnHeader>
 						<cellContents backcolor="#BFE1FF" mode="Opaque">
+							<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 							<box>
 								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 							</box>
@@ -771,7 +772,9 @@ grower_grading_pool_details.graded_rmt_class_id
 	<noData>
 		<band height="56">
 			<staticText>
-				<reportElement x="60" y="0" width="700" height="30" uuid="6a8e9d1b-7ca0-4e5d-892b-f1b5d83ef39d"/>
+				<reportElement x="60" y="0" width="701" height="30" uuid="6a8e9d1b-7ca0-4e5d-892b-f1b5d83ef39d">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Center">
 					<font size="18"/>
 				</textElement>
