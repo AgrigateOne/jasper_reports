@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="delivery_tripsheet" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="ireport.zoom" value="1.771561000000001"/>
@@ -9,7 +9,7 @@
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="115"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="880"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="live_kromco_nspack"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -294,7 +294,7 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{vehicle_number}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{vehicle_job_id}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="350" y="47" width="72" height="13" uuid="c23827b9-96b1-4858-8fb3-b68bc82cdf3d"/>
@@ -315,7 +315,7 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 				<textElement textAlignment="Center">
 					<font size="10" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Interwarehouse]]></text>
+				<text><![CDATA[Delivery]]></text>
 			</staticText>
 			<staticText>
 				<reportElement key="" x="5" y="13" width="96" height="13" uuid="f2eced94-a786-4686-8ff7-bc9eeb64043e"/>
