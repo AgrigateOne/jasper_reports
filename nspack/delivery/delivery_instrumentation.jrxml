@@ -11,19 +11,19 @@
 	<parameter name="transaction_id" class="java.lang.String"/>
 	<queryString language="SQL">
 		<![CDATA[with fi as (
-select f.transaction_id ,'avg_firmness' mtype, avg(firmness)::dec(5,1) as m_values 
+select f.transaction_id ,'avg_firmness' mtype, avg(firmness)::dec(5,2) as m_values 
 from kromco_mes.instruments_fta_measurements fm join kromco_mes.instruments_fta_sessions f on fm.instruments_fta_session_id =f.id 
 where firmness between 0.5 and 20
 group by f.transaction_id 
 union all 
-select f.transaction_id,'avg_diameter', avg(diameter)::dec(5,1) from kromco_mes.instruments_fta_measurements fm join kromco_mes.instruments_fta_sessions f on 
+select f.transaction_id,'avg_diameter', avg(diameter)::dec(5,2) from kromco_mes.instruments_fta_measurements fm join kromco_mes.instruments_fta_sessions f on 
 fm.instruments_fta_session_id =f.id 
 where  diameter between 20 and 120
 group by f.transaction_id 
 union all 
-select r.transaction_id,'avg_brix', avg(measurement)::dec(5,1) from kromco_mes.instruments_rfm_measurements rm 
+select r.transaction_id,'avg_brix', avg(measurement)::dec(5,2)from kromco_mes.instruments_rfm_measurements rm 
 join kromco_mes.instruments_rfm_sessions r on rm.instruments_rfm_session_id =r.id 
-where scale_type ='Brix' and measurement between 0.5 and 30
+where scale_type in ('Brix','Manual') and measurement between 0.5 and 30
 group by r.transaction_id 
 )
 select transaction_id,mtype,m_values from fi where transaction_id =$P{transaction_id}]]>
