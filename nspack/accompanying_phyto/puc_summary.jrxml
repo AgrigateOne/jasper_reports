@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="puc_summary" language="groovy" printOrder="Horizontal" pageWidth="300" pageHeight="103" columnWidth="300" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="cba47b92-bbda-40d5-b5d7-7f12c9f0b664">
 	<property name="ireport.zoom" value="3.0"/>
 	<property name="ireport.x" value="0"/>
@@ -9,6 +9,7 @@
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="267"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="726"/>
 	<parameter name="load_id" class="java.lang.Integer"/>
+	<parameter name="pallet_ids" class="java.util.Collection"/>
 	<queryString language="SQL">
 		<![CDATA[select intake,pucs,sum(total_ctns)  ctns,sum(total_pallets) plts
 from (
@@ -21,7 +22,7 @@ ELSE ''::text
 END,edi_in_consignment_note_number)  AS intake
 ,string_agg(distinct puc , ',') as pucs,SUM(carton_quantity) as total_ctns,COUNT(distinct pallet_number) as total_pallets
 from vw_pallet_sequence_flat
-where load_id = $P{load_id} 
+where load_id = $P{load_id}  	AND  $X{IN,vw_pallet_sequence_flat.pallet_id,pallet_ids}
 group by
 COALESCE (
 CASE

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="accompanying_phyto" language="groovy" printOrder="Horizontal" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="10" bottomMargin="10" whenResourceMissingType="Empty" uuid="57a0c595-5448-465f-8162-0e6517403bd3">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="accompanying_phyto" language="groovy" printOrder="Horizontal" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="10" bottomMargin="10" isSummaryWithPageHeaderAndFooter="true" whenResourceMissingType="Empty" uuid="57a0c595-5448-465f-8162-0e6517403bd3">
 	<property name="ireport.zoom" value="2.253944402704733"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -21,6 +21,7 @@
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<parameter name="load_id" class="java.lang.Integer"/>
 	<parameter name="from_depot" class="java.lang.String"/>
+	<parameter name="pallet_ids" class="java.util.Collection"/>
 	<queryString language="SQL">
 		<![CDATA[WITH headers as (
 select * from 
@@ -28,7 +29,7 @@ select * from
 WITH ph AS(
 		select $P{load_id} as load_id,string_agg(distinct p.phc,',') packhouse_code
 	     from pallets p
-	    where load_id = $P{load_id}	
+	    where load_id = $P{load_id}	AND  $X{IN,p.id,pallet_ids}
 ),
 commodities as (
 	 select string_agg(distinct commodities.description,',')as commodity ,max($P{load_id})  as load_id
@@ -38,7 +39,7 @@ commodities as (
      JOIN cultivar_groups ON cultivar_groups.id = ps.cultivar_group_id
      LEFT JOIN cultivars ON cultivars.id = ps.cultivar_id
      LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
-	where load_id = $P{load_id}
+	where load_id = $P{load_id} 	AND  $X{IN,p.id,pallet_ids}
 ),
 packhouse_contact AS(
         SELECT  $P{load_id}  as load_id ,people.first_name,people.surname ,contact_methods.contact_method_code, contact_method_types.contact_method_type
@@ -91,7 +92,7 @@ left join packhouse_contact on  p.load_id = packhouse_contact.load_id
 left join depots on depots.depot_code = p.depot
 left join ph on  p.load_id = ph.load_id
 left join commodities on commodities.load_id = p.load_id
-where p.load_id =  $P{load_id}
+where p.load_id =  $P{load_id} 	AND  $X{IN,p.pallet_id,pallet_ids}
 ) as d
 	)
 select * from 
@@ -103,7 +104,7 @@ WITH puc_groups as (
 					p.pallet_number as pallet_id,
 					sum(p.carton_quantity) carton_quantity
 					 from vw_pallet_sequence_flat p
-					where p.load_id =  $P{load_id}
+					where p.load_id =  $P{load_id} 	AND  $X{IN,p.pallet_id,pallet_ids}
 					group by 
 					p.pallet_number
                    )
@@ -128,7 +129,7 @@ from vw_pallet_sequence_flat p
 join puc_groups on puc_groups.pallet_id = p.pallet_number
 join headers on p.load_id = headers.load_id
 join loads on p.load_id=loads.id
-where p.load_id =  $P{load_id}
+where p.load_id =  $P{load_id} 	AND  $X{IN,p.pallet_id,pallet_ids}
 ) as d
 where seq_no = 1
 order by row_num asc]]>
