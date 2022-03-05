@@ -254,14 +254,14 @@ ORDER BY
 		<band height="16" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
-				<reportElement x="183" y="0" width="20" height="13" uuid="f97a0554-b35a-40fc-9835-53113d9ec278">
+				<reportElement x="183" y="0" width="48" height="13" uuid="f97a0554-b35a-40fc-9835-53113d9ec278">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[Size]]></text>
+				<text><![CDATA[Size/Count]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="156" y="0" width="25" height="13" uuid="ea84ba02-ce39-4351-b6e8-d4146e083fa2">
@@ -348,17 +348,6 @@ ORDER BY
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Nett]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="204" y="0" width="26" height="13" uuid="73d20789-9244-43b0-b62c-a2fe57bde3c6">
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-				</reportElement>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[Count]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="457" y="0" width="98" height="13" uuid="139c2eb7-34a0-4179-9b52-0397d983e785">
@@ -458,7 +447,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{grade_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="183" y="0" width="20" height="12" uuid="9c731255-1902-476b-923d-a15baf50e179">
+				<reportElement x="183" y="0" width="48" height="12" uuid="9c731255-1902-476b-923d-a15baf50e179">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -532,16 +521,6 @@ ORDER BY
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{commodity_code}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="204" y="0" width="26" height="12" uuid="91ebec3a-b32e-4bc0-8dc2-bbeb64bb7083">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-				</reportElement>
-				<textElement>
-					<font size="8" isUnderline="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{actual_size_count_code}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement isPrintRepeatedValues="false" x="457" y="0" width="98" height="12" uuid="0804e167-2e0e-453b-b9d4-cb0d10a06dab">
