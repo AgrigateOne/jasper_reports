@@ -182,11 +182,11 @@ ORDER BY
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
-				<reportElement x="249" y="0" width="24" height="13" uuid="244c8c2a-36bc-40bb-bd85-7f164e792fc5"/>
+				<reportElement x="234" y="0" width="24" height="13" uuid="244c8c2a-36bc-40bb-bd85-7f164e792fc5"/>
 				<text><![CDATA[TM]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="209" y="0" width="34" height="13" uuid="9a009dd0-b8a8-4bcd-9076-619bffabe57b"/>
+				<reportElement x="198" y="0" width="34" height="13" uuid="9a009dd0-b8a8-4bcd-9076-619bffabe57b"/>
 				<text><![CDATA[Grade]]></text>
 			</staticText>
 			<staticText>
@@ -194,7 +194,7 @@ ORDER BY
 				<text><![CDATA[Nett]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="347" y="0" width="46" height="13" uuid="e78e5113-4f7f-4580-ae0d-92ebc11e0cfb">
+				<reportElement x="355" y="0" width="38" height="13" uuid="e78e5113-4f7f-4580-ae0d-92ebc11e0cfb">
 					<printWhenExpression><![CDATA[!$P{scartons_equals_pallets}]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right"/>
@@ -221,11 +221,11 @@ ORDER BY
 				<text><![CDATA[Pack]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="276" y="0" width="34" height="13" uuid="6a540ab5-5dce-4b57-b781-2572e3053b0d"/>
-				<text><![CDATA[Size Count]]></text>
+				<reportElement x="258" y="0" width="62" height="13" uuid="6a540ab5-5dce-4b57-b781-2572e3053b0d"/>
+				<text><![CDATA[Size/Count]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="311" y="0" width="34" height="13" uuid="79b307fa-49b8-49a2-9005-e3749c9627a7"/>
+				<reportElement x="320" y="0" width="34" height="13" uuid="79b307fa-49b8-49a2-9005-e3749c9627a7"/>
 				<text><![CDATA[Inv]]></text>
 			</staticText>
 			<staticText>
@@ -247,7 +247,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$P{scartons_equals_pallets} ? "Bins" : "Plts"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="170" y="0" width="34" height="13" uuid="d2df65a4-653c-4d53-a800-7a6b5666255e"/>
+				<reportElement x="163" y="0" width="34" height="13" uuid="d2df65a4-653c-4d53-a800-7a6b5666255e"/>
 				<text><![CDATA[Sell By]]></text>
 			</staticText>
 		</band>
@@ -257,11 +257,11 @@ ORDER BY
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isBlankWhenNull="true">
-				<reportElement x="209" y="0" width="34" height="13" uuid="c65eaaa8-3700-4e38-a6c3-c227fa11e65d"/>
+				<reportElement x="198" y="0" width="34" height="13" uuid="c65eaaa8-3700-4e38-a6c3-c227fa11e65d"/>
 				<textFieldExpression><![CDATA[$F{grade_code}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="249" y="0" width="24" height="13" uuid="ce49baa0-3ad3-4fb8-987f-e71ec8af5cd6"/>
+				<reportElement x="234" y="0" width="24" height="13" uuid="ce49baa0-3ad3-4fb8-987f-e71ec8af5cd6"/>
 				<textFieldExpression><![CDATA[$F{target_market_code}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00" isBlankWhenNull="true">
@@ -295,11 +295,11 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{old_pack_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="276" y="0" width="34" height="13" uuid="3f09adf3-b322-4d87-965f-fe5504f96fdb"/>
+				<reportElement x="258" y="0" width="62" height="13" uuid="3f09adf3-b322-4d87-965f-fe5504f96fdb"/>
 				<textFieldExpression><![CDATA[$F{edi_size_count}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="311" y="0" width="34" height="13" uuid="11b74f3b-29af-4bfb-bc75-0aa453e34583"/>
+				<reportElement x="320" y="0" width="34" height="13" uuid="11b74f3b-29af-4bfb-bc75-0aa453e34583"/>
 				<textFieldExpression><![CDATA[$F{inventory_code}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00" isBlankWhenNull="true">
@@ -308,14 +308,14 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{gross_weight}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="347" y="0" width="46" height="13" uuid="e925fdc1-37d9-4205-bfe1-3734cec5c80e">
+				<reportElement x="355" y="0" width="38" height="13" uuid="e925fdc1-37d9-4205-bfe1-3734cec5c80e">
 					<printWhenExpression><![CDATA[!$P{scartons_equals_pallets}]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{ctn_qty}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="170" y="0" width="34" height="13" uuid="277fbb92-601a-4dd3-915b-6444d3fc8884"/>
+				<reportElement x="163" y="0" width="34" height="13" uuid="277fbb92-601a-4dd3-915b-6444d3fc8884"/>
 				<textFieldExpression><![CDATA[$F{sell_by_code}]]></textFieldExpression>
 			</textField>
 		</band>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="accompanying_phyto" language="groovy" printOrder="Horizontal" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="10" bottomMargin="10" whenResourceMissingType="Empty" uuid="57a0c595-5448-465f-8162-0e6517403bd3">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="accompanying_phyto" language="groovy" printOrder="Horizontal" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="10" bottomMargin="10" isSummaryWithPageHeaderAndFooter="true" whenResourceMissingType="Empty" uuid="57a0c595-5448-465f-8162-0e6517403bd3">
 	<property name="ireport.zoom" value="2.253944402704733"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/dispatch_consignment"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44:80/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack_KR_Live"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="kromco_nspack_dev"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
@@ -19,29 +19,29 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<parameter name="load_id" class="java.lang.Integer"/>
 	<parameter name="from_depot" class="java.lang.String"/>
+	<parameter name="pallet_ids" class="java.util.Collection"/>
 	<queryString language="SQL">
 		<![CDATA[WITH headers as (
 select * from 
 (
 WITH ph AS(
-		select $P{load_id} as load_id,string_agg(distinct p.phc,',') packhouse_code
+		select string_agg(distinct p.phc,',') packhouse_code,30 as ids
 	     from pallets p
-	    where load_id = $P{load_id}	
+	    where $X{IN,p.id,pallet_ids}
 ),
 commodities as (
-	 select string_agg(distinct commodities.description,',')as commodity ,max($P{load_id})  as load_id
+	 select string_agg(distinct commodities.description,',')as commodity ,30 as ids
       from pallet_sequences ps 
     JOIN pallets p ON p.id = ps.pallet_id
-    LEFT JOIN loads ON loads.id = p.load_id
      JOIN cultivar_groups ON cultivar_groups.id = ps.cultivar_group_id
      LEFT JOIN cultivars ON cultivars.id = ps.cultivar_id
      LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
-	where load_id = $P{load_id}
+	where $X{IN,p.id,pallet_ids}
 ),
 packhouse_contact AS(
-        SELECT  $P{load_id}  as load_id ,people.first_name,people.surname ,contact_methods.contact_method_code, contact_method_types.contact_method_type
+        SELECT  30  as ids,
+        people.first_name,people.surname ,contact_methods.contact_method_code, contact_method_types.contact_method_type
         FROM party_contact_methods
         JOIN contact_methods ON contact_methods.id = party_contact_methods.contact_method_id
         JOIN contact_method_types ON contact_method_types.id = contact_methods.contact_method_type_id  
@@ -55,7 +55,6 @@ packhouse_contact AS(
 )
 select  distinct
 commodities.commodity,
-p.load_id,
 '00' || CAST(p.load_id as text) as document_number,
 destination_countries.description  as importing_country,
 p.exporter,
@@ -80,6 +79,7 @@ ph.packhouse_code ,
 '' as puc,
 '' as inspector_code,
 '' as inspector_tel_no_1
+,30 as ids
  from vw_pallet_sequence_flat p
 LEFT JOIN govt_inspection_pallets ON govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
 LEFT JOIN govt_inspection_sheets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
@@ -87,11 +87,11 @@ LEFT JOIN destination_countries ON destination_countries.id = govt_inspection_sh
 left join inspectors on inspectors.id= govt_inspection_sheets.inspector_id
 left join party_roles on inspectors.inspector_party_role_id= party_roles.id
 left join parties on party_roles.party_id=parties.id
-left join packhouse_contact on  p.load_id = packhouse_contact.load_id
+left join packhouse_contact on  30 = packhouse_contact.ids
 left join depots on depots.depot_code = p.depot
-left join ph on  p.load_id = ph.load_id
-left join commodities on commodities.load_id = p.load_id
-where p.load_id =  $P{load_id}
+left join ph on  30 = ph.ids
+left join commodities on commodities.ids = 30
+where  $X{IN,p.pallet_id,pallet_ids}
 ) as d
 	)
 select * from 
@@ -103,7 +103,7 @@ WITH puc_groups as (
 					p.pallet_number as pallet_id,
 					sum(p.carton_quantity) carton_quantity
 					 from vw_pallet_sequence_flat p
-					where p.load_id =  $P{load_id}
+					where  $X{IN,p.pallet_id,pallet_ids}
 					group by 
 					p.pallet_number
                    )
@@ -123,12 +123,11 @@ headers.*,
 '' as puc,
 '' as inspector_code,
 '' as inspector_tel_no_1,
-loads.exporter_party_role_id
+p.exporter_party_role_id
 from vw_pallet_sequence_flat p
 join puc_groups on puc_groups.pallet_id = p.pallet_number
-join headers on p.load_id = headers.load_id
-join loads on p.load_id=loads.id
-where p.load_id =  $P{load_id}
+join headers on 30 = headers.ids
+where   $X{IN,p.pallet_id,pallet_ids}
 ) as d
 where seq_no = 1
 order by row_num asc]]>
@@ -975,8 +974,8 @@ Address:]]></text>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<subreportParameter name="load_id">
-					<subreportParameterExpression><![CDATA[$P{load_id}]]></subreportParameterExpression>
+				<subreportParameter name="pallet_ids">
+					<subreportParameterExpression><![CDATA[$P{pallet_ids}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["puc_summary.jasper"]]></subreportExpression>
@@ -989,9 +988,10 @@ Address:]]></text>
 				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="510" y="45" width="26" height="11" uuid="d0f61a67-a381-419f-912e-ee1ddbbbf9a5">
+				<reportElement x="510" y="45" width="31" height="11" uuid="d0f61a67-a381-419f-912e-ee1ddbbbf9a5">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font size="7"/>

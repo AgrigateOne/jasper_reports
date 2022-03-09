@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="bin assets" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="7e3aaf77-d546-4751-a978-9cc728d86554">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="live_kromco_nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="kr_nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="234"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="755"/>
@@ -11,15 +11,7 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT
-to_locations.id as to_location_id ,to_locations.location_long_code as to_location
-,from_locations.id as from_location_id ,from_locations.location_long_code as from_location
-,coalesce(max(issued_to_farm.total_issued_to_farm ),0) - (
-	    coalesce(max(received_from_farm.total_received_from_farm),0) + coalesce(max(rmt_deliveries.total_received),0) )as total_bins_at_farm,
-max(issued_to_farm.total_issued_to_farm )as total_issued_to_farm,
-max(received_from_farm.total_received_from_farm) as total_received_from_farm,
-max(rmt_deliveries.total_received) as total_received_from_deliveries,
-sum(bin_asset_transaction_items.quantity_bins) total_qty_bins
-,rcmt.container_material_type_code
+rcmt.container_material_type_code
 ,string_agg(distinct date(bin_asset_transactions.created_at)::text, '; '   order by date(bin_asset_transactions.created_at)::text ) as created_at
 ,fn_party_role_name((SELECT pr.id
 FROM public.party_roles pr
@@ -27,6 +19,16 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 ,(SELECT pr.id
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) AS implementation_owner_party_role_id
+,from_locations.location_long_code AS from_location
+,to_locations.location_long_code AS to_location
+,to_locations.id as location_to_id
+,max(rmt_deliveries.total_received_from_deliveries) as total_received_from_deliveries
+,max(received_from_farm.total_received_from_farm) as total_received_from_farm
+,max(issued_to_farm.total_issued_to_farm )as total_issued_to_farm
+,max(bin_sales.total_issued_by_bin_sales) as total_issued_by_bin_sales
+,(coalesce(max(issued_to_farm.total_issued_to_farm ),0) + coalesce(max(bin_sales.total_issued_by_bin_sales),0)) - (
+	     coalesce(max(received_from_farm.total_received_from_farm),0) + coalesce(max(rmt_deliveries.total_received_from_deliveries),0) )as total_bins_at_farm
+,max(bin_asset_transaction_items.quantity_bins) transaction_qty_bins
 FROM bin_asset_transactions
 JOIN bin_asset_transaction_items         ON bin_asset_transactions.id = bin_asset_transaction_items.bin_asset_transaction_id
 JOIN locations to_locations ON to_locations.id = bin_asset_transaction_items.bin_asset_to_location_id
@@ -36,70 +38,39 @@ LEFT JOIN rmt_container_material_owners ON rmt_container_material_owners.id = bi
 LEFT JOIN rmt_container_material_types rcmt on rmt_container_material_owners.rmt_container_material_type_id= rcmt.id
 LEFT JOIN business_processes ON business_processes.id = bin_asset_transactions.business_process_id
 LEFT JOIN (
-			SELECT material_owner, container_material_type_code, to_location, sum(quantity_bins) AS total_issued_to_farm
-	               ,rmt_container_material_type_id,rmt_container_material_owner_id,to_location_id
+			SELECT distinct material_owner, container_material_type_code, to_location, rmt_container_material_type_id,rmt_container_material_owner_id,to_location_id,
+			 SUM(quantity_bins) OVER(PARTITION BY to_location_id) AS total_issued_to_farm
 	        FROM vw_offsite_bin_asset_transactions
 			WHERE transaction_type_code NOT IN ('BIN SALES','RMT DELIVERIES', 'RECEIVE_BINS' )
-			GROUP BY
-			material_owner, container_material_type_code, to_location,rmt_container_material_type_id,rmt_container_material_owner_id,to_location_id
+	        ORDER BY  to_location,container_material_type_code
           ) issued_to_farm ON  issued_to_farm.to_location_id = to_locations.id AND
 		    issued_to_farm.rmt_container_material_owner_id= rmt_container_material_owners.id
-            AND issued_to_farm.rmt_container_material_type_id =rcmt.id
 LEFT JOIN (
-			SELECT material_owner, container_material_type_code, from_location, sum(quantity_bins) AS total_received_from_farm,
-	        from_location_id,rmt_container_material_type_id,rmt_container_material_owner_id
+			SELECT distinct material_owner, container_material_type_code, from_location,from_location_id,rmt_container_material_type_id,rmt_container_material_owner_id,
+			SUM(quantity_bins) OVER (PARTITION BY from_location_id) AS total_received_from_farm
 			FROM vw_offsite_bin_asset_transactions
 			WHERE transaction_type_code = 'RECEIVE_BINS'
-			GROUP BY material_owner, container_material_type_code, from_location,from_location_id,rmt_container_material_type_id,rmt_container_material_owner_id
           ) received_from_farm ON received_from_farm.from_location_id = to_locations.id AND
 		    received_from_farm.rmt_container_material_owner_id= rmt_container_material_owners.id
             AND received_from_farm.rmt_container_material_type_id =rcmt.id
 LEFT JOIN (
-			SELECT material_owner, container_material_type_code, from_location, sum(quantity_bins) AS total_received,from_location_id,
-	        rmt_container_material_type_id,rmt_container_material_owner_id
+			SELECT distinct material_owner, container_material_type_code, from_location,from_location_id,rmt_container_material_type_id,rmt_container_material_owner_id,
+	        SUM(quantity_bins) OVER (PARTITION BY from_location_id) AS total_received_from_deliveries
 			FROM vw_offsite_bin_asset_transactions
-			WHERE transaction_type_code = 'RMT DELIVERIES'
-			GROUP BY material_owner, container_material_type_code, from_location,from_location_id,rmt_container_material_type_id,rmt_container_material_owner_id
-           ) rmt_deliveries ON rmt_deliveries.from_location_id = to_locations.id AND
-		    rmt_deliveries.rmt_container_material_owner_id= rmt_container_material_owners.id
-            AND rmt_deliveries.rmt_container_material_type_id =rcmt.id
-where  bin_asset_transactions.id=$P{bin_asset_transaction_id}
+			WHERE transaction_type_code = 'RMT DELIVERIES' 
+	        order by from_location, container_material_type_code desc
+           ) rmt_deliveries ON rmt_deliveries.from_location_id = to_locations.id
+LEFT JOIN (
+			SELECT distinct material_owner, container_material_type_code, to_location,to_location_id,rmt_container_material_type_id,rmt_container_material_owner_id,
+			SUM(quantity_bins) OVER (PARTITION BY to_location_id) AS total_issued_by_bin_sales
+			FROM vw_offsite_bin_asset_transactions
+			WHERE transaction_type_code = 'BIN SALES'
+          ) bin_sales ON   bin_sales.to_location_id = to_locations.id
+		    AND bin_sales.rmt_container_material_owner_id= rmt_container_material_owners.id
+where  bin_asset_transactions.id =  $P{bin_asset_transaction_id}
 group by
-from_locations.location_long_code,to_locations.location_long_code,rcmt.container_material_type_code,business_processes.process
-,to_locations.id,from_locations.id
-]]>
+from_locations.location_long_code,to_locations.location_long_code,rcmt.container_material_type_code,business_processes.process,to_locations.id,from_locations.id]]>
 	</queryString>
-	<field name="total_bins_at_farm" class="java.lang.Long">
-		<property name="com.jaspersoft.studio.field.name" value="total_bins_at_farm"/>
-		<property name="com.jaspersoft.studio.field.label" value="total_bins_at_farm"/>
-	</field>
-	<field name="total_issued_to_farm" class="java.lang.Long">
-		<property name="com.jaspersoft.studio.field.name" value="total_issued_to_farm"/>
-		<property name="com.jaspersoft.studio.field.label" value="total_issued_to_farm"/>
-	</field>
-	<field name="to_location_id" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="to_location_id"/>
-		<property name="com.jaspersoft.studio.field.label" value="to_location_id"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="locations"/>
-	</field>
-	<field name="total_received_from_farm" class="java.lang.Long">
-		<property name="com.jaspersoft.studio.field.name" value="total_received_from_farm"/>
-		<property name="com.jaspersoft.studio.field.label" value="total_received_from_farm"/>
-	</field>
-	<field name="total_qty_bins" class="java.lang.Long">
-		<property name="com.jaspersoft.studio.field.name" value="total_qty_bins"/>
-		<property name="com.jaspersoft.studio.field.label" value="total_qty_bins"/>
-	</field>
-	<field name="from_location" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="from_location"/>
-		<property name="com.jaspersoft.studio.field.label" value="from_location"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="locations"/>
-	</field>
-	<field name="to_location" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="to_location"/>
-		<property name="com.jaspersoft.studio.field.label" value="to_location"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="locations"/>
-	</field>
 	<field name="container_material_type_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="container_material_type_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="container_material_type_code"/>
@@ -118,8 +89,47 @@ from_locations.location_long_code,to_locations.location_long_code,rcmt.container
 		<property name="com.jaspersoft.studio.field.name" value="implementation_owner_party_role_id"/>
 		<property name="com.jaspersoft.studio.field.label" value="implementation_owner_party_role_id"/>
 	</field>
+	<field name="from_location" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="from_location"/>
+		<property name="com.jaspersoft.studio.field.label" value="from_location"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="locations"/>
+	</field>
+	<field name="to_location" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="to_location"/>
+		<property name="com.jaspersoft.studio.field.label" value="to_location"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="locations"/>
+	</field>
+	<field name="location_to_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="location_to_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="location_to_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="locations"/>
+	</field>
+	<field name="total_received_from_deliveries" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total_received_from_deliveries"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_received_from_deliveries"/>
+	</field>
+	<field name="total_received_from_farm" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total_received_from_farm"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_received_from_farm"/>
+	</field>
+	<field name="total_issued_to_farm" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total_issued_to_farm"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_issued_to_farm"/>
+	</field>
+	<field name="total_issued_by_bin_sales" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total_issued_by_bin_sales"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_issued_by_bin_sales"/>
+	</field>
+	<field name="total_bins_at_farm" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total_bins_at_farm"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_bins_at_farm"/>
+	</field>
+	<field name="transaction_qty_bins" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="transaction_qty_bins"/>
+		<property name="com.jaspersoft.studio.field.label" value="transaction_qty_bins"/>
+	</field>
 	<variable name="total_bins" class="java.lang.Integer" calculation="Sum">
-		<variableExpression><![CDATA[$F{total_qty_bins}]]></variableExpression>
+		<variableExpression><![CDATA[$F{transaction_qty_bins}]]></variableExpression>
 	</variable>
 	<background>
 		<band height="1" splitType="Stretch"/>
@@ -288,7 +298,7 @@ from_locations.location_long_code,to_locations.location_long_code,rcmt.container
 				<textElement textAlignment="Left">
 					<font size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{total_qty_bins}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{transaction_qty_bins}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="70" y="0" width="130" height="20" uuid="b86e5455-0c95-48ac-91b8-78a2ced07b74">
