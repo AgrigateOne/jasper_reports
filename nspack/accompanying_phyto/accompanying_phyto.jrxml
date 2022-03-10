@@ -6,7 +6,7 @@
 	<property name="ireport.y" value="0"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/dispatch_consignment"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44:80/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="kromco_nspack_dev"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="sr"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
@@ -55,7 +55,7 @@ packhouse_contact AS(
 )
 select  distinct
 commodities.commodity,
-'00' || CAST(p.load_id as text) as document_number,
+'00' ||  COALESCE(CAST(p.load_id as text), '0') as document_number,
 destination_countries.description  as importing_country,
 p.exporter,
 
@@ -184,11 +184,6 @@ order by row_num asc]]>
 	<field name="commodity" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="commodity"/>
 		<property name="com.jaspersoft.studio.field.label" value="commodity"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
-	</field>
-	<field name="load_id" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.name" value="load_id"/>
-		<property name="com.jaspersoft.studio.field.label" value="load_id"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
 	<field name="document_number" class="java.lang.String">
@@ -988,7 +983,7 @@ Address:]]></text>
 				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="510" y="45" width="31" height="11" uuid="d0f61a67-a381-419f-912e-ee1ddbbbf9a5">
+				<reportElement x="510" y="45" width="30" height="11" uuid="d0f61a67-a381-419f-912e-ee1ddbbbf9a5">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
