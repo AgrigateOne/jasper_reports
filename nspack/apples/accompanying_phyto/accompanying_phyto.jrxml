@@ -988,9 +988,10 @@ Address:]]></text>
 				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="510" y="45" width="26" height="11" uuid="d0f61a67-a381-419f-912e-ee1ddbbbf9a5">
+				<reportElement x="510" y="45" width="27" height="11" uuid="d0f61a67-a381-419f-912e-ee1ddbbbf9a5">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font size="7"/>
