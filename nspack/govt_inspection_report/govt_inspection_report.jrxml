@@ -70,7 +70,7 @@ scrapped_pallet_number AS (
 	fruit_actual_counts_for_packs.actual_count_for_pack AS actual_count,
      farms.farm_code AS farm,
      pucs.puc_code AS puc,
-     COALESCE(registered_orchards.orchard_code ,orchards.orchard_code) AS orchard,
+     orchards.orchard_code AS orchard,
      commodities.code AS commodity,
      cultivar_groups.cultivar_group_code AS cultivar_group,
      cultivars.cultivar_name AS cultivar,
@@ -153,7 +153,7 @@ scrapped_pallet_number AS (
     left join govt_inspection_pallets  ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
     left join pallets p on govt_inspection_pallets.pallet_id =p.id
     join pallet_sequences ps on p.id=ps.scrapped_from_pallet_id
-     LEFT JOIN registered_orchards ON registered_orchards.id = ps.marketing_orchard_id
+
      LEFT JOIN pallets repacked_from_pallets ON repacked_from_pallets.id = ps.repacked_from_pallet_id
      LEFT JOIN plant_resources plt_packhouses ON plt_packhouses.id = p.plt_packhouse_resource_id
      LEFT JOIN plant_resources plt_lines ON plt_lines.id = p.plt_line_resource_id
