@@ -970,9 +970,9 @@ Address:]]></text>
 				<textFieldExpression><![CDATA[$F{inspector_tel_no_1}]]></textFieldExpression>
 			</textField>
 			<subreport isUsingCache="false" runToBottom="false" overflowType="Stretch">
-				<reportElement x="223" y="326" width="342" height="2" uuid="b54eb6ae-3769-4404-af1a-4670eaa2418a">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<reportElement x="223" y="326" width="342" height="1" uuid="b54eb6ae-3769-4404-af1a-4670eaa2418a">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<subreportParameter name="load_id">
 					<subreportParameterExpression><![CDATA[$P{load_id}]]></subreportParameterExpression>
@@ -1302,7 +1302,7 @@ Address:]]></text>
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="103" splitType="Stretch">
+		<band height="103" splitType="Prevent">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
 				<reportElement x="329" y="0" width="244" height="12" uuid="7cc3776a-7922-4a1d-82ec-8cb69c51a36a">
