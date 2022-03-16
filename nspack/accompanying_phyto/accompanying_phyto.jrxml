@@ -965,7 +965,7 @@ Address:]]></text>
 				<textFieldExpression><![CDATA[$F{inspector_tel_no_1}]]></textFieldExpression>
 			</textField>
 			<subreport isUsingCache="false" runToBottom="false" overflowType="Stretch">
-				<reportElement x="250" y="317" width="315" height="11" uuid="b54eb6ae-3769-4404-af1a-4670eaa2418a">
+				<reportElement x="250" y="320" width="315" height="1" uuid="b54eb6ae-3769-4404-af1a-4670eaa2418a">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>

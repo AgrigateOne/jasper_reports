@@ -141,7 +141,7 @@ order by pucs desc]]>
 		<band height="14" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<textField isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement x="0" y="0" width="72" height="14" uuid="814e04ec-4f8f-4c9f-8cdb-c2da9656d625">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -159,7 +159,7 @@ order by pucs desc]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{intake}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.00" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement x="276" y="0" width="42" height="14" uuid="1b261a61-e9a7-46af-9292-05c3d9da2393">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -175,7 +175,7 @@ order by pucs desc]]>
 				<textFieldExpression><![CDATA[$F{ctns}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement stretchType="ContainerHeight" x="70" y="0" width="206" height="14" uuid="0e02a99c-cb60-4ff8-b2a7-d684e5551af1">
+				<reportElement stretchType="ContainerBottom" x="70" y="0" width="206" height="14" uuid="0e02a99c-cb60-4ff8-b2a7-d684e5551af1">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
@@ -190,7 +190,7 @@ order by pucs desc]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{pucs}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement x="318" y="0" width="37" height="14" uuid="d9eb339d-295f-4a3d-960d-f5e244eb58e7">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
