@@ -216,7 +216,7 @@ vessel_code,exporter_certificate_code,commodities.code,mv.description,commoditie
 						<subreportParameterExpression><![CDATA[$P{load_id}]]></subreportParameterExpression>
 					</subreportParameter>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression><![CDATA["export_certificate_puc.jrxml"]]></subreportExpression>
+					<subreportExpression><![CDATA["export_certificate_puc.jasper"]]></subreportExpression>
 				</subreport>
 				<textField>
 					<reportElement x="105" y="196" width="135" height="15" uuid="b2915577-f2b8-46f1-9fea-838834a202ab">
@@ -748,7 +748,7 @@ vessel_code,exporter_certificate_code,commodities.code,mv.description,commoditie
 				<reportElement x="0" y="32" width="146" height="81" uuid="6ad90793-bf1e-40c7-a4f8-63c92fb8b01e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<imageExpression><![CDATA["/home/patie/nosoft_projects/crossbeams/jasper_reports/nspack/logos/sa emblem.png"]]></imageExpression>
+				<imageExpression><![CDATA["../logos/sa emblem.png"]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="438" y="48" width="71" height="14" uuid="bcd8a256-41c3-495c-99e9-1588619f433b">
