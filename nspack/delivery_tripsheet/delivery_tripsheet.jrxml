@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="delivery_tripsheet" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="ireport.zoom" value="1.771561000000001"/>
@@ -9,7 +9,7 @@
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="115"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="880"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="live_kromco_nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -55,7 +55,7 @@ vehicle_jobs.loaded_at,
 vehicle_jobs.offloaded_at,
 '' plt_packhouse,
 business_processes.process,cp.colour_percentage ,
-vehicle_jobs.business_process_id,
+vehicle_jobs.business_process_id,main_cold_treatments.treatment_code main_cold_treatment_code,
 fn_party_role_name((SELECT pr.id
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1)) AS implementation_owner_name,
@@ -79,7 +79,9 @@ left join locations on locations.id=vehicle_jobs.planned_location_to_id
 left join rmt_deliveries d on vehicle_jobs.rmt_delivery_id = d.id
 left join orchards o on d.orchard_id = o.id
 left join pucs p on d.puc_id = p.id
-where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
+LEFT JOIN treatments main_cold_treatments ON main_cold_treatments.id = rmt_bins.main_cold_treatment_id
+where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}
+order by 2,3,4,5,6,1]]>
 	</queryString>
 	<field name="orchard_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="orchard_code"/>
@@ -205,6 +207,11 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 		<property name="com.jaspersoft.studio.field.name" value="business_process_id"/>
 		<property name="com.jaspersoft.studio.field.label" value="business_process_id"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vehicle_jobs"/>
+	</field>
+	<field name="main_cold_treatment_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="main_cold_treatment_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="main_cold_treatment_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="treatments"/>
 	</field>
 	<field name="implementation_owner_name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="implementation_owner_name"/>
@@ -482,7 +489,7 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="19" splitType="Stretch">
+		<band height="15" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<line>
 				<reportElement x="0" y="1" width="555" height="1" uuid="dc4d9cf4-a191-48ec-bacf-0a8b1edcc987">
@@ -526,7 +533,7 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 				<text><![CDATA[Size]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="255" y="2" width="47" height="13" uuid="06d2722b-2835-4d64-80fd-5040eebaeb09">
+				<reportElement x="215" y="2" width="32" height="13" uuid="06d2722b-2835-4d64-80fd-5040eebaeb09">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -570,7 +577,7 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 				<text><![CDATA[Rmt]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="215" y="2" width="40" height="13" uuid="3e4438fe-3426-4286-b9ec-1f03eeaed294">
+				<reportElement x="247" y="2" width="25" height="13" uuid="3e4438fe-3426-4286-b9ec-1f03eeaed294">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -646,10 +653,22 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 				</textElement>
 				<text><![CDATA[Class]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="272" y="1" width="30" height="14" uuid="c638180e-be07-4506-bb5c-f9cf430270f9">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="6"/>
+				</textElement>
+				<text><![CDATA[Main ColdSTR]]></text>
+			</staticText>
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="17" splitType="Stretch">
+		<band height="13" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isBlankWhenNull="true">
 				<reportElement x="0" y="0" width="60" height="13" uuid="3685f158-6339-4e45-a224-aeacd7d46ff9">
@@ -699,7 +718,7 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 				<textFieldExpression><![CDATA[$F{colour_percentage}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="255" y="0" width="47" height="13" uuid="acef8336-1258-4291-80d8-4ee7401286fb">
+				<reportElement x="215" y="0" width="32" height="13" uuid="acef8336-1258-4291-80d8-4ee7401286fb">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -721,7 +740,7 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 				<textFieldExpression><![CDATA[$F{rmt_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="215" y="0" width="40" height="13" uuid="6fb645e7-8b96-4a96-bc81-f2786819c959">
+				<reportElement x="247" y="0" width="25" height="13" uuid="6fb645e7-8b96-4a96-bc81-f2786819c959">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -815,6 +834,18 @@ where vehicle_job_units.vehicle_job_id =   $P{vehicle_job_id}]]>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{rmt_class_code}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="274" y="0" width="25" height="13" uuid="3e286793-fd99-4ae5-af8d-68f62714a3eb">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{main_cold_treatment_code}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
