@@ -8,13 +8,13 @@
 	<parameter name="load_id" class="java.lang.Integer"/>
 	<queryString language="SQL">
 		<![CDATA[WITH trading_partner AS(
-	SELECT organizations.long_description,
-addresses.address_line_1,
-addresses.address_line_2,
-addresses.address_line_3,
-addresses.city,
-addresses.postal_code,
-addresses.country,
+	SELECT UPPER(organizations.long_description) AS long_description,
+UPPER(addresses.address_line_1) AS address_line_1,
+UPPER(addresses.address_line_2) AS address_line_2,
+UPPER(addresses.address_line_3) AS address_line_3,
+UPPER(addresses.city) AS city,
+UPPER(addresses.postal_code) AS postal_code,
+UPPER(addresses.country) AS country,
 fn_party_contact_method(party_addresses.party_id, 'Tel') AS tel_no_1,
 fn_party_contact_method(party_addresses.party_id, 'Fax') AS tel_no_2,
 30 as trading_partner_int
@@ -27,7 +27,7 @@ LEFT JOIN addresses ON addresses.id = party_addresses.address_id
 WHERE party_roles.id = ( SELECT  pr.id FROM public.party_roles pr WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER')LIMIT 1)
 )
 SELECT distinct vessels.vessel_code,
-'42/' || loads.exporter_certificate_code||'/'|| loads.id as serial_no,
+concat('42/' ,loads.exporter_certificate_code,'/',loads.id) as serial_no,
 --array_to_string(array_agg(distinct(pucs.puc_code)), '/' ) AS puc,
 commodities.code as commodity_code,
 case mv.description
@@ -335,7 +335,7 @@ vessel_code,exporter_certificate_code,commodities.code,mv.description,commoditie
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 				</rectangle>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement x="105" y="211" width="135" height="15" uuid="65a8f6a9-13a3-487a-92ac-75c80540d9b7">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
@@ -363,7 +363,7 @@ vessel_code,exporter_certificate_code,commodities.code,mv.description,commoditie
 					</textElement>
 					<text><![CDATA[Vessel:]]></text>
 				</staticText>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement x="313" y="26" width="187" height="12" uuid="d607fee0-0b11-4f8c-9298-db590222fc19"/>
 					<textElement>
 						<font size="9" isBold="true"/>
@@ -476,9 +476,12 @@ vessel_code,exporter_certificate_code,commodities.code,mv.description,commoditie
 					<text><![CDATA[40 days by Sea or Land and 10 days by Air]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="339" y="105" width="80" height="15" uuid="78023a27-781e-428c-94f3-c7ccc071d09e"/>
+					<reportElement x="339" y="105" width="80" height="15" uuid="78023a27-781e-428c-94f3-c7ccc071d09e">
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					</reportElement>
 					<textElement>
 						<font size="9" isBold="true"/>
+						<paragraph leftIndent="5"/>
 					</textElement>
 					<text><![CDATA[GRABOUW]]></text>
 				</staticText>
@@ -552,9 +555,12 @@ vessel_code,exporter_certificate_code,commodities.code,mv.description,commoditie
 					<text><![CDATA[Inspection Stamp]]></text>
 				</staticText>
 				<textField pattern="dd MMMMM yyyy">
-					<reportElement x="339" y="83" width="100" height="15" uuid="084f94a8-d7f8-4a31-9d47-e1750a2a2dc9"/>
+					<reportElement x="339" y="83" width="100" height="15" uuid="084f94a8-d7f8-4a31-9d47-e1750a2a2dc9">
+						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					</reportElement>
 					<textElement>
 						<font size="9" isBold="true"/>
+						<paragraph leftIndent="5"/>
 					</textElement>
 					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 				</textField>
