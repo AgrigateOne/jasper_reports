@@ -24,7 +24,8 @@ LEFT JOIN parties ON parties.id = party_roles.party_id
 LEFT JOIN party_addresses ON party_addresses.party_id = party_roles.party_id
 LEFT JOIN addresses ON addresses.id = party_addresses.address_id
   AND addresses.address_type_id = (SELECT id FROM address_types WHERE address_type = 'Delivery Address')
-WHERE party_roles.id = ( SELECT  pr.id FROM public.party_roles pr WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER')LIMIT 1)
+JOIN loads on loads.exporter_party_role_id = party_roles.id
+WHERE loads.id = $P{load_id}
 )
 SELECT distinct vessels.vessel_code,
 concat('42/' ,loads.exporter_certificate_code,'/',loads.id) as serial_no,
