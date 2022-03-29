@@ -23,16 +23,16 @@
 	<parameter name="from_depot" class="java.lang.String"/>
 	<queryString language="SQL">
 		<![CDATA[WITH headers as (
-select * from 
+select * from
 (
 WITH ph AS(
-		select $P{load_id} as load_id,string_agg(distinct p.phc,',') packhouse_code
+		select 1810 as load_id,string_agg(distinct p.phc,',') packhouse_code
 	     from pallets p
-	    where load_id = $P{load_id}	
+	    where load_id = $P{load_id}
 ),
 commodities as (
-	 select string_agg(distinct commodities.description,',')as commodity ,max($P{load_id})  as load_id
-      from pallet_sequences ps 
+	 select string_agg(distinct commodities.description,',')as commodity ,max(1810)  as load_id
+      from pallet_sequences ps
     JOIN pallets p ON p.id = ps.pallet_id
     LEFT JOIN loads ON loads.id = p.load_id
      JOIN cultivar_groups ON cultivar_groups.id = ps.cultivar_group_id
@@ -41,17 +41,17 @@ commodities as (
 	where load_id = $P{load_id}
 ),
 packhouse_contact AS(
-        SELECT  $P{load_id}  as load_id ,people.first_name,people.surname ,contact_methods.contact_method_code, contact_method_types.contact_method_type
+        SELECT  1810  as load_id ,people.first_name,people.surname ,contact_methods.contact_method_code, contact_method_types.contact_method_type
         FROM party_contact_methods
         JOIN contact_methods ON contact_methods.id = party_contact_methods.contact_method_id
-        JOIN contact_method_types ON contact_method_types.id = contact_methods.contact_method_type_id  
+        JOIN contact_method_types ON contact_method_types.id = contact_methods.contact_method_type_id
 		JOIN party_roles pr on party_contact_methods.party_id = pr.party_id
 		JOIN people on pr.person_id = people.id
 		WHERE pr.id in (
 		SELECT pr.id
 					FROM public.party_roles pr
 					WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'PACKHOUSE_CONTACT_PERSON') LIMIT 1
-		)	
+		)
 )
 select  distinct
 commodities.commodity,
@@ -72,7 +72,7 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'CUSTOMER_CONTACT_PERSON')
 p.final_destination  as importing_country,
 packhouse_contact.first_name phc_first_name,
 packhouse_contact.surname as phc_surname,
-packhouse_contact.contact_method_code as phc_contact, 
+packhouse_contact.contact_method_code as phc_contact,
 packhouse_contact.contact_method_type as phc_contact_method_type,
 depots.magisterial_district,
 ph.packhouse_code ,
@@ -94,20 +94,21 @@ left join commodities on commodities.load_id = p.load_id
 where p.load_id =  $P{load_id}
 ) as d
 	)
-select * from 
+select * from
 (
 WITH puc_groups as (
-					select  
-					string_agg(distinct p.puc,','  order by p.puc) pucs,
-					string_agg(distinct p.marketing_orchard,','  order by p.marketing_orchard) blocks,
-					p.pallet_number as pallet_id,
-					sum(p.carton_quantity) carton_quantity
+					select
+					string_agg( p.puc,',' order by   p.pallet_number,p.id) pucs,
+					string_agg( p.marketing_orchard,',' order by p.pallet_number,p.id) blocks,
+					p.pallet_number as pallet_id
+					,sum(p.carton_quantity) carton_quantity
 					 from vw_pallet_sequence_flat p
-					where p.load_id =  $P{load_id}
-					group by 
-					p.pallet_number
+					where load_id =  $P{load_id}
+					group by
+					pallet_number
+	                order by  pallet_number
                    )
-select  
+select
 row_number() over (partition by p.pallet_number order by p.pallet_number desc) AS seq_no,
 dense_rank() over (order by p.pallet_number asc) AS row_num,
 row_number() over (partition by p.puc order by p.pallet_number desc) AS puc_seq,
@@ -116,7 +117,7 @@ puc_groups.blocks,
 puc_groups.carton_quantity,
 p.pallet_number as pallet_id,
 p.marketing_variety,
-COALESCE(CAST(p.size_ref AS text) ,CAST(p.actual_count as text)) as count,  
+COALESCE(CAST(p.size_ref AS text) ,CAST(p.actual_count as text)) as count,
 p.pick_ref  as sell_by_code,
 COALESCE(p.inspection_variety,p.customer_variety,p.marketing_variety) as variety,
 headers.*,
