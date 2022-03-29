@@ -98,8 +98,8 @@ select * from
 (
 WITH puc_groups as (
 					select  
-					string_agg(distinct p.puc,',') pucs,
-					string_agg(distinct p.orchard,',') blocks,
+					string_agg(distinct p.puc,',' order by  p.puc) pucs,
+					string_agg(distinct p.orchard,',' order by p.orchard) blocks,
 					p.pallet_number as pallet_id,
 					sum(p.carton_quantity) carton_quantity
 					 from vw_pallet_sequence_flat p
@@ -1137,6 +1137,7 @@ Address:]]></text>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1146,7 +1147,7 @@ Address:]]></text>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top">
 					<font size="10"/>
-					<paragraph firstLineIndent="2"/>
+					<paragraph firstLineIndent="2" leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{blocks}]]></textFieldExpression>
 			</textField>
@@ -1226,6 +1227,7 @@ Address:]]></text>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1235,7 +1237,7 @@ Address:]]></text>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Top">
 					<font size="10"/>
-					<paragraph firstLineIndent="2"/>
+					<paragraph firstLineIndent="2" leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{pucs}]]></textFieldExpression>
 			</textField>
