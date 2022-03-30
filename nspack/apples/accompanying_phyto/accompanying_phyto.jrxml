@@ -26,7 +26,7 @@
 select * from
 (
 WITH ph AS(
-		select 1810 as load_id,string_agg(distinct p.phc,',') packhouse_code
+		select $P{load_id} as load_id,string_agg(distinct p.phc,',') packhouse_code
 	     from pallets p
 	    where load_id = $P{load_id}
 ),
@@ -41,7 +41,7 @@ commodities as (
 	where load_id = $P{load_id}
 ),
 packhouse_contact AS(
-        SELECT  1810  as load_id ,people.first_name,people.surname ,contact_methods.contact_method_code, contact_method_types.contact_method_type
+        SELECT  $P{load_id}  as load_id ,people.first_name,people.surname ,contact_methods.contact_method_code, contact_method_types.contact_method_type
         FROM party_contact_methods
         JOIN contact_methods ON contact_methods.id = party_contact_methods.contact_method_id
         JOIN contact_method_types ON contact_method_types.id = contact_methods.contact_method_type_id

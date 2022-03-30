@@ -65,7 +65,7 @@ order by pucs desc]]>
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
-				<reportElement x="272" y="1" width="42" height="12" uuid="d88ef14d-4b61-4dfe-a569-48d6da5c48c1">
+				<reportElement x="270" y="1" width="42" height="12" uuid="d88ef14d-4b61-4dfe-a569-48d6da5c48c1">
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -102,7 +102,7 @@ order by pucs desc]]>
 				<text><![CDATA[Intake Document]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="314" y="1" width="37" height="12" uuid="75e0d10b-11b2-48b5-b972-432886787f79">
+				<reportElement x="312" y="1" width="37" height="12" uuid="75e0d10b-11b2-48b5-b972-432886787f79">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -113,13 +113,13 @@ order by pucs desc]]>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
+				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Total Plts]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="72" y="0" width="200" height="12" uuid="77cc9478-4ecc-4f4d-b949-08a06920e76b">
+				<reportElement x="72" y="0" width="198" height="12" uuid="77cc9478-4ecc-4f4d-b949-08a06920e76b">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -161,7 +161,7 @@ order by pucs desc]]>
 				<textFieldExpression><![CDATA[$F{intake}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="272" y="0" width="42" height="30" uuid="1b261a61-e9a7-46af-9292-05c3d9da2393">
+				<reportElement x="270" y="0" width="42" height="30" uuid="1b261a61-e9a7-46af-9292-05c3d9da2393">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -177,7 +177,7 @@ order by pucs desc]]>
 				<textFieldExpression><![CDATA[$F{ctns}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement stretchType="ContainerBottom" x="72" y="0" width="200" height="30" uuid="0e02a99c-cb60-4ff8-b2a7-d684e5551af1">
+				<reportElement stretchType="ContainerBottom" x="72" y="0" width="198" height="30" uuid="0e02a99c-cb60-4ff8-b2a7-d684e5551af1">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
@@ -219,7 +219,7 @@ order by pucs desc]]>
 		<band height="12" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isBlankWhenNull="true">
-				<reportElement x="314" y="0" width="35" height="12" uuid="b4fffe9c-1c12-4cbe-93d3-26f60c2053e0">
+				<reportElement x="312" y="0" width="37" height="12" uuid="b4fffe9c-1c12-4cbe-93d3-26f60c2053e0">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -233,7 +233,7 @@ order by pucs desc]]>
 				<textFieldExpression><![CDATA[$V{total_plts}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="272" y="0" width="42" height="12" uuid="9c309fab-43b2-4af7-b83d-53e18b7f0671">
+				<reportElement x="270" y="0" width="42" height="12" uuid="9c309fab-43b2-4af7-b83d-53e18b7f0671">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -264,7 +264,7 @@ order by pucs desc]]>
 				<text><![CDATA[  Totals]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="72" y="0" width="200" height="12" uuid="c8f486c3-db3d-4708-82e3-6853a4a90440">
+				<reportElement x="72" y="0" width="198" height="12" uuid="c8f486c3-db3d-4708-82e3-6853a4a90440">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
