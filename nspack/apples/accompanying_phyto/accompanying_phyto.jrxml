@@ -31,7 +31,7 @@ WITH ph AS(
 	    where load_id = $P{load_id}
 ),
 commodities as (
-	 select string_agg(distinct commodities.description,',')as commodity ,max(1810)  as load_id
+	 select string_agg(distinct commodities.description,',')as commodity ,$P{load_id}  as load_id
       from pallet_sequences ps
     JOIN pallets p ON p.id = ps.pallet_id
     LEFT JOIN loads ON loads.id = p.load_id
