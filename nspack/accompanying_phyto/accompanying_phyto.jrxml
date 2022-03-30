@@ -98,8 +98,8 @@ select * from
 (
 WITH puc_groups as (
 					select  
-					string_agg(distinct p.puc,',' order by  p.puc) pucs,
-					string_agg(distinct p.orchard,',' order by p.orchard) blocks,
+					string_agg( p.puc,',' order by p.pallet_number,p.id) pucs,
+					string_agg( p.orchard,',' order by p.pallet_number,p.id) blocks,
 					p.pallet_number as pallet_id,
 					sum(p.carton_quantity) carton_quantity
 					 from vw_pallet_sequence_flat p

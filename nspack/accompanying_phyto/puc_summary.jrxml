@@ -4,7 +4,7 @@
 	<property name="ireport.zoom" value="3.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="kr_nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="sr"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="267"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="726"/>
@@ -20,7 +20,7 @@ WHEN NOT govt_inspection_passed THEN consignment_note_number || 'F'::text
 WHEN govt_inspection_passed THEN consignment_note_number
 ELSE ''::text
 END,edi_in_consignment_note_number)  AS intake
-,string_agg(distinct puc , ',' order by puc) as pucs,SUM(carton_quantity) as total_ctns,COUNT(distinct pallet_number) as total_pallets
+,string_agg( puc , ',' order by pallet_number, id) as pucs,SUM(carton_quantity) as total_ctns,COUNT(distinct pallet_number) as total_pallets
 from vw_pallet_sequence_flat
 where $X{IN,vw_pallet_sequence_flat.pallet_id,pallet_ids}
 group by
@@ -138,29 +138,31 @@ order by pucs desc]]>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="12" splitType="Stretch">
+		<band height="30" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isBlankWhenNull="true">
-				<reportElement x="0" y="0" width="70" height="11" uuid="814e04ec-4f8f-4c9f-8cdb-c2da9656d625">
+				<reportElement x="0" y="0" width="70" height="30" uuid="814e04ec-4f8f-4c9f-8cdb-c2da9656d625">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
 					<leftPen lineWidth="1.0"/>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{intake}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="212" y="0" width="43" height="11" uuid="1b261a61-e9a7-46af-9292-05c3d9da2393">
+				<reportElement x="212" y="0" width="43" height="30" uuid="1b261a61-e9a7-46af-9292-05c3d9da2393">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
 					<bottomPen lineWidth="1.0"/>
@@ -172,11 +174,12 @@ order by pucs desc]]>
 				<textFieldExpression><![CDATA[$F{ctns}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="70" y="0" width="141" height="11" uuid="0e02a99c-cb60-4ff8-b2a7-d684e5551af1">
+				<reportElement x="70" y="0" width="141" height="30" uuid="0e02a99c-cb60-4ff8-b2a7-d684e5551af1">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
 					<bottomPen lineWidth="1.0"/>
@@ -189,8 +192,9 @@ order by pucs desc]]>
 				<textFieldExpression><![CDATA[$F{pucs}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="256" y="0" width="40" height="11" uuid="d9eb339d-295f-4a3d-960d-f5e244eb58e7">
+				<reportElement x="256" y="0" width="40" height="30" uuid="d9eb339d-295f-4a3d-960d-f5e244eb58e7">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
 					<bottomPen lineWidth="1.0"/>
