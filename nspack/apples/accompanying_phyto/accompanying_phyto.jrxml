@@ -98,15 +98,15 @@ select * from
 (
 WITH puc_groups as (
 					select
-					string_agg( p.puc,',' order by   p.pallet_number,p.id) pucs,
-					string_agg( p.marketing_orchard,',' order by p.pallet_number,p.id) blocks,
+					string_agg( p.marketing_puc,',' order by   p.pallet_sequence_number) pucs,
+					string_agg( p.marketing_orchard,',' order by p.pallet_sequence_number) blocks,
 					p.pallet_number as pallet_id
 					,sum(p.carton_quantity) carton_quantity
 					 from vw_pallet_sequence_flat p
 					where load_id =  $P{load_id}
 					group by
 					pallet_number
-	                order by  pallet_number
+
                    )
 select
 row_number() over (partition by p.pallet_number order by p.pallet_number desc) AS seq_no,
