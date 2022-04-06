@@ -1,19 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pallet_detail" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="57a0c595-5448-465f-8162-0e6517403bd3">
 	<property name="ireport.zoom" value="2.253944402704733"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/dispatch_consignment"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44:80/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ud local"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
 	<parameter name="load_id" class="java.lang.Integer"/>
 	<parameter name="scartons_equals_pallets" class="java.lang.Boolean"/>
 	<queryString language="SQL">
-		<![CDATA[select fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack) AS edi_size_count,
+		<![CDATA[WITH plt_qty as (
+	select   pallets.pallet_number,pallet_sequences.pallet_sequence_number,
+	count(distinct pallets.id) as plt_qty,
+   rank() OVER (PARTITION BY pallets.pallet_number ORDER BY pallet_sequences.pallet_sequence_number) AS rank
+FROM pallets
+JOIN pallet_sequences ON pallet_sequences.pallet_id = pallets.id
+WHERE pallets.load_id = $P{load_id}
+ group by pallets.pallet_number,pallet_sequences.pallet_sequence_number
+)
+select fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack) AS edi_size_count,
   pallets.pallet_number,
   sum(pallet_sequences.carton_quantity)carton_quantity,
   fn_party_role_name(pallet_sequences.marketing_org_party_role_id) AS organization_code, -- ? OK?
@@ -27,8 +36,9 @@
   pallet_sequences.pick_ref AS encrypt_pick_ref,
   inventory_codes.inventory_code,
   target_market_groups.target_market_group_name AS  target_market_code,
-  sum(pallet_sequences.carton_quantity / pallets.carton_quantity)  AS plt_qty,
-  pucs.puc_code AS puc,
+    plt_qty.plt_qty,
+       rank() OVER (PARTITION BY pallets.pallet_number ORDER BY pallet_sequences.pallet_sequence_number) AS rank,
+      pucs.puc_code AS puc,
   cargo_temperatures.temperature_code AS temp_tail,
   pallet_sequences.product_chars AS pt_product_characteristics,
   fruit_actual_counts_for_packs.actual_count_for_pack AS actual_size_count_code,
@@ -44,6 +54,7 @@
 pallet_sequences.phyto_data
 FROM pallets
 JOIN pallet_sequences ON pallet_sequences.pallet_id = pallets.id
+LEFT JOIN plt_qty on plt_qty.pallet_number = pallets.pallet_number and plt_qty.rank = 1 and plt_qty.pallet_sequence_number = pallet_sequences.pallet_sequence_number
 LEFT JOIN cultivar_groups ON cultivar_groups.id = pallet_sequences.cultivar_group_id
 LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
 JOIN marketing_varieties ON marketing_varieties.id = pallet_sequences.marketing_variety_id
@@ -85,7 +96,7 @@ group by pallets.pallet_number,pallets.load_id,
   pallet_bases.pallet_base_code ,
   organizations.long_description ,
   pallets.phc ,
-pallets.gross_weight,
+pallets.gross_weight,plt_qty.plt_qty,pallet_sequences.pallet_sequence_number,
 pallet_sequences.phyto_data,  marketing_varieties.marketing_variety_code
 ,fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack) 
 ORDER BY
@@ -166,6 +177,10 @@ ORDER BY
 	<field name="plt_qty" class="java.lang.Long">
 		<property name="com.jaspersoft.studio.field.name" value="plt_qty"/>
 		<property name="com.jaspersoft.studio.field.label" value="plt_qty"/>
+	</field>
+	<field name="rank" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="rank"/>
+		<property name="com.jaspersoft.studio.field.label" value="rank"/>
 	</field>
 	<field name="puc" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="puc"/>
