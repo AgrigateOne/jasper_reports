@@ -100,6 +100,7 @@ pallets.gross_weight,plt_qty.plt_qty,pallet_sequences.pallet_sequence_number,
 pallet_sequences.phyto_data,  marketing_varieties.marketing_variety_code
 ,fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack) 
 ORDER BY
+pallets.pallet_number,pallet_sequences.pallet_sequence_number,
   commodities.code,
   marketing_varieties.marketing_variety_code,
   grades.grade_code,
