@@ -59,7 +59,7 @@ END,edi_in_consignment_note_number) as addendum_manifest,
   pol,
   temp_code,
   booking_reference,
-  case when orchard='DEPOT_UNKNOWN'then '' else orchard end orchard ,
+  case when orchard='DEPOT_UNKNOWN'then '' else marketing_orchard end orchard ,
   phyto_data
   FROM vw_pallet_sequence_flat
   JOIN marketing_varieties ON marketing_varieties.marketing_variety_code = vw_pallet_sequence_flat.marketing_variety
@@ -111,7 +111,7 @@ END,edi_in_consignment_note_number),
   inspection_point,
   shipped_at,
   coalesce(inspection_class,grade),
-  case when orchard='DEPOT_UNKNOWN'then '' else orchard end,
+  case when orchard='DEPOT_UNKNOWN'then '' else marketing_orchard end,
   phyto_data,
   production_region,production_area
 )  AS sq]]>
