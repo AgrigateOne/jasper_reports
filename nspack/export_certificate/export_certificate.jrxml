@@ -54,7 +54,7 @@ sum(ps.carton_quantity) as ctn_qty,
 sum(ps.nett_weight / ps.carton_quantity) as nett_mass,
 pod_ports.port_code as arrival_port_name,
 case rmt_classes.description when 'CAT I' then 'CLASS 1' when 'CAT II' THEN 'CLASS 2' ELSE rmt_classes.description END as product_class_description,
-destination_countries.country_name as country_medium_code,
+destination_countries.description as country_medium_code,
 tp.exporter as trading_partner_code,
 tp.address_line_1||','|| tp.address_line_2||','||tp.city||','||tp.postal_code || ',' || tp.country as trader_name
 from pallets p
@@ -78,7 +78,7 @@ join  trading_partner tp on trading_partner_int = 30
 where loads.id=$P{load_id}
 group by
 vessel_code,exporter_certificate_code,commodities.code,mv.description,commodities.description
-,load_containers.container_code,pod_ports.port_code,rmt_classes.description,destination_countries.country_name
+,load_containers.container_code,pod_ports.port_code,rmt_classes.description,destination_countries.description
 ,tp.exporter,tp.address_line_1,tp.address_line_2,tp.city,tp.postal_code,tp.country,loads.id
 
 ]]>
