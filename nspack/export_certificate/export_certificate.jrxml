@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="export_certificate" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="2feb80a9-cf2b-4ffa-aba7-8f4f0e675df4">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="kr_nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="158"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="831"/>
 	<parameter name="load_id" class="java.lang.Integer"/>
@@ -51,7 +51,7 @@ ELSE mv.description END  as marketing_variety_description,
 commodities.description as commodity_desc,
 load_containers.container_code,
 sum(ps.carton_quantity) as ctn_qty,
-sum(ps.nett_weight / ps.carton_quantity) as nett_mass,
+sum(ps.nett_weight) as nett_mass,
 pod_ports.port_code as arrival_port_name,
 case rmt_classes.description when 'CAT I' then 'CLASS 1' when 'CAT II' THEN 'CLASS 2' ELSE rmt_classes.description END as product_class_description,
 destination_countries.description as country_medium_code,
@@ -79,9 +79,7 @@ where loads.id=$P{load_id}
 group by
 vessel_code,exporter_certificate_code,commodities.code,mv.description,commodities.description
 ,load_containers.container_code,pod_ports.port_code,rmt_classes.description,destination_countries.description
-,tp.exporter,tp.address_line_1,tp.address_line_2,tp.city,tp.postal_code,tp.country,loads.id
-
-]]>
+,tp.exporter,tp.address_line_1,tp.address_line_2,tp.city,tp.postal_code,tp.country,loads.id]]>
 	</queryString>
 	<field name="vessel_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="vessel_code"/>
@@ -673,7 +671,7 @@ vessel_code,exporter_certificate_code,commodities.code,mv.description,commoditie
 		<band height="802" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<line>
-				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" x="340" y="352" width="1" height="250" uuid="626ef890-6c1d-4dbb-b720-18da06671198">
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" x="340" y="352" width="1" height="80" uuid="626ef890-6c1d-4dbb-b720-18da06671198">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="local_mesure_unitheight" value="pixel"/>
@@ -697,7 +695,7 @@ vessel_code,exporter_certificate_code,commodities.code,mv.description,commoditie
 				</reportElement>
 			</rectangle>
 			<line>
-				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" x="141" y="352" width="1" height="250" uuid="1fb7a87f-5701-4cd5-a3c7-92b14248c66a">
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" x="141" y="352" width="1" height="80" uuid="1fb7a87f-5701-4cd5-a3c7-92b14248c66a">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="local_mesure_unitheight" value="pixel"/>
@@ -709,7 +707,7 @@ vessel_code,exporter_certificate_code,commodities.code,mv.description,commoditie
 				</reportElement>
 			</line>
 			<line>
-				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" x="416" y="352" width="1" height="250" uuid="284c2d82-22b0-4f84-a0e1-41a4109c6450">
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" x="416" y="352" width="1" height="80" uuid="284c2d82-22b0-4f84-a0e1-41a4109c6450">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="local_mesure_unitheight" value="pixel"/>
