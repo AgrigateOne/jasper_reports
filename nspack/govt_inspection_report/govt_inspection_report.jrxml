@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gov_inspection_sheet" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b276ed72-36fe-4eb1-8898-57bb00d5eee1">
 	<property name="ireport.zoom" value="1.7524694974069621"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="46"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/first_intake"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="live_kromco_nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ud local"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="158"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="831"/>
@@ -149,6 +149,7 @@ scrapped_pallet_number AS (
 	govt_inspection_sheets.upn,
 	fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack) AS edi_size_count
     ,inspection_failure_reasons.failure_reason
+    ,govt_inspection_sheets.reinspection
 	from govt_inspection_sheets
     left join govt_inspection_pallets  ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
     left join pallets p on govt_inspection_pallets.pallet_id =p.id
@@ -295,6 +296,12 @@ coalesce(scrapped_pallet_number.gap_certification,
 		  fruit_size_references.size_reference,
 		  fruit_actual_counts_for_packs.actual_count_for_pack)
 		  )  AS edi_size_count
+       ,COALESCE(scrapped_pallet_number.reinspection,govt_inspection_sheets.reinspection) AS reinspection,
+		CASE WHEN  (COALESCE(scrapped_pallet_number.reinspection,govt_inspection_sheets.reinspection)) THEN
+			'Yes'
+		ELSE
+		     'No'
+		END reinspection_result
 
 	from govt_inspection_sheets
 	LEFT join govt_inspection_pallets  ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
@@ -570,6 +577,14 @@ coalesce(scrapped_pallet_number.gap_certification,
 		<property name="com.jaspersoft.studio.field.name" value="edi_size_count"/>
 		<property name="com.jaspersoft.studio.field.label" value="edi_size_count"/>
 	</field>
+	<field name="reinspection" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="reinspection"/>
+		<property name="com.jaspersoft.studio.field.label" value="reinspection"/>
+	</field>
+	<field name="reinspection_result" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="reinspection_result"/>
+		<property name="com.jaspersoft.studio.field.label" value="reinspection_result"/>
+	</field>
 	<sortField name="pallet_number"/>
 	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
@@ -819,8 +834,10 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
 			</subreport>
 			<textField evaluationTime="Report">
-				<reportElement x="322" y="183" width="82" height="13" uuid="e44d19c0-656f-4e54-aa9e-8767d601d467"/>
-				<textElement textAlignment="Center"/>
+				<reportElement x="404" y="183" width="82" height="13" uuid="e44d19c0-656f-4e54-aa9e-8767d601d467">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$V{fail_pallet_id1}]]></textFieldExpression>
 			</textField>
 			<staticText>
@@ -845,6 +862,20 @@ coalesce(scrapped_pallet_number.gap_certification,
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{upn}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="263" y="209" width="90" height="13" uuid="5a2bc8ba-7ad8-4b6f-a482-9245deb9ed80">
+					<printWhenExpression><![CDATA[$F{reinspection_result} == "Yes"]]></printWhenExpression>
+				</reportElement>
+				<text><![CDATA[Is Reinspection:]]></text>
+			</staticText>
+			<textField evaluationTime="Report">
+				<reportElement x="404" y="209" width="82" height="13" uuid="cdcfc196-1900-42c9-84b9-78b699d64692">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<printWhenExpression><![CDATA[$F{reinspection_result} == "Yes"]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{reinspection_result} == "Yes"]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
