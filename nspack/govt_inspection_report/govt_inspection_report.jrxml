@@ -875,7 +875,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 					<printWhenExpression><![CDATA[$F{reinspection_result} == "Yes"]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Left"/>
-				<textFieldExpression><![CDATA[$F{reinspection_result} == "Yes"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{reinspection_result}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
