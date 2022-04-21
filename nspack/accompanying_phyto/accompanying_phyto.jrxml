@@ -88,7 +88,7 @@ left join inspectors on inspectors.id= govt_inspection_sheets.inspector_id
 left join party_roles on inspectors.inspector_party_role_id= party_roles.id
 left join parties on party_roles.party_id=parties.id
 left join packhouse_contact on  30 = packhouse_contact.ids
-left join loads on p.load_id = loads.id
+left join depots on depots.depot_code = p.depot
 left join ph on  30 = ph.ids
 left join commodities on commodities.ids = 30
 where  $X{IN,p.pallet_id,pallet_ids}
