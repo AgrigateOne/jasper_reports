@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="addendum" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="22c9f520-d5e9-4af2-ac4c-ad2be98d416a">
 	<property name="ireport.zoom" value="1.7524694974069637"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/addendum"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44:80/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Live Kromco"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack_KR_Live"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="283"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="717"/>
@@ -29,7 +29,7 @@ cast(sum(sequence_nett_weight) as dec(9,2)) as sequence_nett_weight,
 COALESCE(customer_variety,marketing_varieties.inspection_variety,marketing_variety) as variety,
   pallet_number,
   production_area,
-  puc,
+  coalesce(marketing_puc,puc) puc,
    phc,
   region,
   commodity,
@@ -59,14 +59,14 @@ END,edi_in_consignment_note_number) as addendum_manifest,
   pol,
   temp_code,
   booking_reference,
-  case when orchard='DEPOT_UNKNOWN'then '' else marketing_orchard end orchard ,
+  case when orchard='DEPOT_UNKNOWN'then '' else coalesce(marketing_orchard,orchard) end orchard ,
   phyto_data
   FROM vw_pallet_sequence_flat
   JOIN marketing_varieties ON marketing_varieties.marketing_variety_code = vw_pallet_sequence_flat.marketing_variety
   WHERE vw_pallet_sequence_flat.load_id=$P{load_id} 
   group by COALESCE(customer_variety,marketing_varieties.inspection_variety,marketing_variety) ,
   pallet_number,
-  puc,
+  coalesce(marketing_puc,puc) ,
   phc,
   region,
   commodity,
@@ -111,10 +111,13 @@ END,edi_in_consignment_note_number),
   inspection_point,
   shipped_at,
   coalesce(inspection_class,grade),
-  case when orchard='DEPOT_UNKNOWN'then '' else marketing_orchard end,
+  case when orchard='DEPOT_UNKNOWN'then '' else coalesce(marketing_orchard,orchard) end,
   phyto_data,
   production_region,production_area
-)  AS sq]]>
+)  AS sq
+
+
+]]>
 	</queryString>
 	<field name="total_row" class="java.lang.Long">
 		<property name="com.jaspersoft.studio.field.name" value="total_row"/>
