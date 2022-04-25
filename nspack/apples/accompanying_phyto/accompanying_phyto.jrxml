@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="accompanying_phyto" language="groovy" printOrder="Horizontal" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="10" bottomMargin="10" whenResourceMissingType="Empty" uuid="57a0c595-5448-465f-8162-0e6517403bd3">
 	<property name="ireport.zoom" value="2.253944402704733"/>
 	<property name="ireport.x" value="0"/>
@@ -22,117 +22,162 @@
 	<parameter name="load_id" class="java.lang.Integer"/>
 	<parameter name="from_depot" class="java.lang.String"/>
 	<queryString language="SQL">
-		<![CDATA[WITH headers as (
-select * from
-(
-WITH ph AS(
-		select $P{load_id} as load_id,string_agg(distinct p.phc,',') packhouse_code
-	     from pallets p
-	    where load_id = $P{load_id}
-),
-commodities as (
-	 select string_agg(distinct commodities.description,',')as commodity ,$P{load_id}  as load_id
-      from pallet_sequences ps
-    JOIN pallets p ON p.id = ps.pallet_id
-    LEFT JOIN loads ON loads.id = p.load_id
-     JOIN cultivar_groups ON cultivar_groups.id = ps.cultivar_group_id
-     LEFT JOIN cultivars ON cultivars.id = ps.cultivar_id
-     LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
-	where load_id = $P{load_id}
-),
-packhouse_contact AS(
-        SELECT  $P{load_id}  as load_id ,people.first_name,people.surname ,contact_methods.contact_method_code, contact_method_types.contact_method_type
-        FROM party_contact_methods
-        JOIN contact_methods ON contact_methods.id = party_contact_methods.contact_method_id
-        JOIN contact_method_types ON contact_method_types.id = contact_methods.contact_method_type_id
-		JOIN party_roles pr on party_contact_methods.party_id = pr.party_id
-		JOIN people on pr.person_id = people.id
-		WHERE pr.id in (
-		SELECT pr.id
-					FROM public.party_roles pr
-					WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'PACKHOUSE_CONTACT_PERSON') LIMIT 1
-		)
+		<![CDATA[WITH headers AS (
+    SELECT
+        *
+    FROM ( WITH ph AS (
+            SELECT
+                $P{load_id} AS load_id,
+                string_agg(DISTINCT p.phc, ',') packhouse_code
+            FROM
+                pallets p
+            WHERE
+                load_id = $P{load_id}),
+            commodities AS (
+                SELECT
+                    string_agg(DISTINCT commodities.description, ',') AS commodity,
+                    $P{load_id} AS load_id
+                FROM
+                    pallet_sequences ps
+                    JOIN pallets p ON p.id = ps.pallet_id
+                    LEFT JOIN loads ON loads.id = p.load_id
+                    JOIN cultivar_groups ON cultivar_groups.id = ps.cultivar_group_id
+                    LEFT JOIN cultivars ON cultivars.id = ps.cultivar_id
+                    LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
+                WHERE
+                    load_id = $P{load_id}),
+                packhouse_contact AS (
+                    SELECT
+                        $P{load_id} AS load_id,
+                        people.first_name,
+                        people.surname,
+                        contact_methods.contact_method_code,
+                        contact_method_types.contact_method_type
+                    FROM
+                        party_contact_methods
+                        JOIN contact_methods ON contact_methods.id = party_contact_methods.contact_method_id
+                        JOIN contact_method_types ON contact_method_types.id = contact_methods.contact_method_type_id
+                        JOIN party_roles pr ON party_contact_methods.party_id = pr.party_id
+                        JOIN people ON pr.person_id = people.id
+                    WHERE
+                        pr.id IN (
+                            SELECT
+                                pr.id
+                            FROM
+                                public.party_roles pr
+                            WHERE
+                                pr.role_id = (
+                                    SELECT
+                                        id
+                                    FROM
+                                        roles
+                                    WHERE
+                                        name = 'PACKHOUSE_CONTACT_PERSON')
+                                LIMIT 1))
+                        SELECT DISTINCT
+                            commodities.commodity,
+                            p.load_id,
+                            '00' || CAST(p.load_id AS text) AS document_number,
+                            destination_countries.description AS importing_country,
+                            p.exporter,
+                            (
+                                SELECT
+                                    pr.id
+                                FROM
+                                    public.party_roles pr
+                                WHERE
+                                    pr.role_id = (
+                                        SELECT
+                                            id
+                                        FROM
+                                            roles
+                                        WHERE
+                                            name = 'IMPLEMENTATION_OWNER')
+                                    LIMIT 1) AS implementation_owner_party_role_id,
+                            (
+                                SELECT
+                                    pr.id
+                                FROM
+                                    public.party_roles pr
+                                WHERE
+                                    pr.role_id = (
+                                        SELECT
+                                            id
+                                        FROM
+                                            roles
+                                        WHERE
+                                            name = 'CUSTOMER_CONTACT_PERSON')
+                                    LIMIT 1) AS packhouse_contact_person_party_role_id,
+                                'Daff_Seq_No' AS daff_seq_no,
+                                p.final_destination AS importing_country,
+                                packhouse_contact.first_name phc_first_name,
+                                packhouse_contact.surname AS phc_surname,
+                                packhouse_contact.contact_method_code AS phc_contact,
+                                packhouse_contact.contact_method_type AS phc_contact_method_type,
+                                depots.magisterial_district,
+                                ph.packhouse_code,
+                                'kr' AS depot,
+                                '' AS puc,
+                                '' AS inspector_code,
+                                '' AS inspector_tel_no_1
+                            FROM
+                                vw_pallet_sequence_flat p
+                            LEFT JOIN govt_inspection_pallets ON govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
+                            LEFT JOIN govt_inspection_sheets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+                            LEFT JOIN destination_countries ON destination_countries.id = govt_inspection_sheets.destination_country_id
+                            LEFT JOIN inspectors ON inspectors.id = govt_inspection_sheets.inspector_id
+                            LEFT JOIN party_roles ON inspectors.inspector_party_role_id = party_roles.id
+                            LEFT JOIN parties ON party_roles.party_id = parties.id
+                            LEFT JOIN packhouse_contact ON p.load_id = packhouse_contact.load_id
+                            LEFT JOIN depots ON depots.depot_code = p.depot
+                            LEFT JOIN ph ON p.load_id = ph.load_id
+                            LEFT JOIN commodities ON commodities.load_id = p.load_id
+                        WHERE
+                            p.load_id = $P{load_id}) AS d
 )
-select  distinct
-commodities.commodity,
-p.load_id,
-'00' || CAST(p.load_id as text) as document_number,
-destination_countries.description  as importing_country,
-p.exporter,
-
-(SELECT pr.id
-FROM public.party_roles pr
-WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) AS implementation_owner_party_role_id,
-
-(SELECT pr.id
-FROM public.party_roles pr
-WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'CUSTOMER_CONTACT_PERSON') LIMIT 1) AS packhouse_contact_person_party_role_id,
-
-'Daff_Seq_No' as daff_seq_no,
-p.final_destination  as importing_country,
-packhouse_contact.first_name phc_first_name,
-packhouse_contact.surname as phc_surname,
-packhouse_contact.contact_method_code as phc_contact,
-packhouse_contact.contact_method_type as phc_contact_method_type,
-depots.magisterial_district,
-ph.packhouse_code ,
-'kr' as depot,
-'' as puc,
-'' as inspector_code,
-'' as inspector_tel_no_1
- from vw_pallet_sequence_flat p
-LEFT JOIN govt_inspection_pallets ON govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
-LEFT JOIN govt_inspection_sheets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
-LEFT JOIN destination_countries ON destination_countries.id = govt_inspection_sheets.destination_country_id
-left join inspectors on inspectors.id= govt_inspection_sheets.inspector_id
-left join party_roles on inspectors.inspector_party_role_id= party_roles.id
-left join parties on party_roles.party_id=parties.id
-left join packhouse_contact on  p.load_id = packhouse_contact.load_id
-left join depots on depots.depot_code = p.depot
-left join ph on  p.load_id = ph.load_id
-left join commodities on commodities.load_id = p.load_id
-where p.load_id =  $P{load_id}
-) as d
-	)
-select * from
-(
-WITH puc_groups as (
-					select
-					string_agg( p.marketing_puc,',' order by   p.pallet_sequence_number) pucs,
-					string_agg( p.marketing_orchard,',' order by p.pallet_sequence_number) blocks,
-					p.pallet_number as pallet_id
-					,sum(p.carton_quantity) carton_quantity
-					 from vw_pallet_sequence_flat p
-					where load_id =  $P{load_id}
-					group by
-					pallet_number
-
-                   )
-select
-row_number() over (partition by p.pallet_number order by p.pallet_number desc) AS seq_no,
-dense_rank() over (order by p.pallet_number asc) AS row_num,
-row_number() over (partition by p.puc order by p.pallet_number desc) AS puc_seq,
-puc_groups.pucs,
-puc_groups.blocks,
-puc_groups.carton_quantity,
-p.pallet_number as pallet_id,
-p.marketing_variety,
-COALESCE(CAST(p.size_ref AS text) ,CAST(p.actual_count as text)) as count,
-p.pick_ref  as sell_by_code,
-COALESCE(p.inspection_variety,p.customer_variety,p.marketing_variety) as variety,
-headers.*,
-'' as puc,
-'' as inspector_code,
-'' as inspector_tel_no_1,
-loads.exporter_party_role_id
-from vw_pallet_sequence_flat p
-join puc_groups on puc_groups.pallet_id = p.pallet_number
-join headers on p.load_id = headers.load_id
-join loads on p.load_id=loads.id
-where p.load_id =  $P{load_id}
-) as d
-where seq_no = 1
-order by row_num asc]]>
+        SELECT
+            *
+        FROM ( WITH puc_groups AS (
+                SELECT
+                    string_agg(coalesce(p.marketing_puc,p.puc) , ',' ORDER BY p.pallet_sequence_number) pucs,
+                string_agg(coalesce(p.marketing_orchard,p.orchard), ',' ORDER BY p.pallet_sequence_number) blocks,
+                p.pallet_number AS pallet_id,
+                sum(p.carton_quantity) carton_quantity
+            FROM
+                vw_pallet_sequence_flat p
+            WHERE
+                load_id = $P{load_id}
+            GROUP BY
+                pallet_number
+)
+            SELECT
+                row_number() OVER (PARTITION BY p.pallet_number ORDER BY p.pallet_number DESC) AS seq_no,
+                dense_rank() OVER (ORDER BY p.pallet_number ASC) AS row_num,
+                row_number() OVER (PARTITION BY p.puc ORDER BY p.pallet_number DESC) AS puc_seq,
+                puc_groups.pucs,
+                puc_groups.blocks,
+                puc_groups.carton_quantity,
+                p.pallet_number AS pallet_id,
+                p.marketing_variety,
+                COALESCE(CAST(p.size_ref AS text), CAST(p.actual_count AS text)) AS count,
+                p.pick_ref AS sell_by_code,
+                COALESCE(p.inspection_variety, p.customer_variety, p.marketing_variety) AS variety,
+                headers.*,
+                '' AS puc,
+                '' AS inspector_code,
+                '' AS inspector_tel_no_1,
+                loads.exporter_party_role_id
+            FROM
+                vw_pallet_sequence_flat p
+                JOIN puc_groups ON puc_groups.pallet_id = p.pallet_number
+                JOIN headers ON p.load_id = headers.load_id
+                JOIN loads ON p.load_id = loads.id
+            WHERE
+                p.load_id = $P{load_id}) AS d
+    WHERE
+        seq_no = 1
+    ORDER BY
+        row_num ASC]]>
 	</queryString>
 	<field name="seq_no" class="java.lang.Long">
 		<property name="com.jaspersoft.studio.field.name" value="seq_no"/>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="puc_summary" language="groovy" printOrder="Horizontal" pageWidth="350" pageHeight="95" columnWidth="350" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="cba47b92-bbda-40d5-b5d7-7f12c9f0b664">
 	<property name="ireport.zoom" value="3.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="live_kromco_nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="267"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="726"/>
@@ -19,7 +19,7 @@ WHEN NOT govt_inspection_passed THEN consignment_note_number || 'F'::text
 WHEN govt_inspection_passed THEN consignment_note_number
 ELSE ''::text
 END,edi_in_consignment_note_number)  AS intake
-,string_agg( distinct marketing_puc , ','  ) as pucs,SUM(carton_quantity) as total_ctns,COUNT(distinct pallet_number) as total_pallets
+,string_agg( distinct coalesce(marketing_puc,puc) , ','  ) as pucs,SUM(carton_quantity) as total_ctns,COUNT(distinct pallet_number) as total_pallets
 from vw_pallet_sequence_flat
 where load_id = $P{load_id} 
 group by
@@ -29,10 +29,10 @@ WHEN NOT govt_inspection_passed THEN consignment_note_number || 'F'::text
 WHEN govt_inspection_passed THEN consignment_note_number
 ELSE ''::text
 END,edi_in_consignment_note_number)
-
 )as d
 group by intake,pucs
-order by pucs desc]]>
+order by pucs desc
+]]>
 	</queryString>
 	<field name="intake" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="intake"/>
