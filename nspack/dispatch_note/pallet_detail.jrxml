@@ -71,7 +71,7 @@ LEFT JOIN party_roles ON party_roles.id = pallet_sequences.marketing_org_party_r
 LEFT JOIN organizations ON organizations.party_id = party_roles.party_id
 LEFT JOIN inventory_codes ON inventory_codes.id = pallet_sequences.inventory_code_id
 left JOIN pucs ON pucs.id = pallet_sequences.puc_id
-left JOIN pucs marketingpuc ON marketpuc.id = pallet_sequences.marketing_puc_id 
+left JOIN pucs marketingpuc ON marketingpuc.id = pallet_sequences.marketing_puc_id 
 LEFT JOIN load_containers ON load_containers.load_id = pallets.load_id
 LEFT JOIN cargo_temperatures ON cargo_temperatures.id = load_containers.cargo_temperature_id
 LEFT JOIN pallet_formats ON pallet_formats.id = pallets.pallet_format_id
@@ -89,7 +89,7 @@ group by pallets.pallet_number,pallets.load_id,
   pallet_sequences.pick_ref ,
   inventory_codes.inventory_code,
   target_market_groups.target_market_group_name ,
-  pucs.puc_code ,
+  coalesce(marketingpuc.puc_code ,pucs.puc_code) ,
   cargo_temperatures.temperature_code,
   pallet_sequences.product_chars ,
   fruit_actual_counts_for_packs.actual_count_for_pack ,
