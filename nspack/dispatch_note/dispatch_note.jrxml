@@ -103,11 +103,12 @@ loads.customer_party_role_id,
 loads.exporter_party_role_id,pcs.pucs,coalesce(cargo_temperatures.temperature_code ,'')cargo_temp
 FROM loads
 join 
-(select  pallets.load_id ,string_agg(distinct pucs.puc_code,',') pucs
+(select  pallets.load_id ,string_agg(distinct coalesce(marketingpuc.puc_code ,pucs.puc_code),',') pucs
 from pallets  
 join pallet_sequences ps on ps.pallet_id=pallets.id 
 join pucs on ps.puc_id=pucs.id 
-group by pallets.load_id ) pcs  on pcs.load_id=loads.id
+left JOIN pucs marketingpuc ON marketingpuc.id = ps.marketing_puc_id 
+group by pallets.load_id  ) pcs  on pcs.load_id=loads.id
 JOIN depots ON depots.id = loads.depot_id
 JOIN destination_cities ON destination_cities.id = loads.final_destination_id
 JOIN voyage_ports pol_voyage_ports ON pol_voyage_ports.id = loads.pol_voyage_port_id

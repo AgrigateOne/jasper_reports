@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pallet_detail" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="57a0c595-5448-465f-8162-0e6517403bd3">
 	<property name="ireport.zoom" value="2.253944402704733"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/dispatch_consignment"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44:80/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ud local"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
@@ -38,7 +38,7 @@ select fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.u
   target_market_groups.target_market_group_name AS  target_market_code,
     plt_qty.plt_qty,
        rank() OVER (PARTITION BY pallets.pallet_number ORDER BY pallet_sequences.pallet_sequence_number) AS rank,
-      pucs.puc_code AS puc,
+     coalesce(marketingpuc.puc_code ,pucs.puc_code) AS puc,
   cargo_temperatures.temperature_code AS temp_tail,
   pallet_sequences.product_chars AS pt_product_characteristics,
   fruit_actual_counts_for_packs.actual_count_for_pack AS actual_size_count_code,
@@ -70,7 +70,8 @@ LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = pa
 LEFT JOIN party_roles ON party_roles.id = pallet_sequences.marketing_org_party_role_id
 LEFT JOIN organizations ON organizations.party_id = party_roles.party_id
 LEFT JOIN inventory_codes ON inventory_codes.id = pallet_sequences.inventory_code_id
-JOIN pucs ON pucs.id = pallet_sequences.puc_id
+left JOIN pucs ON pucs.id = pallet_sequences.puc_id
+left JOIN pucs marketingpuc ON marketpuc.id = pallet_sequences.marketing_puc_id 
 LEFT JOIN load_containers ON load_containers.load_id = pallets.load_id
 LEFT JOIN cargo_temperatures ON cargo_temperatures.id = load_containers.cargo_temperature_id
 LEFT JOIN pallet_formats ON pallet_formats.id = pallets.pallet_format_id
