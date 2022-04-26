@@ -17,7 +17,7 @@
   pallet_sequences.sell_by_code,
   fruit_size_references.size_reference AS size_count_code,
   grades.grade_code,
-  fn_party_role_name(pallet_sequences.marketing_org_party_role_id) AS organization_code,
+  fn_party_role_org_code(pallet_sequences.marketing_org_party_role_id) AS organization_code,
   target_market_groups.target_market_group_name AS target_market_code,
   SUM(pallet_sequences.carton_quantity) AS ctn_qty,
   SUM(CAST(pallet_sequences.carton_quantity AS numeric(5,1)) / CAST(pallets.carton_quantity AS numeric(5,1))) AS plt_qty,
