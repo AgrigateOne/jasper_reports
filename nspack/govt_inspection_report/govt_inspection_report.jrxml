@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gov_inspection_sheet" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b276ed72-36fe-4eb1-8898-57bb00d5eee1">
 	<property name="ireport.zoom" value="1.7524694974069621"/>
 	<property name="ireport.x" value="0"/>
@@ -973,7 +973,9 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<text><![CDATA[Farm]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="301" y="45" width="26" height="13" uuid="4238b2dd-5c08-4ce9-8433-6ce9ab06b0e8"/>
+				<reportElement x="301" y="45" width="22" height="13" uuid="4238b2dd-5c08-4ce9-8433-6ce9ab06b0e8">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
@@ -997,7 +999,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<text><![CDATA[Barcode]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="327" y="45" width="26" height="13" uuid="e93064c5-0d37-4608-93d1-8e96113273f4"/>
+				<reportElement x="323" y="45" width="26" height="13" uuid="e93064c5-0d37-4608-93d1-8e96113273f4"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
@@ -1190,7 +1192,9 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[$F{variety}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="327" y="0" width="26" height="11" uuid="b6a1a1d5-1c55-45f4-a80b-11c2e262fe98"/>
+				<reportElement x="323" y="0" width="26" height="11" uuid="b6a1a1d5-1c55-45f4-a80b-11c2e262fe98">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
@@ -1211,7 +1215,9 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[$F{commodity}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="353" y="0" width="30" height="11" uuid="7277c671-32e6-45ae-87a8-47d2efbf9f57"/>
+				<reportElement x="349" y="0" width="34" height="11" uuid="7277c671-32e6-45ae-87a8-47d2efbf9f57">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
@@ -1263,7 +1269,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[$F{puc}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="301" y="0" width="26" height="11" uuid="a3bfe17f-f5d6-4afc-98d8-87fbc10aff91"/>
+				<reportElement x="301" y="0" width="22" height="11" uuid="a3bfe17f-f5d6-4afc-98d8-87fbc10aff91"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
