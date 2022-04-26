@@ -183,14 +183,17 @@ ORDER BY
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
 				<reportElement x="234" y="0" width="24" height="13" uuid="244c8c2a-36bc-40bb-bd85-7f164e792fc5"/>
+				<textElement textAlignment="Center"/>
 				<text><![CDATA[TM]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="198" y="0" width="34" height="13" uuid="9a009dd0-b8a8-4bcd-9076-619bffabe57b"/>
+				<textElement textAlignment="Center"/>
 				<text><![CDATA[Grade]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="400" y="0" width="56" height="13" uuid="cbb4af4c-a8ec-4727-bdaa-2b052740d789"/>
+				<textElement textAlignment="Right"/>
 				<text><![CDATA[Nett]]></text>
 			</staticText>
 			<staticText>
@@ -202,22 +205,27 @@ ORDER BY
 			</staticText>
 			<staticText>
 				<reportElement x="130" y="0" width="30" height="13" uuid="50a69642-51d4-43ad-b24e-66338478841e"/>
+				<textElement textAlignment="Center"/>
 				<text><![CDATA[Org]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="38" y="0" width="32" height="13" uuid="0c71e07b-f74f-446b-b611-4ffacbcab570"/>
+				<textElement textAlignment="Center"/>
 				<text><![CDATA[Var]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="11" y="0" width="27" height="13" uuid="ac2c4b3c-4771-44f7-ae30-0643b0a154e2"/>
+				<textElement textAlignment="Center"/>
 				<text><![CDATA[Com]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="70" y="0" width="30" height="13" uuid="9a901880-78b7-4b13-a41a-3dcc595c0fa0"/>
+				<textElement textAlignment="Center"/>
 				<text><![CDATA[Mark]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="100" y="0" width="30" height="13" uuid="852e8698-f663-4a1f-b6b8-68520924d500"/>
+				<textElement textAlignment="Center"/>
 				<text><![CDATA[Pack]]></text>
 			</staticText>
 			<staticText>
@@ -226,10 +234,12 @@ ORDER BY
 			</staticText>
 			<staticText>
 				<reportElement x="320" y="0" width="34" height="13" uuid="79b307fa-49b8-49a2-9005-e3749c9627a7"/>
+				<textElement textAlignment="Center"/>
 				<text><![CDATA[Inv]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="460" y="0" width="50" height="13" uuid="777f68a0-4c9f-46db-a5cf-ce0620582047"/>
+				<textElement textAlignment="Right"/>
 				<text><![CDATA[Gross]]></text>
 			</staticText>
 			<textField>
@@ -248,6 +258,7 @@ ORDER BY
 			</textField>
 			<staticText>
 				<reportElement x="163" y="0" width="34" height="13" uuid="d2df65a4-653c-4d53-a800-7a6b5666255e"/>
+				<textElement textAlignment="Center"/>
 				<text><![CDATA[Sell By]]></text>
 			</staticText>
 		</band>
@@ -258,13 +269,15 @@ ORDER BY
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isBlankWhenNull="true">
 				<reportElement x="198" y="0" width="34" height="13" uuid="c65eaaa8-3700-4e38-a6c3-c227fa11e65d"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{grade_code}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="234" y="0" width="24" height="13" uuid="ce49baa0-3ad3-4fb8-987f-e71ec8af5cd6"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{target_market_code}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0.00" isBlankWhenNull="true">
+			<textField pattern="###0.0" isBlankWhenNull="true">
 				<reportElement x="400" y="0" width="56" height="13" uuid="fe1509a6-4821-4b34-b102-09f9d13ee9a1"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{nett_weight}]]></textFieldExpression>
@@ -276,22 +289,27 @@ ORDER BY
 			</textField>
 			<textField>
 				<reportElement x="130" y="0" width="30" height="13" uuid="a8eda34a-2baf-45d3-bdc8-6abd38b4618c"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{organization_code}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="11" y="0" width="27" height="13" uuid="ef6c6f97-4f0b-4a17-8faf-ede6db7440f6"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{commodity_code}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="38" y="0" width="32" height="13" uuid="da9e9337-e9b9-4ece-a1ac-aa6c2c166a00"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{variety_short_long}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="70" y="0" width="30" height="13" uuid="ed70b627-2b59-4700-b334-cbc8385195b3"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{brand_code}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="100" y="0" width="30" height="13" uuid="7bffe4ab-3e50-4820-abd7-a72a327229a2"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{old_pack_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
@@ -300,9 +318,10 @@ ORDER BY
 			</textField>
 			<textField>
 				<reportElement x="320" y="0" width="34" height="13" uuid="11b74f3b-29af-4bfb-bc75-0aa453e34583"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{inventory_code}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0.00" isBlankWhenNull="true">
+			<textField pattern="###0.0" isBlankWhenNull="true">
 				<reportElement x="460" y="0" width="50" height="13" uuid="c7668a75-d5a1-4dd7-abb6-1bb83bbfa669"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{gross_weight}]]></textFieldExpression>
@@ -316,6 +335,7 @@ ORDER BY
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="163" y="0" width="34" height="13" uuid="277fbb92-601a-4dd3-915b-6444d3fc8884"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{sell_by_code}]]></textFieldExpression>
 			</textField>
 		</band>

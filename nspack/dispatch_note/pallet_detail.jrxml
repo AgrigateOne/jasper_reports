@@ -271,7 +271,7 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 		<band height="16" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
-				<reportElement x="183" y="0" width="48" height="13" uuid="f97a0554-b35a-40fc-9835-53113d9ec278">
+				<reportElement x="180" y="0" width="48" height="13" uuid="f97a0554-b35a-40fc-9835-53113d9ec278">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -281,7 +281,7 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 				<text><![CDATA[Size/Count]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="156" y="0" width="25" height="13" uuid="ea84ba02-ce39-4351-b6e8-d4146e083fa2">
+				<reportElement x="155" y="0" width="25" height="13" uuid="ea84ba02-ce39-4351-b6e8-d4146e083fa2">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -292,19 +292,19 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 				<text><![CDATA[Grade]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="291" y="0" width="18" height="13" uuid="33f7e29d-785e-4ea7-8756-82eeb686a57a">
+				<reportElement x="292" y="0" width="18" height="13" uuid="33f7e29d-785e-4ea7-8756-82eeb686a57a">
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[TM]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="309" y="0" width="21" height="13" uuid="1df34564-fa14-4587-b4bd-26aa6a70f779">
+				<reportElement x="310" y="0" width="21" height="13" uuid="1df34564-fa14-4587-b4bd-26aa6a70f779">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Inv]]></text>
@@ -314,7 +314,7 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Org]]></text>
@@ -323,7 +323,7 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 				<reportElement x="5" y="0" width="20" height="13" uuid="fc717367-f9b2-4fe3-a83d-2c02abed876a">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Comm]]></text>
@@ -332,7 +332,7 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 				<reportElement x="50" y="0" width="25" height="13" uuid="ea214d68-7033-4e1b-a4d2-80c0c4fa6185">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Pack]]></text>
@@ -342,7 +342,7 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Var]]></text>
@@ -352,16 +352,16 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Mark]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="232" y="0" width="24" height="13" uuid="cd902a99-0472-4d5f-baea-4d25f140c924">
+				<reportElement x="228" y="0" width="33" height="13" uuid="cd902a99-0472-4d5f-baea-4d25f140c924">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Nett]]></text>
@@ -386,16 +386,16 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[PUC]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="256" y="0" width="35" height="13" uuid="7224d875-64b4-466d-aed0-85006952e8f5">
+				<reportElement x="261" y="0" width="31" height="13" uuid="7224d875-64b4-466d-aed0-85006952e8f5">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center">
+				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Gross]]></text>
@@ -443,7 +443,7 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Sell By]]></text>
@@ -454,7 +454,7 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 		<band height="13" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isBlankWhenNull="true">
-				<reportElement x="156" y="0" width="25" height="12" uuid="de9932c2-c446-4757-b958-d0584900efba">
+				<reportElement x="155" y="0" width="25" height="12" uuid="de9932c2-c446-4757-b958-d0584900efba">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -464,7 +464,7 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 				<textFieldExpression><![CDATA[$F{grade_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="183" y="0" width="48" height="12" uuid="9c731255-1902-476b-923d-a15baf50e179">
+				<reportElement x="180" y="0" width="48" height="12" uuid="9c731255-1902-476b-923d-a15baf50e179">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -474,19 +474,19 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 				<textFieldExpression><![CDATA[$F{edi_size_count}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="291" y="0" width="18" height="12" uuid="0eae09a3-de76-406a-889b-960d0d9447e4">
+				<reportElement x="292" y="0" width="18" height="12" uuid="0eae09a3-de76-406a-889b-960d0d9447e4">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{target_market_code}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="309" y="0" width="21" height="12" uuid="dea65c3d-a870-47d2-bb1e-c846a1163fc1">
+				<reportElement x="310" y="0" width="21" height="12" uuid="dea65c3d-a870-47d2-bb1e-c846a1163fc1">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{inventory_code}]]></textFieldExpression>
@@ -506,7 +506,7 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{organization_code}]]></textFieldExpression>
@@ -516,7 +516,7 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{brand_code}]]></textFieldExpression>
@@ -525,7 +525,7 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 				<reportElement x="50" y="0" width="25" height="12" uuid="7882e60d-a0be-42af-8421-b21a1b176e6e">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{old_pack_code}]]></textFieldExpression>
@@ -534,7 +534,7 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 				<reportElement x="5" y="0" width="20" height="12" uuid="6b01930b-71ac-4e7e-8e9b-2acab2da4cb9">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{commodity_code}]]></textFieldExpression>
@@ -560,16 +560,16 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{variety_short_long}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0.00" isBlankWhenNull="true">
-				<reportElement x="232" y="0" width="24" height="12" uuid="a3451f06-dded-4e0f-a608-643d24fecd15">
+			<textField pattern="###0.0" isBlankWhenNull="true">
+				<reportElement x="228" y="0" width="33" height="12" uuid="a3451f06-dded-4e0f-a608-643d24fecd15">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Left">
+				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{seq_nett_weight}]]></textFieldExpression>
@@ -578,13 +578,13 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 				<reportElement x="331" y="0" width="30" height="12" uuid="b17b0077-a9f2-4801-9fda-08d1e27a795c">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{puc}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0.00" isBlankWhenNull="true">
-				<reportElement x="256" y="0" width="35" height="12" uuid="b0e40b6d-ab68-4744-bc95-7b4e2384b52c">
+			<textField pattern="###0.0" isBlankWhenNull="true">
+				<reportElement x="261" y="0" width="31" height="12" uuid="b0e40b6d-ab68-4744-bc95-7b4e2384b52c">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right">
