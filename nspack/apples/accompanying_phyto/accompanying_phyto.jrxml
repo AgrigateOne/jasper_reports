@@ -166,12 +166,15 @@
                 '' AS puc,
                 '' AS inspector_code,
                 '' AS inspector_tel_no_1,
-                loads.exporter_party_role_id
+                loads.exporter_party_role_id,
+                orders.internal_order_number
             FROM
                 vw_pallet_sequence_flat p
                 JOIN puc_groups ON puc_groups.pallet_id = p.pallet_number
                 JOIN headers ON p.load_id = headers.load_id
                 JOIN loads ON p.load_id = loads.id
+                left join orders_loads on   orders_loads.load_id =loads.id
+                left join orders on orders_loads.order_id =orders.id
             WHERE
                 p.load_id = $P{load_id}) AS d
     WHERE
@@ -331,6 +334,11 @@
 		<property name="com.jaspersoft.studio.field.name" value="exporter_party_role_id"/>
 		<property name="com.jaspersoft.studio.field.label" value="exporter_party_role_id"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="loads"/>
+	</field>
+	<field name="internal_order_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="internal_order_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="internal_order_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="orders"/>
 	</field>
 	<variable name="sq" class="java.lang.Integer">
 		<variableExpression><![CDATA[$F{puc_seq}]]></variableExpression>
@@ -1052,6 +1060,29 @@ Address:]]></text>
 				</reportElement>
 				<imageExpression><![CDATA["../../logos/sa_ministry_of_agric.png"]]></imageExpression>
 			</image>
+			<textField isBlankWhenNull="true">
+				<reportElement x="221" y="229" width="172" height="33" uuid="934f5eb4-880d-4061-a93c-067a401ce3d0">
+					<property name="net.sf.jasperreports.text.truncate.at.char" value="true"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement>
+					<font size="9"/>
+					<paragraph firstLineIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{internal_order_number}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<columnHeader>
