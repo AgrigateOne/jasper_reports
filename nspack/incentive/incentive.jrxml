@@ -179,7 +179,8 @@ sum(CASE WHEN incentive < 0 THEN
     packers_shift
 
 FROM
-    calc_sql2;]]>
+    calc_sql2
+    order by fruitphour desc;]]>
 	</queryString>
 	<field name="party_name" class="java.lang.String"/>
 	<field name="start_date_time" class="java.sql.Timestamp"/>
