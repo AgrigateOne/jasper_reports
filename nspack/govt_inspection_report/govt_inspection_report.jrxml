@@ -356,7 +356,8 @@ coalesce(scrapped_pallet_number.gap_certification,
 
      WHERE
   govt_inspection_sheets.id = $P{govt_inspection_sheet_id}
-  AND $P!{QueryCondition} order by inspection_tm,commodity, variety, grade, std_pack, edi_size_count]]>
+  AND $P!{QueryCondition} 
+  ORDER BY inspection_tm,commodity, variety, grade, p.pallet_number,ps.pallet_sequence_number]]>
 	</queryString>
 	<field name="seq_no" class="java.lang.Long">
 		<property name="com.jaspersoft.studio.field.name" value="seq_no"/>
