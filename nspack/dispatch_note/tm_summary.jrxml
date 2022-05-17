@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="210" pageHeight="205" columnWidth="210" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cfe44653-e3bf-48f8-8773-306d8c01ff40">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ud local"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="287"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="702"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="load_id" class="java.lang.Integer"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+ grades.grade_code,
+   target_market_groups.target_market_group_name AS  target_market_code,
+ fn_edi_size_count(
+	 standard_pack_codes.use_size_ref_for_edi, 
+	 commodities.use_size_ref_for_edi,
+	 fruit_size_references.edi_out_code, 
+	 fruit_size_references.size_reference,
+	 fruit_actual_counts_for_packs.actual_count_for_pack
+   ) AS edi_size_count,
+ SUM(CAST(pallet_sequences.carton_quantity AS numeric(5,1)) / CAST(pallets.carton_quantity AS numeric(5,1))) AS plt_qty
+FROM loads
+JOIN pallets ON pallets.load_id = loads.id
+JOIN pallet_sequences ON pallet_sequences.pallet_id = pallets.id
+LEFT JOIN fruit_size_references ON fruit_size_references.id = pallet_sequences.fruit_size_reference_id
+LEFT JOIN cultivar_groups ON cultivar_groups.id = pallet_sequences.cultivar_group_id
+LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
+JOIN grades ON grades.id = pallet_sequences.grade_id
+LEFT JOIN standard_pack_codes ON standard_pack_codes.id = pallet_sequences.standard_pack_code_id
+LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = pallet_sequences.fruit_actual_counts_for_pack_id
+JOIN target_market_groups ON target_market_groups.id = pallet_sequences.packed_tm_group_id
+WHERE loads.id = $P{load_id}
+GROUP BY  commodities.code,target_market_groups.target_market_group_name,
+ grades.grade_code,  fruit_size_references.size_reference,
+standard_pack_codes.standard_pack_code, fruit_actual_counts_for_packs.actual_count_for_pack,pallets.load_id, 
+fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack) 
+ORDER BY  commodities.code,
+ grades.grade_code,
+ standard_pack_codes.standard_pack_code,
+ fruit_actual_counts_for_packs.actual_count_for_pack,target_market_groups.target_market_group_name]]>
+	</queryString>
+	<field name="grade_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="grade_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="grade_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades"/>
+	</field>
+	<field name="target_market_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="target_market_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="target_market_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="target_market_groups"/>
+	</field>
+	<field name="edi_size_count" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="edi_size_count"/>
+		<property name="com.jaspersoft.studio.field.label" value="edi_size_count"/>
+	</field>
+	<field name="plt_qty" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="plt_qty"/>
+		<property name="com.jaspersoft.studio.field.label" value="plt_qty"/>
+	</field>
+	<variable name="plt_qty_1" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{plt_qty}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="14" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="0" y="0" width="48" height="13" uuid="400dd001-607e-4f85-a84a-331e1416c624"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Grade]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="55" y="0" width="48" height="13" uuid="c19c889c-9bf6-483b-b7b2-ebda8f34e6b2">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Size/Count]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="0" width="48" height="13" uuid="56676388-2f61-4972-9fa8-8a1753c312b7">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[TM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="160" y="0" width="48" height="13" uuid="10f716fa-870d-4ef2-a4b2-490eaba44c11">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="12" width="210" height="1" uuid="8ce088f7-487a-4ad6-b637-8d62f3bc884a">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement x="110" y="0" width="48" height="11" uuid="7cb400de-9014-47fc-a5d7-facaa923e52b">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{target_market_code}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="48" height="11" uuid="ab347fc1-793c-4cb6-b326-e2c7ec529613"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{grade_code}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="55" y="0" width="48" height="11" uuid="70d683b5-60e8-4470-9d22-d8081d4f8780">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{edi_size_count}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.##">
+				<reportElement x="160" y="0" width="48" height="15" uuid="b16d018e-0ff0-4025-ab91-378c19218517">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{plt_qty}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="15" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<line>
+				<reportElement x="0" y="0" width="208" height="1" uuid="50b38132-159f-48ce-8ede-7eb92b6937ba">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="160" y="0" width="41" height="13" uuid="f1c81288-6e94-409d-ab6b-478b3918c79c">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{plt_qty_1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>
