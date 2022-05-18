@@ -1203,7 +1203,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{count}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{edi_size_count}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="24" y="0" width="23" height="11" uuid="278427f5-157d-4fd2-98f4-235ebe92df29"/>
