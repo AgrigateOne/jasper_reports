@@ -586,7 +586,12 @@ coalesce(scrapped_pallet_number.gap_certification,
 		<property name="com.jaspersoft.studio.field.name" value="reinspection_result"/>
 		<property name="com.jaspersoft.studio.field.label" value="reinspection_result"/>
 	</field>
+	<sortField name="packed_tm_group"/>
+	<sortField name="commodity"/>
+	<sortField name="variety"/>
+	<sortField name="grade"/>
 	<sortField name="pallet_number"/>
+	<sortField name="seq_no"/>
 	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
 	</variable>
