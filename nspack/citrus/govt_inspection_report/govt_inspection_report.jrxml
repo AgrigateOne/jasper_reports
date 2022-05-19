@@ -817,42 +817,12 @@ coalesce(scrapped_pallet_number.gap_certification,
 					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["party_role_address.jasper"]]></subreportExpression>
-			</subreport>
-			<subreport>
-				<reportElement x="215" y="56" width="145" height="95" uuid="f1e0e8c6-53da-44c0-ac5c-fce6141644f3">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<subreportParameter name="party_role_id">
-					<subreportParameterExpression><![CDATA[$F{inspection_billing_party_role_id}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="address_type">
-					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="name_prefix">
-					<subreportParameterExpression><![CDATA["Billing: "]]></subreportParameterExpression>
-				</subreportParameter>
-				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["party_role_address.jasper"]]></subreportExpression>
-			</subreport>
-			<subreport>
-				<reportElement x="413" y="56" width="138" height="95" uuid="49c58c05-e219-42f4-b9de-643127f72fd8">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<subreportParameter name="party_role_id">
-					<subreportParameterExpression><![CDATA[$F{exporter_party_role_id}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="address_type">
-					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="name_prefix">
-					<subreportParameterExpression><![CDATA["Exporter: "]]></subreportParameterExpression>
-				</subreportParameter>
-				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["party_role_address.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA["../../shared/party_role_address.jasper"
+
+
+
+
+]]></subreportExpression>
 			</subreport>
 			<textField evaluationTime="Report">
 				<reportElement x="404" y="183" width="82" height="13" uuid="e44d19c0-656f-4e54-aa9e-8767d601d467">
@@ -898,6 +868,51 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$F{reinspection_result}]]></textFieldExpression>
 			</textField>
+			<subreport>
+				<reportElement x="368" y="56" width="138" height="95" uuid="a0bf3073-058a-4b54-8824-f0ce849b868a">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<subreportParameter name="party_role_id">
+					<subreportParameterExpression><![CDATA[$F{exporter_party_role_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="address_type">
+					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="name_prefix">
+					<subreportParameterExpression><![CDATA["Exporter: "]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["../../shared/party_role_address.jasper"
+
+
+
+
+]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="170" y="56" width="145" height="95" uuid="8d7f6c80-5f76-44e9-93e6-11ab432f8b30">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="party_role_id">
+					<subreportParameterExpression><![CDATA[$F{inspection_billing_party_role_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="address_type">
+					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="name_prefix">
+					<subreportParameterExpression><![CDATA["Billing: "]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["../../shared/party_role_address.jasper"
+
+
+
+
+]]></subreportExpression>
+			</subreport>
 		</band>
 	</title>
 	<pageHeader>
