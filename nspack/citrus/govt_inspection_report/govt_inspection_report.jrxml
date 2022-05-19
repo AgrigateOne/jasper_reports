@@ -1,0 +1,1444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gov_inspection_sheet" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b276ed72-36fe-4eb1-8898-57bb00d5eee1">
+	<property name="ireport.zoom" value="1.7524694974069621"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="46"/>
+	<property name="ireport.jasperserver.reportUnit" value="/FG/first_intake"/>
+	<property name="ireport.jasperserver.url" value="http://172.16.16.44/jasperserver/services/repository"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ud local"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="158"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="831"/>
+	<subDataset name="dataset1" uuid="c85ecac9-39da-4aaa-997f-4e9b10bcfb3c"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Users"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="inspection_passed" class="java.lang.Boolean"/>
+	<parameter name="QueryCondition" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{inspection_passed}.booleanValue() ? "govt_inspection_pallets.passed=true" : "govt_inspection_pallets.passed=false"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="govt_inspection_sheet_id" class="java.lang.Integer"/>
+	<parameter name="signee_caption" class="java.lang.String">
+		<defaultValueExpression><![CDATA["Logistics"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[WITH ggn AS (
+    Select distinct govt_inspection_pallets.govt_inspection_sheet_id
+	,p.id
+   ,CASE WHEN COALESCE(pucs.gap_code,pcs.gap_code) IS NOT NULL AND govt_inspection_sheets.created_at
+	            BETWEEN COALESCE(pucs.gap_code_valid_from,pcs.gap_code_valid_from) AND COALESCE(pucs.gap_code_valid_until,pcs.gap_code_valid_until) THEN
+      COALESCE(pucs.gap_code,pcs.gap_code)
+    ELSE
+      NULL
+    END gap_code
+	from govt_inspection_sheets
+    left join govt_inspection_pallets  ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+    left join pallets p on govt_inspection_pallets.pallet_id =p.id
+    left join pallet_sequences ps on ps.pallet_id=p.id
+	left join pallet_sequences sps on ps.scrapped_from_pallet_id=p.id
+    left join pucs ON pucs.id = ps.puc_id
+	left join pucs pcs on pcs.id = sps.puc_id
+  WHERE
+    govt_inspection_sheets.id = $P{govt_inspection_sheet_id}
+),
+ggn_validation AS (
+  SELECT
+    string_agg(DISTINCT gap_code::text, '; '::text ORDER BY gap_code::text) gap_code,
+  govt_inspection_sheet_id
+FROM
+  ggn
+GROUP BY
+  govt_inspection_sheet_id
+),
+scrapped_pallet_number AS (
+  SELECT DISTINCT
+	  govt_inspection_pallets.passed as govt_inspection_pallets_passed,
+  destination_regions.destination_region_name,
+
+	  CASE WHEN pucs.gap_code IS NOT NULL
+    AND govt_inspection_sheets.created_at BETWEEN pucs.gap_code_valid_from AND pucs.gap_code_valid_until THEN
+    'global gap certified'
+  ELSE
+    NULL
+  END gap_certification,
+    COALESCE(marketing_varieties.marketing_variety_code,marketing_varieties.inspection_variety) as marketing_variety,
+    COALESCE(cvv.marketing_variety_code,marketing_varieties.inspection_variety, marketing_varieties.marketing_variety_code) AS variety,
+     p.id as scrapped_pallet_id,
+	 p.pallet_number,
+	ps.pallet_sequence_number,
+	fruit_actual_counts_for_packs.actual_count_for_pack AS actual_count,
+     farms.farm_code AS farm,
+     pucs.puc_code AS puc,
+     COALESCE(registered_orchards.orchard_code,orchards.orchard_code) AS orchard,
+     commodities.code AS commodity,
+     cultivar_groups.cultivar_group_code AS cultivar_group,
+     cultivars.cultivar_name AS cultivar,
+     fn_party_role_name(ps.marketing_org_party_role_id) AS marketing_org,
+     target_market_groups.target_market_group_name AS packed_tm_group,
+     target_markets.target_market_name AS target_market,
+     marks.mark_code AS mark,
+     pm_marks.packaging_marks,
+     inventory_codes.inventory_code,
+     cvv.marketing_variety_code AS customer_variety,
+      std_fruit_size_counts.size_count_value AS std_size,
+     fruit_size_references.size_reference AS size_ref,
+     basic_pack_codes.basic_pack_code AS basic_pack,
+     standard_pack_codes.standard_pack_code AS std_pack,
+     ps.product_resource_allocation_id AS resource_allocation_id,
+     ps.marketing_order_number AS order_number,
+     seasons.season_code AS season,
+     p.phc,
+     pallet_bases.pallet_base_code AS pallet_base,
+     pallet_stack_types.stack_type_code AS stack_type,
+     fn_pallet_verification_failed(p.id) AS pallet_verification_failed,
+     ps.verified,
+     ps.verification_passed,
+     pallet_verification_failure_reasons.reason AS verification_failure_reason,
+     ps.verification_result,
+     ps.verified_at,
+     ps.extended_columns,
+     ps.carton_quantity,
+     ps.scanned_from_carton_id AS scanned_carton,
+     ps.scrapped_at AS seq_scrapped_at,
+     ps.exit_ref AS seq_exit_ref,
+     ps.pick_ref,
+     p.carton_quantity AS pallet_carton_quantity,
+     ps.carton_quantity::numeric / p.carton_quantity::numeric AS pallet_size,
+     p.build_status,
+     grades.grade_code AS grade,
+     grades.rmt_grade,
+     grades.inspection_class,
+     ps.sell_by_code,
+     ps.product_chars,
+     govt_inspection_pallets.govt_inspection_sheet_id,
+     COALESCE(govt_inspection_sheets.inspection_point, p.edi_in_inspection_point) AS inspection_point,
+     inspected_dest_country.country_name AS inspected_dest_country,
+     p.last_govt_inspection_pallet_id,
+     p.depot_pallet,
+     p.edi_in_consignment_note_number,
+     COALESCE(p.govt_reinspection_at, p.govt_first_inspection_at)::date AS inspection_date,
+     p.repacked,
+     p.repacked_at,
+     p.repacked_at::date AS repacked_date,
+     ps.repacked_from_pallet_id,
+     repacked_from_pallets.pallet_number AS repacked_from_pallet_number,
+     ps.phyto_data,
+     ps.created_by,
+     ps.verified_by,
+     fruit_size_references.size_reference,
+     govt_inspection_sheets.consignment_note_number,
+     ps.gtin_code,
+     rmt_classes.rmt_class_code,
+     ps.tu_labour_product_id,
+     ps.ru_labour_product_id,
+     ps.fruit_sticker_ids,
+     ps.tu_sticker_ids,
+     pucs.gap_code,
+     pucs.gap_code_valid_from,
+    pucs.gap_code_valid_until,
+	CASE
+	WHEN target_markets.inspection_tm THEN target_markets.target_market_name
+	ELSE target_market_groups.target_market_group_name
+	END AS inspection_tm,
+	inspected_dest_country.iso_country_code,
+	fn_party_role_name (inspectors.inspector_party_role_id) AS inspector,
+	govt_inspection_sheets.created_at inspection_date_time,
+	govt_inspection_sheets.inspection_billing_party_role_id,
+	govt_inspection_sheets.exporter_party_role_id,
+	govt_inspection_sheets.upn,
+  fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack
+	                  ) as edi_size_count,
+  	COALESCE(CAST(fruit_actual_counts_for_packs.actual_count_for_pack AS  text),
+	         fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi,
+							   commodities.use_size_ref_for_edi,
+							   fruit_size_references.edi_out_code,
+							   fruit_size_references.size_reference,
+							   fruit_actual_counts_for_packs.actual_count_for_pack
+	                          )
+			 ) AS count
+    ,inspection_failure_reasons.failure_reason
+    ,govt_inspection_sheets.reinspection
+	from govt_inspection_sheets
+    left join govt_inspection_pallets  ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+    left join pallets p on govt_inspection_pallets.pallet_id =p.id
+    join pallet_sequences ps on p.id=ps.scrapped_from_pallet_id
+     LEFT JOIN pallets repacked_from_pallets ON repacked_from_pallets.id = ps.repacked_from_pallet_id
+     LEFT JOIN plant_resources plt_packhouses ON plt_packhouses.id = p.plt_packhouse_resource_id
+     LEFT JOIN plant_resources plt_lines ON plt_lines.id = p.plt_line_resource_id
+     LEFT JOIN plant_resources packhouses ON packhouses.id = ps.packhouse_resource_id
+     LEFT JOIN plant_resources lines ON lines.id = ps.production_line_id
+     LEFT JOIN plant_resources palletizing_bays ON palletizing_bays.id = p.palletizing_bay_resource_id
+     JOIN locations ON locations.id = p.location_id
+     JOIN farms ON farms.id = ps.farm_id
+     LEFT JOIN farm_groups ON farms.farm_group_id = farm_groups.id
+     JOIN production_regions ON production_regions.id = farms.pdn_region_id
+     JOIN pucs ON pucs.id = ps.puc_id
+     JOIN orchards ON orchards.id = ps.orchard_id
+     JOIN cultivar_groups ON cultivar_groups.id = ps.cultivar_group_id
+     LEFT JOIN cultivars ON cultivars.id = ps.cultivar_id
+     LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
+     JOIN marketing_varieties ON marketing_varieties.id = ps.marketing_variety_id
+     JOIN marks ON marks.id = ps.mark_id
+     LEFT JOIN pm_marks ON pm_marks.id = ps.pm_mark_id
+     JOIN inventory_codes ON inventory_codes.id = ps.inventory_code_id
+     JOIN target_market_groups ON target_market_groups.id = ps.packed_tm_group_id
+     LEFT JOIN target_markets ON target_markets.id = ps.target_market_id
+     JOIN grades ON grades.id = ps.grade_id
+     LEFT JOIN customer_varieties ON customer_varieties.id = ps.customer_variety_id
+     LEFT JOIN marketing_varieties cvv ON cvv.id = customer_varieties.variety_as_customer_variety_id
+     LEFT JOIN std_fruit_size_counts ON std_fruit_size_counts.id = ps.std_fruit_size_count_id
+     LEFT JOIN fruit_size_references ON fruit_size_references.id = ps.fruit_size_reference_id
+     LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = ps.fruit_actual_counts_for_pack_id
+     JOIN basic_pack_codes ON basic_pack_codes.id = ps.basic_pack_code_id
+     JOIN standard_pack_codes ON standard_pack_codes.id = ps.standard_pack_code_id
+     JOIN seasons ON seasons.id = ps.season_id
+     JOIN cartons_per_pallet ON cartons_per_pallet.id = ps.cartons_per_pallet_id
+     LEFT JOIN pallet_formats ON pallet_formats.id = p.pallet_format_id
+     LEFT JOIN pallet_bases ON pallet_bases.id = pallet_formats.pallet_base_id
+     LEFT JOIN pallet_stack_types ON pallet_stack_types.id = pallet_formats.pallet_stack_type_id
+     LEFT JOIN pallet_verification_failure_reasons ON pallet_verification_failure_reasons.id = ps.pallet_verification_failure_reason_id
+     LEFT JOIN destination_countries inspected_dest_country ON inspected_dest_country.id = govt_inspection_sheets.destination_country_id
+	  LEFT JOIN destination_regions ON destination_regions.id = govt_inspection_sheets.destination_region_id
+     LEFT JOIN edi_in_transactions ON edi_in_transactions.id = p.edi_in_transaction_id
+     LEFT JOIN standard_product_weights ON standard_product_weights.standard_pack_id = standard_pack_codes.id AND standard_product_weights.commodity_id = commodities.id
+     LEFT JOIN pucs marketing_pucs ON marketing_pucs.id = ps.marketing_puc_id
+     LEFT JOIN registered_orchards ON registered_orchards.id = ps.marketing_orchard_id
+     LEFT JOIN rmt_classes ON rmt_classes.id = ps.rmt_class_id
+	LEFT JOIN inspectors ON inspectors.id = govt_inspection_sheets.inspector_id
+    LEFT JOIN inspection_failure_reasons  on inspection_failure_reasons.id = govt_inspection_pallets.failure_reason_id
+
+  WHERE
+    govt_inspection_sheet_id = $P{govt_inspection_sheet_id}
+    AND $P!{QueryCondition}
+)
+SELECT row_number () OVER (partition by p.id ORDER by ps.id )as seq_no,case when (row_number () OVER (partition by p.id ORDER by ps.id ))=1 then true else false end as print_barcode,
+
+
+  ggn_validation.gap_code,
+  CASE WHEN NOT (govt_inspection_pallets.passed) THEN
+    govt_inspection_pallets.id
+  ELSE
+    NULL
+  END fail_pallet_id,
+  (
+    SELECT
+      pr.id
+    FROM
+      public.party_roles pr
+    WHERE
+      pr.role_id = (
+        SELECT
+          id
+        FROM
+          roles
+        WHERE
+          name = 'IMPLEMENTATION_OWNER')
+      LIMIT 1) AS implementation_owner_party_role_id,
+  p.id,
+  p.id as pallet_id,
+    coalesce(scrapped_pallet_number.carton_quantity, ps.carton_quantity) AS carton_quantity,
+  coalesce(scrapped_pallet_number.pallet_number, p.pallet_number) AS pallet_number,
+  coalesce(scrapped_pallet_number.pallet_sequence_number, ps.pallet_sequence_number) AS pallet_sequence_number,
+  coalesce(scrapped_pallet_number.farm, farms.farm_code) AS farm,
+  coalesce(scrapped_pallet_number.puc, pucs.puc_code) AS puc,
+  coalesce(scrapped_pallet_number.orchard,registered_orchards.orchard_code, orchards.orchard_code) AS orchard,
+  coalesce(scrapped_pallet_number.commodity, commodities.code) AS commodity,
+  coalesce(scrapped_pallet_number.cultivar_group, cultivar_groups.cultivar_group_code) AS cultivar_group,
+  coalesce(scrapped_pallet_number.cultivar, cultivars.cultivar_name) AS cultivar,
+  coalesce(scrapped_pallet_number.marketing_org,fn_party_role_name(ps.marketing_org_party_role_id)) AS marketing_org,
+  coalesce(scrapped_pallet_number.packed_tm_group, target_market_groups.target_market_group_name) AS packed_tm_group,
+  coalesce(scrapped_pallet_number.mark, marks.mark_code) AS mark,
+  coalesce(scrapped_pallet_number.inventory_code, inventory_codes.inventory_code) AS inventory_code,
+  coalesce(scrapped_pallet_number.customer_variety, cvv.marketing_variety_code) AS customer_variety,
+  coalesce(scrapped_pallet_number.std_size, std_fruit_size_counts.size_count_value) AS std_size,
+  coalesce(scrapped_pallet_number.size_ref, fruit_size_references.size_reference) AS size_ref,
+  coalesce(scrapped_pallet_number.actual_count, fruit_actual_counts_for_packs.actual_count_for_pack) AS actual_count,
+  coalesce(scrapped_pallet_number.basic_pack, basic_pack_codes.basic_pack_code) AS basic_pack,
+  coalesce(scrapped_pallet_number.std_pack, standard_pack_codes.standard_pack_code) AS std_pack,
+  coalesce(scrapped_pallet_number.phc,p.phc) AS phc,
+  coalesce(scrapped_pallet_number.inspection_class, scrapped_pallet_number.grade, grades.inspection_class, grades.grade_code) AS grade,
+   coalesce(scrapped_pallet_number.iso_country_code,inspected_dest_country.iso_country_code) iso_country_code,
+
+coalesce(scrapped_pallet_number.verification_failure_reason,pallet_verification_failure_reasons.reason) as pallet_verification_failure_reason,
+coalesce(scrapped_pallet_number.failure_reason,inspection_failure_reasons.failure_reason) as failure_reason,
+
+coalesce(scrapped_pallet_number.order_number,ps.marketing_order_number) AS order_number,
+coalesce(scrapped_pallet_number.inspector,fn_party_role_name (inspectors.inspector_party_role_id)) AS inspector,
+coalesce(scrapped_pallet_number.inspection_date_time,govt_inspection_sheets.created_at) inspection_date_time,
+coalesce(scrapped_pallet_number.inspection_billing_party_role_id,govt_inspection_sheets.inspection_billing_party_role_id) as inspection_billing_party_role_id,
+coalesce(scrapped_pallet_number.exporter_party_role_id,govt_inspection_sheets.exporter_party_role_id) as exporter_party_role_id,
+coalesce(scrapped_pallet_number.upn,govt_inspection_sheets.upn) as upn,
+coalesce(scrapped_pallet_number.destination_region_name,destination_regions.destination_region_name) as destination_region_name,
+coalesce(scrapped_pallet_number.pallet_size,ps.carton_quantity::numeric / p.carton_quantity::numeric) AS pallet_size,
+COALESCE(scrapped_pallet_number.variety,cvv.marketing_variety_code,marketing_varieties.inspection_variety, marketing_varieties.marketing_variety_code) AS variety,
+COALESCE(scrapped_pallet_number.pallet_base,pallet_bases.pallet_base_code ) AS pallet_base,
+COALESCE(scrapped_pallet_number.govt_inspection_pallets_passed,govt_inspection_pallets.passed ) AS govt_inspection_pallets_passed,
+
+
+coalesce(scrapped_pallet_number.gap_certification,
+	  CASE WHEN pucs.gap_code IS NOT NULL
+    AND govt_inspection_sheets.created_at BETWEEN pucs.gap_code_valid_from AND pucs.gap_code_valid_until THEN
+    'global gap certified'
+  ELSE
+    NULL
+  END ) as gap_certification,
+
+  CASE WHEN NOT (govt_inspection_pallets.passed) THEN
+    govt_inspection_sheets.consignment_note_number || 'F'
+  WHEN (govt_inspection_pallets.passed) THEN
+    govt_inspection_sheets.consignment_note_number
+  ELSE
+    ''
+  END consignment_note_number,
+  coalesce(scrapped_pallet_number.phyto_data, ps.phyto_data) AS phyto_data,
+  coalesce(scrapped_pallet_number.inspection_tm,
+		    CASE
+            WHEN target_markets.inspection_tm THEN target_markets.target_market_name
+            ELSE target_market_groups.target_market_group_name
+        END
+		  ) AS inspection_tm,
+  govt_inspection_sheets.inspection_point,
+  coalesce(scrapped_pallet_number.edi_size_count,
+		  fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi,
+		  commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code,
+		  fruit_size_references.size_reference,
+		  fruit_actual_counts_for_packs.actual_count_for_pack)
+		  )  AS edi_size_count,
+		  COALESCE(scrapped_pallet_number.count,CAST(fruit_actual_counts_for_packs.actual_count_for_pack AS  text),
+		  		  fn_edi_size_count(  standard_pack_codes.use_size_ref_for_edi,
+									  commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code,
+									  fruit_size_references.size_reference,
+									  fruit_actual_counts_for_packs.actual_count_for_pack
+								     )
+		  ) as count
+       ,COALESCE(scrapped_pallet_number.reinspection,govt_inspection_sheets.reinspection) AS reinspection,
+		CASE WHEN  (COALESCE(scrapped_pallet_number.reinspection,govt_inspection_sheets.reinspection)) THEN
+			'Yes'
+		ELSE
+		     'No'
+		END reinspection_result
+
+	from govt_inspection_sheets
+	LEFT join govt_inspection_pallets  ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+	LEFT join pallets p on govt_inspection_pallets.pallet_id =p.id
+	LEFT join pallet_sequences ps on ps.pallet_id=p.id
+	LEFT JOIN pallets repacked_from_pallets ON repacked_from_pallets.id = ps.repacked_from_pallet_id
+	LEFT JOIN plant_resources plt_packhouses ON plt_packhouses.id = p.plt_packhouse_resource_id
+	LEFT JOIN plant_resources plt_lines ON plt_lines.id = p.plt_line_resource_id
+	LEFT JOIN plant_resources packhouses ON packhouses.id = ps.packhouse_resource_id
+	LEFT JOIN plant_resources lines ON lines.id = ps.production_line_id
+	LEFT JOIN plant_resources palletizing_bays ON palletizing_bays.id = p.palletizing_bay_resource_id
+	LEFT JOIN locations ON locations.id = p.location_id
+	LEFT JOIN farms ON farms.id = ps.farm_id
+	LEFT JOIN farm_groups ON farms.farm_group_id = farm_groups.id
+	LEFT JOIN production_regions ON production_regions.id = farms.pdn_region_id
+	LEFT JOIN pucs ON pucs.id = ps.puc_id
+	LEFT JOIN orchards ON orchards.id = ps.orchard_id
+	LEFT JOIN cultivar_groups ON cultivar_groups.id = ps.cultivar_group_id
+	LEFT JOIN cultivars ON cultivars.id = ps.cultivar_id
+	LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
+	LEFT JOIN marketing_varieties ON marketing_varieties.id = ps.marketing_variety_id
+	LEFT JOIN marks ON marks.id = ps.mark_id
+	LEFT JOIN pm_marks ON pm_marks.id = ps.pm_mark_id
+	LEFT JOIN inventory_codes ON inventory_codes.id = ps.inventory_code_id
+	LEFT JOIN target_market_groups ON target_market_groups.id = ps.packed_tm_group_id
+	LEFT JOIN target_markets ON target_markets.id = ps.target_market_id
+	LEFT  JOIN grades ON grades.id = ps.grade_id
+	LEFT JOIN customer_varieties ON customer_varieties.id = ps.customer_variety_id
+	LEFT JOIN marketing_varieties cvv ON cvv.id = customer_varieties.variety_as_customer_variety_id
+	LEFT JOIN std_fruit_size_counts ON std_fruit_size_counts.id = ps.std_fruit_size_count_id
+	LEFT JOIN fruit_size_references ON fruit_size_references.id = ps.fruit_size_reference_id
+	LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = ps.fruit_actual_counts_for_pack_id
+	LEFT JOIN basic_pack_codes ON basic_pack_codes.id = ps.basic_pack_code_id
+	LEFT JOIN standard_pack_codes ON standard_pack_codes.id = ps.standard_pack_code_id
+	LEFT JOIN seasons ON seasons.id = ps.season_id
+	LEFT JOIN cartons_per_pallet ON cartons_per_pallet.id = ps.cartons_per_pallet_id
+	LEFT JOIN pallet_formats ON pallet_formats.id = p.pallet_format_id
+	LEFT JOIN pallet_bases ON pallet_bases.id = pallet_formats.pallet_base_id
+	LEFT JOIN pallet_stack_types ON pallet_stack_types.id = pallet_formats.pallet_stack_type_id
+	LEFT JOIN pallet_verification_failure_reasons ON pallet_verification_failure_reasons.id = ps.pallet_verification_failure_reason_id
+	LEFT JOIN destination_countries inspected_dest_country ON inspected_dest_country.id = govt_inspection_sheets.destination_country_id
+	LEFT JOIN destination_regions ON destination_regions.id = govt_inspection_sheets.destination_region_id
+	LEFT JOIN edi_in_transactions ON edi_in_transactions.id = p.edi_in_transaction_id
+	LEFT JOIN standard_product_weights ON standard_product_weights.standard_pack_id = standard_pack_codes.id AND standard_product_weights.commodity_id = commodities.id
+	LEFT JOIN pucs marketing_pucs ON marketing_pucs.id = ps.marketing_puc_id
+	LEFT JOIN registered_orchards ON registered_orchards.id = ps.marketing_orchard_id
+	LEFT JOIN rmt_classes ON rmt_classes.id = ps.rmt_class_id
+	LEFT JOIN scrapped_pallet_number ON scrapped_pallet_number.scrapped_pallet_id = govt_inspection_pallets.pallet_id
+	LEFT JOIN ggn_validation ON govt_inspection_sheets.id = ggn_validation.govt_inspection_sheet_id
+	LEFT JOIN inspectors ON inspectors.id = govt_inspection_sheets.inspector_id
+	LEFT JOIN inspection_failure_reasons  on inspection_failure_reasons.id = govt_inspection_pallets.failure_reason_id
+
+     WHERE
+  govt_inspection_sheets.id = $P{govt_inspection_sheet_id}
+  AND $P!{QueryCondition} 
+  ORDER BY inspection_tm,commodity, variety, grade, p.pallet_number,ps.pallet_sequence_number]]>
+	</queryString>
+	<field name="seq_no" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="seq_no"/>
+		<property name="com.jaspersoft.studio.field.label" value="seq_no"/>
+	</field>
+	<field name="print_barcode" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="print_barcode"/>
+		<property name="com.jaspersoft.studio.field.label" value="print_barcode"/>
+	</field>
+	<field name="gap_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="gap_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="gap_code"/>
+	</field>
+	<field name="fail_pallet_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="fail_pallet_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="fail_pallet_id"/>
+	</field>
+	<field name="implementation_owner_party_role_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="implementation_owner_party_role_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="implementation_owner_party_role_id"/>
+	</field>
+	<field name="id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="id"/>
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pallets"/>
+	</field>
+	<field name="pallet_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="pallet_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="pallet_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pallets"/>
+	</field>
+	<field name="carton_quantity" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="carton_quantity"/>
+		<property name="com.jaspersoft.studio.field.label" value="carton_quantity"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="pallet_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pallet_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="pallet_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="pallet_sequence_number" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="pallet_sequence_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="pallet_sequence_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="farm" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="farm"/>
+		<property name="com.jaspersoft.studio.field.label" value="farm"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="puc" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="puc"/>
+		<property name="com.jaspersoft.studio.field.label" value="puc"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="orchard" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="orchard"/>
+		<property name="com.jaspersoft.studio.field.label" value="orchard"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="commodity" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="commodity"/>
+		<property name="com.jaspersoft.studio.field.label" value="commodity"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="cultivar_group" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cultivar_group"/>
+		<property name="com.jaspersoft.studio.field.label" value="cultivar_group"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="cultivar" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cultivar"/>
+		<property name="com.jaspersoft.studio.field.label" value="cultivar"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="marketing_org" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="marketing_org"/>
+		<property name="com.jaspersoft.studio.field.label" value="marketing_org"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="packed_tm_group" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="packed_tm_group"/>
+		<property name="com.jaspersoft.studio.field.label" value="packed_tm_group"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="mark" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="mark"/>
+		<property name="com.jaspersoft.studio.field.label" value="mark"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="inventory_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="inventory_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="inventory_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="customer_variety" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="customer_variety"/>
+		<property name="com.jaspersoft.studio.field.label" value="customer_variety"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="std_size" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="std_size"/>
+		<property name="com.jaspersoft.studio.field.label" value="std_size"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="size_ref" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="size_ref"/>
+		<property name="com.jaspersoft.studio.field.label" value="size_ref"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="actual_count" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="actual_count"/>
+		<property name="com.jaspersoft.studio.field.label" value="actual_count"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="basic_pack" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="basic_pack"/>
+		<property name="com.jaspersoft.studio.field.label" value="basic_pack"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="std_pack" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="std_pack"/>
+		<property name="com.jaspersoft.studio.field.label" value="std_pack"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="phc" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="phc"/>
+		<property name="com.jaspersoft.studio.field.label" value="phc"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="grade" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="grade"/>
+		<property name="com.jaspersoft.studio.field.label" value="grade"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="iso_country_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="iso_country_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="iso_country_code"/>
+	</field>
+	<field name="pallet_verification_failure_reason" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pallet_verification_failure_reason"/>
+		<property name="com.jaspersoft.studio.field.label" value="pallet_verification_failure_reason"/>
+	</field>
+	<field name="failure_reason" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="failure_reason"/>
+		<property name="com.jaspersoft.studio.field.label" value="failure_reason"/>
+	</field>
+	<field name="order_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="order_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="order_number"/>
+	</field>
+	<field name="inspector" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="inspector"/>
+		<property name="com.jaspersoft.studio.field.label" value="inspector"/>
+	</field>
+	<field name="inspection_date_time" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="inspection_date_time"/>
+		<property name="com.jaspersoft.studio.field.label" value="inspection_date_time"/>
+	</field>
+	<field name="inspection_billing_party_role_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="inspection_billing_party_role_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="inspection_billing_party_role_id"/>
+	</field>
+	<field name="exporter_party_role_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="exporter_party_role_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="exporter_party_role_id"/>
+	</field>
+	<field name="upn" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="upn"/>
+		<property name="com.jaspersoft.studio.field.label" value="upn"/>
+	</field>
+	<field name="destination_region_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="destination_region_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="destination_region_name"/>
+	</field>
+	<field name="pallet_size" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="pallet_size"/>
+		<property name="com.jaspersoft.studio.field.label" value="pallet_size"/>
+	</field>
+	<field name="variety" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="variety"/>
+		<property name="com.jaspersoft.studio.field.label" value="variety"/>
+	</field>
+	<field name="pallet_base" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pallet_base"/>
+		<property name="com.jaspersoft.studio.field.label" value="pallet_base"/>
+	</field>
+	<field name="govt_inspection_pallets_passed" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="govt_inspection_pallets_passed"/>
+		<property name="com.jaspersoft.studio.field.label" value="govt_inspection_pallets_passed"/>
+	</field>
+	<field name="gap_certification" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="gap_certification"/>
+		<property name="com.jaspersoft.studio.field.label" value="gap_certification"/>
+	</field>
+	<field name="consignment_note_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="consignment_note_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="consignment_note_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="phyto_data" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="phyto_data"/>
+		<property name="com.jaspersoft.studio.field.label" value="phyto_data"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="inspection_tm" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="inspection_tm"/>
+		<property name="com.jaspersoft.studio.field.label" value="inspection_tm"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="inspection_point" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="inspection_point"/>
+		<property name="com.jaspersoft.studio.field.label" value="inspection_point"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="govt_inspection_sheets"/>
+	</field>
+	<field name="edi_size_count" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="edi_size_count"/>
+		<property name="com.jaspersoft.studio.field.label" value="edi_size_count"/>
+	</field>
+	<field name="count" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="count"/>
+		<property name="com.jaspersoft.studio.field.label" value="count"/>
+	</field>
+	<field name="reinspection" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="reinspection"/>
+		<property name="com.jaspersoft.studio.field.label" value="reinspection"/>
+	</field>
+	<field name="reinspection_result" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="reinspection_result"/>
+		<property name="com.jaspersoft.studio.field.label" value="reinspection_result"/>
+	</field>
+	<sortField name="pallet_number"/>
+	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
+	</variable>
+	<variable name="pallet_number_1" class="java.lang.Integer" calculation="DistinctCount">
+		<variableExpression><![CDATA[$F{pallet_number}]]></variableExpression>
+	</variable>
+	<variable name="pallet_number1" class="java.lang.Integer" incrementType="Report" calculation="DistinctCount">
+		<variableExpression><![CDATA[$F{pallet_number}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="fail_pallet_id1" class="java.lang.Integer" calculation="DistinctCount">
+		<variableExpression><![CDATA[$F{fail_pallet_id}]]></variableExpression>
+	</variable>
+	<group name="TM">
+		<groupExpression><![CDATA[$F{packed_tm_group}]]></groupExpression>
+	</group>
+	<group name="fail_reason">
+		<groupExpression><![CDATA[$F{failure_reason}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="226" splitType="Stretch">
+			<staticText>
+				<reportElement x="191" y="2" width="131" height="15" uuid="ce7fa501-b1fc-42da-aaea-b7d9636358cf">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Export Intake Document]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="262" y="170" width="43" height="13" uuid="0099968c-2e12-414f-9744-537927d467c4"/>
+				<text><![CDATA[Order:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="404" y="157" width="48" height="13" uuid="3caab678-e576-4db0-9802-2064dea222d6"/>
+				<text><![CDATA[Depot:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="170" width="100" height="13" uuid="c9c37b57-c952-4290-a910-c8ce566410a5"/>
+				<text><![CDATA[Inspector Name:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="183" width="100" height="13" uuid="13b831b7-c083-4b98-a086-a51e392baddf"/>
+				<text><![CDATA[Inspection Date:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="196" width="100" height="13" uuid="4016a60c-4b63-45e6-9551-25163693f0b1"/>
+				<text><![CDATA[Inspection Point:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="305" y="170" width="100" height="13" uuid="ce86a56c-c652-49ba-bbdb-a05c7e9d7f1f"/>
+				<textFieldExpression><![CDATA[$F{order_number}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="105" y="196" width="150" height="13" uuid="9ff87982-6993-4d32-b414-809b1f23e2b0">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{inspection_point}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="105" y="170" width="150" height="13" uuid="150f65fa-8c7c-4add-8883-93c354fb52c7">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{inspector}]]></textFieldExpression>
+			</textField>
+			<textField pattern="yyyy-M-dd">
+				<reportElement x="105" y="183" width="150" height="13" uuid="830c5490-e6bb-487b-b0ae-6817e92b379e">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{inspection_date_time}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="1" y="224" width="555" height="2" uuid="8c89a3a6-3f7b-4f1d-a81b-8bddcc5be707"/>
+			</line>
+			<staticText>
+				<reportElement x="452" y="157" width="100" height="13" uuid="2f808615-584d-4a0a-891c-c08536c8cb9e"/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="156" width="555" height="1" uuid="93b69d37-4fc4-45a4-b4f4-5aae4eaa94c6"/>
+			</line>
+			<staticText>
+				<reportElement x="397" y="4" width="56" height="10" uuid="5bd90808-eb26-47f5-98c8-c8f665b5c006"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Date:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="397" y="14" width="56" height="10" uuid="a8b1337f-6050-47c2-bba1-b2e6dd308356"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Waybill:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="4" width="37" height="10" uuid="b331ff9c-856d-46d1-8273-8a84ef69a8d6"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Print Date:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy h.mm a">
+				<reportElement x="453" y="4" width="100" height="10" uuid="f20ae102-127e-4ec7-8906-3ced9f6e2664"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{inspection_date_time}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy h.mm a">
+				<reportElement x="38" y="4" width="114" height="10" uuid="6c260cdb-87d3-4377-ba42-52b4a82e8316">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="453" y="14" width="100" height="10" uuid="05e3658c-f32e-4c93-8f01-ef04ec5c1a42"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{consignment_note_number}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="0" width="555" height="2" uuid="2d35ee35-20f4-43f1-bb87-d245e1feba06"/>
+			</line>
+			<line>
+				<reportElement x="0" y="52" width="555" height="2" uuid="6cf556c8-04a5-4df4-b342-0d156cae945c"/>
+			</line>
+			<textField pattern="yyyy-M-dd">
+				<reportElement x="105" y="209" width="150" height="13" uuid="d689d4d9-11be-4594-89a0-213b3036c56d">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{inspection_date_time}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="209" width="100" height="13" uuid="fe814b28-59ae-46f4-92f0-637df8c504d5"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Intake Date:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="157" width="56" height="13" uuid="9aa8d926-c5aa-46c7-aee0-54987bca59b8"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Waybill:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="105" y="157" width="150" height="13" uuid="2551f732-f89c-44e1-bbb0-e43b7aae8a54">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{consignment_note_number}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="262" y="183" width="60" height="13" uuid="b7fe1fec-1961-4633-bdaa-564ae95a3713"/>
+				<text><![CDATA[Rejections:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="262" y="196" width="60" height="13" uuid="396ad2d0-bb87-41aa-8725-7cb690d8b30c"/>
+				<text><![CDATA[Remarks:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="262" y="157" width="60" height="13" uuid="9b855370-35c2-4427-9857-01ebde4feb47"/>
+				<text><![CDATA[Truck No:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="404" y="170" width="48" height="13" uuid="c4b13bf3-38a8-466f-ac38-2657dfbb0791"/>
+				<text><![CDATA[Total Plts:]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="207" y="17" width="100" height="33" uuid="a3054b99-8e6a-43b0-a27c-814287dd0f55">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.barHeight" value="px"/>
+					<property name="com.jaspersoft.studio.unit.barWidth" value="px"/>
+				</reportElement>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barHeight="100">
+					<jr:codeExpression><![CDATA[$F{consignment_note_number}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+			<textField evaluationTime="Report">
+				<reportElement x="452" y="170" width="100" height="12" uuid="622db272-749f-4689-8c26-bc0f73fc5c6b"/>
+				<textFieldExpression><![CDATA[$V{pallet_number1}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="3" y="56" width="123" height="95" uuid="f8260582-5e73-4ef0-9981-e7d4f1be8337">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="party_role_id">
+					<subreportParameterExpression><![CDATA[$F{implementation_owner_party_role_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="address_type">
+					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["party_role_address.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="215" y="56" width="145" height="95" uuid="f1e0e8c6-53da-44c0-ac5c-fce6141644f3">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="party_role_id">
+					<subreportParameterExpression><![CDATA[$F{inspection_billing_party_role_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="address_type">
+					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="name_prefix">
+					<subreportParameterExpression><![CDATA["Billing: "]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["party_role_address.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="413" y="56" width="138" height="95" uuid="49c58c05-e219-42f4-b9de-643127f72fd8">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<subreportParameter name="party_role_id">
+					<subreportParameterExpression><![CDATA[$F{exporter_party_role_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="address_type">
+					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="name_prefix">
+					<subreportParameterExpression><![CDATA["Exporter: "]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["party_role_address.jasper"]]></subreportExpression>
+			</subreport>
+			<textField evaluationTime="Report">
+				<reportElement x="404" y="183" width="82" height="13" uuid="e44d19c0-656f-4e54-aa9e-8767d601d467">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$V{fail_pallet_id1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="397" y="24" width="62" height="10" uuid="e1e1bf3f-197d-4182-bdb5-91e716ea4501">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[UPN:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="453" y="24" width="101" height="10" uuid="612d5b0f-a48f-4a12-80ee-bf72fbc41cbe">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{upn}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="263" y="209" width="90" height="13" uuid="5a2bc8ba-7ad8-4b6f-a482-9245deb9ed80">
+					<printWhenExpression><![CDATA[$F{reinspection_result} == "Yes"]]></printWhenExpression>
+				</reportElement>
+				<text><![CDATA[Is Reinspection:]]></text>
+			</staticText>
+			<textField evaluationTime="Report">
+				<reportElement x="404" y="209" width="82" height="13" uuid="cdcfc196-1900-42c9-84b9-78b699d64692">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<printWhenExpression><![CDATA[$F{reinspection_result} == "Yes"]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{reinspection_result}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="61" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="0" y="45" width="24" height="13" uuid="03391b14-b34c-48e4-88ad-b094e06aa174"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Com]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="24" y="45" width="23" height="13" uuid="f0117312-3a07-4c7a-a13f-63ef978ec02e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Var]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="47" y="45" width="25" height="13" uuid="22753fa7-e3d4-4c6d-9576-0825fa9511f8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Pack]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="72" y="45" width="26" height="13" uuid="6d343af3-e8e4-4116-b4a5-4d638475461e">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Class]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="99" y="45" width="17" height="13" uuid="49671f40-2934-4733-b6af-9288b50b3e3d">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cnt]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="152" y="45" width="26" height="13" uuid="708d0864-3d80-497e-95fb-7e477d487918"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mark]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="178" y="45" width="20" height="13" uuid="fb430d7e-3647-4e8b-a11a-698a8ad29cac"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="198" y="45" width="25" height="13" uuid="ee39a171-73cc-4562-adf0-f9cc52d86827"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="223" y="45" width="27" height="13" uuid="dd224acd-3df2-4b33-ad7c-0843cc85780e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="45" width="21" height="13" uuid="e6afac30-5cf7-457a-ba87-ff39f46ce0f7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ctns]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="138" y="45" width="14" height="13" uuid="b006ecd9-9474-4990-b773-f698441dce88"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[IC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="250" y="45" width="30" height="13" uuid="0c0ecd14-4700-480e-91aa-9c8b878a61a6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Farm]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="301" y="45" width="22" height="13" uuid="4238b2dd-5c08-4ce9-8433-6ce9ab06b0e8">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Plts]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="383" y="45" width="30" height="13" uuid="6cb26be7-38a9-4b32-836e-2382c3ee4b1f">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Orch]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="457" y="45" width="98" height="13" uuid="9f167809-de02-4968-92aa-bb6af980d98a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Barcode]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="323" y="45" width="26" height="13" uuid="e93064c5-0d37-4608-93d1-8e96113273f4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Base]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="353" y="45" width="30" height="13" uuid="867dea48-9e27-4564-a1aa-96612a046213"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PHC]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="56" width="555" height="1" uuid="4edad7c7-afbc-4cae-a04f-d40bd51b3694">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="350" y="0" width="58" height="13" uuid="12b6a678-f6d4-4cd8-9c33-be19ec4ea816">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Waybill:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="410" y="0" width="120" height="13" uuid="3c38160a-3032-4433-81df-de8a8cbd2560">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{consignment_note_number}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="413" y="45" width="67" height="13" uuid="6861c8a6-0c1a-4d63-a841-1552a3683f2d">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Phyto Data]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="117" y="45" width="21" height="13" uuid="0012db30-c291-415f-9bd3-86edde986d60">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Size]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="4" width="24" height="15" uuid="51ad6b6c-5774-44a7-92fd-f4caabc692c9">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[GG:]]></text>
+			</staticText>
+			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
+				<reportElement x="24" y="4" width="321" height="22" uuid="6d4c395e-6b4f-4393-aca1-49518bd17b16">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{gap_code}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="24" y="30" width="150" height="13" uuid="c8d87372-e5ae-424e-b481-70b067c67fa4">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{gap_certification}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="350" y="19" width="60" height="13" uuid="c39f4098-0931-47fe-acc6-8c25c51ee68f">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[UPN:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="410" y="19" width="120" height="13" uuid="4f1a29ab-5505-4f4d-b648-6604f29e7c44">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{upn}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="19">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[$F{print_barcode}]]></printWhenExpression>
+			<componentElement>
+				<reportElement x="465" y="0" width="90" height="15" uuid="bf7b56b0-ed6e-472f-b006-eedfaf557c3b">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.barHeight" value="px"/>
+					<property name="com.jaspersoft.studio.unit.barWidth" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barHeight="60">
+					<jr:codeExpression><![CDATA[$F{pallet_number}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+			<staticText>
+				<reportElement x="1" y="0" width="46" height="13" uuid="7c669dd4-3de7-4714-9bff-113b8cf21da4">
+					<printWhenExpression><![CDATA[$F{govt_inspection_pallets_passed} != true]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Reason:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="47" y="0" width="205" height="13" uuid="ff318fb9-4118-44bb-8ba2-231372c5ae1f">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[$F{govt_inspection_pallets_passed} != true]]></printWhenExpression>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{failure_reason}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="11" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField isBlankWhenNull="true">
+				<reportElement x="280" y="0" width="21" height="11" uuid="a87ae22d-9134-43d0-8703-72800411e360"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{carton_quantity}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="47" y="0" width="25" height="11" uuid="0080b612-9378-4d20-bebe-7195519c85e7"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{std_pack}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="138" y="0" width="14" height="11" uuid="449f85e3-a4fe-4c0a-90f9-dcdd6f8e0989"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{inventory_code}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="99" y="0" width="18" height="11" uuid="eff04fd7-2c38-48fd-8900-aafe80cf4e43">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{count}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="24" y="0" width="23" height="11" uuid="278427f5-157d-4fd2-98f4-235ebe92df29"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{variety}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="323" y="0" width="26" height="11" uuid="b6a1a1d5-1c55-45f4-a80b-11c2e262fe98">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pallet_base}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="178" y="0" width="20" height="11" uuid="e68a1c1e-4a7e-4319-97fc-db48090ac18e"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{inspection_tm}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="24" height="11" uuid="8972db56-64f0-42d9-b128-86f3ef137b32"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{commodity}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="349" y="0" width="34" height="11" uuid="7277c671-32e6-45ae-87a8-47d2efbf9f57">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{phc}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="198" y="0" width="25" height="11" uuid="bcf2f6cd-4465-4f5d-ab8c-cebd8df004e2"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{iso_country_code}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="223" y="0" width="27" height="11" uuid="ef571c4c-fd42-4ded-9b06-8783bfc0b415"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{destination_region_name}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement x="457" y="0" width="98" height="11" uuid="9989200a-ba33-4bfd-9b9f-cddec1220328"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pallet_number}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="72" y="0" width="26" height="11" uuid="18db69d1-d385-4a82-b0ab-be689c54569a">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{grade}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="152" y="0" width="26" height="11" uuid="07518f91-ba03-45c3-8770-f26323c9a14f"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{mark}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement x="250" y="0" width="30" height="11" uuid="4f86a9d9-6c70-4005-8b40-f96b9d7b1d34"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{puc}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="301" y="0" width="22" height="11" uuid="a3bfe17f-f5d6-4afc-98d8-87fbc10aff91"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pallet_size}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement x="383" y="0" width="30" height="11" uuid="3f309a59-ca60-42ec-9a48-4ca1e76afe66">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{orchard}]]></textFieldExpression>
+			</textField>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement x="413" y="0" width="44" height="11" uuid="57ac9bce-5172-48cb-a60b-e2c034e9cab3">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{phyto_data}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="117" y="0" width="21" height="11" uuid="5131c5cb-cb79-407a-842f-929c57266a71"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{size_ref}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="30">
+			<textField>
+				<reportElement x="218" y="12" width="80" height="15" uuid="9265a950-d41c-4005-8567-a57db14d0bc2"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="298" y="12" width="40" height="15" uuid="c4ace318-b269-47aa-8419-f1cd00bc9445"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="10" width="555" height="2" uuid="01d73b07-a723-482f-8c04-cc7b23173069"/>
+			</line>
+		</band>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="79">
+			<rectangle>
+				<reportElement x="278" y="0" width="139" height="25" uuid="38ed3f14-1ced-44f1-9fec-8f3850db459a"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="0" y="25" width="139" height="35" uuid="3ea17db4-d82d-45ed-a30a-75c196ed27c7"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="416" y="0" width="139" height="25" uuid="979079ac-40e6-4b9a-a7aa-e1b47548b27b"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="139" y="0" width="139" height="25" uuid="2a9587d5-575a-4b6c-bf78-60fad9ec1360"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="0" y="0" width="139" height="25" uuid="5e6c3259-6aa9-4767-b7d1-420cb436658c"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="278" y="25" width="139" height="35" uuid="9ad2ed17-299a-4f03-b534-da38f3ec5e69"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="139" y="25" width="139" height="35" uuid="d89c57a2-a531-49a7-a63c-b06d12b75192"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="416" y="25" width="139" height="35" uuid="de793fd6-0080-4063-8793-3abca56533d8"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="25" width="138" height="35" uuid="6c7bdde1-9a5e-4ab2-b6dd-67822385974f"/>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Signature]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="278" y="25" width="138" height="35" uuid="23eca3c7-030b-42d0-8621-2c3eb6e193e0"/>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Signature]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="138" height="24" uuid="8e0cb925-2114-4b9e-9a37-822562c20f8e"/>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Approved by]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="278" y="0" width="138" height="24" uuid="513e8cf4-89ab-4883-af31-fcf97d4bad4d"/>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{signee_caption}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="216" y="64" width="80" height="15" uuid="96df7021-0880-4459-9abd-63d085e05409"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="296" y="64" width="40" height="15" uuid="0b7e0303-5192-45c3-bde1-ae779bbcc6a7"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+	<summary>
+		<band height="79" splitType="Stretch">
+			<textField>
+				<reportElement x="91" y="11" width="100" height="20" uuid="407070f1-c6bc-4af7-87d6-95725260bc5a"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{ctn_qty_1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="4" y="11" width="70" height="20" uuid="53917dfc-3266-4674-90a0-5e070361b152"/>
+				<text><![CDATA[Total cartons:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="223" y="11" width="70" height="20" uuid="94212d69-17cc-4700-b2af-f8665d644624"/>
+				<text><![CDATA[Total Pallets:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="304" y="11" width="113" height="20" uuid="dad05585-7db3-4c6f-9a38-6c16a0f80e7e"/>
+				<textFieldExpression><![CDATA[$V{pallet_number_1}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="2" y="35" width="552" height="44" uuid="9dd7beb6-49f2-406a-a885-f1b6309fe9f2">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<subreportParameter name="subgovt_inspection_sheet_id">
+					<subreportParameterExpression><![CDATA[$P{govt_inspection_sheet_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="paraminspecstatus">
+					<subreportParameterExpression><![CDATA[($P{inspection_passed}.toString().equals ("true")) ? new String("passed"):new String("failed")]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["inspection_summary.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</summary>
+</jasperReport>
