@@ -53,6 +53,7 @@ fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi,
 							   fruit_actual_counts_for_packs.actual_count_for_pack
 	                          )
 			 ) AS count,
+  std_fruit_size_counts.marketing_size_range_mm AS diameter_range,
 sum(ps.carton_quantity) carton_quantity,
 max(scrapped_plt_cnt.scrapped_plt_qty) as scrapped_plt_qty,
 p.govt_inspection_passed
@@ -71,6 +72,7 @@ LEFT JOIN standard_pack_codes ON standard_pack_codes.id = ps.standard_pack_code_
 LEFT JOIN fruit_size_references ON fruit_size_references.id = ps.fruit_size_reference_id
 LEFT JOIN grades ON grades.id = ps.grade_id
 LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = ps.fruit_actual_counts_for_pack_id
+LEFT JOIN std_fruit_size_counts ON std_fruit_size_counts.id = ps.std_fruit_size_count_id
     WHERE  govt_inspection_sheets.id= $P{subgovt_inspection_sheet_id}
 group by
 govt_inspection_pallets.govt_inspection_sheet_id,	
@@ -79,6 +81,7 @@ COALESCE(marketing_varieties.marketing_variety_code,marketing_varieties.inspecti
 COALESCE(cvv.marketing_variety_code,marketing_varieties.inspection_variety, marketing_varieties.marketing_variety_code),
 standard_pack_codes.standard_pack_code,
 fruit_size_references.size_reference,
+ std_fruit_size_counts.marketing_size_range_mm,
 grades.grade_code,
 cvv.marketing_variety_code,
 fruit_actual_counts_for_packs.actual_count_for_pack,
@@ -125,6 +128,7 @@ fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi,
 							   fruit_actual_counts_for_packs.actual_count_for_pack
 	                          )
 			 ) AS count,
+std_fruit_size_counts.marketing_size_range_mm AS diameter_range,
 sum(ps.carton_quantity) carton_quantity,
 max(plt_cnt.plt_qty) as plt_qty,
 p.govt_inspection_passed
@@ -141,6 +145,7 @@ LEFT JOIN marketing_varieties cvv ON cvv.id = customer_varieties.variety_as_cust
 LEFT JOIN marketing_varieties ON marketing_varieties.id = ps.marketing_variety_id
 LEFT JOIN standard_pack_codes ON standard_pack_codes.id = ps.standard_pack_code_id
 LEFT JOIN fruit_size_references ON fruit_size_references.id = ps.fruit_size_reference_id
+LEFT JOIN std_fruit_size_counts ON std_fruit_size_counts.id = ps.std_fruit_size_count_id
 LEFT JOIN grades ON grades.id = ps.grade_id
 LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = ps.fruit_actual_counts_for_pack_id
     WHERE  govt_inspection_sheets.id= $P{subgovt_inspection_sheet_id}
@@ -155,6 +160,7 @@ standard_pack_codes.standard_pack_code,
 fruit_size_references.size_reference,
 grades.grade_code,
 cvv.marketing_variety_code,
+ std_fruit_size_counts.marketing_size_range_mm,
 fruit_actual_counts_for_packs.actual_count_for_pack,
 p.govt_inspection_passed,
 standard_pack_codes.use_size_ref_for_edi,
@@ -175,7 +181,8 @@ COALESCE(p.actual_count,scrapped_plts.actual_count) as actual_count,
 COALESCE(p.carton_quantity,scrapped_plts.carton_quantity) as carton_quantity,
 COALESCE(p.plt_qty,scrapped_plts.scrapped_plt_qty) as plt_qty,
 COALESCE(p.govt_inspection_passed,scrapped_plts.govt_inspection_passed) as  govt_inspection_passed,
-COALESCE(p.variety,scrapped_plts.variety) as variety
+COALESCE(p.variety,scrapped_plts.variety) as variety,
+COALESCE(p.diameter_range,scrapped_plts.diameter_range) as diameter_range
 from govt_inspection_sheets
 LEFT JOIN govt_inspection_pallets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
 LEFT JOIN plts p on govt_inspection_sheets.id = p.govt_inspection_sheet_id
@@ -237,6 +244,10 @@ order by commodity, variety,std_pack, grade, edi_size_count]]>
 		<property name="com.jaspersoft.studio.field.name" value="variety"/>
 		<property name="com.jaspersoft.studio.field.label" value="variety"/>
 	</field>
+	<field name="diameter_range" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="diameter_range"/>
+		<property name="com.jaspersoft.studio.field.label" value="diameter_range"/>
+	</field>
 	<variable name="ctn_qty1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
 	</variable>
@@ -255,7 +266,7 @@ order by commodity, variety,std_pack, grade, edi_size_count]]>
 		</band>
 	</title>
 	<columnHeader>
-		<band height="13" splitType="Stretch">
+		<band height="16" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
@@ -273,8 +284,9 @@ order by commodity, variety,std_pack, grade, edi_size_count]]>
 				<text><![CDATA[Variety]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="144" y="0" width="44" height="13" uuid="da5d9292-dba0-4c6e-ba22-142cff0c3eab">
+				<reportElement x="142" y="0" width="42" height="13" uuid="da5d9292-dba0-4c6e-ba22-142cff0c3eab">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement>
 					<font size="8"/>
@@ -302,7 +314,9 @@ order by commodity, variety,std_pack, grade, edi_size_count]]>
 				</reportElement>
 			</line>
 			<staticText>
-				<reportElement x="188" y="0" width="38" height="13" uuid="f8cc392f-f97c-4e92-b84f-f295958eec9f"/>
+				<reportElement x="188" y="0" width="38" height="13" uuid="f8cc392f-f97c-4e92-b84f-f295958eec9f">
+					<printWhenExpression><![CDATA[$F{commodity} != "SC"]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Left">
 					<font size="8"/>
 				</textElement>
@@ -322,10 +336,22 @@ order by commodity, variety,std_pack, grade, edi_size_count]]>
 				</textElement>
 				<text><![CDATA[Plts]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="186" y="0" width="44" height="13" uuid="fc5a6ca7-22b6-4185-86f2-2a3b4158f742">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<printWhenExpression><![CDATA[$F{commodity} == "SC"]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Diam(mm)]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="12" splitType="Stretch">
+		<band height="11" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isBlankWhenNull="true">
@@ -343,7 +369,8 @@ order by commodity, variety,std_pack, grade, edi_size_count]]>
 				<textFieldExpression><![CDATA[$F{variety}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="144" y="0" width="44" height="11" uuid="b4b41068-d50c-4edc-b706-6bb573b95427">
+				<reportElement x="142" y="0" width="42" height="11" uuid="b4b41068-d50c-4edc-b706-6bb573b95427">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement>
@@ -359,17 +386,20 @@ order by commodity, variety,std_pack, grade, edi_size_count]]>
 				<textFieldExpression><![CDATA[$F{std_pack}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="188" y="0" width="26" height="11" uuid="2d66686b-d513-4e1c-a03e-c38e3aa824c5">
+				<reportElement x="186" y="0" width="44" height="11" uuid="2d66686b-d513-4e1c-a03e-c38e3aa824c5">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<printWhenExpression><![CDATA[$F{commodity} == "SC"]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Left">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{count}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{diameter_range}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="231" y="0" width="26" height="12" uuid="d059d582-b982-4b73-bb25-b808f75cf068">
+				<reportElement x="231" y="0" width="26" height="11" uuid="d059d582-b982-4b73-bb25-b808f75cf068">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
 					<font size="8" isUnderline="false"/>
@@ -392,6 +422,18 @@ order by commodity, variety,std_pack, grade, edi_size_count]]>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{each_plt_qty}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="186" y="0" width="42" height="11" uuid="283a153b-ff05-46b1-8d42-c2fe163d6724">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<printWhenExpression><![CDATA[$F{commodity} != "SC"]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{count}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
