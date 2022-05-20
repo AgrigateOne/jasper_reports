@@ -30,7 +30,7 @@
     commodities.code                                                        AS commodity,
     cultivars.cultivar_name                                                 AS cultivar,
     target_market_groups.target_market_group_name                           AS packed_tm_group,
-    fruit_size_references.size_reference                                    AS size_ref,
+    COALESCE(fruit_size_references.size_reference,fruit_actual_counts_for_packs.actual_count_for_pack) AS size_ref,
     p.phc,
     grades.grade_code                                                       AS grade,
     fn_party_role_name(govt_inspection_sheets.exporter_party_role_id) AS exporter,
@@ -54,7 +54,7 @@ LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
 JOIN target_market_groups ON target_market_groups.id = ps.packed_tm_group_id
 JOIN grades ON grades.id = ps.grade_id
 LEFT JOIN fruit_size_references ON fruit_size_references.id = ps.fruit_size_reference_id
-
+LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = ps.fruit_actual_counts_for_pack_id
 WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 	</queryString>
 	<field name="pallet_number" class="java.lang.String"/>
