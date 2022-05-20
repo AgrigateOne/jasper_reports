@@ -13,7 +13,7 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SR_nspack.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ud local"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
@@ -431,7 +431,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[REV 1]]></text>
+				<text><![CDATA[REV 2]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="489" y="0" width="50" height="11" uuid="afb05576-dba3-4f8f-9bad-382a330a2da5"/>
