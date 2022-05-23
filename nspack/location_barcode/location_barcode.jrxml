@@ -36,7 +36,10 @@ WHERE
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<frame>
-				<reportElement x="0" y="0" width="270" height="212" uuid="95974526-3bbd-444c-85e1-87bb8eaf5307"/>
+				<reportElement x="0" y="0" width="274" height="220" uuid="95974526-3bbd-444c-85e1-87bb8eaf5307">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -55,10 +58,11 @@ WHERE
 				<textFieldExpression><![CDATA[$F{print_code}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement x="46" y="190" width="218" height="22" uuid="91034f02-1eab-4b57-a338-ddffbc82c45f">
+				<reportElement x="46" y="195" width="218" height="22" uuid="91034f02-1eab-4b57-a338-ddffbc82c45f">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right">
 					<font size="10"/>
@@ -66,24 +70,25 @@ WHERE
 				<textFieldExpression><![CDATA[$F{location_short_code}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement x="4" y="157" width="257" height="33" uuid="328cb9b3-e558-4de3-892c-5467ed26c64d">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<reportElement x="4" y="160" width="257" height="25" uuid="328cb9b3-e558-4de3-892c-5467ed26c64d">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Left">
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="18"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{location_long_code}]]></textFieldExpression>
 			</textField>
 			<componentElement>
-				<reportElement x="4" y="26" width="260" height="125" uuid="15fcbd6d-6fc4-4cc3-9d23-95fa96a7c783">
+				<reportElement x="4" y="26" width="266" height="134" uuid="15fcbd6d-6fc4-4cc3-9d23-95fa96a7c783">
 					<property name="local_mesure_unitbarHeight" value="pixel"/>
 					<property name="local_mesure_unitbarWidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.barWidth" value="px"/>
-					<property name="com.jaspersoft.studio.unit.barHeight" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.barHeight" value="px"/>
 				</reportElement>
-				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barHeight="90">
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barHeight="120">
 					<jr:codeExpression><![CDATA[$F{barcode}]]></jr:codeExpression>
 				</jr:barbecue>
 			</componentElement>
