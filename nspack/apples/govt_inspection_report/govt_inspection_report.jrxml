@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gov_inspection_sheet" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b276ed72-36fe-4eb1-8898-57bb00d5eee1">
 	<property name="ireport.zoom" value="1.7524694974069621"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="46"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/first_intake"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ud local"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="158"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="831"/>
@@ -54,7 +54,7 @@ GROUP BY
 scrapped_pallet_number AS (
   SELECT DISTINCT
 	  govt_inspection_pallets.passed as govt_inspection_pallets_passed,
-  destination_regions.destination_region_name,
+  dr.destination_region_name,
 
 	  CASE WHEN pucs.gap_code IS NOT NULL
     AND govt_inspection_sheets.created_at BETWEEN pucs.gap_code_valid_from AND pucs.gap_code_valid_until THEN
@@ -141,7 +141,7 @@ scrapped_pallet_number AS (
 	WHEN target_markets.inspection_tm THEN target_markets.target_market_name
 	ELSE target_market_groups.target_market_group_name
 	END AS inspection_tm,
-	inspected_dest_country.iso_country_code,
+dc.country_name iso_country_code,
 	fn_party_role_name (inspectors.inspector_party_role_id) AS inspector,
 	govt_inspection_sheets.created_at inspection_date_time,
 	govt_inspection_sheets.inspection_billing_party_role_id,
@@ -191,6 +191,10 @@ scrapped_pallet_number AS (
      LEFT JOIN pallet_verification_failure_reasons ON pallet_verification_failure_reasons.id = ps.pallet_verification_failure_reason_id
      LEFT JOIN destination_countries inspected_dest_country ON inspected_dest_country.id = govt_inspection_sheets.destination_country_id
 	  LEFT JOIN destination_regions ON destination_regions.id = govt_inspection_sheets.destination_region_id
+	left join public.destination_regions_tm_groups on destination_regions_tm_groups.target_market_group_id =ps.packed_tm_group_id 
+	left join destination_regions dr on dr.id =destination_regions_tm_groups.destination_region_id 
+	left join target_markets_for_countries on target_markets_for_countries.target_market_id =ps.target_market_id
+left join destination_countries dc on dc.id= target_markets_for_countries.destination_country_id 
      LEFT JOIN edi_in_transactions ON edi_in_transactions.id = p.edi_in_transaction_id
      LEFT JOIN standard_product_weights ON standard_product_weights.standard_pack_id = standard_pack_codes.id AND standard_product_weights.commodity_id = commodities.id
      LEFT JOIN pucs marketing_pucs ON marketing_pucs.id = ps.marketing_puc_id
@@ -249,7 +253,7 @@ SELECT row_number () OVER (partition by p.id ORDER by ps.id )as seq_no,case when
   coalesce(scrapped_pallet_number.std_pack, standard_pack_codes.standard_pack_code) AS std_pack,
   coalesce(scrapped_pallet_number.phc,p.phc) AS phc,
   coalesce(scrapped_pallet_number.inspection_class, scrapped_pallet_number.grade, grades.inspection_class, grades.grade_code) AS grade,
-   coalesce(scrapped_pallet_number.iso_country_code,inspected_dest_country.iso_country_code) iso_country_code,
+   coalesce(scrapped_pallet_number.iso_country_code,dc.country_name) iso_country_code,
 
 coalesce(scrapped_pallet_number.verification_failure_reason,pallet_verification_failure_reasons.reason) as pallet_verification_failure_reason,
 coalesce(scrapped_pallet_number.failure_reason,inspection_failure_reasons.failure_reason) as failure_reason,
@@ -260,7 +264,7 @@ coalesce(scrapped_pallet_number.inspection_date_time,govt_inspection_sheets.crea
 coalesce(scrapped_pallet_number.inspection_billing_party_role_id,govt_inspection_sheets.inspection_billing_party_role_id) as inspection_billing_party_role_id,
 coalesce(scrapped_pallet_number.exporter_party_role_id,govt_inspection_sheets.exporter_party_role_id) as exporter_party_role_id,
 coalesce(scrapped_pallet_number.upn,govt_inspection_sheets.upn) as upn,
-coalesce(scrapped_pallet_number.destination_region_name,destination_regions.destination_region_name) as destination_region_name,
+coalesce(scrapped_pallet_number.destination_region_name,dr.destination_region_name) as destination_region_name,
 coalesce(scrapped_pallet_number.pallet_size,ps.carton_quantity::numeric / p.carton_quantity::numeric) AS pallet_size,
 COALESCE(scrapped_pallet_number.variety,cvv.marketing_variety_code,marketing_varieties.inspection_variety, marketing_varieties.marketing_variety_code) AS variety,
 COALESCE(scrapped_pallet_number.pallet_base,pallet_bases.pallet_base_code ) AS pallet_base,
@@ -344,6 +348,10 @@ coalesce(scrapped_pallet_number.gap_certification,
 	LEFT JOIN pallet_verification_failure_reasons ON pallet_verification_failure_reasons.id = ps.pallet_verification_failure_reason_id
 	LEFT JOIN destination_countries inspected_dest_country ON inspected_dest_country.id = govt_inspection_sheets.destination_country_id
 	LEFT JOIN destination_regions ON destination_regions.id = govt_inspection_sheets.destination_region_id
+	left join public.destination_regions_tm_groups on destination_regions_tm_groups.target_market_group_id =ps.packed_tm_group_id 
+	left join destination_regions dr on dr.id =destination_regions_tm_groups.destination_region_id 
+	left join target_markets_for_countries on target_markets_for_countries.target_market_id =ps.target_market_id
+    left join destination_countries dc on dc.id= target_markets_for_countries.destination_country_id 
 	LEFT JOIN edi_in_transactions ON edi_in_transactions.id = p.edi_in_transaction_id
 	LEFT JOIN standard_product_weights ON standard_product_weights.standard_pack_id = standard_pack_codes.id AND standard_product_weights.commodity_id = commodities.id
 	LEFT JOIN pucs marketing_pucs ON marketing_pucs.id = ps.marketing_puc_id
@@ -802,8 +810,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[   "../../shared/party_role_address.jasper"
-]]></subreportExpression>
+				<subreportExpression><![CDATA["../../shared/party_role_address.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
 				<reportElement x="215" y="56" width="145" height="95" uuid="f1e0e8c6-53da-44c0-ac5c-fce6141644f3">
@@ -820,8 +827,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 					<subreportParameterExpression><![CDATA["Billing: "]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[   "../../shared/party_role_address.jasper"
-]]></subreportExpression>
+				<subreportExpression><![CDATA["../../shared/party_role_address.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
 				<reportElement x="413" y="56" width="138" height="95" uuid="49c58c05-e219-42f4-b9de-643127f72fd8">
@@ -839,8 +845,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 					<subreportParameterExpression><![CDATA["Exporter: "]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[   "../../shared/party_role_address.jasper"
-]]></subreportExpression>
+				<subreportExpression><![CDATA["../../shared/party_role_address.jasper"]]></subreportExpression>
 			</subreport>
 			<textField evaluationTime="Report">
 				<reportElement x="404" y="183" width="82" height="13" uuid="e44d19c0-656f-4e54-aa9e-8767d601d467">
