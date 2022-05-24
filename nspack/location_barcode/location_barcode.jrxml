@@ -81,14 +81,16 @@ WHERE
 				<textFieldExpression><![CDATA[$F{location_long_code}]]></textFieldExpression>
 			</textField>
 			<componentElement>
-				<reportElement x="4" y="26" width="266" height="134" uuid="15fcbd6d-6fc4-4cc3-9d23-95fa96a7c783">
+				<reportElement stretchType="ContainerHeight" x="1" y="26" width="270" height="134" uuid="15fcbd6d-6fc4-4cc3-9d23-95fa96a7c783">
 					<property name="local_mesure_unitbarHeight" value="pixel"/>
 					<property name="local_mesure_unitbarWidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.barWidth" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.barWidth" value="px"/>
 					<property name="com.jaspersoft.studio.unit.barHeight" value="px"/>
 				</reportElement>
-				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barHeight="120">
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barWidth="0" barHeight="70">
 					<jr:codeExpression><![CDATA[$F{barcode}]]></jr:codeExpression>
 				</jr:barbecue>
 			</componentElement>
