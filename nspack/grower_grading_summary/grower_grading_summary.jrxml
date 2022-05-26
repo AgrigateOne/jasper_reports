@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="grower_grading_summary" language="groovy" columnCount="5" printOrder="Horizontal" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="156" columnSpacing="7" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" uuid="945d24dc-a46b-4d12-918e-0ac2ec6f4b2a">
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="378"/>
@@ -420,7 +420,7 @@ grower_grading_pool_details.graded_rmt_class_id
 				<text><![CDATA[Prodution Run:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="370" y="110" width="120" height="15" uuid="e89a99c1-8f5d-4748-8975-89880d01c908"/>
+				<reportElement x="370" y="110" width="237" height="15" uuid="e89a99c1-8f5d-4748-8975-89880d01c908"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
