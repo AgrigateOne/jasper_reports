@@ -311,9 +311,8 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 				<text><![CDATA[Inv]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="105" y="0" width="25" height="13" uuid="c01dc3cb-fcb8-4a9d-b6d9-8bd8b8b6afd8">
+				<reportElement x="105" y="0" width="20" height="13" uuid="c01dc3cb-fcb8-4a9d-b6d9-8bd8b8b6afd8">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
 					<font size="8"/>
@@ -454,11 +453,11 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 		<band height="13" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isBlankWhenNull="true">
-				<reportElement x="155" y="0" width="25" height="12" uuid="de9932c2-c446-4757-b958-d0584900efba">
+				<reportElement x="160" y="0" width="20" height="12" uuid="de9932c2-c446-4757-b958-d0584900efba">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center">
+				<textElement textAlignment="Left">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{grade_code}]]></textFieldExpression>
@@ -502,7 +501,7 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 				<textFieldExpression><![CDATA[$F{plt_qty}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="105" y="0" width="25" height="12" uuid="b7d84869-99fe-4617-98bc-a5ba07906bdb">
+				<reportElement x="105" y="0" width="20" height="12" uuid="b7d84869-99fe-4617-98bc-a5ba07906bdb">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -617,7 +616,7 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 				<textFieldExpression><![CDATA[$F{phyto_data}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="130" y="0" width="25" height="12" uuid="62fe8875-5889-44f4-bd0c-ee8740aedc58">
+				<reportElement x="125" y="0" width="35" height="12" uuid="62fe8875-5889-44f4-bd0c-ee8740aedc58">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
