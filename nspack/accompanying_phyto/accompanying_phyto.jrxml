@@ -134,7 +134,7 @@ headers.*,
 '' as puc,
 '' as inspector_code,
 '' as inspector_tel_no_1,
-COALESCE(p.exporter_party_role_id,$P{default_exporter}) as exporter_party_role_id,
+COALESCE(p.exporter_party_role_id,$P{default_exporter}) as exporter_party_role_id
 from vw_pallet_sequence_flat p
 join puc_groups on puc_groups.pallet_id = p.pallet_number
 join headers on 30 = headers.ids
