@@ -134,7 +134,7 @@ headers.*,
 '' as puc,
 '' as inspector_code,
 '' as inspector_tel_no_1,
-p.exporter_party_role_id
+COALESCE(p.exporter_party_role_id,$P{default_exporter}) as exporter_party_role_id,
 from vw_pallet_sequence_flat p
 join puc_groups on puc_groups.pallet_id = p.pallet_number
 join headers on 30 = headers.ids
@@ -721,7 +721,6 @@ Address:]]></text>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<printWhenExpression><![CDATA[$P{default_exporter} == null]]></printWhenExpression>
 				</reportElement>
 				<subreportParameter name="party_role_id">
 					<subreportParameterExpression><![CDATA[$F{exporter_party_role_id}]]></subreportParameterExpression>
@@ -1050,24 +1049,6 @@ Address:]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{consignment_note_numbers}]]></textFieldExpression>
 			</textField>
-			<subreport>
-				<reportElement x="107" y="181" width="108" height="44" uuid="d163999c-0188-4419-9ef2-b437207a92ec">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<printWhenExpression><![CDATA[$P{default_exporter} != null]]></printWhenExpression>
-				</reportElement>
-				<subreportParameter name="party_role_id">
-					<subreportParameterExpression><![CDATA[$P{default_exporter}]]></subreportParameterExpression>
-				</subreportParameter>
-				<subreportParameter name="address_type">
-					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
-				</subreportParameter>
-				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["exporting_company_address.jasper"]]></subreportExpression>
-			</subreport>
 		</band>
 	</title>
 	<columnHeader>
