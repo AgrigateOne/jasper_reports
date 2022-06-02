@@ -23,7 +23,7 @@ addresses.city,
 addresses.postal_code,
 addresses.country,
 fn_party_contact_method(party_addresses.party_id, 'Tel') AS tel_no_1,
-fn_party_contact_method(party_addresses.party_id, 'Fax') AS tel_no_2
+fn_party_contact_method(party_addresses.party_id, 'Cell') AS tel_no_2
 FROM party_roles
 LEFT JOIN organizations ON organizations.id = party_roles.organization_id
 LEFT JOIN parties ON parties.id = party_roles.party_id
