@@ -313,7 +313,7 @@ order by row_num asc]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="345" splitType="Stretch">
+		<band height="360" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
 				<reportElement x="10" y="99" width="590" height="13" uuid="e15532f7-220d-46f2-89ae-c39fcb22e1dd">
@@ -474,25 +474,24 @@ Address:]]></text>
 				</reportElement>
 			</line>
 			<staticText>
-				<reportElement x="14" y="304" width="118" height="12" uuid="72b994ff-4ed7-48c8-b414-bb3e8ae80317">
+				<reportElement x="14" y="304" width="114" height="12" uuid="72b994ff-4ed7-48c8-b414-bb3e8ae80317">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
 					<leftPen lineWidth="1.0"/>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement verticalAlignment="Bottom">
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font size="9" isBold="false" isItalic="false"/>
 				</textElement>
-				<text><![CDATA[  Packhouse Code:]]></text>
+				<text><![CDATA[ Packhouse Code:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="14" y="291" width="118" height="12" uuid="bf9d3f3d-e102-4921-a9a8-b5d60f5a3748">
+				<reportElement x="14" y="291" width="114" height="12" uuid="bf9d3f3d-e102-4921-a9a8-b5d60f5a3748">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -501,13 +500,13 @@ Address:]]></text>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement verticalAlignment="Bottom">
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font size="9" isBold="false" isItalic="false"/>
 				</textElement>
-				<text><![CDATA[  Dalrrd Inspection Depot:]]></text>
+				<text><![CDATA[ Dalrrd Inspection Depot:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="14" y="278" width="118" height="12" uuid="5f66ceb1-7f42-4a75-8314-8e1176d0930d">
+				<reportElement x="14" y="278" width="114" height="12" uuid="5f66ceb1-7f42-4a75-8314-8e1176d0930d">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -519,38 +518,38 @@ Address:]]></text>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement verticalAlignment="Bottom">
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font size="9" isBold="false" isItalic="false"/>
 				</textElement>
-				<text><![CDATA[  Magisterial District:]]></text>
+				<text><![CDATA[ Magisterial District:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="14" y="316" width="118" height="28" uuid="c0b7eb74-4f79-4721-9d31-77dc647aaad8">
+				<reportElement x="14" y="316" width="114" height="25" uuid="c0b7eb74-4f79-4721-9d31-77dc647aaad8">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
 					<leftPen lineWidth="1.0"/>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement verticalAlignment="Bottom">
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="9" isBold="false" isItalic="false"/>
 				</textElement>
-				<text><![CDATA[  Packhouse Person's 
-  Contact Details:]]></text>
+				<text><![CDATA[ Packhouse Person's 
+ Contact Details:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="133" y="278" width="107" height="12" uuid="c8eeca96-c587-4301-a18c-8d66b9050934">
+				<reportElement x="128" y="278" width="150" height="12" uuid="c8eeca96-c587-4301-a18c-8d66b9050934">
 					<property name="net.sf.jasperreports.text.truncate.at.char" value="true"/>
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -565,12 +564,12 @@ Address:]]></text>
 				<textFieldExpression><![CDATA[$F{magisterial_district}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement x="133" y="304" width="107" height="12" uuid="b5087a5e-4f15-4b81-88ff-abc7a6d99c40">
+				<reportElement x="128" y="303" width="150" height="13" uuid="b5087a5e-4f15-4b81-88ff-abc7a6d99c40">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
 					<bottomPen lineWidth="1.0"/>
@@ -583,18 +582,18 @@ Address:]]></text>
 				<textFieldExpression><![CDATA[$F{packhouse_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="133" y="317" width="51" height="14" uuid="6b216612-ec08-40ac-93ba-5375bbf413d0">
+				<reportElement x="128" y="317" width="106" height="12" uuid="6b216612-ec08-40ac-93ba-5375bbf413d0">
 					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font size="10"/>
@@ -603,13 +602,14 @@ Address:]]></text>
 				<textFieldExpression><![CDATA[$F{phc_first_name}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="133" y="291" width="107" height="12" uuid="5f4b5de0-7131-41a9-82af-5c93180148bc">
+				<reportElement x="128" y="290" width="150" height="13" uuid="5f4b5de0-7131-41a9-82af-5c93180148bc">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
 					<bottomPen lineWidth="1.0"/>
@@ -644,15 +644,16 @@ Address:]]></text>
 				<textFieldExpression><![CDATA[$F{commodity}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="133" y="331" width="107" height="13" uuid="ab124887-afad-40b9-8efd-5590dc526b94">
+				<reportElement x="128" y="341" width="106" height="12" uuid="ab124887-afad-40b9-8efd-5590dc526b94">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
+					<leftPen lineWidth="1.0"/>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
@@ -663,11 +664,10 @@ Address:]]></text>
 				<textFieldExpression><![CDATA[$F{phc_contact}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="133" y="317" width="107" height="14" uuid="56002464-0940-4294-9dcc-9dfa05292e4b">
+				<reportElement x="128" y="329" width="106" height="12" uuid="56002464-0940-4294-9dcc-9dfa05292e4b">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -992,7 +992,7 @@ Address:]]></text>
 				<textFieldExpression><![CDATA[$F{inspector_tel_no_1}]]></textFieldExpression>
 			</textField>
 			<subreport isUsingCache="false" runToBottom="false" overflowType="Stretch">
-				<reportElement x="250" y="320" width="315" height="1" uuid="b54eb6ae-3769-4404-af1a-4670eaa2418a">
+				<reportElement x="250" y="325" width="315" height="1" uuid="b54eb6ae-3769-4404-af1a-4670eaa2418a">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
