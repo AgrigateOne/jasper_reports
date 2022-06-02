@@ -23,6 +23,7 @@
 	<parameter name="pallet_ids" class="java.util.Collection"/>
 	<parameter name="use_load_numbers_for_phyto_report" class="java.lang.Boolean"/>
 	<parameter name="default_exporter" class="java.lang.Integer"/>
+	<parameter name="default_phyto_inspection_depot" class="java.lang.String"/>
 	<queryString language="SQL">
 		<![CDATA[WITH headers as (
 select * from 
@@ -83,9 +84,9 @@ packhouse_contact.first_name phc_first_name,
 packhouse_contact.surname as phc_surname,
 packhouse_contact.contact_method_code as phc_contact, 
 packhouse_contact.contact_method_type as phc_contact_method_type,
-depots.magisterial_district,
+COALESCE(depots.magisterial_district,phyto_inspection_depot.magisterial_district) magisterial_district,
 ph.packhouse_code ,
-p.depot,
+COALESCE(p.depot,$P{default_phyto_inspection_depot}) depot ,
 '' as puc,
 '' as inspector_code,
 '' as inspector_tel_no_1
@@ -102,6 +103,7 @@ left join depots on depots.depot_code = p.depot
 left join ph on  30 = ph.ids
 left join commodities on commodities.ids = 30
 left join doc_nums on doc_nums.join_id = 6
+left join depots phyto_inspection_depot on phyto_inspection_depot.depot_code = $P{default_phyto_inspection_depot}
 where  $X{IN,p.pallet_id,pallet_ids}
 ) as d
 	)
@@ -1008,7 +1010,7 @@ Address:]]></text>
 				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="510" y="45" width="30" height="11" uuid="d0f61a67-a381-419f-912e-ee1ddbbbf9a5">
+				<reportElement x="510" y="45" width="31" height="11" uuid="d0f61a67-a381-419f-912e-ee1ddbbbf9a5">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
