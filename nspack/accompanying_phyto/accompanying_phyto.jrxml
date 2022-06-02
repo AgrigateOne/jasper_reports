@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="accompanying_phyto" language="groovy" printOrder="Horizontal" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="10" bottomMargin="10" isSummaryWithPageHeaderAndFooter="true" whenResourceMissingType="Empty" uuid="57a0c595-5448-465f-8162-0e6517403bd3">
 	<property name="ireport.zoom" value="2.253944402704733"/>
 	<property name="ireport.x" value="0"/>
@@ -1178,14 +1178,13 @@ Address:]]></text>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="41" splitType="Prevent">
+		<band height="37" splitType="Prevent">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isBlankWhenNull="true">
-				<reportElement x="326" y="0" width="84" height="39" uuid="fcbe90ac-5b3b-45d1-9e79-d0ace2ad2cc5">
+				<reportElement x="326" y="0" width="84" height="35" uuid="fcbe90ac-5b3b-45d1-9e79-d0ace2ad2cc5">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 				</reportElement>
 				<box>
@@ -1201,7 +1200,7 @@ Address:]]></text>
 				<textFieldExpression><![CDATA[$F{blocks}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="529" y="0" width="43" height="40" uuid="4d057aa4-f90b-470c-87ec-374ecc2bfff9">
+				<reportElement x="529" y="0" width="43" height="35" uuid="4d057aa4-f90b-470c-87ec-374ecc2bfff9">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -1219,10 +1218,9 @@ Address:]]></text>
 				<textFieldExpression><![CDATA[$F{count}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="409" y="0" width="56" height="39" uuid="bf8b07c7-69d7-411c-958a-894abba9360f">
+				<reportElement x="409" y="0" width="56" height="35" uuid="bf8b07c7-69d7-411c-958a-894abba9360f">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<box>
@@ -1237,10 +1235,9 @@ Address:]]></text>
 				<textFieldExpression><![CDATA[$F{carton_quantity}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="464" y="0" width="65" height="39" uuid="af4877c7-53f4-4a2b-8807-24665d75b329">
+				<reportElement x="464" y="0" width="65" height="35" uuid="af4877c7-53f4-4a2b-8807-24665d75b329">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<box>
@@ -1255,9 +1252,10 @@ Address:]]></text>
 				<textFieldExpression><![CDATA[$F{sell_by_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="283" y="0" width="43" height="39" uuid="5bf7f62a-7afc-420f-a6f7-de7fd25e3341">
+				<reportElement x="283" y="0" width="43" height="35" uuid="5bf7f62a-7afc-420f-a6f7-de7fd25e3341">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -1271,11 +1269,10 @@ Address:]]></text>
 				<textFieldExpression><![CDATA[$F{variety}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="149" y="0" width="134" height="39" uuid="f0ecc350-22ab-46bd-a697-9976644a4161">
+				<reportElement x="149" y="0" width="134" height="35" uuid="f0ecc350-22ab-46bd-a697-9976644a4161">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 				</reportElement>
 				<box>
@@ -1291,7 +1288,7 @@ Address:]]></text>
 				<textFieldExpression><![CDATA[$F{pucs}]]></textFieldExpression>
 			</textField>
 			<componentElement>
-				<reportElement x="25" y="1" width="120" height="39" uuid="90e49f4f-e8ca-4f4c-9f68-a340a3756ad3">
+				<reportElement x="25" y="1" width="120" height="27" uuid="90e49f4f-e8ca-4f4c-9f68-a340a3756ad3">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.barHeight" value="px"/>
@@ -1302,7 +1299,7 @@ Address:]]></text>
 				</jr:barbecue>
 			</componentElement>
 			<textField>
-				<reportElement key="" x="20" y="29" width="125" height="10" uuid="505c05a6-ba49-4925-8d0f-a20d2d8df9fb">
+				<reportElement key="" x="20" y="25" width="125" height="10" uuid="505c05a6-ba49-4925-8d0f-a20d2d8df9fb">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1313,15 +1310,15 @@ Address:]]></text>
 				<textFieldExpression><![CDATA[$F{pallet_id}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="22" y="1" width="1" height="38" uuid="70861549-8465-43b1-abd3-30b1b798b808">
+				<reportElement x="22" y="1" width="1" height="35" uuid="70861549-8465-43b1-abd3-30b1b798b808">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 			</line>
 			<line>
-				<reportElement x="8" y="39" width="563" height="1" uuid="a9c3b588-77ae-4579-bca7-7023a89c4d4e">
+				<reportElement x="8" y="35" width="563" height="1" uuid="a9c3b588-77ae-4579-bca7-7023a89c4d4e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1329,11 +1326,10 @@ Address:]]></text>
 				</reportElement>
 			</line>
 			<textField>
-				<reportElement x="8" y="0" width="12" height="40" uuid="4014ace4-e8e1-40cc-be28-c792233abb08">
+				<reportElement x="8" y="0" width="12" height="35" uuid="4014ace4-e8e1-40cc-be28-c792233abb08">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
