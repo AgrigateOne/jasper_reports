@@ -78,6 +78,15 @@
                             commodities.commodity,
                             p.load_id,
                             '00' || CAST(p.load_id AS text) AS document_number,
+                                                      (
+            SELECT
+               string_agg(c.description, '; ') 
+            FROM
+                "destination_countries" c
+                JOIN "target_markets_for_countries" t ON "t"."destination_country_id" = "c"."id"
+                join   target_markets on t.target_market_id =target_markets.id 
+                AND target_markets.target_market_name = p.target_market
+                    AND "c"."active") AS countries,
                             destination_countries.description AS importing_country,
                             p.exporter,
                             (
@@ -245,6 +254,10 @@
 		<property name="com.jaspersoft.studio.field.name" value="document_number"/>
 		<property name="com.jaspersoft.studio.field.label" value="document_number"/>
 	</field>
+	<field name="countries" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="countries"/>
+		<property name="com.jaspersoft.studio.field.label" value="countries"/>
+	</field>
 	<field name="importing_country" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="importing_country"/>
 		<property name="com.jaspersoft.studio.field.label" value="importing_country"/>
@@ -267,7 +280,7 @@
 		<property name="com.jaspersoft.studio.field.name" value="daff_seq_no"/>
 		<property name="com.jaspersoft.studio.field.label" value="daff_seq_no"/>
 	</field>
-	<field name="COLUMN_20" class="java.lang.String">
+	<field name="COLUMN_21" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="importing_country"/>
 		<property name="com.jaspersoft.studio.field.label" value="importing_country"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
@@ -318,15 +331,15 @@
 		<property name="com.jaspersoft.studio.field.name" value="inspector_tel_no_1"/>
 		<property name="com.jaspersoft.studio.field.label" value="inspector_tel_no_1"/>
 	</field>
-	<field name="COLUMN_31" class="java.lang.String">
+	<field name="COLUMN_32" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="puc"/>
 		<property name="com.jaspersoft.studio.field.label" value="puc"/>
 	</field>
-	<field name="COLUMN_32" class="java.lang.String">
+	<field name="COLUMN_33" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="inspector_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="inspector_code"/>
 	</field>
-	<field name="COLUMN_33" class="java.lang.String">
+	<field name="COLUMN_34" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="inspector_tel_no_1"/>
 		<property name="com.jaspersoft.studio.field.label" value="inspector_tel_no_1"/>
 	</field>
@@ -383,7 +396,7 @@
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement>
-					<font size="9" isBold="false" isItalic="false"/>
+					<font size="8" isBold="false" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[  Importing Country:]]></text>
 			</staticText>
@@ -441,7 +454,7 @@
 					<font size="9"/>
 					<paragraph firstLineIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{importing_country}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{countries}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="14" y="115" width="91" height="25" isPrintWhenDetailOverflows="true" uuid="6890d4cd-4666-4ebc-9e67-c6bf03d7bda6">
