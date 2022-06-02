@@ -60,7 +60,7 @@ doc_nums as (
     select string_agg(distinct CAST(p.load_id as text), ';' )load_ids ,
            string_agg(distinct CAST(p.consignment_note_number as text), ';' )consignment_note_numbers ,
         6 as join_id
-    from vw_pallet_sequence_flat p where  p.pallet_id IN (1007,1008)
+    from vw_pallet_sequence_flat p where  $X{IN,p.pallet_id,pallet_ids}
 )
 select  distinct
 doc_nums.load_ids,
