@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="location_barcode" printOrder="Horizontal" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="bfc0adbc-cbc0-4040-b07b-13a779caf07c">
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="landscape location_barcode" columnCount="2" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="400" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="bfc0adbc-cbc0-4040-b07b-13a779caf07c">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -48,13 +48,14 @@ WHERE
 		<band splitType="Stretch"/>
 	</background>
 	<detail>
-		<band height="500" splitType="Stretch">
+		<band height="250" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<frame>
-				<reportElement x="0" y="0" width="780" height="500" uuid="95974526-3bbd-444c-85e1-87bb8eaf5307">
+				<reportElement x="0" y="0" width="390" height="240" uuid="95974526-3bbd-444c-85e1-87bb8eaf5307">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.layout"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="0.5"/>
@@ -63,9 +64,9 @@ WHERE
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement x="13" y="475" width="257" height="25" uuid="328cb9b3-e558-4de3-892c-5467ed26c64d">
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<reportElement x="13" y="207" width="130" height="25" uuid="328cb9b3-e558-4de3-892c-5467ed26c64d">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Left" verticalAlignment="Middle">
@@ -74,20 +75,22 @@ WHERE
 					<textFieldExpression><![CDATA[$F{location_long_code}]]></textFieldExpression>
 				</textField>
 				<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-					<reportElement x="311" y="475" width="218" height="25" uuid="91034f02-1eab-4b57-a338-ddffbc82c45f">
+					<reportElement x="150" y="207" width="119" height="25" uuid="91034f02-1eab-4b57-a338-ddffbc82c45f">
 						<property name="local_mesure_unitheight" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Center">
 						<font fontName="SansSerif" size="16" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{location_short_code}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="540" y="475" width="230" height="25" uuid="cca3df49-7135-4d35-b0ee-ff54ead21a42">
+					<reportElement x="250" y="207" width="140" height="25" uuid="cca3df49-7135-4d35-b0ee-ff54ead21a42">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Center">
@@ -97,16 +100,17 @@ WHERE
 				</textField>
 			</frame>
 			<componentElement>
-				<reportElement stretchType="ContainerHeight" x="1" y="0" width="769" height="470" uuid="15fcbd6d-6fc4-4cc3-9d23-95fa96a7c783">
+				<reportElement stretchType="ContainerHeight" x="1" y="5" width="389" height="195" uuid="15fcbd6d-6fc4-4cc3-9d23-95fa96a7c783">
 					<property name="local_mesure_unitbarHeight" value="pixel"/>
 					<property name="local_mesure_unitbarWidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.barWidth" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.barHeight" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barWidth="0" barHeight="70">
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barWidth="0" barHeight="68">
 					<jr:codeExpression><![CDATA[$F{barcode}]]></jr:codeExpression>
 				</jr:barbecue>
 			</componentElement>
