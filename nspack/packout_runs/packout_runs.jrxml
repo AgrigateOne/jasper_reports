@@ -5,7 +5,7 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ud local"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="sr"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="production_run_id" class="java.util.Collection" nestedType="java.lang.Integer"/>
 	<parameter name="carton_or_bin" class="java.lang.String">
@@ -20,7 +20,7 @@
 select
     18 as join_id,
 pr.id as production_run_id,
-pr.cultivar_id ,pr.farm_id ,
+pr.cultivar_id,
 string_agg(distinct farms.farm_code::text, ','   order by farms.farm_code::text )farms,
 string_agg(distinct pucs.puc_code::text, ','   order by pucs.puc_code ::text)pucs,
 string_agg(distinct orchards.orchard_code::text, ','   order by orchards.orchard_code::text )orchards,
@@ -37,7 +37,7 @@ left JOIN orchards ON orchards.id = b.orchard_id
 LEFT JOIN farms ON farms.id = b.farm_id
 Left join pucs on b.puc_id = pucs.id
 WHERE not  ( b.scrapped =true)  and $X{IN, pr.id , production_run_id}
-group by pr.cultivar_id ,pr.farm_id,pr.id
+group by pr.cultivar_id ,pr.id
 ),
 grand_things as (
     select sum(bin_tipped.total_bin_weight) as grand_total_bin_weight ,
@@ -54,7 +54,7 @@ run_attrib as (
 SELECT
 20 as join_id,
 pr.id as production_run_id,
-pr.cultivar_id ,pr.farm_id ,cultivars.cultivar_name,
+pr.cultivar_id  ,cultivars.cultivar_name,
 string_agg(distinct farms.farm_code, ','   order by farms.farm_code )farms,
 string_agg(distinct pucs.puc_code, ','   order by pucs.puc_code )pucs
 ,string_agg(DISTINCT p.production_run_id::text, ','  order by p.production_run_id::text  ) runs
@@ -70,20 +70,21 @@ LEFT JOIN farms ON farms.id = pr.farm_id
 LEFT JOIN pucs ON pucs.id = pr.puc_id
 left JOIN orchards ON orchards.id = pr.orchard_id
 where   $X{IN, p.production_run_id, production_run_id}
-group by  pr.cultivar_id ,pr.farm_id ,cultivars.cultivar_name,farms.farm_code,pucs.puc_code,pr.id
+group by  pr.cultivar_id ,cultivars.cultivar_name,farms.farm_code,pucs.puc_code,pr.id
 )
 -------------packout details--------------------------------
 , packout_details as (
 select
 19 as join_id,
-production_runs.id as production_run_id,
-production_runs.cultivar_id ,production_runs.farm_id ,   COALESCE(cultivars.cultivar_name, cultivar_groups.cultivar_group_code) AS cultivar,
-marketing_varieties.marketing_variety_code,
-grades.grade_code,basic_pack_codes.basic_pack_code as basic_pack,
-std_fruit_size_counts.size_count_value AS std_size,
-fruit_size_references.size_reference AS size_ref,
+max(production_runs.id) as production_run_id,
+production_runs.cultivar_id  ,
+COALESCE(cultivars.cultivar_name, cultivar_groups.cultivar_group_code) AS cultivar, --,production_runs.farm_id
+basic_pack_codes.basic_pack_code as basic_pack,
 fruit_actual_counts_for_packs.actual_count_for_pack AS actual_count,
 inventory_codes.inventory_code,
+grades.grade_code,
+std_fruit_size_counts.size_count_value AS std_size,
+fruit_size_references.size_reference AS size_ref,
 sum(pallet_sequences.nett_weight::numeric(12,2)) AS nett_weight,
 sum(pallet_sequences.carton_quantity)carton_quantity,
 sum(standard_product_weights.nett_weight * pallet_sequences.carton_quantity::numeric) AS derived_nett_weight,
@@ -116,16 +117,17 @@ JOIN basic_pack_codes ON basic_pack_codes.id = pallet_sequences.basic_pack_code_
 JOIN inventory_codes ON inventory_codes.id = pallet_sequences.inventory_code_id
 JOIN production_run_stats ON production_run_stats.production_run_id = pallet_sequences.production_run_id
 WHERE case when    $P{dispatched_only}   = true then pallets.load_id is not null else true end and $X{IN, pallet_sequences.production_run_id, production_run_id}
-group by   production_runs.cultivar_id ,production_runs.farm_id ,   COALESCE(cultivars.cultivar_name, cultivar_groups.cultivar_group_code) ,
-marketing_varieties.marketing_variety_code,
+group by
 grades.grade_code,
+production_runs.cultivar_id  ,
+COALESCE(cultivars.cultivar_name, cultivar_groups.cultivar_group_code) ,
 basic_pack_codes.basic_pack_code ,
 std_fruit_size_counts.size_count_value ,
 fruit_size_references.size_reference ,
 fruit_actual_counts_for_packs.actual_count_for_pack ,
 inventory_codes.inventory_code
-,cvv.marketing_variety_code
-,target_market_groups.target_market_group_name,production_runs.id
+,target_market_groups.target_market_group_name,
+COALESCE(cvv.marketing_variety_code,marketing_varieties.marketing_variety_code)
 ),
 packhouses as (
     select
@@ -148,10 +150,8 @@ output_r as (
 SELECT
 production_run_id,
 cultivar_id ,
-farm_id ,
 'cartons' AS record_type,
 cultivar,
-marketing_variety_code,
 grade_code,
 basic_pack,
 std_size,
@@ -168,9 +168,7 @@ FROM
 packout_details vpd
 GROUP BY
 cultivar_id ,
-farm_id ,
 cultivar,
-marketing_variety_code,
 grade_code,
 basic_pack,
 std_size,
@@ -185,10 +183,8 @@ UNION ALL
 select
 production_run_rebin_id,
 cultivar_id ,
-farm_id ,
 'Rebins' AS record_type,
 coalesce(cultivar_name, cultivar_group_code) cultivar,
-coalesce(cultivar_name, cultivar_group_code) AS marketing_variety_code,
 rmt_class_code,
 NULL basic_pack,
 NULL std_size,
@@ -206,7 +202,6 @@ public.vw_bins
 where not  ( scrapped =true) and $X{IN, production_run_rebin_id, production_run_id}
 GROUP BY
 cultivar_id ,
-farm_id ,
 cultivar,
 coalesce(cultivar_name, cultivar_group_code),
 rmt_class_code,
@@ -239,7 +234,7 @@ output_r.packhouses,
 coalesce(bin_tipped.farms,run_attrib.farms) farms,
 coalesce(bin_tipped.pucs,run_attrib.pucs) pucs,
 output_r.cultivar,
-output_r.marketing_variety_code,
+--output_r.marketing_variety_code,
 output_r.grade_code,
 output_r.basic_pack,
 output_r.std_size,
@@ -253,20 +248,19 @@ coalesce(bin_tipped.cultivars,run_attrib.cultivar_name)cultivars
 ,bin_tipped.orchards as orchards
 FROM run_attrib
 left join bin_tipped on bin_tipped.production_run_id=run_attrib.production_run_id
-left join output_r on run_attrib.farm_id=output_r.farm_id and run_attrib.production_run_id=output_r.production_run_id
+left join output_r on run_attrib.cultivar_id=output_r.cultivar_id and run_attrib.production_run_id=output_r.production_run_id
 left join grand_things on grand_things.join_id=18
 left join packhouses on packhouses.join_id = 19
 left join runs_info on runs_info.join_id = 20
 ORDER BY
-record_type,
-grade_code,std_size,inventory_code]]>
+record_type,grade_code,std_size,
+variety,basic_pack,actual_count,inventory_code,packed_tm_group]]>
 	</queryString>
 	<field name="grade_code" class="java.lang.String"/>
 	<field name="nett_weight" class="java.math.BigDecimal"/>
 	<field name="inventory_code" class="java.lang.String"/>
 	<field name="total_bin_weight" class="java.math.BigDecimal"/>
 	<field name="cultivar" class="java.lang.String"/>
-	<field name="marketing_variety_code" class="java.lang.String"/>
 	<field name="std_size" class="java.lang.Integer"/>
 	<field name="size_ref" class="java.lang.String"/>
 	<field name="actual_count" class="java.lang.Integer"/>
@@ -318,6 +312,9 @@ grade_code,std_size,inventory_code]]>
 	<variable name="total_derived_weight" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{derived_nett_weight}]]></variableExpression>
 	</variable>
+	<variable name="packed_weight" class="java.lang.Double">
+		<variableExpression><![CDATA[$P{use_packed_weight} ? $F{total_weight}:$F{total_derived_weight}]]></variableExpression>
+	</variable>
 	<group name="grade_code">
 		<groupExpression><![CDATA[$F{grade_code}]]></groupExpression>
 		<groupHeader>
@@ -345,9 +342,10 @@ grade_code,std_size,inventory_code]]>
 					<text><![CDATA[Weight]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="410" y="11" width="52" height="15" uuid="b56fa57e-d05c-467c-bb26-2c063cf1eba8">
+					<reportElement x="410" y="11" width="53" height="15" uuid="b56fa57e-d05c-467c-bb26-2c063cf1eba8">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Right"/>
 					<text><![CDATA[Total Cartons]]></text>
@@ -424,7 +422,7 @@ grade_code,std_size,inventory_code]]>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Right"/>
-					<textFieldExpression><![CDATA[$V{nett_weight_1}/$F{total_bin_weight}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{nett_weight_1}/$F{grand_total_bin_weight}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -486,7 +484,7 @@ grade_code,std_size,inventory_code]]>
 				</box>
 				<textFieldExpression><![CDATA[$F{grand_total_bin_weight}]]></textFieldExpression>
 			</textField>
-			<textField evaluationTime="Report" pattern="#,##0.00 %" isBlankWhenNull="true">
+			<textField textAdjust="ScaleFont" evaluationTime="Report" pattern="#0.00%" isBlankWhenNull="true">
 				<reportElement stretchType="ContainerHeight" x="264" y="163" width="60" height="15" uuid="e04886f4-8a5e-4cc7-a1cc-bad547dc5256">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -498,8 +496,7 @@ grade_code,std_size,inventory_code]]>
 				<textElement>
 					<paragraph firstLineIndent="3"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{total_bin_weight}.intValue()==0?0:
-($P{use_packed_weight} ? $F{total_weight}:$F{total_derived_weight})/$F{total_bin_weight}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{packed_weight}/$F{grand_total_bin_weight}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="264" y="150" width="60" height="13" uuid="950f53f4-8b28-4915-9865-28f56cfd6369">
@@ -765,8 +762,8 @@ grade_code,std_size,inventory_code]]>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{total_bin_weight}.intValue()==0?0:
-($P{use_packed_weight} ?$F{nett_weight} : $F{derived_nett_weight})/$F{total_bin_weight}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{grand_total_bin_weight}.intValue()==0?0:
+($P{use_packed_weight} ?$F{nett_weight} : $F{derived_nett_weight})/$F{grand_total_bin_weight}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="193" y="0" width="43" height="13" uuid="468c2187-af8c-4216-9702-92c22b57a158">
