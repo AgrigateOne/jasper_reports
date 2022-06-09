@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_picklist" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="live_kromco_nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="113"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="879"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -124,8 +124,8 @@ pallet_holdovers.buildup_remarks,holdover_quantity ,
 					ELSE 'UNINSPECTED' END AS inspected_result
 from  public.vw_pallet_sequence_flat 
 join loads on  loads.id=vw_pallet_sequence_flat.load_id
-left join load_vehicles on load_vehicles.id=vw_pallet_sequence_flat.load_id
-left join load_voyages on load_voyages.id=vw_pallet_sequence_flat.load_id
+left join load_vehicles on load_vehicles.load_id=vw_pallet_sequence_flat.load_id
+left join load_voyages on load_voyages.load_id=vw_pallet_sequence_flat.load_id
 left join voyages on voyages.id=load_voyages.voyage_id
 JOIN destination_cities ON destination_cities.id = loads.final_destination_id
 JOIN voyage_ports pol_voyage_ports ON pol_voyage_ports.id = loads.pol_voyage_port_id
@@ -133,7 +133,7 @@ JOIN voyage_ports pod_voyage_ports ON pod_voyage_ports.id = loads.pod_voyage_por
 JOIN ports pol_port ON pol_port.id = pol_voyage_ports.port_id
 JOIN ports pod_port ON pod_port.id = pod_voyage_ports.port_id
 LEFT JOIN vessels ON voyages.vessel_id = vessels.id
-left join load_containers on load_containers.id=vw_pallet_sequence_flat.load_id
+left join load_containers on load_containers.load_id=vw_pallet_sequence_flat.load_id
 LEFT JOIN container_stack_types ON container_stack_types.id = load_containers.stack_type_id
 left join depots on depots.id=loads.depot_id
 LEFT JOIN party_roles cust_pr ON cust_pr.id = loads.customer_party_role_id
@@ -538,7 +538,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<text><![CDATA[Customer:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="79" y="30" width="132" height="13" uuid="7e91ed80-cd9e-435a-8c22-d19a069aa97d"/>
+				<reportElement stretchType="RelativeToBandHeight" x="79" y="30" width="150" height="13" uuid="7e91ed80-cd9e-435a-8c22-d19a069aa97d"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
@@ -669,7 +669,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<text><![CDATA[Port Name:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="221" y="43" width="65" height="13" uuid="4bfebe7a-c26c-436a-b2b6-3373e556cce8"/>
+				<reportElement x="229" y="43" width="57" height="13" uuid="4bfebe7a-c26c-436a-b2b6-3373e556cce8"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -683,14 +683,14 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<text><![CDATA[Shipper:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="221" y="30" width="65" height="13" uuid="458cff24-978e-4626-b21b-33068eca41d6"/>
+				<reportElement x="229" y="30" width="57" height="13" uuid="458cff24-978e-4626-b21b-33068eca41d6"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Export Party:]]></text>
 			</staticText>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement x="79" y="43" width="132" height="13" uuid="3cb19ece-6e6f-434b-b274-fb244fded92b"/>
+				<reportElement x="79" y="43" width="150" height="13" uuid="3cb19ece-6e6f-434b-b274-fb244fded92b"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -704,7 +704,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<textFieldExpression><![CDATA[$F{export_party_role_name}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="79" y="57" width="132" height="13" uuid="ea97e593-8c15-4fb2-b6f8-2cdcaf309a2b"/>
+				<reportElement x="79" y="57" width="150" height="13" uuid="ea97e593-8c15-4fb2-b6f8-2cdcaf309a2b"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -718,7 +718,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<text><![CDATA[Booking Ref:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="221" y="57" width="65" height="13" uuid="89f5f6a2-25a9-479c-9dcc-f1fc9ab6e205"/>
+				<reportElement x="229" y="57" width="57" height="13" uuid="89f5f6a2-25a9-479c-9dcc-f1fc9ab6e205"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
