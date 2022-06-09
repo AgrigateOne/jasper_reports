@@ -2,7 +2,7 @@
 <!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="210" pageHeight="205" columnWidth="210" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cfe44653-e3bf-48f8-8773-306d8c01ff40">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ud local"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="live_kromco_nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="287"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="702"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -65,7 +65,7 @@ ORDER BY  commodities.code,
 		<property name="com.jaspersoft.studio.field.name" value="plt_qty"/>
 		<property name="com.jaspersoft.studio.field.label" value="plt_qty"/>
 	</field>
-	<variable name="plt_qty_1" class="java.lang.Long" calculation="Sum">
+	<variable name="plt_qty_1" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{plt_qty}]]></variableExpression>
 	</variable>
 	<background>
@@ -147,7 +147,7 @@ ORDER BY  commodities.code,
 				</textElement>
 				<textFieldExpression><![CDATA[$F{edi_size_count}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#0.##">
+			<textField pattern="###0.00;-###0.00">
 				<reportElement x="160" y="0" width="48" height="15" uuid="b16d018e-0ff0-4025-ab91-378c19218517">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -169,7 +169,7 @@ ORDER BY  commodities.code,
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 			</line>
-			<textField isBlankWhenNull="true">
+			<textField pattern="###0.00;-###0.00" isBlankWhenNull="true">
 				<reportElement x="160" y="0" width="41" height="13" uuid="f1c81288-6e94-409d-ab6b-478b3918c79c">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
