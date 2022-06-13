@@ -14,7 +14,6 @@ function source_and_binary_ok() {
   BIN=()
   # echo "Full Array: ${AR[@]}"
   for fn in "${AR[@]}"; do
-    # echo "$fn";
     if [[ "$fn" == *.jrxml ]]
     then
       SRC+=("${fn%.*}")
@@ -29,19 +28,19 @@ function source_and_binary_ok() {
   for fn in "${SRC[@]}"; do
     if ! [[ ${BIN[*]} =~ "$fn" ]]
     then
-      WRONG+=("$fn")
+      WRONG+=("$fn.jrxml")
     fi
   done
   for fn in "${BIN[@]}"; do
     if ! [[ ${SRC[*]} =~ "$fn" ]]
     then
-      WRONG+=("$fn")
+      WRONG+=("$fn.jasper")
     fi
   done
 
   if (( ${#WRONG[@]} > 0 ));
   then
-    echo "The following reports cannot be committed (commit must include both .jrxml and .jasper files):"
+    echo -e "\nThe following reports cannot be committed (commit must include both .jrxml and .jasper files):"
     printf '%s\n' "${WRONG[@]}"
     return 1
   else
@@ -51,16 +50,19 @@ function source_and_binary_ok() {
 
 echo "Checking reports for source and compiled files..."
 
-# LIST=('file1.jrxml' 'file1.jasper' 'file2.jrxml' 'dummy' 'file3.jasper')
-LIST=$(git status -su | awk '{sub(/^(R.*-> )|[ MA?]+/,"")};1' | awk '!/^D/')
+# LIST="file1.jrxml file1.jasper file2.jrxml dummy file3.jasper nspack/addendum/addendum.jrxml"
+# Get a list of the files selected for this commit:
+LIST=$(git diff --cached --name-only --diff-filter=ACM)
+array=(${LIST})
+# echo $LIST
+# echo "Length: ${#array[@]}"
+# echo "Full Array: ${array[@]}"
 
-# echo "Full Array: ${LIST[@]}"
-# echo "Length: ${#LIST[@]}"
-
-if source_and_binary_ok "${LIST[@]}"
+if source_and_binary_ok "${array[@]}"
 then
   echo 'Report file sets are OK'
   exit 0
 else
+  echo ''
   exit 1
 fi

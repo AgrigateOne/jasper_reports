@@ -5,6 +5,6 @@ echo "Running pre-commit hook"
 
 # $? stores exit value of the last command
 if [ $? -ne 0 ]; then
- echo "Reports must be correct before commiting"
+ echo "Reports must be correct before committing"
  exit 1
 fi
