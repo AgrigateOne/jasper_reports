@@ -8,7 +8,7 @@
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44/jasperserver-pro/"/>
 	<property name="ireport.jasperserver.user" value="superuser"/>
 	<property name="ireport.jasperserver.report.resource" value="/organizations/organization_1/reports/MES/Presort/ps_grower_grading_files/ps_grower_grading_"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="kr_nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
 	<property name="com.jaspersoft.studio.report.unit.description" value="Audience:  MES User.  Output:  PDF.  MES:  Grower Grading done per Lot."/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="166"/>
@@ -114,11 +114,13 @@ order by colour_sort, gradesort, isn]]>
 	</parameter>
 	<queryString>
 		<![CDATA[WITH mkt_varieties AS (
-select string_agg(distinct var.marketing_variety_code,',')as marketing_variety,production_runs.id  production_run_id
+select 
+--string_agg(distinct var.marketing_variety_code,',')as marketing_variety
+production_runs.id  production_run_id
 ,sum(grower_grading_cartons.carton_quantity) as total_carton_qty
 from production_runs
-left join marketing_varieties_for_cultivars mrk_for_cultivars ON mrk_for_cultivars.cultivar_id = production_runs.cultivar_id
-left join marketing_varieties var ON  mrk_for_cultivars.marketing_variety_id = var.id
+--left join marketing_varieties_for_cultivars mrk_for_cultivars ON mrk_for_cultivars.cultivar_id = production_runs.cultivar_id
+--left join marketing_varieties var ON  mrk_for_cultivars.marketing_variety_id = var.id
 join grower_grading_pools ON  production_runs.id = grower_grading_pools.production_run_id 
 join grower_grading_cartons on grower_grading_cartons.grower_grading_pool_id = grower_grading_pools.id
 where grower_grading_pools.id = $P{grower_grading_pool_id} 
@@ -139,7 +141,7 @@ rmt_classes.rmt_class_code
 ,cultivars.cultivar_name
 ,seasons.season_code
 ,rmt_codes.rmt_code
-,mkt_varieties.marketing_variety
+--,mkt_varieties.marketing_variety
 , mkt_varieties.total_carton_qty
 from grower_grading_pool_details
 JOIN grower_grading_pools ON grower_grading_pools.id = grower_grading_pool_details.grower_grading_pool_id
@@ -158,6 +160,16 @@ order by
 grower_grading_pool_details.graded_rmt_class_id
 , grower_grading_pool_details.graded_size_count_id]]>
 	</queryString>
+	<field name="rmt_class_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="rmt_class_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="rmt_class_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="rmt_classes"/>
+	</field>
+	<field name="rmt_size_code" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="rmt_size_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="rmt_size_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="std_fruit_size_counts"/>
+	</field>
 	<field name="input_weight" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="input_weight"/>
 		<property name="com.jaspersoft.studio.field.label" value="input_weight"/>
@@ -173,22 +185,12 @@ grower_grading_pool_details.graded_rmt_class_id
 		<property name="com.jaspersoft.studio.field.label" value="graded_size_count_id"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="grower_grading_pool_details"/>
 	</field>
-	<field name="rmt_class_code" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="rmt_class_code"/>
-		<property name="com.jaspersoft.studio.field.label" value="rmt_class_code"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="rmt_classes"/>
-	</field>
-	<field name="rmt_size_code" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="rmt_size_code"/>
-		<property name="com.jaspersoft.studio.field.label" value="rmt_size_code"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="rmt_sizes"/>
-	</field>
-	<field name="graded_weight" class="java.lang.Double">
+	<field name="graded_weight" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="graded_weight"/>
 		<property name="com.jaspersoft.studio.field.label" value="graded_weight"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="grower_grading_pool_details"/>
 	</field>
-	<field name="weight_percentage" class="java.lang.Double">
+	<field name="weight_percentage" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="weight_percentage"/>
 		<property name="com.jaspersoft.studio.field.label" value="weight_percentage"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="grower_grading_pool_details"/>
@@ -226,10 +228,6 @@ grower_grading_pool_details.graded_rmt_class_id
 		<property name="com.jaspersoft.studio.field.name" value="rmt_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="rmt_code"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="rmt_codes"/>
-	</field>
-	<field name="marketing_variety" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="marketing_variety"/>
-		<property name="com.jaspersoft.studio.field.label" value="marketing_variety"/>
 	</field>
 	<field name="total_carton_qty" class="java.lang.Long">
 		<property name="com.jaspersoft.studio.field.name" value="total_carton_qty"/>
@@ -398,18 +396,6 @@ grower_grading_pool_details.graded_rmt_class_id
 				<text><![CDATA[Rmt Code:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="130" width="85" height="15" uuid="4f43c415-8bcb-4679-a1b1-e04842aeb0c3">
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<textElement>
-					<font size="12" isBold="false"/>
-				</textElement>
-				<text><![CDATA[Marketing Variety:]]></text>
-			</staticText>
-			<staticText>
 				<reportElement x="276" y="110" width="84" height="15" uuid="55ac523e-3a16-4957-bcec-0391498068fb">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -425,17 +411,6 @@ grower_grading_pool_details.graded_rmt_class_id
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{production_run_code}]]></textFieldExpression>
-			</textField>
-			<textField pattern="##.## kg" isBlankWhenNull="true">
-				<reportElement x="89" y="130" width="85" height="15" uuid="3f0d87cd-56cf-454f-9583-d2ac1f0ad96d">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<textElement>
-					<font size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{marketing_variety}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.###;#,##0.###-" isBlankWhenNull="true">
 				<reportElement x="370" y="130" width="120" height="15" uuid="60e2be7d-d71c-48d0-aa7e-0e32e7670bd3">
