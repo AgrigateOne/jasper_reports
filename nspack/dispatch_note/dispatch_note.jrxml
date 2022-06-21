@@ -117,10 +117,10 @@ JOIN ports pol_port ON pol_port.id = pol_voyage_ports.port_id
 JOIN ports pod_port ON pod_port.id = pod_voyage_ports.port_id
 JOIN voyages ON pol_voyage_ports.voyage_id = voyages.id
 LEFT JOIN vessels ON voyages.vessel_id = vessels.id
-LEFT JOIN load_containers ON loads.id = load_containers.load_id
+LEFT JOIN load_vehicles ON load_vehicles.id = loads.load_vehicle_id
+LEFT JOIN load_containers ON load_containers.id = load_vehicles.load_container_id
 left join cargo_temperatures on load_containers.cargo_temperature_id =cargo_temperatures.id
 LEFT JOIN load_voyages ON loads.id = load_voyages.load_id
-LEFT JOIN load_vehicles ON loads.id = load_vehicles.load_id
 LEFT JOIN container_stack_types ON container_stack_types.id = load_containers.stack_type_id
 LEFT JOIN party_roles exp_pr ON exp_pr.id = loads.exporter_party_role_id
 LEFT JOIN organizations exp_org ON exp_org.party_id = exp_pr.party_id
@@ -580,7 +580,9 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[PO File:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="435" y="34" width="112" height="13" uuid="6c251326-4a79-4e22-9edf-8fc2ecba228c"/>
+				<reportElement x="435" y="34" width="112" height="13" uuid="6c251326-4a79-4e22-9edf-8fc2ecba228c">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -944,7 +946,7 @@ where loads.id = $P{load_id}]]>
 				</jr:barbecue>
 			</componentElement>
 			<subreport>
-				<reportElement x="230" y="31" width="101" height="95" uuid="8aa248d9-044f-4bff-b07f-035007ce5912">
+				<reportElement x="230" y="31" width="110" height="95" uuid="8aa248d9-044f-4bff-b07f-035007ce5912">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>

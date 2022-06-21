@@ -124,7 +124,6 @@ pallet_holdovers.buildup_remarks,holdover_quantity ,
 					ELSE 'UNINSPECTED' END AS inspected_result
 from  public.vw_pallet_sequence_flat 
 join loads on  loads.id=vw_pallet_sequence_flat.load_id
-left join load_vehicles on load_vehicles.load_id=vw_pallet_sequence_flat.load_id
 left join load_voyages on load_voyages.load_id=vw_pallet_sequence_flat.load_id
 left join voyages on voyages.id=load_voyages.voyage_id
 JOIN destination_cities ON destination_cities.id = loads.final_destination_id
@@ -133,7 +132,8 @@ JOIN voyage_ports pod_voyage_ports ON pod_voyage_ports.id = loads.pod_voyage_por
 JOIN ports pol_port ON pol_port.id = pol_voyage_ports.port_id
 JOIN ports pod_port ON pod_port.id = pod_voyage_ports.port_id
 LEFT JOIN vessels ON voyages.vessel_id = vessels.id
-left join load_containers on load_containers.load_id=vw_pallet_sequence_flat.load_id
+LEFT JOIN load_vehicles ON load_vehicles.id = loads.load_vehicle_id
+LEFT JOIN load_containers ON load_containers.id = load_vehicles.load_container_id
 LEFT JOIN container_stack_types ON container_stack_types.id = load_containers.stack_type_id
 left join depots on depots.id=loads.depot_id
 LEFT JOIN party_roles cust_pr ON cust_pr.id = loads.customer_party_role_id

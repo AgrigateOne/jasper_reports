@@ -72,8 +72,10 @@ LEFT JOIN party_roles ON party_roles.id = pallet_sequences.marketing_org_party_r
 LEFT JOIN organizations ON organizations.party_id = party_roles.party_id
 LEFT JOIN inventory_codes ON inventory_codes.id = pallet_sequences.inventory_code_id
 left JOIN pucs ON pucs.id = pallet_sequences.puc_id
-left JOIN pucs marketingpuc ON marketingpuc.id = pallet_sequences.marketing_puc_id 
-LEFT JOIN load_containers ON load_containers.load_id = pallets.load_id
+left JOIN pucs marketingpuc ON marketingpuc.id = pallet_sequences.marketing_puc_id
+LEFT JOIN loads ON loads.id = pallets.load_id
+LEFT JOIN load_vehicles ON load_vehicles.id = loads.load_vehicle_id
+LEFT JOIN load_containers ON load_containers.id = load_vehicles.load_container_id
 LEFT JOIN cargo_temperatures ON cargo_temperatures.id = load_containers.cargo_temperature_id
 LEFT JOIN pallet_formats ON pallet_formats.id = pallets.pallet_format_id
 LEFT JOIN pallet_bases ON pallet_bases.id = pallet_formats.pallet_base_id
@@ -631,8 +633,9 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 	<summary>
 		<band height="36" splitType="Stretch">
 			<textField pattern="###0.00" isBlankWhenNull="true">
-				<reportElement x="432" y="3" width="25" height="13" uuid="eafb0fde-cf16-4785-bf1c-2e291259339a">
+				<reportElement x="432" y="3" width="28" height="13" uuid="eafb0fde-cf16-4785-bf1c-2e291259339a">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left">
 					<font size="8"/>
