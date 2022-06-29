@@ -5,7 +5,7 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="sr"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SR-live"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="production_run_id" class="java.util.Collection" nestedType="java.lang.Integer"/>
 	<parameter name="carton_or_bin" class="java.lang.String">
@@ -315,6 +315,9 @@ variety,basic_pack,actual_count,inventory_code,packed_tm_group]]>
 	<variable name="packed_weight" class="java.lang.Double">
 		<variableExpression><![CDATA[$P{use_packed_weight} ? $F{total_weight}:$F{total_derived_weight}]]></variableExpression>
 	</variable>
+	<variable name="total_packed_percent" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[($P{use_packed_weight} ? $F{total_weight}:$F{total_derived_weight})/$F{grand_total_bin_weight}]]></variableExpression>
+	</variable>
 	<group name="grade_code">
 		<groupExpression><![CDATA[$F{grade_code}]]></groupExpression>
 		<groupHeader>
@@ -496,7 +499,7 @@ variety,basic_pack,actual_count,inventory_code,packed_tm_group]]>
 				<textElement>
 					<paragraph firstLineIndent="3"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{packed_weight}/$F{grand_total_bin_weight}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{total_packed_percent}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="264" y="150" width="60" height="13" uuid="950f53f4-8b28-4915-9865-28f56cfd6369">
@@ -547,9 +550,10 @@ variety,basic_pack,actual_count,inventory_code,packed_tm_group]]>
 				<textFieldExpression><![CDATA[$F{all_runs}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="357" y="150" width="68" height="13" uuid="1b4459a7-02b3-49e3-a40a-926bd06f0584">
+				<reportElement x="357" y="150" width="69" height="13" uuid="1b4459a7-02b3-49e3-a40a-926bd06f0584">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement>
 					<paragraph firstLineIndent="3"/>
