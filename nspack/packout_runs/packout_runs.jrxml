@@ -345,7 +345,7 @@ variety,basic_pack,actual_count,inventory_code,packed_tm_group]]>
 					<text><![CDATA[Weight]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="410" y="11" width="53" height="15" uuid="b56fa57e-d05c-467c-bb26-2c063cf1eba8">
+					<reportElement x="410" y="11" width="110" height="15" uuid="b56fa57e-d05c-467c-bb26-2c063cf1eba8">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -354,7 +354,7 @@ variety,basic_pack,actual_count,inventory_code,packed_tm_group]]>
 					<text><![CDATA[Total Cartons]]></text>
 				</staticText>
 				<line>
-					<reportElement x="8" y="26" width="465" height="1" uuid="19189517-7fb8-4f8a-9bba-87c7156904a2"/>
+					<reportElement x="8" y="27" width="522" height="1" uuid="19189517-7fb8-4f8a-9bba-87c7156904a2"/>
 					<graphicElement>
 						<pen lineStyle="Dotted"/>
 					</graphicElement>
@@ -391,7 +391,7 @@ variety,basic_pack,actual_count,inventory_code,packed_tm_group]]>
 		<groupFooter>
 			<band height="34">
 				<rectangle>
-					<reportElement x="10" y="4" width="460" height="30" forecolor="#CCCCCC" uuid="d4d7877f-6190-456b-b65b-b3c2932ec9be"/>
+					<reportElement x="10" y="4" width="530" height="30" forecolor="#CCCCCC" uuid="d4d7877f-6190-456b-b65b-b3c2932ec9be"/>
 				</rectangle>
 				<textField pattern="#,##0.00" isBlankWhenNull="true">
 					<reportElement x="310" y="6" width="90" height="15" uuid="d1533133-5868-46cf-b2c2-74295de69d89">
@@ -414,8 +414,9 @@ variety,basic_pack,actual_count,inventory_code,packed_tm_group]]>
 					<text><![CDATA[Total:]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
-					<reportElement x="395" y="6" width="67" height="15" uuid="df51975c-3138-488d-99c7-8201e1c11308">
+					<reportElement x="410" y="6" width="120" height="15" uuid="df51975c-3138-488d-99c7-8201e1c11308">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<textElement textAlignment="Right"/>
 					<textFieldExpression><![CDATA[$V{ctn_qty_1}]]></textFieldExpression>
@@ -746,7 +747,7 @@ variety,basic_pack,actual_count,inventory_code,packed_tm_group]]>
 				<textFieldExpression><![CDATA[$P{use_packed_weight} ?$F{nett_weight}:$F{derived_nett_weight}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="400" y="0" width="62" height="13" uuid="e97fb374-a6ed-4308-a0cb-d0488d245f84">
+				<reportElement x="410" y="0" width="120" height="13" uuid="e97fb374-a6ed-4308-a0cb-d0488d245f84">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right"/>
