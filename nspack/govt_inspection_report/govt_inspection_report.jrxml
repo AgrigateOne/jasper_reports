@@ -6,7 +6,7 @@
 	<property name="ireport.y" value="46"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/first_intake"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ud local"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack local"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="158"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="831"/>
@@ -54,8 +54,6 @@ GROUP BY
 scrapped_pallet_number AS (
   SELECT DISTINCT
 	  govt_inspection_pallets.passed as govt_inspection_pallets_passed,
-  destination_regions.destination_region_name,
-
 	  CASE WHEN pucs.gap_code IS NOT NULL
     AND govt_inspection_sheets.created_at BETWEEN pucs.gap_code_valid_from AND pucs.gap_code_valid_until THEN
     'global gap certified'
@@ -269,7 +267,17 @@ coalesce(scrapped_pallet_number.inspection_date_time,govt_inspection_sheets.crea
 coalesce(scrapped_pallet_number.inspection_billing_party_role_id,govt_inspection_sheets.inspection_billing_party_role_id) as inspection_billing_party_role_id,
 coalesce(scrapped_pallet_number.exporter_party_role_id,govt_inspection_sheets.exporter_party_role_id) as exporter_party_role_id,
 coalesce(scrapped_pallet_number.upn,govt_inspection_sheets.upn) as upn,
-coalesce(scrapped_pallet_number.destination_region_name,destination_regions.destination_region_name) as destination_region_name,
+
+  CASE WHEN govt_inspection_sheets.use_inspection_destination_for_load_out THEN
+        (SELECT destination_regions.destination_region_name
+		FROM destination_regions_tm_groups
+		LEFT JOIN destination_regions ON destination_regions.id = destination_regions_tm_groups.destination_region_id
+		WHERE destination_regions_tm_groups.target_market_group_id = ps.packed_tm_group_id
+        LIMIT 1)
+ELSE
+         destination_regions.destination_region_name
+END AS destination_region_name,
+
 coalesce(scrapped_pallet_number.pallet_size,ps.carton_quantity::numeric / p.carton_quantity::numeric) AS pallet_size,
 COALESCE(scrapped_pallet_number.variety,cvv.marketing_variety_code,marketing_varieties.inspection_variety, marketing_varieties.marketing_variety_code) AS variety,
 COALESCE(scrapped_pallet_number.pallet_base,pallet_bases.pallet_base_code ) AS pallet_base,
@@ -630,7 +638,8 @@ coalesce(scrapped_pallet_number.gap_certification,
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="226" splitType="Stretch">
+		<band height="240" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
 				<reportElement x="191" y="2" width="131" height="15" uuid="ce7fa501-b1fc-42da-aaea-b7d9636358cf">
 					<property name="local_mesure_unitheight" value="pixel"/>
@@ -683,9 +692,6 @@ coalesce(scrapped_pallet_number.gap_certification,
 				</reportElement>
 				<textFieldExpression><![CDATA[$F{inspection_date_time}]]></textFieldExpression>
 			</textField>
-			<line>
-				<reportElement x="1" y="224" width="555" height="2" uuid="8c89a3a6-3f7b-4f1d-a81b-8bddcc5be707"/>
-			</line>
 			<staticText>
 				<reportElement x="452" y="157" width="100" height="13" uuid="2f808615-584d-4a0a-891c-c08536c8cb9e"/>
 				<text><![CDATA[]]></text>
@@ -898,10 +904,25 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$F{reinspection_result}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="263" y="224" width="90" height="13" uuid="b0f38b68-fa61-484d-a0ed-832cabe3c7ce">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<text><![CDATA[Total Cartons:]]></text>
+			</staticText>
+			<textField evaluationTime="Report">
+				<reportElement x="404" y="224" width="82" height="13" uuid="f4c18b14-cd64-4a71-b3db-ae175e0e50cf">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$V{ctn_qty_1}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="61" splitType="Stretch">
+		<band height="58" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
 				<reportElement x="0" y="45" width="24" height="13" uuid="03391b14-b34c-48e4-88ad-b094e06aa174"/>
@@ -1039,9 +1060,10 @@ coalesce(scrapped_pallet_number.gap_certification,
 				</reportElement>
 			</line>
 			<staticText>
-				<reportElement x="350" y="0" width="58" height="13" uuid="12b6a678-f6d4-4cd8-9c33-be19ec4ea816">
+				<reportElement x="350" y="15" width="58" height="13" uuid="12b6a678-f6d4-4cd8-9c33-be19ec4ea816">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement>
 					<font size="10"/>
@@ -1049,9 +1071,10 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<text><![CDATA[Waybill:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="410" y="0" width="120" height="13" uuid="3c38160a-3032-4433-81df-de8a8cbd2560">
+				<reportElement x="410" y="15" width="120" height="13" uuid="3c38160a-3032-4433-81df-de8a8cbd2560">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement>
 					<font size="10"/>
@@ -1091,7 +1114,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<text><![CDATA[GG:]]></text>
 			</staticText>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement x="24" y="4" width="321" height="22" uuid="6d4c395e-6b4f-4393-aca1-49518bd17b16">
+				<reportElement x="24" y="6" width="321" height="22" uuid="6d4c395e-6b4f-4393-aca1-49518bd17b16">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -1112,7 +1135,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[$F{gap_certification}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="350" y="19" width="60" height="13" uuid="c39f4098-0931-47fe-acc6-8c25c51ee68f">
+				<reportElement x="350" y="30" width="60" height="13" uuid="c39f4098-0931-47fe-acc6-8c25c51ee68f">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -1124,7 +1147,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<text><![CDATA[UPN:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="410" y="19" width="120" height="13" uuid="4f1a29ab-5505-4f4d-b648-6604f29e7c44">
+				<reportElement x="410" y="30" width="120" height="13" uuid="4f1a29ab-5505-4f4d-b648-6604f29e7c44">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -1135,6 +1158,11 @@ coalesce(scrapped_pallet_number.gap_certification,
 				</textElement>
 				<textFieldExpression><![CDATA[$F{upn}]]></textFieldExpression>
 			</textField>
+			<line>
+				<reportElement x="0" y="-2" width="555" height="2" uuid="8c89a3a6-3f7b-4f1d-a81b-8bddcc5be707">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+			</line>
 		</band>
 	</pageHeader>
 	<detail>
