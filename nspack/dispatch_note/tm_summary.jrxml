@@ -44,7 +44,7 @@ standard_pack_codes.standard_pack_code, fruit_actual_counts_for_packs.actual_cou
 fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack) 
 ORDER BY  commodities.code,
  grades.grade_code,
- standard_pack_codes.standard_pack_code,
+ standard_pack_codes.standard_pack_code ,
  fruit_actual_counts_for_packs.actual_count_for_pack,target_market_groups.target_market_group_name]]>
 	</queryString>
 	<field name="grade_code" class="java.lang.String">
