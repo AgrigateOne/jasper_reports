@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="delivery_report" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="d109052e-9b0f-425e-bdc4-875aca838363">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="L_Badlands_NSPACK"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack local"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="199"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="794"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -40,6 +40,7 @@
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) AS implementation_owner_party_role_id
 ,a.reference_number,rmt_codes.rmt_code
+,a.remarks
 FROM
     rmt_deliveries a
     LEFT JOIN rmt_delivery_destinations d ON d.id = a.rmt_delivery_destination_id
@@ -209,6 +210,11 @@ group by     a.id,j.rmt_delivery_id,
 		<property name="com.jaspersoft.studio.field.name" value="rmt_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="rmt_code"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="rmt_codes"/>
+	</field>
+	<field name="remarks" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="remarks"/>
+		<property name="com.jaspersoft.studio.field.label" value="remarks"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="rmt_deliveries"/>
 	</field>
 	<variable name="bin_qty1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{bin_qty}]]></variableExpression>
@@ -625,6 +631,27 @@ group by     a.id,j.rmt_delivery_id,
 				</textElement>
 				<text><![CDATA[RMT Code:]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="0" y="390" width="110" height="20" uuid="2b48c0dc-d1c0-4680-9b54-1f20a706cc37">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REMARKS:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="130" y="390" width="410" height="110" uuid="b413e0a8-a724-463c-9e26-203a33ce6672">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{remarks}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
