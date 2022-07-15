@@ -637,7 +637,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="240" splitType="Stretch">
+		<band height="250" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
 				<reportElement x="191" y="2" width="131" height="15" uuid="ce7fa501-b1fc-42da-aaea-b7d9636358cf">
