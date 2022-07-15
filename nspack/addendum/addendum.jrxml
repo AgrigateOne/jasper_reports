@@ -6,24 +6,26 @@
 	<property name="ireport.y" value="0"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/addendum"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44:80/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack_KR_Live"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack local"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="283"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="717"/>
 	<parameter name="load_id" class="java.lang.Integer"/>
-	<parameter name="user_name" class="java.lang.String">
+	<parameter name="user" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 	</parameter>
 	<parameter name="place_of_issue" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 		<defaultValueExpression><![CDATA["CPT"]]></defaultValueExpression>
 	</parameter>
+	<parameter name="user_name" class="java.lang.String"/>
 	<queryString language="SQL">
 		<![CDATA[select 
   count(*) OVER (PARTITION BY sq.load_id) AS total_row,
 * 
 FROM 
-(SELECT  
+(SELECT
+ $P{user} user_name,
 cast(sum(sequence_nett_weight) as dec(9,2)) as sequence_nett_weight,
  sum(carton_quantity)carton_quantity,
 COALESCE(customer_variety,marketing_varieties.inspection_variety,marketing_variety) as variety,
@@ -119,6 +121,10 @@ END,edi_in_consignment_note_number),
 	<field name="total_row" class="java.lang.Long">
 		<property name="com.jaspersoft.studio.field.name" value="total_row"/>
 		<property name="com.jaspersoft.studio.field.label" value="total_row"/>
+	</field>
+	<field name="user_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="user_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="user_name"/>
 	</field>
 	<field name="sequence_nett_weight" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="sequence_nett_weight"/>
@@ -441,7 +447,7 @@ END,edi_in_consignment_note_number),
 				</rectangle>
 				<staticText>
 					<reportElement x="572" y="58" width="89" height="10" uuid="cedaa42e-69c8-43d3-9412-2106e8b196a8"/>
-					<textElement>
+					<textElement verticalAlignment="Bottom">
 						<font fontName="SansSerif" size="5"/>
 						<paragraph leftIndent="5"/>
 					</textElement>
@@ -521,9 +527,12 @@ END,edi_in_consignment_note_number),
 					<textFieldExpression><![CDATA[$F{shipper}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="572" y="38" width="89" height="10" uuid="d587537f-3858-4674-9970-12d1e0fce4c8"/>
-					<textElement>
+					<reportElement x="572" y="38" width="89" height="10" uuid="d587537f-3858-4674-9970-12d1e0fce4c8">
+						<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Bottom">
 						<font fontName="SansSerif" size="5"/>
+						<paragraph firstLineIndent="5"/>
 					</textElement>
 					<text><![CDATA[Name of D:IS  ]]></text>
 				</staticText>
@@ -542,7 +551,7 @@ END,edi_in_consignment_note_number),
 				</rectangle>
 				<staticText>
 					<reportElement x="297" y="38" width="89" height="10" uuid="719707bb-3690-4ba8-8468-8ce5a4a88916"/>
-					<textElement>
+					<textElement verticalAlignment="Bottom">
 						<font fontName="SansSerif" size="5"/>
 						<paragraph leftIndent="5"/>
 					</textElement>
@@ -590,9 +599,12 @@ END,edi_in_consignment_note_number),
 					</graphicElement>
 				</line>
 				<staticText>
-					<reportElement x="572" y="48" width="89" height="10" uuid="fc119d5a-bfe7-4b66-8466-141f6c027bb3"/>
+					<reportElement x="572" y="48" width="89" height="10" uuid="fc119d5a-bfe7-4b66-8466-141f6c027bb3">
+						<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+					</reportElement>
 					<textElement verticalAlignment="Bottom">
 						<font fontName="SansSerif" size="5"/>
+						<paragraph firstLineIndent="5"/>
 					</textElement>
 					<text><![CDATA[Signature:]]></text>
 				</staticText>
@@ -620,10 +632,10 @@ END,edi_in_consignment_note_number),
 						<property name="local_mesure_unitheight" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
-					<textElement>
+					<textElement verticalAlignment="Bottom">
 						<font fontName="SansSerif" size="5"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$P{user_name}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{user_name}.toUpperCase()]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="1" y="138" width="170" height="8" uuid="1f790c84-bffc-4197-916a-47b484e9ef11"/>
@@ -668,9 +680,12 @@ END,edi_in_consignment_note_number),
 					<text><![CDATA[PPECB certificate number:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="297" y="58" width="89" height="10" uuid="0dfad95f-ba85-4aa4-857a-3baf109939a8"/>
-					<textElement>
+					<reportElement x="297" y="58" width="89" height="10" uuid="0dfad95f-ba85-4aa4-857a-3baf109939a8">
+						<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Bottom">
 						<font fontName="SansSerif" size="5"/>
+						<paragraph firstLineIndent="5"/>
 					</textElement>
 					<text><![CDATA[Name (in print):]]></text>
 				</staticText>
