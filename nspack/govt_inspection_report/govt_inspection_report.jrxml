@@ -825,9 +825,10 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement x="215" y="56" width="145" height="95" uuid="f1e0e8c6-53da-44c0-ac5c-fce6141644f3">
+				<reportElement x="215" y="56" width="146" height="95" uuid="f1e0e8c6-53da-44c0-ac5c-fce6141644f3">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<subreportParameter name="party_role_id">
 					<subreportParameterExpression><![CDATA[$F{inspection_billing_party_role_id}]]></subreportParameterExpression>
