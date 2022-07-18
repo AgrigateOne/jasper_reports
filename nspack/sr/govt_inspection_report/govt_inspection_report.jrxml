@@ -83,7 +83,7 @@ scrapped_pallet_number AS (
      cvv.marketing_variety_code AS customer_variety,
       std_fruit_size_counts.size_count_value AS std_size,
 	std_fruit_size_counts.marketing_size_range_mm AS diameter_range,
-     fruit_size_references.size_reference AS size_ref,
+     COALESCE(fruit_size_references.edi_out_code,fruit_size_references.size_reference) AS size_ref,
      basic_pack_codes.basic_pack_code AS basic_pack,
      standard_pack_codes.standard_pack_code AS std_pack,
      ps.product_resource_allocation_id AS resource_allocation_id,
@@ -254,7 +254,7 @@ SELECT row_number () OVER (partition by p.id ORDER by ps.id )as seq_no,case when
   coalesce(scrapped_pallet_number.customer_variety, cvv.marketing_variety_code) AS customer_variety,
   coalesce(scrapped_pallet_number.std_size, std_fruit_size_counts.size_count_value) AS std_size,
 coalesce(scrapped_pallet_number.diameter_range,std_fruit_size_counts.marketing_size_range_mm ) AS diameter_range,
-  coalesce(scrapped_pallet_number.size_ref, fruit_size_references.size_reference) AS size_ref,
+  coalesce(scrapped_pallet_number.size_ref,fruit_size_references.edi_out_code ,fruit_size_references.size_reference) AS size_ref,
   coalesce(scrapped_pallet_number.actual_count, fruit_actual_counts_for_packs.actual_count_for_pack) AS actual_count,
   coalesce(scrapped_pallet_number.basic_pack, basic_pack_codes.basic_pack_code) AS basic_pack,
   coalesce(scrapped_pallet_number.std_pack, standard_pack_codes.standard_pack_code) AS std_pack,
@@ -823,8 +823,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[   "../../shared/party_role_address.jasper"
-]]></subreportExpression>
+				<subreportExpression><![CDATA["../../shared/party_role_address.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
 				<reportElement x="215" y="56" width="145" height="95" uuid="f1e0e8c6-53da-44c0-ac5c-fce6141644f3">
@@ -841,8 +840,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 					<subreportParameterExpression><![CDATA["Billing: "]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[   "../../shared/party_role_address.jasper"
-]]></subreportExpression>
+				<subreportExpression><![CDATA["../../shared/party_role_address.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
 				<reportElement x="413" y="56" width="138" height="95" uuid="49c58c05-e219-42f4-b9de-643127f72fd8">
@@ -860,8 +858,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 					<subreportParameterExpression><![CDATA["Exporter: "]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA[   "../../shared/party_role_address.jasper"
-]]></subreportExpression>
+				<subreportExpression><![CDATA["../../shared/party_role_address.jasper"]]></subreportExpression>
 			</subreport>
 			<textField evaluationTime="Report">
 				<reportElement x="404" y="183" width="82" height="13" uuid="e44d19c0-656f-4e54-aa9e-8767d601d467">
@@ -1265,7 +1262,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{count}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{actual_count}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="22" y="0" width="21" height="11" uuid="278427f5-157d-4fd2-98f4-235ebe92df29">
