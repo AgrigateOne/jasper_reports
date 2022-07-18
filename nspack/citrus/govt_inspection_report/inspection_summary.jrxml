@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="summary" language="groovy" pageWidth="350" pageHeight="802" columnWidth="350" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cba47b92-bbda-40d5-b5d7-7f12c9f0b664">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="231"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="763"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ud local"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="subgovt_inspection_sheet_id" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="paraminspecstatus" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[WITH scrapped_plt_cnt AS(
+select count(distinct pallet_number) as scrapped_plt_qty,max(govt_inspection_sheet_id) as govt_inspection_sheet_id 
+from vw_scrapped_pallet_sequence_flat
+WHERE  govt_inspection_sheet_id= $P{subgovt_inspection_sheet_id}
+AND (  case when  $P{paraminspecstatus} ='passed' then govt_inspection_passed=true 
+       when       $P{paraminspecstatus} ='failed' then govt_inspection_passed=false end )
+),scrapped_plts AS(
+SELECT 
+distinct
+count(distinct p.id) as each_plt_qty,
+govt_inspection_pallets.govt_inspection_sheet_id,
+commodities.code AS commodity,
+COALESCE(marketing_varieties.marketing_variety_code,marketing_varieties.inspection_variety) as marketing_variety,
+COALESCE(cvv.marketing_variety_code,marketing_varieties.inspection_variety, marketing_varieties.marketing_variety_code) AS variety,
+standard_pack_codes.standard_pack_code AS std_pack,
+fruit_size_references.size_reference AS size_ref,
+grades.grade_code AS grade,
+fruit_actual_counts_for_packs.actual_count_for_pack AS actual_count,
+fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi,
+				  commodities.use_size_ref_for_edi, 
+				  fruit_size_references.edi_out_code,
+				  fruit_size_references.size_reference, 
+				  fruit_actual_counts_for_packs.actual_count_for_pack) AS edi_size_count,
+  	COALESCE(CAST(fruit_actual_counts_for_packs.actual_count_for_pack AS  text),
+	         fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi,
+							   commodities.use_size_ref_for_edi,
+							   fruit_size_references.edi_out_code,
+							   fruit_size_references.size_reference,
+							   fruit_actual_counts_for_packs.actual_count_for_pack
+	                          )
+			 ) AS count,
+sum(ps.carton_quantity) carton_quantity,
+max(scrapped_plt_cnt.scrapped_plt_qty) as scrapped_plt_qty,
+p.govt_inspection_passed
+from govt_inspection_sheets
+LEFT join govt_inspection_pallets  ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+LEFT join pallets p on govt_inspection_pallets.pallet_id =p.id
+LEFT join pallet_sequences ps on p.id=ps.scrapped_from_pallet_id
+LEFT JOIN scrapped_plt_cnt on govt_inspection_sheets.id = scrapped_plt_cnt.govt_inspection_sheet_id
+LEFT JOIN cultivar_groups ON cultivar_groups.id = ps.cultivar_group_id
+LEFT JOIN cultivars ON cultivars.id = ps.cultivar_id
+LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
+LEFT JOIN customer_varieties ON customer_varieties.id = ps.customer_variety_id
+LEFT JOIN marketing_varieties cvv ON cvv.id = customer_varieties.variety_as_customer_variety_id	
+LEFT JOIN marketing_varieties ON marketing_varieties.id = ps.marketing_variety_id
+LEFT JOIN standard_pack_codes ON standard_pack_codes.id = ps.standard_pack_code_id
+LEFT JOIN fruit_size_references ON fruit_size_references.id = ps.fruit_size_reference_id
+LEFT JOIN grades ON grades.id = ps.grade_id
+LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = ps.fruit_actual_counts_for_pack_id
+    WHERE  govt_inspection_sheets.id= $P{subgovt_inspection_sheet_id}
+group by
+govt_inspection_pallets.govt_inspection_sheet_id,	
+commodities.code,
+COALESCE(marketing_varieties.marketing_variety_code,marketing_varieties.inspection_variety),
+COALESCE(cvv.marketing_variety_code,marketing_varieties.inspection_variety, marketing_varieties.marketing_variety_code),
+standard_pack_codes.standard_pack_code,
+fruit_size_references.size_reference,
+grades.grade_code,
+cvv.marketing_variety_code,
+fruit_actual_counts_for_packs.actual_count_for_pack,
+p.govt_inspection_passed,
+standard_pack_codes.use_size_ref_for_edi,
+commodities.use_size_ref_for_edi,
+fruit_size_references.edi_out_code
+)
+,plt_cnt AS(
+select 
+count(distinct p.pallet_number) as plt_qty,
+max(govt_inspection_pallets.govt_inspection_sheet_id) as govt_inspection_sheet_id 
+	
+from govt_inspection_sheets
+left join govt_inspection_pallets  ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+left join pallets p on govt_inspection_pallets.pallet_id =p.id
+	
+WHERE  govt_inspection_pallets.govt_inspection_sheet_id= $P{subgovt_inspection_sheet_id}
+AND (  case when $P{paraminspecstatus} ='passed' then govt_inspection_passed=true 
+      when      $P{paraminspecstatus} ='failed' then govt_inspection_passed=false end )
+)
+,plts AS (
+SELECT 
+distinct
+count(distinct p.id) as each_plt_qty,
+govt_inspection_pallets.govt_inspection_sheet_id,
+commodities.code AS commodity,
+COALESCE(marketing_varieties.marketing_variety_code,marketing_varieties.inspection_variety) as marketing_variety,
+COALESCE(cvv.marketing_variety_code,marketing_varieties.inspection_variety, marketing_varieties.marketing_variety_code) AS variety,
+standard_pack_codes.standard_pack_code AS std_pack,
+fruit_size_references.size_reference AS size_ref,
+grades.grade_code AS grade,
+fruit_actual_counts_for_packs.actual_count_for_pack AS actual_count,
+fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi,
+				  commodities.use_size_ref_for_edi, 
+				  fruit_size_references.edi_out_code,
+				  fruit_size_references.size_reference, 
+				  fruit_actual_counts_for_packs.actual_count_for_pack) AS edi_size_count,
+  	COALESCE(CAST(fruit_actual_counts_for_packs.actual_count_for_pack AS  text),
+	         fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi,
+							   commodities.use_size_ref_for_edi,
+							   fruit_size_references.edi_out_code,
+							   fruit_size_references.size_reference,
+							   fruit_actual_counts_for_packs.actual_count_for_pack
+	                          )
+			 ) AS count,
+sum(ps.carton_quantity) carton_quantity,
+max(plt_cnt.plt_qty) as plt_qty,
+p.govt_inspection_passed
+from govt_inspection_sheets
+LEFT join govt_inspection_pallets  ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+LEFT join pallets p on govt_inspection_pallets.pallet_id =p.id
+LEFT join pallet_sequences ps on p.id=ps.pallet_id
+LEFT JOIN plt_cnt on govt_inspection_pallets.govt_inspection_sheet_id = plt_cnt.govt_inspection_sheet_id
+LEFT JOIN cultivar_groups ON cultivar_groups.id = ps.cultivar_group_id
+LEFT JOIN cultivars ON cultivars.id = ps.cultivar_id
+LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
+LEFT JOIN customer_varieties ON customer_varieties.id = ps.customer_variety_id
+LEFT JOIN marketing_varieties cvv ON cvv.id = customer_varieties.variety_as_customer_variety_id	
+LEFT JOIN marketing_varieties ON marketing_varieties.id = ps.marketing_variety_id
+LEFT JOIN standard_pack_codes ON standard_pack_codes.id = ps.standard_pack_code_id
+LEFT JOIN fruit_size_references ON fruit_size_references.id = ps.fruit_size_reference_id
+LEFT JOIN grades ON grades.id = ps.grade_id
+LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = ps.fruit_actual_counts_for_pack_id
+    WHERE  govt_inspection_sheets.id= $P{subgovt_inspection_sheet_id}
+    AND (  case when  $P{paraminspecstatus} ='passed' then govt_inspection_passed=true 
+                when  $P{paraminspecstatus} ='failed' then govt_inspection_passed=false end )
+group by 
+govt_inspection_pallets.govt_inspection_sheet_id,	
+commodities.code,
+COALESCE(marketing_varieties.marketing_variety_code,marketing_varieties.inspection_variety),
+COALESCE(cvv.marketing_variety_code,marketing_varieties.inspection_variety, marketing_varieties.marketing_variety_code),
+standard_pack_codes.standard_pack_code,
+fruit_size_references.size_reference,
+grades.grade_code,
+cvv.marketing_variety_code,
+fruit_actual_counts_for_packs.actual_count_for_pack,
+p.govt_inspection_passed,
+standard_pack_codes.use_size_ref_for_edi,
+commodities.use_size_ref_for_edi,
+fruit_size_references.edi_out_code
+)
+SELECT
+distinct
+COALESCE(p.each_plt_qty,scrapped_plts.each_plt_qty) as each_plt_qty,
+COALESCE(p.edi_size_count,scrapped_plts.edi_size_count ) as edi_size_count,
+COALESCE(p.count,scrapped_plts.count) as count,
+COALESCE(p.commodity,scrapped_plts.commodity) as commodity,
+COALESCE(p.marketing_variety,scrapped_plts.marketing_variety) as marketing_variety,
+COALESCE(p.std_pack ,scrapped_plts.std_pack) as std_pack,
+COALESCE(p.size_ref,scrapped_plts.size_ref) as size_ref,
+COALESCE(p.grade,scrapped_plts.grade) as grade,
+COALESCE(p.actual_count,scrapped_plts.actual_count) as actual_count,
+COALESCE(p.carton_quantity,scrapped_plts.carton_quantity) as carton_quantity,
+COALESCE(p.plt_qty,scrapped_plts.scrapped_plt_qty) as plt_qty,
+COALESCE(p.govt_inspection_passed,scrapped_plts.govt_inspection_passed) as  govt_inspection_passed,
+COALESCE(p.variety,scrapped_plts.variety) as variety
+from govt_inspection_sheets
+LEFT JOIN govt_inspection_pallets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+LEFT JOIN plts p on govt_inspection_sheets.id = p.govt_inspection_sheet_id
+LEFT JOIN scrapped_plts on govt_inspection_sheets.id =scrapped_plts.govt_inspection_sheet_id
+WHERE  govt_inspection_sheets.id= $P{subgovt_inspection_sheet_id}
+AND      (  case when  $P{paraminspecstatus} ='passed' then COALESCE(p.govt_inspection_passed,scrapped_plts.govt_inspection_passed)=true 
+                when  $P{paraminspecstatus} ='failed' then COALESCE(p.govt_inspection_passed,scrapped_plts.govt_inspection_passed)=false end )
+order by commodity, variety,std_pack, grade, edi_size_count]]>
+	</queryString>
+	<field name="each_plt_qty" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="each_plt_qty"/>
+		<property name="com.jaspersoft.studio.field.label" value="each_plt_qty"/>
+	</field>
+	<field name="edi_size_count" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="edi_size_count"/>
+		<property name="com.jaspersoft.studio.field.label" value="edi_size_count"/>
+	</field>
+	<field name="count" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="count"/>
+		<property name="com.jaspersoft.studio.field.label" value="count"/>
+	</field>
+	<field name="commodity" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="commodity"/>
+		<property name="com.jaspersoft.studio.field.label" value="commodity"/>
+	</field>
+	<field name="marketing_variety" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="marketing_variety"/>
+		<property name="com.jaspersoft.studio.field.label" value="marketing_variety"/>
+	</field>
+	<field name="std_pack" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="std_pack"/>
+		<property name="com.jaspersoft.studio.field.label" value="std_pack"/>
+	</field>
+	<field name="size_ref" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="size_ref"/>
+		<property name="com.jaspersoft.studio.field.label" value="size_ref"/>
+	</field>
+	<field name="grade" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="grade"/>
+		<property name="com.jaspersoft.studio.field.label" value="grade"/>
+	</field>
+	<field name="actual_count" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="actual_count"/>
+		<property name="com.jaspersoft.studio.field.label" value="actual_count"/>
+	</field>
+	<field name="carton_quantity" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="carton_quantity"/>
+		<property name="com.jaspersoft.studio.field.label" value="carton_quantity"/>
+	</field>
+	<field name="plt_qty" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="plt_qty"/>
+		<property name="com.jaspersoft.studio.field.label" value="plt_qty"/>
+	</field>
+	<field name="govt_inspection_passed" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="govt_inspection_passed"/>
+		<property name="com.jaspersoft.studio.field.label" value="govt_inspection_passed"/>
+	</field>
+	<field name="variety" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="variety"/>
+		<property name="com.jaspersoft.studio.field.label" value="variety"/>
+	</field>
+	<variable name="ctn_qty1" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="6" width="163" height="20" uuid="5540cf67-45c7-4210-b9a0-39498f2ccbeb">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Summary:]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="13" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="0" y="0" width="48" height="13" uuid="0707a9c3-fefe-4166-86b9-12a8465ddb49"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Comm]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="48" y="0" width="48" height="13" uuid="5469099d-43ca-4340-8015-23ef7ee9f37b"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Variety]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="144" y="0" width="44" height="13" uuid="da5d9292-dba0-4c6e-ba22-142cff0c3eab">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Grade]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="96" y="0" width="48" height="13" uuid="8d244faf-d5bf-4150-a883-d47c7daabf4e"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Pack]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="231" y="0" width="26" height="13" uuid="728916a3-0f11-4cea-80ad-beb924f6d23f"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Size]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="12" width="348" height="1" uuid="61532689-4367-431b-b5dd-9185f38ce957">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="188" y="0" width="38" height="13" uuid="f8cc392f-f97c-4e92-b84f-f295958eec9f"/>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Count]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="260" y="0" width="40" height="13" uuid="4e1a6260-75f0-4611-8625-029ea50730af"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Ctns]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="0" width="40" height="13" uuid="2d80ddc4-9631-448f-8d0a-f4a8d634a630"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Plts]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="12" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="48" height="11" uuid="bbc74be3-9650-43ff-9279-5351d102f771"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{commodity}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="48" y="0" width="48" height="11" uuid="42b6779a-1aed-4a5d-80d7-86903c188c14"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{variety}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="144" y="0" width="44" height="11" uuid="b4b41068-d50c-4edc-b706-6bb573b95427">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{grade}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="96" y="0" width="48" height="11" uuid="9e0b7d4a-6e69-4da7-b857-cb2921a6d4a2"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{std_pack}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="188" y="0" width="26" height="11" uuid="2d66686b-d513-4e1c-a03e-c38e3aa824c5">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{count}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="231" y="0" width="26" height="12" uuid="d059d582-b982-4b73-bb25-b808f75cf068">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{size_ref}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.##" isBlankWhenNull="true">
+				<reportElement x="260" y="0" width="40" height="11" uuid="814e04ec-4f8f-4c9f-8cdb-c2da9656d625"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{carton_quantity}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.##" isBlankWhenNull="true">
+				<reportElement x="300" y="0" width="40" height="11" uuid="c8b05f2c-acb2-452e-9942-add9de5e01b7">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{each_plt_qty}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="15" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="0" width="348" height="1" uuid="620dd30c-e871-4498-8ff4-472e4cef0b61">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<textField pattern="#0.##" isBlankWhenNull="true">
+				<reportElement x="255" y="1" width="43" height="14" uuid="473d10d1-a46b-4106-ad00-9d9b5077481e">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{ctn_qty1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.##" isBlankWhenNull="true">
+				<reportElement x="300" y="1" width="40" height="14" uuid="c6e51dc9-251f-4e45-927a-841924b2d723"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{plt_qty}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>
