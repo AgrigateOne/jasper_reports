@@ -114,7 +114,7 @@ group by rmt_classes.rmt_class_code,rmt_classes.id,pr.cultivar_id ,pr.farm_id]]>
 				<textFieldExpression><![CDATA[$F{rmt_class_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="0" y="0" width="50" height="11" uuid="814e04ec-4f8f-4c9f-8cdb-c2da9656d625">
+				<reportElement x="0" y="0" width="51" height="11" uuid="814e04ec-4f8f-4c9f-8cdb-c2da9656d625">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>

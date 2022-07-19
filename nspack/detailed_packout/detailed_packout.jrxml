@@ -466,7 +466,7 @@ grade_code,std_size,inventory_code]]>
 		<groupFooter>
 			<band height="14">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement x="310" y="0" width="42" height="13" uuid="984f2188-bb8b-4c59-b27b-e7dfec964bec">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -560,7 +560,7 @@ grade_code,std_size,inventory_code]]>
 				</reportElement>
 				<text><![CDATA[Packhse:]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="59" y="134" width="243" height="13" uuid="0a8a09d8-0189-4ae2-b768-aa4ea78086c6">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -617,7 +617,7 @@ grade_code,std_size,inventory_code]]>
 				</textElement>
 				<text><![CDATA[Pack Summary]]></text>
 			</staticText>
-			<textField pattern="d MMM h:mm a">
+			<textField pattern="d MMM h:mm a" isBlankWhenNull="true">
 				<reportElement x="133" y="196" width="90" height="13" uuid="69d4b2d4-393e-4359-9c1e-c85207aff270">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -741,7 +741,7 @@ grade_code,std_size,inventory_code]]>
 					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					<subreportExpression><![CDATA["delivery_summary.jasper"]]></subreportExpression>
 				</subreport>
-				<textField pattern="#,##0.00">
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
 					<reportElement x="146" y="49" width="34" height="11" uuid="bc53ba43-5494-4814-a076-cebd8fea3321">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -785,7 +785,7 @@ grade_code,std_size,inventory_code]]>
 					</textElement>
 					<text><![CDATA[Bin tipping]]></text>
 				</staticText>
-				<textField pattern="#,##0.00">
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
 					<reportElement x="50" y="35" width="30" height="11" uuid="b9d0c801-717a-4b52-a413-75f56a647676">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -808,7 +808,7 @@ grade_code,std_size,inventory_code]]>
 					</textElement>
 					<text><![CDATA[Grade]]></text>
 				</staticText>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement x="82" y="35" width="30" height="11" uuid="d510ea45-1c48-4cf2-bb12-6518ee14efbf">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -819,7 +819,7 @@ grade_code,std_size,inventory_code]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{no_of_bins}]]></textFieldExpression>
 				</textField>
-				<textField pattern="#,##0.00">
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
 					<reportElement x="146" y="35" width="30" height="11" uuid="4be510fd-b8f1-41fd-ad0b-a2617d8ae6a1">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -842,7 +842,7 @@ grade_code,std_size,inventory_code]]>
 					</textElement>
 					<text><![CDATA[Ave.Kgs]]></text>
 				</staticText>
-				<textField pattern="#,##0.00">
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
 					<reportElement x="114" y="35" width="35" height="11" uuid="4e14b9c2-6089-492b-a489-7d50797d3cea">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -888,7 +888,7 @@ grade_code,std_size,inventory_code]]>
 					</textElement>
 					<text><![CDATA[Bin Type]]></text>
 				</staticText>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement x="7" y="36" width="40" height="11" uuid="f0e907d1-ef93-41d8-895b-4a39a2569718">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
