@@ -72,7 +72,7 @@ group by rmt_classes.rmt_class_code,rmt_classes.id,pr.cultivar_id ,pr.farm_id]]>
 				<text><![CDATA[Weight]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="0" width="60" height="18" uuid="c35fcb63-7b27-4137-bad2-a9606fa94c33">
+				<reportElement x="0" y="0" width="61" height="18" uuid="c35fcb63-7b27-4137-bad2-a9606fa94c33">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
