@@ -58,10 +58,9 @@ WHERE party_roles.id = $P{party_role_id}]]>
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isBlankWhenNull="true">
-				<reportElement x="2" y="15" width="100" height="13" uuid="db975c88-bbd9-44f3-bcb5-045995237046">
+				<reportElement x="2" y="15" width="101" height="13" uuid="db975c88-bbd9-44f3-bcb5-045995237046">
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<box>
@@ -76,11 +75,11 @@ WHERE party_roles.id = $P{party_role_id}]]>
 				<textFieldExpression><![CDATA[$F{address_line_1}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="2" y="30" width="100" height="13" uuid="e158145e-6dd0-4de7-b25a-13bd851fa6e3">
+				<reportElement x="2" y="30" width="101" height="13" uuid="e158145e-6dd0-4de7-b25a-13bd851fa6e3">
 					<property name="local_mesure_unity" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -94,12 +93,11 @@ WHERE party_roles.id = $P{party_role_id}]]>
 				<textFieldExpression><![CDATA[$F{city}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="2" y="2" width="100" height="13" uuid="5ed06df0-5f00-4d92-b75f-ad25b1008b8b">
+				<reportElement x="2" y="2" width="101" height="13" uuid="5ed06df0-5f00-4d92-b75f-ad25b1008b8b">
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -113,9 +111,8 @@ WHERE party_roles.id = $P{party_role_id}]]>
 				<textFieldExpression><![CDATA[($P{name_prefix}== null ? "" : $P{name_prefix} + ($F{long_description}== null ? "" : $F{long_description}))]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="2" y="42" width="100" height="13" uuid="1c83478f-da4e-478b-a2e1-ef447afed5ca">
+				<reportElement x="2" y="42" width="101" height="13" uuid="1c83478f-da4e-478b-a2e1-ef447afed5ca">
 					<property name="local_mesure_unity" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>

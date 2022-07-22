@@ -58,10 +58,9 @@ WHERE party_roles.id = $P{party_role_id}]]>
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="0" y="15" width="100" height="13" uuid="8d8d7747-6cd0-4f6e-a3e2-d950590556a7">
+				<reportElement x="0" y="15" width="101" height="13" uuid="8d8d7747-6cd0-4f6e-a3e2-d950590556a7">
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<box>
@@ -76,9 +75,10 @@ WHERE party_roles.id = $P{party_role_id}]]>
 				<textFieldExpression><![CDATA[$F{address_line_1}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="0" y="30" width="100" height="13" uuid="b712670c-2a30-40fc-a5af-7d9d600b72ff">
+				<reportElement x="0" y="30" width="101" height="13" uuid="b712670c-2a30-40fc-a5af-7d9d600b72ff">
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -111,10 +111,11 @@ WHERE party_roles.id = $P{party_role_id}]]>
 				<textFieldExpression><![CDATA[($P{name_prefix}== null ? "" : $P{name_prefix} + ($F{long_description}== null ? "" : $F{long_description}))]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="0" y="43" width="100" height="13" uuid="5be83f58-fb97-4ba8-bbff-7464c0971ac2">
+				<reportElement x="0" y="43" width="101" height="13" uuid="5be83f58-fb97-4ba8-bbff-7464c0971ac2">
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>

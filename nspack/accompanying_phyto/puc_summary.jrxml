@@ -94,7 +94,7 @@ GROUP BY intake]]>
 				<text><![CDATA[Intake Document]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="256" y="0" width="40" height="13" uuid="75e0d10b-11b2-48b5-b972-432886787f79">
+				<reportElement x="256" y="0" width="39" height="13" uuid="75e0d10b-11b2-48b5-b972-432886787f79">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -185,7 +185,7 @@ GROUP BY intake]]>
 				<textFieldExpression><![CDATA[$F{pucs}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="256" y="0" width="40" height="30" uuid="d9eb339d-295f-4a3d-960d-f5e244eb58e7">
+				<reportElement x="256" y="0" width="39" height="30" uuid="d9eb339d-295f-4a3d-960d-f5e244eb58e7">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -205,7 +205,9 @@ GROUP BY intake]]>
 		<band height="12" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isBlankWhenNull="true">
-				<reportElement x="256" y="0" width="40" height="12" uuid="b4fffe9c-1c12-4cbe-93d3-26f60c2053e0"/>
+				<reportElement x="256" y="0" width="39" height="12" uuid="b4fffe9c-1c12-4cbe-93d3-26f60c2053e0">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
