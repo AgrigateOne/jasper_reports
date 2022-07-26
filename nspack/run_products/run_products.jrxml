@@ -30,7 +30,7 @@ run.puc,
 run.orchard,
 run.global_gap,
 run.grower_id
-,(select pick_ref from carton_labels where production_run_id = 297 order by id desc limit 1 ) picking_reference
+,(select pick_ref from carton_labels where production_run_id = $P{production_run_id} order by id desc limit 1 ) picking_reference
 ,cl.phc
 ,marketing_varieties.marketing_variety_code variety
 ,grades.grade_code grade
