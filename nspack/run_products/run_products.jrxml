@@ -7,19 +7,19 @@
 	<parameter name="production_run_id" class="java.lang.Integer"/>
 	<queryString language="SQL">
 		<![CDATA[WITH run_attr AS (
-	select --fn_production_run_code(392) AS production_run_code
-    fn_production_run_code(297) AS production_run_code,
+	select
+    fn_production_run_code($P{production_run_id}) AS production_run_code,
     run.id run_number,run.created_at,run.updated_at,run.farm_id,
 	pucs.gap_code global_gap,pucs.puc_code puc, orchards.orchard_code orchard,
 	--coalesce (farm_groups.farm_group_code,farms.farm_code) grower_id,
 	coalesce (farm_groups.id,farms.id) grower_id,
-	229 as run_id
+	$P{production_run_id} as run_id
 	from production_runs run
 	left join pucs on run.puc_id = pucs.id
 	left join orchards on run.orchard_id = orchards.id
 	left join farms on run.farm_id = farms.id
     left join farm_groups on farms.farm_group_id = farm_groups.id
-	where run.id = 297
+	where run.id = $P{production_run_id}
 )
 select
 run.production_run_code AS code,
@@ -59,7 +59,7 @@ left join target_market_groups packed_tm_groups on cl.packed_tm_group_id = packe
 left join inventory_codes on cl.inventory_code_id = inventory_codes.id
 left join party_roles on cl.marketing_org_party_role_id = party_roles.id
 left join organizations marketing_org on party_roles.organization_id = marketing_org.id
-where cl.production_run_id = 297
+where cl.production_run_id = $P{production_run_id}
 group by
 run.production_run_code,
 run.run_number,
