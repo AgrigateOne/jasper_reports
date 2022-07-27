@@ -13,7 +13,8 @@
 	pucs.gap_code global_gap,pucs.puc_code puc, orchards.orchard_code orchard,
 	--coalesce (farm_groups.farm_group_code,farms.farm_code) grower_id,
 	coalesce (farm_groups.id,farms.id) grower_id,
-	$P{production_run_id} as run_id
+	$P{production_run_id} as run_id,
+	run.run_batch_number
 	from production_runs run
 	left join pucs on run.puc_id = pucs.id
 	left join orchards on run.orchard_id = orchards.id
@@ -22,6 +23,7 @@
 	where run.id = $P{production_run_id}
 )
 select
+run.run_batch_number,
 run.production_run_code AS code,
 run.run_number,
 run.created_at,
@@ -61,6 +63,7 @@ left join party_roles on cl.marketing_org_party_role_id = party_roles.id
 left join organizations marketing_org on party_roles.organization_id = marketing_org.id
 where cl.production_run_id = $P{production_run_id}
 group by
+run.run_batch_number,
 run.production_run_code,
 run.run_number,
 run.created_at,
@@ -82,6 +85,11 @@ run.grower_id
 ,marketing_org.medium_description
 ,cl.marketing_org_party_role_id]]>
 	</queryString>
+	<field name="run_batch_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="run_batch_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="run_batch_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="production_runs"/>
+	</field>
 	<field name="code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="code"/>
 		<property name="com.jaspersoft.studio.field.label" value="code"/>
@@ -116,7 +124,7 @@ run.grower_id
 		<property name="com.jaspersoft.studio.field.label" value="global_gap"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="pucs"/>
 	</field>
-	<field name="grower_id" class="java.lang.String">
+	<field name="grower_id" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="grower_id"/>
 		<property name="com.jaspersoft.studio.field.label" value="grower_id"/>
 	</field>
@@ -223,7 +231,7 @@ run.grower_id
 				<textElement textAlignment="Center"/>
 				<text><![CDATA[Code]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="0" y="16" width="301" height="15" uuid="946daed3-3693-4baa-b406-c3ecbf25c213">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -313,7 +321,7 @@ run.grower_id
 				<textElement textAlignment="Center"/>
 				<text><![CDATA[Updated at]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="301" y="16" width="90" height="15" uuid="dbdcadf3-0b6a-425f-ba4d-cf9b9caeeec9">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -328,9 +336,9 @@ run.grower_id
 					<rightPen lineWidth="0.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
-				<textFieldExpression><![CDATA[$F{run_number}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{run_batch_number}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="392" y="16" width="100" height="15" uuid="641a8bf6-f2ed-4b5a-b7af-41256fb07015">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -346,7 +354,7 @@ run.grower_id
 				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
 				<textFieldExpression><![CDATA[$F{picking_reference}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="493" y="16" width="90" height="15" uuid="9f6d0da5-3a33-4245-aa7f-94601e593d15">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -363,7 +371,7 @@ run.grower_id
 				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
 				<textFieldExpression><![CDATA[$F{puc}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="584" y="16" width="110" height="15" uuid="d0353df1-de4c-4e0a-8e01-5d8da2848fb9">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -383,7 +391,7 @@ run.grower_id
 				</textElement>
 				<textFieldExpression><![CDATA[$F{created_at}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="695" y="16" width="105" height="15" uuid="d89d0bfe-5a53-45f3-80ab-91a5f6acd422">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
