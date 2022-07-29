@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NosoftCartonLabel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack local"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
 	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#FFFFFF" fontName="Arial" fontSize="12" isBold="true"/>
@@ -47,7 +48,8 @@
         9 AS std_hours_per_day,
         1.1 AS incentive_factor,
         sum(wage_levels.wage_level) over (partition by s.id) as wage_level_shift,
-        count(contract_workers.id) over (partition by s.id) as packers_shift
+        count(contract_workers.id) over (partition by s.id) as packers_shift,
+	    rank() OVER (PARTITION BY contract_workers.id ORDER BY packing_method_code) AS cw_packing_method_rank
     FROM
         cartons
          JOIN carton_labels ON carton_labels.id = cartons.carton_label_id
@@ -121,8 +123,8 @@ calc_sql AS (
         base_sql.shift_id,
         base_sql.wage_level_shift,
         base_sql.packers_shift,
-        count(*) over (partition by cw_id,shift_id) cw_cnt
-        
+        count(*) over (partition by cw_id,shift_id) cw_cnt,
+        (select sum(wage_level) from base_sql where cw_packing_method_rank = 1) as total_wage_level
     FROM
         base_sql
 ),
@@ -176,40 +178,138 @@ sum(CASE WHEN incentive < 0 THEN
     END/cw_cnt) over (partition by shift_id) shift_incentive,
     shift_id,
     wage_level_shift,
-    packers_shift
-
+    packers_shift,
+    total_wage_level
 FROM
     calc_sql2
     order by fruitphour desc;]]>
 	</queryString>
-	<field name="party_name" class="java.lang.String"/>
-	<field name="start_date_time" class="java.sql.Timestamp"/>
-	<field name="running_hours" class="java.lang.Double"/>
-	<field name="wage_level" class="java.math.BigDecimal"/>
-	<field name="wage_level_description" class="java.lang.String"/>
-	<field name="total_cartons" class="java.lang.Long"/>
-	<field name="total_fruit" class="java.lang.Long"/>
-	<field name="personnel_barcode_number" class="java.lang.String"/>
-	<field name="fruitphour" class="java.lang.Integer"/>
-	<field name="incentive" class="java.lang.Double"/>
-	<field name="rp1000f" class="java.math.BigDecimal"/>
-	<field name="cw_id" class="java.lang.Integer"/>
-	<field name="shift_type_code" class="java.lang.String"/>
-	<field name="packing_method_code" class="java.lang.String"/>
-	<field name="actual_count_reduction_factor" class="java.math.BigDecimal"/>
-	<field name="std_hours_per_day" class="java.lang.Integer"/>
-	<field name="incentive_factor" class="java.math.BigDecimal"/>
-	<field name="require_pack_hour" class="java.lang.Integer"/>
-	<field name="reduced_fruit_for_work_day" class="java.math.BigDecimal"/>
-	<field name="require_for_work_day" class="java.lang.Double"/>
-	<field name="end_date_time" class="java.sql.Timestamp"/>
-	<field name="cw_rank" class="java.lang.Boolean"/>
-	<field name="shift_fruit" class="java.math.BigDecimal"/>
-	<field name="shift_cartons" class="java.math.BigDecimal"/>
-	<field name="shift_incentive" class="java.lang.Double"/>
-	<field name="shift_id" class="java.lang.Integer"/>
-	<field name="wage_level_shift" class="java.math.BigDecimal"/>
-	<field name="packers_shift" class="java.lang.Long"/>
+	<field name="cw_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="cw_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="cw_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="contract_workers"/>
+	</field>
+	<field name="total_fruit" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="total_fruit"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_fruit"/>
+	</field>
+	<field name="running_hours" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.name" value="running_hours"/>
+		<property name="com.jaspersoft.studio.field.label" value="running_hours"/>
+	</field>
+	<field name="wage_level" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="wage_level"/>
+		<property name="com.jaspersoft.studio.field.label" value="wage_level"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="wage_levels"/>
+	</field>
+	<field name="wage_level_description" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="wage_level_description"/>
+		<property name="com.jaspersoft.studio.field.label" value="wage_level_description"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="wage_levels"/>
+	</field>
+	<field name="party_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="party_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="party_name"/>
+	</field>
+	<field name="personnel_barcode_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="personnel_barcode_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="personnel_barcode_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="contract_workers"/>
+	</field>
+	<field name="total_cartons" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="total_cartons"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_cartons"/>
+	</field>
+	<field name="std_hours_per_day" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="std_hours_per_day"/>
+		<property name="com.jaspersoft.studio.field.label" value="std_hours_per_day"/>
+	</field>
+	<field name="packing_method_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="packing_method_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="packing_method_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="packing_methods"/>
+	</field>
+	<field name="actual_count_reduction_factor" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="actual_count_reduction_factor"/>
+		<property name="com.jaspersoft.studio.field.label" value="actual_count_reduction_factor"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="packing_methods"/>
+	</field>
+	<field name="incentive_factor" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="incentive_factor"/>
+		<property name="com.jaspersoft.studio.field.label" value="incentive_factor"/>
+	</field>
+	<field name="require_pack_hour" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="require_pack_hour"/>
+		<property name="com.jaspersoft.studio.field.label" value="require_pack_hour"/>
+	</field>
+	<field name="reduced_fruit_for_work_day" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="reduced_fruit_for_work_day"/>
+		<property name="com.jaspersoft.studio.field.label" value="reduced_fruit_for_work_day"/>
+	</field>
+	<field name="require_for_work_day" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.name" value="require_for_work_day"/>
+		<property name="com.jaspersoft.studio.field.label" value="require_for_work_day"/>
+	</field>
+	<field name="incentive" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.name" value="incentive"/>
+		<property name="com.jaspersoft.studio.field.label" value="incentive"/>
+	</field>
+	<field name="start_date_time" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="start_date_time"/>
+		<property name="com.jaspersoft.studio.field.label" value="start_date_time"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="shifts"/>
+	</field>
+	<field name="fruitphour" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="fruitphour"/>
+		<property name="com.jaspersoft.studio.field.label" value="fruitphour"/>
+	</field>
+	<field name="rp1000f" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="rp1000f"/>
+		<property name="com.jaspersoft.studio.field.label" value="rp1000f"/>
+	</field>
+	<field name="shift_type_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="shift_type_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="shift_type_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="shift_types"/>
+	</field>
+	<field name="end_date_time" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="end_date_time"/>
+		<property name="com.jaspersoft.studio.field.label" value="end_date_time"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="shifts"/>
+	</field>
+	<field name="cw_rank" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="cw_rank"/>
+		<property name="com.jaspersoft.studio.field.label" value="cw_rank"/>
+	</field>
+	<field name="shift_fruit" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="shift_fruit"/>
+		<property name="com.jaspersoft.studio.field.label" value="shift_fruit"/>
+	</field>
+	<field name="shift_cartons" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="shift_cartons"/>
+		<property name="com.jaspersoft.studio.field.label" value="shift_cartons"/>
+	</field>
+	<field name="shift_incentive" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.name" value="shift_incentive"/>
+		<property name="com.jaspersoft.studio.field.label" value="shift_incentive"/>
+	</field>
+	<field name="shift_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="shift_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="shift_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="shifts"/>
+	</field>
+	<field name="wage_level_shift" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="wage_level_shift"/>
+		<property name="com.jaspersoft.studio.field.label" value="wage_level_shift"/>
+	</field>
+	<field name="packers_shift" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="packers_shift"/>
+		<property name="com.jaspersoft.studio.field.label" value="packers_shift"/>
+	</field>
+	<field name="total_wage_level" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total_wage_level"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_wage_level"/>
+	</field>
 	<variable name="total_cartons_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{total_cartons}]]></variableExpression>
 	</variable>
@@ -511,12 +611,13 @@ FROM
 			<textField pattern="###0.00;###0.00-">
 				<reportElement x="736" y="0" width="63" height="15" uuid="f3b0f47e-eab3-4b8c-bbc9-35bf10bbb289"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[Double.valueOf($F{shift_incentive}.doubleValue()+$F{wage_level_shift}.doubleValue())]]></textFieldExpression>
+				<textFieldExpression><![CDATA[Double.valueOf($F{shift_incentive}.doubleValue()+$F{total_wage_level}.doubleValue())
+]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-">
 				<reportElement x="580" y="0" width="43" height="15" uuid="493d12c4-6d7e-4b7c-8e07-e04ff184c1ba"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{wage_level_shift}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{total_wage_level}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>
