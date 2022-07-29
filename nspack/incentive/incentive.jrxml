@@ -547,7 +547,7 @@ FROM
 	</columnFooter>
 	<pageFooter>
 		<band height="26" splitType="Stretch">
-			<textField pattern="EEEEE dd MMMMM yyyy">
+			<textField pattern="MMM d, yyyy">
 				<reportElement style="Column header" x="610" y="8" width="189" height="18" forecolor="#000000" uuid="a8a917d7-104b-444d-a6c3-37768dd7fb70"/>
 				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="10" isBold="false"/>

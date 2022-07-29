@@ -36,7 +36,7 @@ ORDER BY  count(carton_labels.*) desc;]]>
 				<textFieldExpression><![CDATA[$F{marketing_variety_code}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="107" y="0" width="54" height="12" uuid="32762527-8eae-4c6c-8781-ecdab2294104">
+				<reportElement x="107" y="0" width="53" height="12" uuid="32762527-8eae-4c6c-8781-ecdab2294104">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -50,7 +50,7 @@ ORDER BY  count(carton_labels.*) desc;]]>
 	<summary>
 		<band height="13" splitType="Stretch">
 			<textField>
-				<reportElement x="107" y="1" width="54" height="12" uuid="e4130e2c-23a6-4ce4-8c93-b2d5ff52de5c">
+				<reportElement x="107" y="1" width="53" height="12" uuid="e4130e2c-23a6-4ce4-8c93-b2d5ff52de5c">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right">
