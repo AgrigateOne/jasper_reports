@@ -548,7 +548,7 @@ FROM
 	<pageFooter>
 		<band height="26" splitType="Stretch">
 			<textField pattern="EEEEE dd MMMMM yyyy">
-				<reportElement style="Column header" x="683" y="8" width="116" height="18" forecolor="#000000" uuid="a8a917d7-104b-444d-a6c3-37768dd7fb70"/>
+				<reportElement style="Column header" x="610" y="8" width="189" height="18" forecolor="#000000" uuid="a8a917d7-104b-444d-a6c3-37768dd7fb70"/>
 				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
@@ -611,8 +611,7 @@ FROM
 			<textField pattern="###0.00;###0.00-">
 				<reportElement x="736" y="0" width="63" height="15" uuid="f3b0f47e-eab3-4b8c-bbc9-35bf10bbb289"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[Double.valueOf($F{shift_incentive}.doubleValue()+$F{total_wage_level}.doubleValue())
-]]></textFieldExpression>
+				<textFieldExpression><![CDATA[Double.valueOf($F{shift_incentive}.doubleValue()+$F{total_wage_level}.doubleValue())]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-">
 				<reportElement x="580" y="0" width="43" height="15" uuid="493d12c4-6d7e-4b7c-8e07-e04ff184c1ba"/>
