@@ -1007,7 +1007,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 			</staticText>
 			<staticText>
 				<reportElement x="138" y="45" width="14" height="13" uuid="b006ecd9-9474-4990-b773-f698441dce88"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[IC]]></text>
@@ -1224,14 +1224,17 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[$F{std_pack}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="138" y="0" width="14" height="11" uuid="449f85e3-a4fe-4c0a-90f9-dcdd6f8e0989"/>
-				<textElement textAlignment="Center">
+				<reportElement x="142" y="0" width="10" height="11" uuid="449f85e3-a4fe-4c0a-90f9-dcdd6f8e0989">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{inventory_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="91" y="0" width="20" height="11" uuid="eff04fd7-2c38-48fd-8900-aafe80cf4e43">
+				<reportElement x="91" y="0" width="15" height="11" uuid="eff04fd7-2c38-48fd-8900-aafe80cf4e43">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1351,7 +1354,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[$F{phyto_data}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="112" y="0" width="27" height="11" uuid="5131c5cb-cb79-407a-842f-929c57266a71">
+				<reportElement x="107" y="0" width="36" height="11" uuid="5131c5cb-cb79-407a-842f-929c57266a71">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
