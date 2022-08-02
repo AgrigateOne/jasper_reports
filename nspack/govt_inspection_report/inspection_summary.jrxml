@@ -246,7 +246,7 @@ order by commodity, variety,std_pack, grade, edi_size_count]]>
 	<title>
 		<band height="30" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="6" width="165" height="20" uuid="5540cf67-45c7-4210-b9a0-39498f2ccbeb">
+				<reportElement x="0" y="6" width="180" height="20" uuid="5540cf67-45c7-4210-b9a0-39498f2ccbeb">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement>
