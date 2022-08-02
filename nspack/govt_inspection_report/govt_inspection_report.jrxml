@@ -1329,7 +1329,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[$F{grade}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="154" y="0" width="29" height="11" uuid="07518f91-ba03-45c3-8770-f26323c9a14f">
+				<reportElement x="152" y="0" width="31" height="11" uuid="07518f91-ba03-45c3-8770-f26323c9a14f">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
