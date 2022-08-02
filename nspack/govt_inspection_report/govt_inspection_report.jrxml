@@ -1007,7 +1007,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 			</staticText>
 			<staticText>
 				<reportElement x="138" y="45" width="14" height="13" uuid="b006ecd9-9474-4990-b773-f698441dce88"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[IC]]></text>
