@@ -938,14 +938,15 @@ coalesce(scrapped_pallet_number.gap_certification,
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Var]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="41" y="45" width="25" height="13" uuid="22753fa7-e3d4-4c6d-9576-0825fa9511f8">
+				<reportElement x="41" y="45" width="22" height="13" uuid="22753fa7-e3d4-4c6d-9576-0825fa9511f8">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
@@ -953,7 +954,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<text><![CDATA[Pack]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="67" y="45" width="24" height="13" uuid="6d343af3-e8e4-4116-b4a5-4d638475461e">
+				<reportElement x="65" y="45" width="24" height="13" uuid="6d343af3-e8e4-4116-b4a5-4d638475461e">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -963,7 +964,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<text><![CDATA[Class]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="92" y="45" width="17" height="13" uuid="49671f40-2934-4733-b6af-9288b50b3e3d">
+				<reportElement x="90" y="45" width="17" height="13" uuid="49671f40-2934-4733-b6af-9288b50b3e3d">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1102,7 +1103,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<text><![CDATA[Phyto Data]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="112" y="45" width="27" height="13" uuid="0012db30-c291-415f-9bd3-86edde986d60">
+				<reportElement x="108" y="45" width="27" height="13" uuid="0012db30-c291-415f-9bd3-86edde986d60">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
