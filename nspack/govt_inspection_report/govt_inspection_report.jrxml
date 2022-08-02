@@ -1224,11 +1224,11 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[$F{std_pack}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="142" y="0" width="10" height="11" uuid="449f85e3-a4fe-4c0a-90f9-dcdd6f8e0989">
+				<reportElement x="140" y="0" width="10" height="11" uuid="449f85e3-a4fe-4c0a-90f9-dcdd6f8e0989">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Left">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{inventory_code}]]></textFieldExpression>
@@ -1261,7 +1261,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[$F{pallet_base}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="180" y="0" width="18" height="11" uuid="e68a1c1e-4a7e-4319-97fc-db48090ac18e">
+				<reportElement x="183" y="0" width="15" height="11" uuid="e68a1c1e-4a7e-4319-97fc-db48090ac18e">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -1318,11 +1318,13 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[$F{grade}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="152" y="0" width="28" height="11" uuid="07518f91-ba03-45c3-8770-f26323c9a14f">
+				<reportElement x="152" y="0" width="31" height="11" uuid="07518f91-ba03-45c3-8770-f26323c9a14f">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left">
 					<font size="8"/>
+					<paragraph leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{mark}]]></textFieldExpression>
 			</textField>
@@ -1359,7 +1361,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[$F{phyto_data}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="107" y="0" width="36" height="11" uuid="5131c5cb-cb79-407a-842f-929c57266a71">
+				<reportElement x="107" y="0" width="32" height="11" uuid="5131c5cb-cb79-407a-842f-929c57266a71">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
