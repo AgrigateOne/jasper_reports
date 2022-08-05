@@ -18,7 +18,6 @@
 		<parameterDescription><![CDATA[]]></parameterDescription>
 		<defaultValueExpression><![CDATA["CPT"]]></defaultValueExpression>
 	</parameter>
-	<parameter name="user_name" class="java.lang.String"/>
 	<queryString language="SQL">
 		<![CDATA[select 
   count(*) OVER (PARTITION BY sq.load_id) AS total_row,
@@ -419,12 +418,14 @@ END,edi_in_consignment_note_number),
 					</graphicElement>
 				</line>
 				<staticText>
-					<reportElement x="599" y="71" width="53" height="15" uuid="df8c6e8d-f254-4b0a-ad17-c2c5c5285eb5"/>
+					<reportElement x="465" y="71" width="53" height="15" uuid="df8c6e8d-f254-4b0a-ad17-c2c5c5285eb5">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
 					<box>
 						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.0"/>
 						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.0"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="SansSerif" size="5"/>
@@ -466,12 +467,15 @@ END,edi_in_consignment_note_number),
 					</graphicElement>
 				</rectangle>
 				<staticText>
-					<reportElement x="290" y="71" width="39" height="15" uuid="e468e2b2-e508-44c9-9bf3-62461dbeda16"/>
+					<reportElement x="237" y="71" width="30" height="15" uuid="e468e2b2-e508-44c9-9bf3-62461dbeda16">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
 					<box>
 						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.0"/>
 						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.0"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="SansSerif" size="5"/>
@@ -479,12 +483,15 @@ END,edi_in_consignment_note_number),
 					<text><![CDATA[Durban]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="178" y="71" width="69" height="15" uuid="027bef10-f2d2-4cea-8bbc-66e3e62523ec"/>
+					<reportElement x="177" y="71" width="40" height="15" uuid="027bef10-f2d2-4cea-8bbc-66e3e62523ec">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
 					<box>
 						<topPen lineWidth="0.5"/>
 						<leftPen lineWidth="0.5"/>
 						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.0"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="SansSerif" size="5"/>
@@ -615,12 +622,15 @@ END,edi_in_consignment_note_number),
 					</graphicElement>
 				</rectangle>
 				<staticText>
-					<reportElement x="471" y="71" width="78" height="15" uuid="5f0aeb66-5900-444f-ba21-051473b3511f"/>
+					<reportElement x="335" y="71" width="50" height="15" uuid="5f0aeb66-5900-444f-ba21-051473b3511f">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
 					<box>
 						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.0"/>
 						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.0"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="SansSerif" size="5"/>
@@ -646,12 +656,15 @@ END,edi_in_consignment_note_number),
 					<text><![CDATA[Date:]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="382" y="71" width="40" height="15" uuid="661644fa-8a8e-4e49-b2e8-037ca81484db"/>
+					<reportElement x="287" y="71" width="28" height="15" uuid="661644fa-8a8e-4e49-b2e8-037ca81484db">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
 					<box>
 						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.0"/>
 						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.0"/>
 					</box>
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="SansSerif" size="5"/>
@@ -983,64 +996,76 @@ END,edi_in_consignment_note_number),
 					</graphicElement>
 				</rectangle>
 				<rectangle>
-					<reportElement x="247" y="71" width="43" height="15" uuid="97db3338-b024-4c4e-b4ae-d7fc6eba40a4">
+					<reportElement x="217" y="71" width="20" height="15" uuid="97db3338-b024-4c4e-b4ae-d7fc6eba40a4">
 						<property name="local_mesure_unitwidth" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="local_mesure_unitheight" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.element.name" value="Cpt Rectangle"/>
 					</reportElement>
 					<graphicElement>
 						<pen lineWidth="0.5"/>
 					</graphicElement>
 				</rectangle>
 				<rectangle>
-					<reportElement x="329" y="71" width="53" height="15" uuid="27dd2b91-e9d4-4196-bb0a-6eb9cde4bf18">
+					<reportElement x="267" y="71" width="20" height="15" uuid="27dd2b91-e9d4-4196-bb0a-6eb9cde4bf18">
 						<property name="local_mesure_unitwidth" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="local_mesure_unitheight" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.element.name" value="Durban Rectangle"/>
 					</reportElement>
 					<graphicElement>
 						<pen lineWidth="0.5"/>
 					</graphicElement>
 				</rectangle>
 				<rectangle>
-					<reportElement x="652" y="71" width="53" height="15" uuid="8959d93f-fc3a-4a23-bc44-2dfedd77d710">
+					<reportElement x="518" y="71" width="20" height="15" uuid="8959d93f-fc3a-4a23-bc44-2dfedd77d710">
 						<property name="local_mesure_unitwidth" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="local_mesure_unitheight" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.element.name" value="Other Rectangle"/>
 					</reportElement>
 					<graphicElement>
 						<pen lineWidth="0.5"/>
 					</graphicElement>
 				</rectangle>
 				<rectangle>
-					<reportElement x="422" y="71" width="49" height="15" uuid="95f66cb8-e9d0-4952-939d-7d8967e72f28">
+					<reportElement x="315" y="71" width="20" height="15" uuid="95f66cb8-e9d0-4952-939d-7d8967e72f28">
 						<property name="local_mesure_unitwidth" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="local_mesure_unitheight" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.element.name" value="Maputo Rectangle"/>
 					</reportElement>
 					<graphicElement>
 						<pen lineWidth="0.5"/>
 					</graphicElement>
 				</rectangle>
 				<rectangle>
-					<reportElement x="549" y="71" width="50" height="15" uuid="8ecf9715-6b17-49d4-83c9-ddf4b13b57d6">
+					<reportElement x="385" y="71" width="20" height="15" uuid="8ecf9715-6b17-49d4-83c9-ddf4b13b57d6">
 						<property name="local_mesure_unitwidth" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="local_mesure_unitheight" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.element.name" value="PLZ Rectangle"/>
 					</reportElement>
 					<graphicElement>
 						<pen lineWidth="0.5"/>
 					</graphicElement>
 				</rectangle>
 				<staticText>
-					<reportElement x="652" y="71" width="56" height="15" uuid="3580e8ca-26ed-4381-b50d-f8f32cedd94a">
+					<reportElement x="518" y="71" width="20" height="15" uuid="3580e8ca-26ed-4381-b50d-f8f32cedd94a">
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
-						<printWhenExpression><![CDATA[!$P{place_of_issue}.equalsIgnoreCase( "CPT" ) && !$P{place_of_issue}.equalsIgnoreCase( "DBN" ) && !$P{place_of_issue}.equalsIgnoreCase( "MPM" ) && !$P{place_of_issue}.equalsIgnoreCase( "PLZ" )]]></printWhenExpression>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.element.name" value="Other X static"/>
+						<printWhenExpression><![CDATA[!$P{place_of_issue}.equalsIgnoreCase( "CPT" ) && !$P{place_of_issue}.equalsIgnoreCase( "DBN" ) && !$P{place_of_issue}.equalsIgnoreCase( "MPM" ) && !$P{place_of_issue}.equalsIgnoreCase( "PLZ" )&& !$P{place_of_issue}.equalsIgnoreCase( "Grabouw" )]]></printWhenExpression>
 					</reportElement>
 					<box>
 						<topPen lineWidth="0.5"/>
@@ -1054,7 +1079,10 @@ END,edi_in_consignment_note_number),
 					<text><![CDATA[X]]></text>
 				</staticText>
 				<staticText>
-					<reportElement key="" x="422" y="71" width="49" height="15" uuid="458472d5-6dcc-4296-a413-06feed742592">
+					<reportElement key="" x="315" y="71" width="20" height="15" uuid="458472d5-6dcc-4296-a413-06feed742592">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.element.name" value="Maputo X static"/>
 						<printWhenExpression><![CDATA[$P{place_of_issue}.equalsIgnoreCase( "MPM" )]]></printWhenExpression>
 					</reportElement>
 					<box>
@@ -1069,7 +1097,10 @@ END,edi_in_consignment_note_number),
 					<text><![CDATA[X]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="329" y="71" width="53" height="15" uuid="078b87ed-2f5c-469b-a0f2-8d1daa601960">
+					<reportElement x="267" y="71" width="20" height="15" uuid="078b87ed-2f5c-469b-a0f2-8d1daa601960">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.element.name" value="Durban X static"/>
 						<printWhenExpression><![CDATA[$P{place_of_issue}.equalsIgnoreCase( "DBN" )]]></printWhenExpression>
 					</reportElement>
 					<box>
@@ -1084,7 +1115,10 @@ END,edi_in_consignment_note_number),
 					<text><![CDATA[X]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="247" y="71" width="43" height="15" uuid="2a5273a5-72d1-4259-b858-2737d3afe6ad">
+					<reportElement x="217" y="71" width="20" height="15" uuid="2a5273a5-72d1-4259-b858-2737d3afe6ad">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.element.name" value="Cpt X Static"/>
 						<printWhenExpression><![CDATA[$P{place_of_issue}.equalsIgnoreCase( "CPT" )]]></printWhenExpression>
 					</reportElement>
 					<box>
@@ -1099,8 +1133,61 @@ END,edi_in_consignment_note_number),
 					<text><![CDATA[X]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="549" y="71" width="50" height="15" uuid="64713671-ca76-4982-aaf9-df438715f50c">
+					<reportElement x="405" y="71" width="40" height="15" uuid="7611e1b8-67c0-4687-b5b0-ce19fc600101">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="5"/>
+					</textElement>
+					<text><![CDATA[Grabouw]]></text>
+				</staticText>
+				<rectangle>
+					<reportElement x="445" y="71" width="20" height="15" uuid="6e4205f4-cf37-4427-b1a9-c8e8fb8a82b1">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.element.name" value="Grabouw Rectangle"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement x="385" y="71" width="20" height="15" uuid="dfcca50c-fac7-4b4d-ae62-cb28bde3f066">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.element.name" value="PLZ X static"/>
 						<printWhenExpression><![CDATA[$P{place_of_issue}.equalsIgnoreCase( "PLZ" )]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="5" isBold="false"/>
+					</textElement>
+					<text><![CDATA[X]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="445" y="71" width="20" height="15" uuid="e1101c7e-0318-4a66-8e0e-a0f09cd9c3cb">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.element.name" value="Grabouw X static"/>
+						<printWhenExpression><![CDATA[$P{place_of_issue}.equalsIgnoreCase( "Grabouw" )]]></printWhenExpression>
 					</reportElement>
 					<box>
 						<topPen lineWidth="0.5"/>
