@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gov_inspection_sheet" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b276ed72-36fe-4eb1-8898-57bb00d5eee1">
 	<property name="ireport.zoom" value="1.7524694974069621"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="46"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/first_intake"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="live_kromco_nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="158"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="831"/>
@@ -204,7 +204,7 @@ left join destination_countries dc on dc.id= target_markets_for_countries.destin
     LEFT JOIN inspection_failure_reasons  on inspection_failure_reasons.id = govt_inspection_pallets.failure_reason_id
 
   WHERE
-    govt_inspection_sheet_id = $P{govt_inspection_sheet_id}
+    govt_inspection_sheet_id = $P{govt_inspection_sheet_id}     and p.exit_ref <> 'RESTORE REPACKED PALLET'
     AND $P!{QueryCondition}
 )
 SELECT row_number () OVER (partition by p.id ORDER by ps.id )as seq_no,case when (row_number () OVER (partition by p.id ORDER by ps.id ))=1 then true else false end as print_barcode,
@@ -799,9 +799,10 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[$V{pallet_number1}]]></textFieldExpression>
 			</textField>
 			<subreport>
-				<reportElement x="3" y="56" width="123" height="95" uuid="f8260582-5e73-4ef0-9981-e7d4f1be8337">
+				<reportElement x="3" y="56" width="124" height="95" uuid="f8260582-5e73-4ef0-9981-e7d4f1be8337">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<subreportParameter name="party_role_id">
 					<subreportParameterExpression><![CDATA[$F{implementation_owner_party_role_id}]]></subreportParameterExpression>

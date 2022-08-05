@@ -207,7 +207,7 @@ scrapped_pallet_number AS (
     LEFT JOIN inspection_failure_reasons  on inspection_failure_reasons.id = govt_inspection_pallets.failure_reason_id
 
   WHERE
-    govt_inspection_sheet_id = $P{govt_inspection_sheet_id}
+    govt_inspection_sheet_id = $P{govt_inspection_sheet_id} and p.exit_ref <> 'RESTORE REPACKED PALLET'
     AND $P!{QueryCondition}
 )
 SELECT row_number () OVER (partition by p.id ORDER by ps.id )as seq_no,case when (row_number () OVER (partition by p.id ORDER by ps.id ))=1 then true else false end as print_barcode,
