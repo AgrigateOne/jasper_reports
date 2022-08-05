@@ -267,17 +267,7 @@ coalesce(scrapped_pallet_number.inspection_date_time,govt_inspection_sheets.crea
 coalesce(scrapped_pallet_number.inspection_billing_party_role_id,govt_inspection_sheets.inspection_billing_party_role_id) as inspection_billing_party_role_id,
 coalesce(scrapped_pallet_number.exporter_party_role_id,govt_inspection_sheets.exporter_party_role_id) as exporter_party_role_id,
 coalesce(scrapped_pallet_number.upn,govt_inspection_sheets.upn) as upn,
-
-  CASE WHEN govt_inspection_sheets.use_inspection_destination_for_load_out THEN
-        (SELECT destination_regions.destination_region_name
-		FROM destination_regions_tm_groups
-		LEFT JOIN destination_regions ON destination_regions.id = destination_regions_tm_groups.destination_region_id
-		WHERE destination_regions_tm_groups.target_market_group_id = ps.packed_tm_group_id
-        LIMIT 1)
-ELSE
-         destination_regions.destination_region_name
-END AS destination_region_name,
-
+destination_regions.destination_region_name,
 coalesce(scrapped_pallet_number.pallet_size,ps.carton_quantity::numeric / p.carton_quantity::numeric) AS pallet_size,
 COALESCE(scrapped_pallet_number.variety,cvv.marketing_variety_code,marketing_varieties.inspection_variety, marketing_varieties.marketing_variety_code) AS variety,
 COALESCE(scrapped_pallet_number.pallet_base,pallet_bases.pallet_base_code ) AS pallet_base,
