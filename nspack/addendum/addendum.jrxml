@@ -1445,7 +1445,7 @@ END,edi_in_consignment_note_number),
 				<textFieldExpression><![CDATA[$F{booking_reference}]]></textFieldExpression>
 			</textField>
 			<image scaleImage="FillFrame">
-				<reportElement x="1" y="0" width="150" height="80" uuid="4d93be6c-bfde-441a-a429-1310524d45eb">
+				<reportElement x="1" y="0" width="151" height="80" uuid="4d93be6c-bfde-441a-a429-1310524d45eb">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
