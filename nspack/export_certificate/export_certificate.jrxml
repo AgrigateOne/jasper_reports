@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="export_certificate" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="2feb80a9-cf2b-4ffa-aba7-8f4f0e675df4">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="live_kromco_nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="158"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="831"/>
 	<parameter name="load_id" class="java.lang.Integer"/>
@@ -557,7 +557,7 @@ vessel_code,exporter_certificate_code,commodities.code,mv.description,commoditie
 					<text><![CDATA[Inspection Stamp]]></text>
 				</staticText>
 				<textField pattern="dd MMMMM yyyy">
-					<reportElement x="339" y="83" width="100" height="15" uuid="084f94a8-d7f8-4a31-9d47-e1750a2a2dc9">
+					<reportElement x="339" y="83" width="161" height="15" uuid="084f94a8-d7f8-4a31-9d47-e1750a2a2dc9">
 						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 					</reportElement>
 					<textElement>
@@ -592,15 +592,17 @@ vessel_code,exporter_certificate_code,commodities.code,mv.description,commoditie
 			<band height="24">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<staticText>
-					<reportElement x="149" y="0" width="159" height="24" uuid="b6e5c67e-d768-4c08-a881-5a7145adb93a">
+					<reportElement x="121" y="0" width="237" height="24" uuid="b6e5c67e-d768-4c08-a881-5a7145adb93a">
 						<property name="local_mesure_unitx" value="pixel"/>
 						<property name="local_mesure_unity" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					</reportElement>
 					<textElement>
 						<font size="9" isBold="true"/>
+						<paragraph firstLineIndent="2"/>
 					</textElement>
-					<text><![CDATA[9.  Type of product (variety if the standard specifies)]]></text>
+					<text><![CDATA[ 9.  Type of product (variety if the           standard  specifies)]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="421" y="0" width="88" height="24" uuid="40204d42-dccb-407c-8ec6-b5290115c739">
@@ -612,16 +614,17 @@ vessel_code,exporter_certificate_code,commodities.code,mv.description,commoditie
 					<text><![CDATA[11.  Total weight in kg gross/net]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="0" y="0" width="109" height="24" uuid="ebf6a436-666d-4647-8584-e0797552d0f0">
+					<reportElement x="0" y="0" width="120" height="24" uuid="ebf6a436-666d-4647-8584-e0797552d0f0">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<box>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
 					<textElement>
 						<font size="9" isBold="true"/>
@@ -630,13 +633,15 @@ vessel_code,exporter_certificate_code,commodities.code,mv.description,commoditie
 					<text><![CDATA[8.  Packages (number and type)]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="348" y="0" width="71" height="24" uuid="6f3dfd47-4d3a-4947-bf16-290b0084a3de">
+					<reportElement x="358" y="0" width="61" height="24" uuid="6f3dfd47-4d3a-4947-bf16-290b0084a3de">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					</reportElement>
-					<textElement>
+					<textElement textAlignment="Left">
 						<font size="9" isBold="true"/>
 					</textElement>
-					<text><![CDATA[10.  Quality class]]></text>
+					<text><![CDATA[10.Quality class]]></text>
 				</staticText>
 			</band>
 		</groupHeader>
@@ -644,8 +649,9 @@ vessel_code,exporter_certificate_code,commodities.code,mv.description,commoditie
 			<band height="15">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<textField>
-					<reportElement x="0" y="0" width="45" height="15" uuid="4ed2d797-3d69-4b6d-ba81-4e4d05244260">
+					<reportElement x="0" y="0" width="40" height="15" uuid="4ed2d797-3d69-4b6d-ba81-4e4d05244260">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<box>
 						<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -653,13 +659,20 @@ vessel_code,exporter_certificate_code,commodities.code,mv.description,commoditie
 						<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 						<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					</box>
-					<textElement textAlignment="Right">
+					<textElement textAlignment="Center">
 						<font size="8" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{totctns}]]></textFieldExpression>
 				</textField>
 				<staticText>
-					<reportElement x="56" y="0" width="80" height="12" uuid="c99a92a3-661a-4136-b7f7-4ed59f5898ac"/>
+					<reportElement x="41" y="0" width="79" height="14" uuid="c99a92a3-661a-4136-b7f7-4ed59f5898ac">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<box>
+						<rightPen lineWidth="1.0"/>
+					</box>
 					<textElement>
 						<font size="8" isBold="true"/>
 					</textElement>
@@ -695,18 +708,6 @@ vessel_code,exporter_certificate_code,commodities.code,mv.description,commoditie
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 			</rectangle>
-			<line>
-				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" x="141" y="352" width="1" height="80" uuid="1fb7a87f-5701-4cd5-a3c7-92b14248c66a">
-					<property name="local_mesure_unitwidth" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="local_mesure_unity" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-				</reportElement>
-			</line>
 			<line>
 				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToTallestObject" x="416" y="352" width="1" height="80" uuid="284c2d82-22b0-4f84-a0e1-41a4109c6450">
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -783,8 +784,9 @@ vessel_code,exporter_certificate_code,commodities.code,mv.description,commoditie
 		<band height="13" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField>
-				<reportElement x="0" y="1" width="45" height="12" uuid="704ecb9e-1ff1-4026-b1f1-9276cd83842b">
+				<reportElement x="0" y="1" width="40" height="12" uuid="704ecb9e-1ff1-4026-b1f1-9276cd83842b">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
 					<pen lineWidth="1.0"/>
@@ -793,29 +795,39 @@ vessel_code,exporter_certificate_code,commodities.code,mv.description,commoditie
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ctn_qty}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="56" y="1" width="75" height="12" isRemoveLineWhenBlank="true" uuid="ca14af76-790d-48d9-acf8-0441f8ee73cd"/>
+				<reportElement x="41" y="1" width="79" height="12" isRemoveLineWhenBlank="true" uuid="ca14af76-790d-48d9-acf8-0441f8ee73cd">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<rightPen lineWidth="1.0"/>
+				</box>
 				<textElement>
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[CARTONS]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="196" y="1" width="152" height="12" uuid="4fc7c380-1a34-4603-bb0d-ebab86e2292a"/>
-				<textElement textAlignment="Left">
+				<reportElement x="209" y="1" width="149" height="12" uuid="4fc7c380-1a34-4603-bb0d-ebab86e2292a"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font fontName="SansSerif" size="9" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{marketing_variety_description}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="151" y="1" width="52" height="12" uuid="7705e38d-cc72-49c4-8058-01c61c304607"/>
-				<textElement textAlignment="Left">
-					<font size="8" isBold="true"/>
+				<reportElement x="121" y="1" width="82" height="12" uuid="7705e38d-cc72-49c4-8058-01c61c304607">
+					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font size="9" isBold="true"/>
+					<paragraph firstLineIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{commodity_desc}]]></textFieldExpression>
 			</textField>
@@ -826,8 +838,11 @@ vessel_code,exporter_certificate_code,commodities.code,mv.description,commoditie
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nett_mass}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="350" y="1" width="69" height="12" uuid="b55d4b53-bf57-40b8-8ee2-8aad608cddda"/>
+			<textField isBlankWhenNull="true">
+				<reportElement x="358" y="1" width="61" height="12" uuid="b55d4b53-bf57-40b8-8ee2-8aad608cddda">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Left">
 					<font size="8" isBold="true"/>
 				</textElement>
