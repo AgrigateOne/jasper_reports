@@ -337,7 +337,7 @@ order by row_num asc]]>
 				<text><![CDATA[    DIRECTORATE: INSPECTION SERVICES]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="10" y="192" width="70" height="12" uuid="1da8ce97-13bb-432f-9754-6a56a91e71cc">
+				<reportElement x="10" y="192" width="70" height="24" uuid="1da8ce97-13bb-432f-9754-6a56a91e71cc">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -352,7 +352,8 @@ order by row_num asc]]>
 				<textElement>
 					<font size="9" isBold="false" isItalic="false"/>
 				</textElement>
-				<text><![CDATA[  Importing Country:]]></text>
+				<text><![CDATA[  Importing 
+  Country:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="10" y="176" width="70" height="15" uuid="33a6ed69-3e2e-4166-80a4-a73a46ae3f93">
@@ -373,7 +374,7 @@ order by row_num asc]]>
 				<text><![CDATA[  Commodity:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="81" y="192" width="151" height="12" uuid="f4fe77ae-8095-4808-b708-317609b760a0">
+				<reportElement x="81" y="192" width="151" height="24" uuid="f4fe77ae-8095-4808-b708-317609b760a0">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>

@@ -93,11 +93,12 @@ WHERE party_roles.id = $P{party_role_id}]]>
 				<textFieldExpression><![CDATA[$F{city}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="2" y="2" width="101" height="13" uuid="5ed06df0-5f00-4d92-b75f-ad25b1008b8b">
+				<reportElement x="2" y="2" width="100" height="13" uuid="5ed06df0-5f00-4d92-b75f-ad25b1008b8b">
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
