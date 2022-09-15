@@ -11,7 +11,7 @@
 	<parameter name="load_id" class="java.lang.Integer"/>
 	<parameter name="pallet_ids" class="java.util.Collection"/>
 	<queryString language="SQL">
-		<![CDATA[SELECT intake,
+		<![CDATA[SELECT intake ,
   string_agg(DISTINCT puc, ', ') AS pucs,
   SUM(carton_quantity) AS ctns,
   COUNT(DISTINCT pallet_number) AS plts

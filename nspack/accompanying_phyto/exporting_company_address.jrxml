@@ -25,7 +25,7 @@
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[SELECT organizations.long_description ,
-addresses.address_line_1,
+addresses.address_line_1 ,
 addresses.address_line_2,
 addresses.address_line_3,
 addresses.city,

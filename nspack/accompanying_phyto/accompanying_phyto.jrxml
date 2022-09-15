@@ -67,7 +67,7 @@ doc_nums.load_ids,
 doc_nums.consignment_note_numbers,
 commodities.commodity,
 '00' ||  COALESCE(CAST(p.load_id as text), '0') as document_number,
-destination_countries.description  as importing_country,
+--destination_countries.description  as importing_country,
 p.exporter,
 
 (SELECT pr.id
