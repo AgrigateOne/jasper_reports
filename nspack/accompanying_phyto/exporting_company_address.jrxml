@@ -80,6 +80,7 @@ WHERE party_roles.id = $P{party_role_id}]]>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -89,6 +90,7 @@ WHERE party_roles.id = $P{party_role_id}]]>
 				</box>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
+					<paragraph firstLineIndent="1"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{city}]]></textFieldExpression>
 			</textField>

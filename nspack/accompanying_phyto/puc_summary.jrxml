@@ -94,7 +94,7 @@ GROUP BY intake]]>
 				<text><![CDATA[Intake Document]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="256" y="0" width="38" height="13" uuid="75e0d10b-11b2-48b5-b972-432886787f79">
+				<reportElement x="256" y="0" width="37" height="13" uuid="75e0d10b-11b2-48b5-b972-432886787f79">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
