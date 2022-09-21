@@ -15,6 +15,8 @@ The report can be generated:
 
 ## Data sources
 
+
+## Header
 | Label | Description | Source |
 | ----- | ----------- | ------ |
 | Document No / Series no | | '00' followed by the load `id` |
@@ -25,19 +27,23 @@ The report can be generated:
 | Magestrial District |The district in which the depot is located or the place where the phyto inspection takes place| the first of `depots.magisterial_district` or the passed in default `phyto_inspection_depot`  that has a value|
 |Dalrrd Inspection Depot | name of depot | the first of: `depots.depot_code` or the passed in default `phyto_inspection_depot`  that has a value|
 |Packhouse Code |The packhouse code where the fruit was packed | `pallets.phc`|
-|Packhouse Person's Contact details |Info related to the packhouse contact person |person `first and last name,contact method tel and contact method - cell|
+|Packhouse Person's Contact details |Info related to the packhouse contact person |person `first and last name,contact method tel and contact method` - cell|
 |Dalrrd seq no | | |
 |Inspection date |The date on which the Dalrrd phyto inspector inspects the pallets on this document |manually filled in by the inspector |
 |Inspector no |The inspector's code |manually filled in by the inspector|
 |Inspector's Signature |The inspector's signature | manually filled in by the inspector|
 |Contact Details & No | The inspector's contact |manually filled in by the inspector |
-||`subreport(puc summary) ---start`||
+## Subreport: puc_summary
+| Label | Description | Source |
+| ----- | ----------- | ------ |
 |Intake Document |The number on the document that represents a batch of received pallets |the first of: `govt_inspection_sheets.consignment_note_number` or `pallets.edi_in_consignment_note_number` that has a value  |
 |PUC's |Grouped PUCs for each intake | `pucs.puc_code`|
 |Total Ctns |Sum of cartons on an intake| sum of pallet_sequences.carton_quantity|
 |Total Plts |Total number of pallets on an intake |number of pallets |
 |PalletID/Pallet barcode ID |Unique string that identifies each pallet |`pallets.pallet_number`|
-||`subreport(puc summary)---end`||
+## Detail
+| Label | Description | Source |
+| ----- | ----------- | ------ |
 |PUC's |The name of the farm where fruit was obtained |`pucs.puc_code` |
 |Variety | Pallet fruit variety|`varieties.variety code` |
 |Block No | The section on the farm where fruit was obtained|`orchards.orchard_code` |
