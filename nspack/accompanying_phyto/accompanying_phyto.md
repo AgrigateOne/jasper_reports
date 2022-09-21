@@ -21,7 +21,7 @@ The report can be generated:
 | ----- | ----------- | ------ |
 | Document No / Series no | | '00' followed by the load `id` |
 | Commodity | The commodity of all fruit on the report | Commodity `description` |
-| Importing | Importing country | Final destination (OR destination country on the govt inspection sheet's `description` ) |
+| Importing | Importing country | the first of: destination country on the govt inspection sheet's `description or final destination selected on a load that has a value. ) |
 | Exporting Company & contact details: | Info related to the exporter | Organizations (medium description), contact method tel and contact method - cell |
 | Producer's Address: | subreport  | `producer_address.jasper` using delivery address of pallet's exporter party or the default exporter |
 | Magestrial District |The district in which the depot is located or the place where the phyto inspection takes place| the first of `depots.magisterial_district` or the passed in default `phyto_inspection_depot`  that has a value|
