@@ -87,7 +87,6 @@
                 join   target_markets on t.target_market_id =target_markets.id 
                 AND target_markets.target_market_name = p.target_market
                     AND "c"."active") AS countries,
-                            destination_countries.description AS importing_country,
                             p.exporter,
                             (
                                 SELECT
@@ -118,7 +117,7 @@
                                             name = 'CUSTOMER_CONTACT_PERSON')
                                     LIMIT 1) AS packhouse_contact_person_party_role_id,
                                 'Daff_Seq_No' AS daff_seq_no,
-                                p.final_destination AS importing_country,
+                                COALESCE(destination_countries.description,p.final_destination) AS importing_country,
                                 packhouse_contact.first_name phc_first_name,
                                 packhouse_contact.surname AS phc_surname,
                                 packhouse_contact.contact_method_code AS phc_contact,
@@ -1055,7 +1054,7 @@ Address:]]></text>
 				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="510" y="45" width="27" height="11" uuid="d0f61a67-a381-419f-912e-ee1ddbbbf9a5">
+				<reportElement x="510" y="45" width="28" height="11" uuid="d0f61a67-a381-419f-912e-ee1ddbbbf9a5">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
