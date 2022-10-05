@@ -289,7 +289,7 @@ coalesce(scrapped_pallet_number.gap_certification,
   ELSE
     ''
   END consignment_note_number,
-  coalesce(scrapped_pallet_number.phyto_data, ps.phyto_data) AS phyto_data,
+  coalesce(scrapped_pallet_number.phyto_data, ps.phyto_data ) AS phyto_data,
   coalesce(scrapped_pallet_number.inspection_tm,
 		    CASE
             WHEN target_markets.inspection_tm THEN target_markets.target_market_name

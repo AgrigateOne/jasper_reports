@@ -100,7 +100,7 @@ WHERE  govt_inspection_pallets.govt_inspection_sheet_id= $P{subgovt_inspection_s
 AND (  case when $P{paraminspecstatus} ='passed' then govt_inspection_passed=true 
       when      $P{paraminspecstatus} ='failed' then govt_inspection_passed=false end )
 )
-,plts AS (
+,plts AS  (
 SELECT 
 distinct
 count(distinct p.id) as each_plt_qty,
