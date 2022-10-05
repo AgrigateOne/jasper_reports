@@ -4,6 +4,7 @@
 
 Govt Inspection report represents a list of inspected pallets.
 It can either be a passed govt inspection sheet or a failed govt inspection sheet.
+This report is for the apples industry
 
 ## Generating the report
 
