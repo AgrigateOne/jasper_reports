@@ -715,7 +715,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[$F{inspection_date_time}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy h.mm a">
-				<reportElement x="38" y="4" width="115" height="10" uuid="6c260cdb-87d3-4377-ba42-52b4a82e8316">
+				<reportElement x="38" y="4" width="116" height="10" uuid="6c260cdb-87d3-4377-ba42-52b4a82e8316">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement>

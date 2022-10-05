@@ -354,7 +354,7 @@ AND      (  case when  $P{paraminspecstatus} ='passed' then COALESCE(p.govt_insp
 				<textElement>
 					<font size="8" isUnderline="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{actual_count}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{edi_size_count}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#0.##" isBlankWhenNull="true">
 				<reportElement x="260" y="0" width="40" height="11" uuid="814e04ec-4f8f-4c9f-8cdb-c2da9656d625"/>
