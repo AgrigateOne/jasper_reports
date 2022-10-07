@@ -114,7 +114,7 @@ LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = pa
 JOIN basic_pack_codes ON basic_pack_codes.id = pallet_sequences.basic_pack_code_id
 JOIN inventory_codes ON inventory_codes.id = pallet_sequences.inventory_code_id
 JOIN production_run_stats ON production_run_stats.production_run_id = pallet_sequences.production_run_id
-WHERE case when    false   = true then pallets.load_id is not null else true end and $X{IN, pallet_sequences.production_run_id, production_run_id}
+WHERE case when    $P{dispatched_only}   = true then pallets.load_id is not null else true end and $X{IN, pallet_sequences.production_run_id, production_run_id}
 group by   production_runs.cultivar_id ,production_runs.farm_id ,   COALESCE(cultivars.cultivar_name, cultivar_groups.cultivar_group_code) ,
 marketing_varieties.marketing_variety_code,
 grades.grade_code,
@@ -185,7 +185,7 @@ NULL size_ref,
 NULL actual_count,
 NULL inventory_code,
 sum(nett_weight) nett_weight,
-sum(nett_weight) AS derived_nett_weight,
+sum(derived_nett_weight) AS derived_nett_weight,
 count(*) carton_quantity,
 NULL packhouses,
 coalesce(cultivar_name, cultivar_group_code) AS variety,
