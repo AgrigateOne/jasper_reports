@@ -40,7 +40,7 @@
 (select 
 array_to_string( 
   ARRAY(SELECT eot.edi_out_filename
-from loads fl left join edi_out_transactions eot on fl.id =eot.record_id 
+from loads fl left join edi_out_transactions eot on fl.id =eot.record_id
 where fl.id=loads.id and flow_type='PO'), ', ') )
 AS files,
 fn_party_role_name((SELECT pr.id

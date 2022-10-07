@@ -377,7 +377,7 @@ Count]]></text>
 				<text><![CDATA[Nett]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="460" y="0" width="85" height="13" uuid="139c2eb7-34a0-4179-9b52-0397d983e785">
+				<reportElement x="460" y="0" width="86" height="13" uuid="139c2eb7-34a0-4179-9b52-0397d983e785">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>

@@ -302,11 +302,12 @@ ORDER BY  commodities.code, marketing_varieties.marketing_variety_code,
 				<textFieldExpression><![CDATA[$F{seq_nett_weight}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="436" y="0" width="48" height="11" uuid="1622dac6-2c8f-4529-bc16-0603eab6bcbf">
+				<reportElement x="436" y="0" width="47" height="11" uuid="1622dac6-2c8f-4529-bc16-0603eab6bcbf">
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right">
 					<font size="8"/>

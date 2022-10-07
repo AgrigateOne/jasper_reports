@@ -348,7 +348,7 @@ ORDER BY
 				<textFieldExpression><![CDATA[$V{plt_qty_1}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="255" y="14" width="101" height="13" uuid="fb4d2353-ef60-4767-b7c4-f536f1a11e60">
+				<reportElement x="255" y="14" width="102" height="13" uuid="fb4d2353-ef60-4767-b7c4-f536f1a11e60">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right"/>
