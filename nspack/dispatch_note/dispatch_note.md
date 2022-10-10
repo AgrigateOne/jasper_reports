@@ -1,14 +1,35 @@
 # Dispatch Note
 
 ## Description
+This report is used as either the dispatch note or picklist depending on the button that is clicked.
+
 Dispatch Note represents the load and its contents.............
+Dispatch Picklist represents .........
+
+As a dispatch note it can either be detailed or summarised.
 
 ## Generating the report
 
-The report can be generated:
-* From a load - click on the "Dispatch Report" button.
-* From the `Finished Goods | Inspection | Dispatch note report` menu .
+The report can be generated as:
+### Dispatch Note
+* From the `Finished Goods | Dispatch | List Shipped Loads or List Loads` menu .
+* From a load - click on the "Dispatch Note" button.
+### Dispatch Note -  Summarized
+* From the `Finished Goods | Dispatch | List Shipped Loads or List Loads` menu .
+* From a load - click on the "Dispatch Note- Summarized" button.
+### Dispatch Picklist Report
+* From the `Finished Goods | Dispatch | List Shipped Loads or List Loads` menu .
+* From a load - click on the "Dispatch Picklist" button.
+* Select "Potrait"
 
+## Report parameters
+| Parameter | Description | Source |
+| ----- | ----------- | ------ |
+|load_id |load id|loads.id  |
+|pallet_report |Denoting to report details| It is either 'detailed' or 'summary' |
+|for_picklist |Denoting to report type  |The same report is returned either a picklist or dispatch note  |
+|cartons_equals_pallets |At some clients cartons are treated as pallets|It is either true or false  |
+|hide_dispatch_summary |Depending on the report detail, the summary will be hidden or displayed|It is either true or false  |
 ## Table Header
 | Label | Description | Source |
 | ----- | ----------- | ------ |
@@ -20,28 +41,26 @@ The report can be generated:
 | Consignee |Consignee  | `organizations.medium_description` of the consignee on the load |
 | Dispatch note | Dispatch note number | 'DN' + `loads.id` |
 | Vessel |Vessel name  | `vessels.vessel_code` |
-| Container code | Container code where ther loadis loaded  | `load_containers.container_code` |
+| Container code | Container code where ther load is loaded  - hidden when parameter 'for_picklist' is true | `load_containers.container_code` |
+| Container seal | Container seal code  - hidden when parameter 'for_picklist' is true | `load_containers.container_seal_code` |
 | Customer |Customer | `organizations.medium_description` of the customer on the load |
 | Shipper | Shipper | `organizations.medium_description` of the shipper on the load |
 | Booking ref |Booking reference  | `load_voyages.booking_reference` |
 | Remark |Remarks on the load  | `load_voyages.memo_pad` |
 | Export party |Exporter name  | `organizations.medium_description` of the exporter on the load  |
 | Voyage no. |Voyage number  | `voyages.voyage_number` |
-| Haulier |Transprter of the load  | `organizations.medium_description` of the haulier on the load |
-| Vehicle Reg | Vehicle Registration number |`load_vehicles.vehicle_number`  | 
-| Vehicle Wgt |Vehicle of loeaded weight   | `load_vehicles.vehicle_weight_out` |
+| Haulier |Transprter of the load  - hidden when parameter 'for_picklist' is true | `organizations.medium_description` of the haulier on the load |
+| Vehicle Reg | Vehicle Registration number  - hidden when parameter 'for_picklist' is true|`load_vehicles.vehicle_number`  | 
+| Vehicle Wgt |Vehicle of loeaded weight  - hidden when parameter 'for_picklist' is true  | `load_vehicles.vehicle_weight_out` |
 | Shipping line | Shipping line name  | `organizations.medium_description` of the shipping line on the load |
-| Temp Settings | Container code and cargo temperature  | `load_containers.internal_container_code`  + `cargo_temperatures.temperature_code`|
+| Temp Settings | Container code and cargo temperature  - hidden when parameter 'for_picklist' is true | `load_containers.internal_container_code`  + `cargo_temperatures.temperature_code`|
 | Cust Order | Customer Order number | `loads.customer_order_number` |
 | Port name | Port of discharge | pod voyage_ports.port_code |
 | PO file | PO document name | `loads.edi_file_name` |
 | Depart port |Port of loading  | pol voyage_ports.port_code |
 | Receive |Depot code  | `depots.depot_code` |
-| Temp rhine |Carrying container temperature on the sea  | `load_containers.container_temperature_rhine` |
-| Temp rhine 2 | Carrying container temperature on the sea  | `load_containers.container_temperature_rhine` |
-## Table Header
-| Label | Description | Source |
-| ----- | ----------- | ------ |
+| Temp rhine |Carrying container temperature on the sea  - hidden when parameter 'for_picklist' is true | `load_containers.container_temperature_rhine` |
+| Temp rhine 2 | Carrying container temperature on the sea   - hidden when parameter 'for_picklist' is true| `load_containers.container_temperature_rhine` |
 | Load ID | Load id | `loads.id` |
 | Cons No |Dispatch consignment note number  | `DN' + `loads.id` |
 | Order number | Order number | `loads.order_number` |
@@ -79,7 +98,7 @@ The report can be generated:
 | Ctns |Carton quantity | `sum(pallet_sequences.carton_quantity)` |
 | Bins/Plts (Label caption is Bins if cartons_equals_pallets else it Plts )| Pallet size| pallet_sequences.carton_quantity/pallets.carton_quantity|
 | Nett |Sequence nett weight  | `sum(pallet_sequences.nett_weight)` |
-| Gross |Pallet gross weight | `pallets.gross_weight` |
+| Gross |Pallet gross weight  - displayed if parameter 'hide_dispatch_summary' is true| `pallets.gross_weight` |
 | Fruit |The total amount of individual fruit on the load  | SUM(fruit_actual_counts_for_packs.actual_count_for_pack * pallet_sequences.carton_quantity) |
 ## Subreport:  Target Market Summary
 | Label | Description | Source |
