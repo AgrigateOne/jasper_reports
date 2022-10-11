@@ -1167,7 +1167,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<text><![CDATA[UPN:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="410" y="19" width="120" height="13" uuid="4f1a29ab-5505-4f4d-b648-6604f29e7c44">
+				<reportElement x="410" y="19" width="119" height="13" uuid="4f1a29ab-5505-4f4d-b648-6604f29e7c44">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
