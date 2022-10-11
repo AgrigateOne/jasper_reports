@@ -37,7 +37,7 @@ commodities.code AS commodity,
 COALESCE(marketing_varieties.marketing_variety_code,marketing_varieties.inspection_variety) as marketing_variety,
 COALESCE(cvv.marketing_variety_code,marketing_varieties.inspection_variety, marketing_varieties.marketing_variety_code) AS variety,
 standard_pack_codes.standard_pack_code AS std_pack,
-fruit_size_references.size_reference AS size_ref,
+COALESCE(fruit_size_references.edi_out_code,fruit_size_references.size_reference) AS size_ref,
 grades.grade_code AS grade,
 fruit_actual_counts_for_packs.actual_count_for_pack AS actual_count,
 fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi,
@@ -112,7 +112,7 @@ commodities.code AS commodity,
 COALESCE(marketing_varieties.marketing_variety_code,marketing_varieties.inspection_variety) as marketing_variety,
 COALESCE(cvv.marketing_variety_code,marketing_varieties.inspection_variety, marketing_varieties.marketing_variety_code) AS variety,
 standard_pack_codes.standard_pack_code AS std_pack,
-fruit_size_references.size_reference AS size_ref,
+COALESCE(fruit_size_references.edi_out_code,fruit_size_references.size_reference) AS size_ref,
 grades.grade_code AS grade,
 fruit_actual_counts_for_packs.actual_count_for_pack AS actual_count,
 fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi,
@@ -435,7 +435,7 @@ order by commodity, variety,std_pack, grade, edi_size_count]]>
 				<textElement textAlignment="Left">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{count}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{actual_count}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
