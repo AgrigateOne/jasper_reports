@@ -32,6 +32,7 @@ Finished goods | Inspection | Govt Inspection sheets
 |Total| Total number of pallets on the govt inspection sheet |Total number of pallets on the govt inspection sheet  |
 |Total cartons|Total number of cartons on the govt inspection sheet  | sum of all cartons on pallets on the sheet |
 |GG|Global Gap code  | `pucs.gap_code` |
+|Gap Certification|Gap Certification status|'global gap certified' if govt_inspection_sheets.created_at is between pucs.gap_code_valid_from AND pucs.gap_code_valid_until|
 |UPN| UPN  |`govt_inspection_sheets.upn`  |
 ## Report Detail
 | Label | Description | Source |
@@ -41,7 +42,7 @@ Finished goods | Inspection | Govt Inspection sheets
 |Pack| Standard pack code | `standard_pack_codes.standard_pack_code` |
 |Class|The grade of each pallet on this sheet   | `grades.grade_code` |
 |Cnt|The actual fruit count that fits in a standard box  | `fruit_actual_counts_for_packs.actual_count_for_pack` |
-|Size|Fruit size reference  | `fruit_size_references.size_reference` |
+|Size|Fruit size reference  | first of:`fruit_size_references.edi_out_code` or `fruit_size_references.size_reference` which has a value |
 |IC|Inventory code  | pallet sequence `inventory_codes.inventory_code` |
 |Mark|Code marks officially recognized by national authorities for fresh fruit and vegetable exports |pallet sequence `marks.mark_code`  |
 |TM|Target market  | `target_markets.target_market_name` if target_markets.inspection_tm has a value else  `target_market_groups.target_market_group_name` is displayed  |
@@ -65,7 +66,7 @@ Finished goods | Inspection | Govt Inspection sheets
 |Pack| Standard pack code | `standard_pack_codes.standard_pack_code` |
 |Grade|The grade of each pallet on this sheet   | `grades.grade_code` |
 |Cnt|The actual fruit count that fits in a standard box  | `fruit_actual_counts_for_packs.actual_count_for_pack` |
-|Size|Fruit size reference  | `fruit_size_references.size_reference` |
+|Size|Fruit size reference  | first of:`fruit_size_references.edi_out_code` or `fruit_size_references.size_reference` which has a value |
 |Ctns|Total number of cartons of all groups on the sheet  | sum of all cartons on pallets on the sheet|
 |Plts|Total number of pallets of all groups on the sheet |  count of pallets on the sheet  |
 
