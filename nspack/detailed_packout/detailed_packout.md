@@ -59,7 +59,7 @@ Production | Runs | List Production Runs
 | Variety|Fruit variety  | the first of: customer marketing variety or `marketing_varieties.marketing_variety_code` that has a value |
 | Grade| Fruit grade | `grades.grade_code` |
 | Pack|Basic pack  | `basic_pack_codes.basic_pack_code` |
-| Mark|Mark code  | `,marks.mark_code` |
+| Mark|Mark code  | `marks.mark_code` |
 | Orgzn|Marketing organization| organizations.medium description of the marketing org selected on the production run |
 | TM| Packed target market | `target_market_groups.target_market_group_name` |
 | Inv|Inventory code  | `inventory_codes.inventory_code` |
