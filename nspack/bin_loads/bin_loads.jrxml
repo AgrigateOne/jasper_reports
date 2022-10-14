@@ -604,7 +604,7 @@ GROUP by depots.description,bin_loads.transporter_party_role_id,
 				<text><![CDATA[bin type]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="360" y="4" width="60" height="15" uuid="835637de-98bb-41f3-a60b-d77ac5d72733">
+				<reportElement x="360" y="4" width="61" height="15" uuid="835637de-98bb-41f3-a60b-d77ac5d72733">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
