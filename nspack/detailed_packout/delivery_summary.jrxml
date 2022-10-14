@@ -200,7 +200,7 @@ group by b.rmt_delivery_id,rmt_container_types.container_type_code,orchards.orch
 				</reportElement>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="220" y="1" width="45" height="13" uuid="b4fffe9c-1c12-4cbe-93d3-26f60c2053e0">
+				<reportElement x="220" y="1" width="44" height="13" uuid="b4fffe9c-1c12-4cbe-93d3-26f60c2053e0">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>

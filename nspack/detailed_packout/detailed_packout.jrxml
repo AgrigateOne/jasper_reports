@@ -5,7 +5,7 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="HB"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="kr_nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="production_run_id" class="java.util.Collection" nestedType="java.lang.Integer"/>
 	<parameter name="carton_or_bin" class="java.lang.String">
@@ -185,7 +185,7 @@ NULL size_ref,
 NULL actual_count,
 NULL inventory_code,
 sum(nett_weight) nett_weight,
-sum(derived_nett_weight) AS derived_nett_weight,
+sum(nett_weight) AS derived_nett_weight,
 count(*) carton_quantity,
 NULL packhouses,
 coalesce(cultivar_name, cultivar_group_code) AS variety,
