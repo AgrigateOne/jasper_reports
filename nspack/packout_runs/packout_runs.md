@@ -38,8 +38,8 @@ The report can be generated as:
 |  Total weight  |Total tipped bin weight | `sum(rmt_bins.nett_weight)` |
 |  Weight packed  |Total packed weight |if parameter 'use_packed_weight' is true then `sum(pallet_sequences.nett_weight)` else `sum(standard_product_weights.nett_weight * pallet_sequences.carton_quantity)`|
 |  Total non pack weight  |Weight difference between packed weight and tipped bin weight | Total weight minus Weight packed |
-|  Percentage  | Total packed weight over total bin tipped weight | Weight packed/Total weight * 100 |
-|  Bins  |Total tipped bins | count of bins tipped on the prouction run |
+|  Percentage  | Total packed weight over total bin tipped weight  percentage| Weight packed/Total weight * 100 |
+|  Bins  |Total tipped bins | count of bins tipped on the production run |
 |  Prod. run  | production run id| `production_runs.id`  |
 ## Pallet Detail
 | Label | Description | Source |
