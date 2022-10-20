@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="packer_summary" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
@@ -194,7 +194,7 @@ Qty]]></text>
 				<textFieldExpression><![CDATA[$F{total_fruit_cwi}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-				<reportElement x="520" y="0" width="92" height="15" uuid="89b64826-d22a-443a-8bec-94b00adb10c6">
+				<reportElement x="520" y="0" width="93" height="15" uuid="89b64826-d22a-443a-8bec-94b00adb10c6">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<printWhenExpression><![CDATA[$F{cw_rank}==1]]></printWhenExpression>
