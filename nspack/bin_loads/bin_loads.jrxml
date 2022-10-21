@@ -86,7 +86,7 @@ FROM bin_loads
     LEFT JOIN farm_groups ON farm_groups.id = farms.farm_group_id
     LEFT JOIN orchards ON orchards.id = bin_load_products.orchard_id
     LEFT JOIN pucs ON pucs.id = bin_load_products.puc_id
-    LEFT JOIN rmt_classes ON rmt_classes.id = rmt_bins.rmt_class_id
+    LEFT JOIN rmt_classes ON rmt_classes.id = bin_load_products.rmt_class_id
 
     LEFT JOIN rmt_container_material_types ON rmt_container_material_types.id = bin_load_products.rmt_container_material_type_id
 	LEFT JOIN depots on dest_depot_id = depots.id

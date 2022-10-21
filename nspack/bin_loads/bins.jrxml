@@ -17,7 +17,7 @@
    coalesce( cultivars.cultivar_name,cultivar_groups.cultivar_group_code)as cultivar_name,
     cultivars.description ,
     farm_groups.farm_group_code,
-    farms.farm_code,
+    farms.farm_code ,
     orchards.orchard_code,
     pucs.puc_code,
     rmt_classes.rmt_class_code,

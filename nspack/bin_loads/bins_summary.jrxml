@@ -14,7 +14,7 @@
 		<![CDATA[select 
 cultivar_groups.cultivar_group_code,
 coalesce( cultivars.cultivar_name,cultivar_groups.cultivar_group_code)as cultivar_name,
-rmt_classes.rmt_class_code,
+rmt_classes.rmt_class_code ,
 rmt_container_material_types.container_material_type_code,
 count(distinct rmt_bins.id) AS no_of_bins,
 sum(rmt_bins.nett_weight::numeric(12,2)) AS total_nett_weight,
