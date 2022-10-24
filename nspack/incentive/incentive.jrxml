@@ -83,7 +83,7 @@
         s.start_date_time,
         s.end_date_time,
         wage_levels.wage_level,
-        wage_levels.description,
+        wage_levels.description ,
         contract_workers.id,
         COALESCE(shift_exceptions.running_hours, s.running_hours, ((EXTRACT(EPOCH FROM end_date_time) - EXTRACT(EPOCH FROM start_date_time)) / 60 / 60)),
         s.start_date_time,
