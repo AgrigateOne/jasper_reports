@@ -27,11 +27,11 @@ Production | Shifts | List Shifts
 |  Pno |Contract worker personnel barcode | `contract_workers.personnel_number` |
 |  Name |Contract worker first and last name | `contract_workers.first_name`  +  `contract_workers.last_name`|
 |  Shift D/N |Shift type| `shift_types.day_night_or_custom` |
-|  Ctn |Number of cartons  packed or palletized per each inventory code| count of `carton_labels.id` |
-|  Total Ctn |Sum total of cartons packed or palletized by worker | sum of all cartons by worker |
-|  Fruit Qty |Total actual fruit count  packed or palletized by worker per each inventory code | `sum(fruit_actual_counts_for_packs.actual_count_for_pack)` |
-|  Total Fruit |Total Sum of  Fruit Qty packed or palletized by worker | sum of all fruit qty |
-|  Inv | List of inventory codes packed or palletized by a worker|`inventory_codes.inventory_code` | 
-|  Cost |The total cost of packing or palletizing a certain fruit inventory type |sum of  `fruit_actual_counts_for_packs.actual_count_for_pack` * first of: `inventory_codes_packing_costs.packing_cost`  or  `inventory_codes.fruit_item_incentive_rate` that has a value |
-|  Total Earnings |Total cost of fruit packed or palletized by worker | sum of Cost |
+|  Ctn |Number of cartons  packed  per each inventory code| count of `carton_labels.id` |
+|  Total Ctn |Sum total of cartons packed  | sum of all cartons by worker |
+|  Fruit Qty |Total actual fruit count  packed  per each inventory code | `sum(fruit_actual_counts_for_packs.actual_count_for_pack)` |
+|  Total Fruit |Total Sum of  Fruit Qty packed| sum of all fruit qty |
+|  Inv | List of inventory codes packed |`inventory_codes.inventory_code` | 
+|  Cost |The total cost of packing  a certain fruit inventory type |sum of  `fruit_actual_counts_for_packs.actual_count_for_pack` * first of: `inventory_codes_packing_costs.packing_cost`  or  `inventory_codes.fruit_item_incentive_rate` that has a value |
+|  Total Earnings |Total cost of fruit packed | sum of Cost |
 |  No Packers | Number of workers in this shift|count of `contract_workers.id` | 
