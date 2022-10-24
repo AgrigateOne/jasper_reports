@@ -48,7 +48,7 @@
                 plant_resource_id,
                 shifts.shift_type_id,
                 shifts.id,
-                day_night_or_custom,
+                day_night_or_custom ,
                 shifts.running_hours
             FROM
                 public.shifts
