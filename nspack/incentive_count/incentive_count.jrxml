@@ -82,7 +82,7 @@
 )
 SELECT
  *,
-    '' AS packing_method,
+    '' AS packing_method ,
      CASE WHEN base_sql.running_hours = 0 THEN
      0::int
    ELSE
