@@ -30,7 +30,7 @@ WHEN govt_inspection_passed THEN consignment_note_number
 ELSE ''::text
 END,edi_in_consignment_note_number)
 )as d
-group by intake,pucs
+group by intake ,pucs
 order by pucs desc]]>
 	</queryString>
 	<field name="intake" class="java.lang.String">

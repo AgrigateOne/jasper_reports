@@ -165,7 +165,7 @@ SELECT
 distinct
 COALESCE(p.each_plt_qty,scrapped_plts.each_plt_qty) as each_plt_qty,
 COALESCE(p.edi_size_count,scrapped_plts.edi_size_count ) as edi_size_count,
-COALESCE(p.count,scrapped_plts.count) as count,
+COALESCE(p.count,scrapped_plts.count) as count ,
 COALESCE(p.commodity,scrapped_plts.commodity) as commodity,
 COALESCE(p.marketing_variety,scrapped_plts.marketing_variety) as marketing_variety,
 COALESCE(p.std_pack ,scrapped_plts.std_pack) as std_pack,

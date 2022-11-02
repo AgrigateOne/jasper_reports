@@ -21,7 +21,7 @@ FROM (SELECT COALESCE(CASE
   ELSE ''::text
   END, edi_in_consignment_note_number)  AS intake,
   puc,
-  carton_quantity,
+  carton_quantity ,
   pallet_number
   FROM vw_pallet_sequence_flat
   WHERE $X{IN,vw_pallet_sequence_flat.pallet_id,pallet_ids}) AS sub

@@ -199,8 +199,8 @@ scrapped_pallet_number AS (
      LEFT JOIN pallet_bases ON pallet_bases.id = pallet_formats.pallet_base_id
      LEFT JOIN pallet_stack_types ON pallet_stack_types.id = pallet_formats.pallet_stack_type_id
      LEFT JOIN pallet_verification_failure_reasons ON pallet_verification_failure_reasons.id = ps.pallet_verification_failure_reason_id
-     LEFT JOIN destination_countries inspected_dest_country ON inspected_dest_country.id = govt_inspection_sheets.destination_country_id
-	  LEFT JOIN destination_regions ON destination_regions.id = govt_inspection_sheets.destination_region_id
+     LEFT JOIN destination_countries inspected_dest_country ON inspected_dest_country.id = govt_inspection_pallets.destination_country_id
+	  LEFT JOIN destination_regions ON destination_regions.id = govt_inspection_pallets.destination_region_id
      LEFT JOIN edi_in_transactions ON edi_in_transactions.id = p.edi_in_transaction_id
      LEFT JOIN standard_product_weights ON standard_product_weights.standard_pack_id = standard_pack_codes.id AND standard_product_weights.commodity_id = commodities.id
      LEFT JOIN pucs marketing_pucs ON marketing_pucs.id = ps.marketing_puc_id
@@ -360,8 +360,8 @@ coalesce(scrapped_pallet_number.gap_certification,
 	LEFT JOIN pallet_bases ON pallet_bases.id = pallet_formats.pallet_base_id
 	LEFT JOIN pallet_stack_types ON pallet_stack_types.id = pallet_formats.pallet_stack_type_id
 	LEFT JOIN pallet_verification_failure_reasons ON pallet_verification_failure_reasons.id = ps.pallet_verification_failure_reason_id
-	LEFT JOIN destination_countries inspected_dest_country ON inspected_dest_country.id = govt_inspection_sheets.destination_country_id
-	LEFT JOIN destination_regions ON destination_regions.id = govt_inspection_sheets.destination_region_id
+	LEFT JOIN destination_countries inspected_dest_country ON inspected_dest_country.id = govt_inspection_pallets.destination_country_id
+	LEFT JOIN destination_regions ON destination_regions.id = govt_inspection_pallets.destination_region_id
 	LEFT JOIN edi_in_transactions ON edi_in_transactions.id = p.edi_in_transaction_id
 	LEFT JOIN standard_product_weights ON standard_product_weights.standard_pack_id = standard_pack_codes.id AND standard_product_weights.commodity_id = commodities.id
 	LEFT JOIN pucs marketing_pucs ON marketing_pucs.id = ps.marketing_puc_id

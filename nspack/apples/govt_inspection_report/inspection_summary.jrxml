@@ -31,7 +31,7 @@ AND (  case when  $P{paraminspecstatus} ='passed' then govt_inspection_passed=tr
 ),scrapped_plts AS(
 SELECT 
 distinct
-count(distinct p.id) as each_plt_qty,
+count(distinct p.id) as each_plt_qty ,
 govt_inspection_pallets.govt_inspection_sheet_id,
 commodities.code AS commodity,
 COALESCE(marketing_varieties.marketing_variety_code,marketing_varieties.inspection_variety) as marketing_variety,

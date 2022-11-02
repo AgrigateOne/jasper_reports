@@ -132,7 +132,7 @@
                                 vw_pallet_sequence_flat p
                             LEFT JOIN govt_inspection_pallets ON govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
                             LEFT JOIN govt_inspection_sheets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
-                            LEFT JOIN destination_countries ON destination_countries.id = govt_inspection_sheets.destination_country_id
+                            LEFT JOIN destination_countries ON destination_countries.id = govt_inspection_pallets.destination_country_id
                             LEFT JOIN inspectors ON inspectors.id = govt_inspection_sheets.inspector_id
                             LEFT JOIN party_roles ON inspectors.inspector_party_role_id = party_roles.id
                             LEFT JOIN parties ON party_roles.party_id = parties.id

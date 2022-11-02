@@ -40,10 +40,10 @@ The report can be generated:
 |PUC's |Grouped PUCs for each intake | `pucs.puc_code`|
 |Total Ctns |Sum of cartons on an intake| sum of pallet_sequences.carton_quantity|
 |Total Plts |Total number of pallets on an intake |number of pallets |
-|PalletID/Pallet barcode ID |Unique string that identifies each pallet |`pallets.pallet_number`|
 ## Detail
 | Label | Description | Source |
 | ----- | ----------- | ------ |
+|PalletID/Pallet barcode ID |Unique string that identifies each pallet |`pallets.pallet_number`|
 |PUC's |The name of the farm where fruit was obtained |`pucs.puc_code` |
 |Variety | Pallet fruit variety|`varieties.variety code` |
 |Block No | The section on the farm where fruit was obtained|`orchards.orchard_code` |
