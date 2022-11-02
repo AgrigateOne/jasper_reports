@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="packersummary" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
@@ -85,7 +85,7 @@
         s.start_date_time,
         s.end_date_time,
         wage_levels.wage_level,
-        wage_levels.description,
+        wage_levels.description ,
         contract_workers.id,
         COALESCE(shift_exceptions.running_hours, s.running_hours, ((EXTRACT(EPOCH FROM end_date_time) - EXTRACT(EPOCH FROM start_date_time)) / 60 / 60)),
         s.start_date_time,
@@ -155,7 +155,7 @@ sum(CASE WHEN incentive < 0 THEN
         0
     ELSE
         incentive
-    END/cw_cnt)incentive from calc_sql2 
+    END/cw_cnt)incentive from calc_sql2
     group by cw_id,    personnel_barcode_number,    wage_level,    wage_level_description,    party_name 
     order by sum(incentive)  desc;]]>
 	</queryString>
