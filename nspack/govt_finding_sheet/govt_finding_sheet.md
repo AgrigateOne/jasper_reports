@@ -36,7 +36,7 @@ Finished Goods | Inspection | List Govt Inspection Sheets
 |  Class  |Fruit grade  |`grades.grade_code`  |
 |  Target Region/Country/Target market  |Destination region /Packed target market group |`destination_regions.destination_region_name`/`target_market_groups.target_market_group_name` |
 |  Size/Count/Diameter  |Fruit size that fits in a standard box |`fruit_size_references.size_reference`  |
-|  Nett Weight  |Pallet nett weight | `pallets.nett_weight` |
+|  Nett Weight  |Pallet nett weight | sum of `pallet_sequences.nett_weight` |
 |  Decay  | | Manually filled in |
 |   Internal Insect Damage  | | Manually filled in|
 |  Athropodia  | | Manually filled in |

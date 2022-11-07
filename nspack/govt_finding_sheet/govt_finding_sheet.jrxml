@@ -32,6 +32,7 @@
 	govt_inspection_sheets.inspection_point ,
 	govt_inspection_sheets.consignment_note_number
 	, p.nett_weight
+	,sum(ps.nett_weight) over (partition by p.pallet_number) AS sum_seq_nett_weight
 
 FROM
 govt_inspection_sheets
@@ -133,6 +134,10 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 		<property name="com.jaspersoft.studio.field.name" value="nett_weight"/>
 		<property name="com.jaspersoft.studio.field.label" value="nett_weight"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="pallets"/>
+	</field>
+	<field name="sum_seq_nett_weight" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="sum_seq_nett_weight"/>
+		<property name="com.jaspersoft.studio.field.label" value="sum_seq_nett_weight"/>
 	</field>
 	<variable name="puc_var" class="java.lang.String" resetType="Page" incrementType="Page"/>
 	<variable name="pallet_number1" class="java.lang.Integer" calculation="DistinctCount">
@@ -1509,7 +1514,7 @@ R  - Reject]]></text>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{nett_weight}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{sum_seq_nett_weight}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="273" y="0" width="19" height="26" uuid="75d5677d-3cc7-42e7-a152-44d49889d9b4">
