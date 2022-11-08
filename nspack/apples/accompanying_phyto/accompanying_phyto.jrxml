@@ -1070,7 +1070,8 @@ Address:]]></text>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<imageExpression><![CDATA["../../logos/sa_ministry_of_agric.png"]]></imageExpression>
+				<imageExpression><![CDATA["../../logos/new_department_aff.png"
+]]></imageExpression>
 			</image>
 			<textField isBlankWhenNull="true">
 				<reportElement x="221" y="229" width="172" height="33" uuid="934f5eb4-880d-4061-a93c-067a401ce3d0">
