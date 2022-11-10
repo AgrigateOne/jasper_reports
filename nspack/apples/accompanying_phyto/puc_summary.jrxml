@@ -19,7 +19,7 @@ WHEN NOT govt_inspection_passed THEN consignment_note_number || 'F'::text
 WHEN govt_inspection_passed THEN consignment_note_number
 ELSE ''::text
 END,edi_in_consignment_note_number)  AS intake
-,string_agg( distinct coalesce(marketing_puc,puc)  , ','  ) as pucs,SUM(carton_quantity) as total_ctns,COUNT(distinct pallet_number) as total_pallets
+,string_agg( distinct coalesce(marketing_puc,puc)   , ','  ) as pucs,SUM(carton_quantity) as total_ctns,COUNT(distinct pallet_number) as total_pallets
 from vw_pallet_sequence_flat
 where load_id = $P{load_id} 
 group by

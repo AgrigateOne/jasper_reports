@@ -18,7 +18,7 @@
 		<![CDATA[SELECT organizations.medium_description  as long_description,
 addresses.address_line_1 ,
 addresses.address_line_2  ,
-addresses.address_line_3,
+addresses.address_line_3 ,
 addresses.city,
 addresses.postal_code,
 addresses.country,

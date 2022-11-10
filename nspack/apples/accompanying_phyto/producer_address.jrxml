@@ -19,7 +19,7 @@
 addresses.address_line_1 ,
 addresses.address_line_2 ,
 addresses.address_line_3 ,
-addresses.city,
+addresses.city ,
 addresses.postal_code,
 addresses.country,
 fn_party_contact_method(party_addresses.party_id, 'Tel') AS tel_no_1,
