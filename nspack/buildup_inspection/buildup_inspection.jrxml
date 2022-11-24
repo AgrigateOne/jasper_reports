@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="buildup_inspection_load" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack local"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="74"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="919"/>
@@ -30,10 +30,13 @@
 	</parameter>
 	<parameter name="load_id" class="java.lang.Integer"/>
 	<queryString language="SQL">
-		<![CDATA[select pallet_buildups.destination_pallet_number,pallet_buildups.source_pallets,pallet_buildups.qty_cartons_to_move ,pallet_buildups.cartons_moved 
+		<![CDATA[
+		select pallet_buildups.destination_pallet_number,pallet_buildups.source_pallets,pallet_buildups.qty_cartons_to_move
+		,pallet_buildups.cartons_moved
 ,pallet_buildups.completed_at ,gip.govt_inspection_sheet_id ,gip.inspected_at,dp.load_id ,load_containers.container_code,
  pol_port.port_code AS pol, pod_voyage_ports.etd AS etd, pod_voyage_ports.atd AS atd, pod_port.port_code AS pod,
-pol_voyage_ports.eta AS eta, pol_voyage_ports.ata AS ata, vessels.vessel_code,fn_party_role_name((SELECT pr.id
+pol_voyage_ports.eta AS eta, pol_voyage_ports.ata AS ata, vessels.vessel_code,
+fn_party_role_name((SELECT pr.id
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1)) AS implementation_owner_name,
 fn_party_role_name(loads.customer_party_role_id) AS customer, fn_party_role_name(loads.consignee_party_role_id) AS
@@ -739,7 +742,7 @@ LEFT JOIN vessels ON voyages.vessel_id = vessels.id
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<subreportParameter name="party_role_id">
-					<subreportParameterExpression><![CDATA[""]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{implementation_owner_name}]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="address_type">
 					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
@@ -762,7 +765,7 @@ LEFT JOIN vessels ON voyages.vessel_id = vessels.id
 				</jr:barbecue>
 			</componentElement>
 			<subreport>
-				<reportElement x="230" y="31" width="110" height="95" uuid="8aa248d9-044f-4bff-b07f-035007ce5912">
+				<reportElement x="230" y="31" width="120" height="95" uuid="8aa248d9-044f-4bff-b07f-035007ce5912">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
