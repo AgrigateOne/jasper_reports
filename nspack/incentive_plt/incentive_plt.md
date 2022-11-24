@@ -24,7 +24,7 @@ Production | Shifts | List Shifts
 |  Name |Contract worker first and last name | `contract_workers.first_name`  +  `contract_workers.last_name`|
 |  Std Packs  |Palletized pallets standard_pack_code | ` standard_pack_codes.standard_pack_code` |
 |  Shift D/N |Shift type| `shift_types.day_night_or_custom` |
-| Total cartons  |Number of palletized cartons  | `count(cartons.id)` |
+| Total cartons  |Number of palletized cartons | `count(cartons.id)` |
 | Total Pallets  |Number of pallets palletized | `count(distinct pallet_sequences.pallet_number )` |
 | Running hours  |Duration of the shift in hours  | `shifts.running_hours` |
 | Total earnings  | The amount earned by palletizer| `standard_pack_codes.palletizer_incentive_rate * total cartons packed` |

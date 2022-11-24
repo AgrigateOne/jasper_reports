@@ -13,7 +13,7 @@ Raw materials | Deliveries | List Deliveries
 ## Report parameters
 | Parameter | Description | Source |
 | ----- | ----------- | ------ |
-|delievery_id|Rmt delivery id | rmt_deliveries.id |
+|delivery_id|Rmt delivery id | rmt_deliveries.id |
 ## Report header
 | Label | Description | Source |
 | ----- | ----------- | ------ |

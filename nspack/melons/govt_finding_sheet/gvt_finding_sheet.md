@@ -1,3 +1,14 @@
+# Govt Finding Sheet report
+
+## Description
+This report represents the findings of inspection by the government.
+
+## Generating the report
+The report can be generated:
+Finished Goods | Inspection | List Govt Inspection Sheets
+* From a govt_inspection_sheet  - click on the "Print Finding Sheet" button.
+
+
 ## Report parameters
 | Parameter | Description | Source |
 | ----- | ----------- | ------ |

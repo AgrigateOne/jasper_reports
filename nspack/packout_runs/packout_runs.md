@@ -19,7 +19,7 @@ The report can be generated as:
 ## Report parameters
 | Parameter | Description | Source |
 | ----- | ----------- | ------ |
-|production_run_id| |  |
+|production_run_id|Production run id | production_runs.id |
 |carton_or_bin| |AppConst::DEFAULT_FG_PACKAGING_TYPE  |
 |use_paked_weight|Denoting which type of weight to use | either true or false |
 |dispatched_only|Denoting ... |either true or false  |
@@ -29,7 +29,7 @@ The report can be generated as:
 | ----- | ----------- | ------ |
 |  Client  |Source of fruit  | `farms.farm_code` |
 |  Deliveries  |Delivery id of fruit received | ` rmt_bins.rmt_delivery_id` |
-|  Pack Weeks  |Week number for when the fruit was tipped on a production run | `production_runs.started_at` |
+|  Pack Weeks  |Week number for when the fruit was tipped on a production run | week `production_runs.started_at` |
 |  orchards  |Source Orchard of the fruit | `orchards.orchard_code` |
 |  Puc  |Farm puc |`pucs.puc_code` |
 |  packhouse  | Packhouse in which the production run was run |`packhouses.plant_resource_code`  |
@@ -45,7 +45,7 @@ The report can be generated as:
 | Label | Description | Source |
 | ----- | ----------- | ------ |
 |  Class  |Fruit grade of tipped fruit| `grades.grade_code` |
-|  Variety  | Fruit Variety | the first of: customer marketing variety or `marketing_varieties.marketing_variety_code` that has a value |
+|  Variety  | Fruit Variety | the first of: customer marketing variety or marketing marketing_variety_code that has a value |
 |  Pack  |Basic pack |`basic_pack_codes.basic_pack_code`  |
 |  Count  |Fruit actual count over size reference   |`fruit_actual_counts_for_packs.actual_count_for_pack`/`fruit_size_references.size_reference`  |
 |  Inv  |Inventory code | `inventory_codes.inventory_code` |
