@@ -30,8 +30,7 @@
 	</parameter>
 	<parameter name="load_id" class="java.lang.Integer"/>
 	<queryString language="SQL">
-		<![CDATA[
-		select pallet_buildups.destination_pallet_number,pallet_buildups.source_pallets,pallet_buildups.qty_cartons_to_move
+		<![CDATA[select pallet_buildups.destination_pallet_number,pallet_buildups.source_pallets,pallet_buildups.qty_cartons_to_move
 		,pallet_buildups.cartons_moved
 ,pallet_buildups.completed_at ,gip.govt_inspection_sheet_id ,gip.inspected_at,dp.load_id ,load_containers.container_code,
  pol_port.port_code AS pol, pod_voyage_ports.etd AS etd, pod_voyage_ports.atd AS atd, pod_port.port_code AS pod,
@@ -427,7 +426,9 @@ LEFT JOIN vessels ON voyages.vessel_id = vessels.id
 				<text><![CDATA[Billing client:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="435" y="60" width="112" height="13" uuid="064eba7f-d4d2-49a6-99d3-3b507bc6a8c5"/>
+				<reportElement x="435" y="60" width="113" height="13" uuid="064eba7f-d4d2-49a6-99d3-3b507bc6a8c5">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -742,7 +743,7 @@ LEFT JOIN vessels ON voyages.vessel_id = vessels.id
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<subreportParameter name="party_role_id">
-					<subreportParameterExpression><![CDATA[$F{implementation_owner_name}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[1]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="address_type">
 					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
@@ -771,7 +772,7 @@ LEFT JOIN vessels ON voyages.vessel_id = vessels.id
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<subreportParameter name="party_role_id">
-					<subreportParameterExpression><![CDATA[""]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[1]]></subreportParameterExpression>
 				</subreportParameter>
 				<subreportParameter name="address_type">
 					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
@@ -944,7 +945,7 @@ LEFT JOIN vessels ON voyages.vessel_id = vessels.id
 				</textElement>
 				<textFieldExpression><![CDATA[$F{govt_inspection_sheet_id}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="476" y="0" width="79" height="13" uuid="32a398bd-d636-427b-ab00-8e241bf7a789">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
