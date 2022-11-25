@@ -907,7 +907,7 @@ LEFT JOIN vessels ON voyages.vessel_id = vessels.id
 				</textElement>
 				<textFieldExpression><![CDATA[$F{completed_at}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="397" y="0" width="79" height="13" uuid="e7f9b38a-971e-4f73-8aff-19a497ccd8d5">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
