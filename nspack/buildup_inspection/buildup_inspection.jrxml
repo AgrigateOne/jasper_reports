@@ -396,7 +396,7 @@ LEFT JOIN vessels ON voyages.vessel_id = vessels.id
 				<text><![CDATA[]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="435" y="34" width="112" height="13" uuid="6c251326-4a79-4e22-9edf-8fc2ecba228c">
+				<reportElement x="57" y="40" width="112" height="13" uuid="6c251326-4a79-4e22-9edf-8fc2ecba228c">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement>
@@ -405,28 +405,28 @@ LEFT JOIN vessels ON voyages.vessel_id = vessels.id
 				<textFieldExpression><![CDATA[""]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="378" y="34" width="54" height="13" uuid="23d17353-c12f-4d4e-acaa-6252be99dcc0"/>
+				<reportElement x="0" y="40" width="54" height="13" uuid="23d17353-c12f-4d4e-acaa-6252be99dcc0"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Exporter:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="435" y="47" width="112" height="13" uuid="876e2141-5775-4f50-b765-51133b66a41f"/>
+				<reportElement x="57" y="53" width="112" height="13" uuid="876e2141-5775-4f50-b765-51133b66a41f"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[""]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="378" y="47" width="54" height="13" uuid="6631e84c-45d7-4596-b024-3816e182c6c5"/>
+				<reportElement x="0" y="53" width="54" height="13" uuid="6631e84c-45d7-4596-b024-3816e182c6c5"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Billing client:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="435" y="60" width="113" height="13" uuid="064eba7f-d4d2-49a6-99d3-3b507bc6a8c5">
+				<reportElement x="57" y="66" width="113" height="13" uuid="064eba7f-d4d2-49a6-99d3-3b507bc6a8c5">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement>
@@ -435,14 +435,14 @@ LEFT JOIN vessels ON voyages.vessel_id = vessels.id
 				<textFieldExpression><![CDATA[""]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="378" y="60" width="54" height="13" uuid="493c7865-edba-47dd-8258-2de8db013414"/>
+				<reportElement x="0" y="66" width="54" height="13" uuid="493c7865-edba-47dd-8258-2de8db013414"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Customer:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="435" y="73" width="113" height="13" uuid="53cf85a2-1ba6-4545-b829-872fabd502f9">
+				<reportElement x="57" y="79" width="113" height="13" uuid="53cf85a2-1ba6-4545-b829-872fabd502f9">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement>
@@ -451,7 +451,7 @@ LEFT JOIN vessels ON voyages.vessel_id = vessels.id
 				<textFieldExpression><![CDATA[""]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="378" y="73" width="54" height="13" uuid="2b5d75cc-c43f-4bdf-8a8d-7b5102b47f78"/>
+				<reportElement x="0" y="79" width="54" height="13" uuid="2b5d75cc-c43f-4bdf-8a8d-7b5102b47f78"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
