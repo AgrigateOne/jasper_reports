@@ -30,7 +30,7 @@
 	</parameter>
 	<parameter name="load_id" class="java.lang.Integer"/>
 	<queryString language="SQL">
-		<![CDATA[select pallet_buildups.destination_pallet_number
+		<![CDATA[select distinct pallet_buildups.destination_pallet_number
 		,trim(both '{}' from CAST(pallet_buildups.source_pallets as text)) AS source_pallets
 		,pallet_buildups.qty_cartons_to_move
 		--,trim(both '[]' from (pallet_buildups.cartons_moved ->> trim(both '{}' from CAST(pallet_buildups.source_pallets as text)))) AS cartons_moved
