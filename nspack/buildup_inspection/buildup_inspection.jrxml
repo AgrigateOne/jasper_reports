@@ -30,11 +30,12 @@
 	</parameter>
 	<parameter name="load_id" class="java.lang.Integer"/>
 	<queryString language="SQL">
-		<![CDATA[select pallet_buildups.destination_pallet_number,
-		pallet_buildups.source_pallets,
-		--trim(both '{}' from CAST(pallet_buildups.source_pallets as text)) AS source_pallets,
-		pallet_buildups.qty_cartons_to_move
-		,pallet_buildups.cartons_moved
+		<![CDATA[
+		select pallet_buildups.destination_pallet_number
+		,trim(both '{}' from CAST(pallet_buildups.source_pallets as text)) AS source_pallets
+		,pallet_buildups.qty_cartons_to_move
+		--,trim(both '[]' from (pallet_buildups.cartons_moved ->> trim(both '{}' from CAST(pallet_buildups.source_pallets as text)))) AS cartons_moved
+		,pallet_buildups.cartons_moved ->> trim(both '{}' from CAST(pallet_buildups.source_pallets as text)) AS cartons_moved
 ,pallet_buildups.completed_at ,gip.govt_inspection_sheet_id ,gip.inspected_at,dp.load_id ,load_containers.container_code,
  pol_port.port_code AS pol, pod_voyage_ports.etd AS etd, pod_voyage_ports.atd AS atd, pod_port.port_code AS pod,
 pol_voyage_ports.eta AS eta, pol_voyage_ports.ata AS ata, vessels.vessel_code,
@@ -62,21 +63,22 @@ left join loads on dp.load_id =loads.id
 JOIN depots ON depots.id = loads.depot_id
 JOIN destination_cities ON destination_cities.id = loads.final_destination_id
 LEFT JOIN load_vehicles ON load_vehicles.id = loads.load_vehicle_id 
-    LEFT JOIN load_containers  ON load_containers.id = load_vehicles.load_container_id
-  JOIN voyage_ports pol_voyage_ports ON pol_voyage_ports.id = loads.pol_voyage_port_id
+LEFT JOIN load_containers  ON load_containers.id = load_vehicles.load_container_id
+JOIN voyage_ports pol_voyage_ports ON pol_voyage_ports.id = loads.pol_voyage_port_id
 JOIN voyage_ports pod_voyage_ports ON pod_voyage_ports.id = loads.pod_voyage_port_id
 JOIN ports pol_port ON pol_port.id = pol_voyage_ports.port_id
 JOIN ports pod_port ON pod_port.id = pod_voyage_ports.port_id
 JOIN voyages ON pol_voyage_ports.voyage_id = voyages.id
 LEFT JOIN vessels ON voyages.vessel_id = vessels.id
-   where loads.id= $P{load_id}]]>
+   where loads.id= $P{load_id}
+order by pallet_buildups.destination_pallet_number]]>
 	</queryString>
 	<field name="destination_pallet_number" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="destination_pallet_number"/>
 		<property name="com.jaspersoft.studio.field.label" value="destination_pallet_number"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="pallet_buildups"/>
 	</field>
-	<field name="source_pallets" class="java.sql.Array">
+	<field name="source_pallets" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="source_pallets"/>
 		<property name="com.jaspersoft.studio.field.label" value="source_pallets"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="pallet_buildups"/>
@@ -399,7 +401,7 @@ LEFT JOIN vessels ON voyages.vessel_id = vessels.id
 				<text><![CDATA[]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="57" y="40" width="112" height="13" uuid="6c251326-4a79-4e22-9edf-8fc2ecba228c">
+				<reportElement x="57" y="40" width="113" height="13" uuid="6c251326-4a79-4e22-9edf-8fc2ecba228c">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement>
@@ -415,7 +417,9 @@ LEFT JOIN vessels ON voyages.vessel_id = vessels.id
 				<text><![CDATA[Exporter:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="57" y="53" width="112" height="13" uuid="876e2141-5775-4f50-b765-51133b66a41f"/>
+				<reportElement x="57" y="53" width="113" height="13" uuid="876e2141-5775-4f50-b765-51133b66a41f">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -879,7 +883,7 @@ LEFT JOIN vessels ON voyages.vessel_id = vessels.id
 				</textElement>
 				<textFieldExpression><![CDATA[$F{destination_pallet_number}]]></textFieldExpression>
 			</textField>
-			<textField    isStretchWithOverflow="true">
+			<textField textAdjust="StretchHeight">
 				<reportElement stretchType="ContainerHeight" x="81" y="0" width="102" height="13" uuid="d9a205c9-44c2-40ff-8fd5-fa841480d5c1">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -900,7 +904,7 @@ LEFT JOIN vessels ON voyages.vessel_id = vessels.id
 				</textElement>
 				<textFieldExpression><![CDATA[$F{qty_cartons_to_move}]]></textFieldExpression>
 			</textField>
-			<textField    isStretchWithOverflow="true">
+			<textField textAdjust="StretchHeight">
 				<reportElement stretchType="ContainerBottom" x="239" y="0" width="117" height="13" uuid="15d91791-68d0-482e-a975-36817410f052">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
