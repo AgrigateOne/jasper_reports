@@ -30,8 +30,7 @@
 	</parameter>
 	<parameter name="load_id" class="java.lang.Integer"/>
 	<queryString language="SQL">
-		<![CDATA[
-		select pallet_buildups.destination_pallet_number
+		<![CDATA[select pallet_buildups.destination_pallet_number
 		,trim(both '{}' from CAST(pallet_buildups.source_pallets as text)) AS source_pallets
 		,pallet_buildups.qty_cartons_to_move
 		--,trim(both '[]' from (pallet_buildups.cartons_moved ->> trim(both '{}' from CAST(pallet_buildups.source_pallets as text)))) AS cartons_moved
@@ -812,7 +811,7 @@ order by pallet_buildups.destination_pallet_number]]>
 				<text><![CDATA[Dest Plt]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="81" y="2" width="102" height="15" uuid="f399e529-df08-44ca-9854-ad6168ab8364">
+				<reportElement x="81" y="2" width="81" height="15" uuid="f399e529-df08-44ca-9854-ad6168ab8364">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -823,18 +822,20 @@ order by pallet_buildups.destination_pallet_number]]>
 				<text><![CDATA[Source Plt]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="183" y="2" width="59" height="15" uuid="6b53631c-2434-412f-832c-97df89cb97a0">
+				<reportElement x="162" y="2" width="68" height="15" uuid="6b53631c-2434-412f-832c-97df89cb97a0">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Qty Ctns Move]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="242" y="2" width="114" height="15" uuid="4d130cac-4fbf-4a73-afb0-1b90e6870428">
+				<reportElement x="230" y="2" width="126" height="15" uuid="4d130cac-4fbf-4a73-afb0-1b90e6870428">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
 					<font size="8"/>
@@ -845,23 +846,23 @@ order by pallet_buildups.destination_pallet_number]]>
 				<reportElement x="356" y="2" width="79" height="15" uuid="5979f430-86b4-4187-aeb2-cb2c55f692d4">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Complt At]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="435" y="2" width="41" height="15" uuid="2986e6ff-72d3-406e-ad8c-0e990443b162">
+				<reportElement x="435" y="2" width="46" height="15" uuid="2986e6ff-72d3-406e-ad8c-0e990443b162">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Gov sheet]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="476" y="2" width="79" height="15" uuid="852ebce6-f1d4-4179-a628-ad603cdfd22e">
+				<reportElement x="481" y="2" width="74" height="15" uuid="852ebce6-f1d4-4179-a628-ad603cdfd22e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
@@ -884,7 +885,7 @@ order by pallet_buildups.destination_pallet_number]]>
 				<textFieldExpression><![CDATA[$F{destination_pallet_number}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight">
-				<reportElement stretchType="ContainerHeight" x="81" y="0" width="102" height="13" uuid="d9a205c9-44c2-40ff-8fd5-fa841480d5c1">
+				<reportElement stretchType="ContainerHeight" x="81" y="0" width="92" height="13" uuid="d9a205c9-44c2-40ff-8fd5-fa841480d5c1">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -894,7 +895,7 @@ order by pallet_buildups.destination_pallet_number]]>
 				<textFieldExpression><![CDATA[$F{source_pallets}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="183" y="0" width="55" height="13" uuid="dd23bc06-1bad-4fc9-895f-283c6d818a5c">
+				<reportElement x="170" y="0" width="45" height="13" uuid="dd23bc06-1bad-4fc9-895f-283c6d818a5c">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -905,8 +906,10 @@ order by pallet_buildups.destination_pallet_number]]>
 				<textFieldExpression><![CDATA[$F{qty_cartons_to_move}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight">
-				<reportElement stretchType="ContainerBottom" x="239" y="0" width="117" height="13" uuid="15d91791-68d0-482e-a975-36817410f052">
+				<reportElement stretchType="ContainerBottom" x="219" y="0" width="149" height="13" uuid="15d91791-68d0-482e-a975-36817410f052">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
@@ -914,21 +917,21 @@ order by pallet_buildups.destination_pallet_number]]>
 				<textFieldExpression><![CDATA[$F{cartons_moved}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="356" y="0" width="79" height="13" uuid="26de1b51-50c0-4547-8e5f-c14d071377d4">
+				<reportElement x="370" y="0" width="80" height="13" uuid="26de1b51-50c0-4547-8e5f-c14d071377d4">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Left">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{completed_at}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="435" y="0" width="41" height="13" uuid="e7f9b38a-971e-4f73-8aff-19a497ccd8d5">
+				<reportElement x="450" y="0" width="26" height="13" uuid="e7f9b38a-971e-4f73-8aff-19a497ccd8d5">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center">
+				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{govt_inspection_sheet_id}]]></textFieldExpression>
@@ -937,7 +940,7 @@ order by pallet_buildups.destination_pallet_number]]>
 				<reportElement x="476" y="0" width="79" height="13" uuid="32a398bd-d636-427b-ab00-8e241bf7a789">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{inspected_at}]]></textFieldExpression>
