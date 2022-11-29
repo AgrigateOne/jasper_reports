@@ -636,7 +636,7 @@ order by pallet_buildups.destination_pallet_number]]>
 				<textFieldExpression><![CDATA[$F{vehicle_number}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="75" y="226" width="470" height="13" uuid="4e33796b-7c53-4ccf-b8b8-5449d200faba">
+				<reportElement x="75" y="226" width="476" height="13" uuid="4e33796b-7c53-4ccf-b8b8-5449d200faba">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement>
@@ -914,9 +914,10 @@ Gov Sheet]]></text>
 Sheet]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="401" y="0" width="68" height="30" uuid="2986e6ff-72d3-406e-ad8c-0e990443b162">
+				<reportElement x="401" y="0" width="55" height="30" uuid="2986e6ff-72d3-406e-ad8c-0e990443b162">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
 					<bottomPen lineWidth="1.0"/>
@@ -928,10 +929,10 @@ Sheet]]></text>
 To Move]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="470" y="0" width="143" height="30" uuid="852ebce6-f1d4-4179-a628-ad603cdfd22e">
+				<reportElement x="456" y="0" width="164" height="30" uuid="852ebce6-f1d4-4179-a628-ad603cdfd22e">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
 					<bottomPen lineWidth="1.0"/>
@@ -968,7 +969,7 @@ Code]]></text>
 				<text><![CDATA[Load]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="614" y="0" width="88" height="30" uuid="475c7a5e-ecb1-48e0-a415-cf4a060287e6">
+				<reportElement x="620" y="0" width="81" height="30" uuid="475c7a5e-ecb1-48e0-a415-cf4a060287e6">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<box>
@@ -1001,7 +1002,7 @@ At]]></text>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{destination_pallet_number}]]></textFieldExpression>
@@ -1040,7 +1041,7 @@ At]]></text>
 				<textFieldExpression><![CDATA[$F{source_gov_sheet_id}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement x="447" y="0" width="167" height="13" uuid="e7f9b38a-971e-4f73-8aff-19a497ccd8d5">
+				<reportElement x="456" y="0" width="164" height="13" uuid="e7f9b38a-971e-4f73-8aff-19a497ccd8d5">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1051,10 +1052,10 @@ At]]></text>
 				<textFieldExpression><![CDATA[$F{cartons_moved}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="401" y="0" width="46" height="13" uuid="32a398bd-d636-427b-ab00-8e241bf7a789">
+				<reportElement x="401" y="0" width="55" height="13" uuid="32a398bd-d636-427b-ab00-8e241bf7a789">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8"/>
@@ -1062,13 +1063,13 @@ At]]></text>
 				<textFieldExpression><![CDATA[$F{qty_cartons_to_move}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="614" y="0" width="88" height="13" uuid="05db6cbf-1400-4dc5-ad25-111b235b9ab7">
+				<reportElement x="620" y="0" width="88" height="13" uuid="05db6cbf-1400-4dc5-ad25-111b235b9ab7">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{completed_at}]]></textFieldExpression>
