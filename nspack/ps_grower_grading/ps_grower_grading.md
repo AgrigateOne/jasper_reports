@@ -1,26 +1,12 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Govt Finding Sheet report
+# Ps grower grading report
 
 ## Description
-This report represents the findings of inspection by the government.
+This report summarizes the input and output of a maf grower grading pool
 
 ## Generating the report
 The report can be generated:
-Finished Goods | Inspection | List Govt Inspection Sheets
-* From a govt_inspection_sheet  - click on the "Print Finding Sheet" button.
+Raw Materials | Presort Grower Grading | Presort Grading Pools
+* From a presort grading pool grid row menu  - click on the "Preview" button.
 
 
 ## Report parameters
@@ -32,7 +18,7 @@ Finished Goods | Inspection | List Govt Inspection Sheets
 | ----- | ----------- | ------ |
 | Maf lot | Maf lot number |`presort_grower_grading_pools.maf_lot_number`  |
 | Farm code  | Farm |`farms.farm_code`  |
-| Commodity code  |Fruit commodity  |`commodities.code+`  |
+| Commodity code  |Fruit commodity  |`commodities.code`  |
 | Variety code  | Fruit variety |`cultivars.cultivar_code`  |
 | Track SLMS  |Track Slms indicator code  |`rmt_codes.rmt_code`  |
 | Product Class  | Product class code |`rmt_classes.rmt_class_code`  |
@@ -48,8 +34,8 @@ Finished Goods | Inspection | List Govt Inspection Sheets
 ## Crosstab
 | Label | Description | Source |
 | ----- | ----------- | ------ |
-| Colour  |  |``  |
-| Class  |  |``  |
-| Size  |  |``  |
-| %  |  |``  |
-| Kg  |  |``  |
+| Colour  |Fruit colour  |`colour_percentages.colour_percentage`  |
+| Class  |Rmt class code  |`rmt_classes.rmt_class_code`  |
+| Size  |  |`presort_grower_grading_bins.maf_article_count`  |
+| %  |Percentage weight of bins of a certain colour ,class and  size in comparison to the total weight of all bins in this pool|(sum of weight of presort_grower_grading_bins of this colour,class and size)/(total weight of all presort_grower_grading_bins in pool)*100 |
+| Kg  |Sum total of weight of presort_grower_grading_bins of  a certain colour ,class and  size  |`sum(presort_grower_grading_bins.rmt_bin_weight::numeric*1)`  |
