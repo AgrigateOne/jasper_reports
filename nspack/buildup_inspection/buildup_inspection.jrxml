@@ -70,9 +70,9 @@ load_containers.container_seal_code,
 load_containers.container_temperature_rhine,
 load_containers.container_temperature_rhine2,depot_code
 FROM pallet_buildups
-right join pallets on  pallets.pallet_number=ANY(pallet_buildups.source_pallets)
+left join pallets on  pallets.pallet_number=ANY(pallet_buildups.source_pallets)
 left join govt_inspection_pallets gip on gip.id=pallets.last_govt_inspection_pallet_id
-left join pallets  dp on dp.pallet_number =pallet_buildups.destination_pallet_number
+right join pallets  dp on dp.pallet_number =pallet_buildups.destination_pallet_number
 LEFT JOIN govt_inspection_pallets gidp ON gidp.id = dp.last_govt_inspection_pallet_id
 left join pallet_sequences ps on ps.buildup_cloned_from_pallet_id =dp.id
 left join pallets np on ps.pallet_id =np.id
