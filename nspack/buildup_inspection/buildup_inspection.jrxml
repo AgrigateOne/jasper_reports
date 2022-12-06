@@ -986,7 +986,7 @@ At]]></text>
 	<detail>
 		<band height="13">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="0" y="0" width="94" height="13" uuid="838a117c-7c27-4d03-965f-52a4b8cf91f4">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -996,7 +996,7 @@ At]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{new_pallet_number}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="ContainerHeight" x="94" y="0" width="106" height="13" uuid="d9a205c9-44c2-40ff-8fd5-fa841480d5c1">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1007,7 +1007,7 @@ At]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{destination_pallet_number}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="200" y="0" width="50" height="13" uuid="dd23bc06-1bad-4fc9-895f-283c6d818a5c">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1018,7 +1018,7 @@ At]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{destination_gov_sheet_id}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement stretchType="ContainerBottom" x="250" y="0" width="93" height="13" uuid="15d91791-68d0-482e-a975-36817410f052">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1029,7 +1029,7 @@ At]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{source_pallets}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="343" y="0" width="58" height="13" uuid="26de1b51-50c0-4547-8e5f-c14d071377d4">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1062,7 +1062,7 @@ At]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{qty_cartons_to_move}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="620" y="0" width="88" height="13" uuid="05db6cbf-1400-4dc5-ad25-111b235b9ab7">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
