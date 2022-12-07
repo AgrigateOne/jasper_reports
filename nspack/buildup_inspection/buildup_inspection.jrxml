@@ -41,7 +41,7 @@
 	<queryString language="SQL">
 		<![CDATA[select distinct
 CASE WHEN pallet_buildups.intermediate_pallet_number IS NOT NULL THEN COALESCE(ps.pallet_number, pallet_buildups.destination_pallet_number)
-ELSE null
+ELSE pallet_buildups.destination_pallet_number
 	END new_pallet_number,
 pallet_buildups.intermediate_pallet_number as intermediate_pallet,
 --COALESCE(ps.pallet_number, pallet_buildups.destination_pallet_number) AS destination_pallet_number,
