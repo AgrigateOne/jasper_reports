@@ -47,7 +47,7 @@ pallet_buildups.intermediate_pallet_number as intermediate_pallet,
 --COALESCE(ps.pallet_number, pallet_buildups.destination_pallet_number) AS destination_pallet_number,
 --pallet_buildups.destination_pallet_number
 trim(both '{}' from CAST(pallet_buildups.source_pallets as text)) AS source_pallets,
- COALESCE(ip.load_id,dp.load_id) AS load_id,
+ COALESCE(dp.load_id,ip.load_id) AS load_id,
 gidp.govt_inspection_sheet_id AS destination_gov_sheet_id,
 gip.govt_inspection_sheet_id AS source_gov_sheet_id,
 pallet_buildups.qty_cartons_to_move
@@ -80,7 +80,7 @@ LEFT JOIN govt_inspection_pallets gidp ON gidp.id = dp.last_govt_inspection_pall
 left join pallet_sequences ps on ps.buildup_cloned_from_pallet_id =dp.id
 --left join pallets np on ps.pallet_id =np.id
 left join pallets ip on ps.pallet_id =ip.id
-left join loads on loads.id = COALESCE(ip.load_id,dp.load_id)
+left join loads on loads.id = COALESCE(dp.load_id,ip.load_id)
 JOIN depots ON depots.id = loads.depot_id
 JOIN destination_cities ON destination_cities.id = loads.final_destination_id
 LEFT JOIN load_vehicles ON load_vehicles.id = loads.load_vehicle_id 
