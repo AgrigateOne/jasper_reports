@@ -7,7 +7,8 @@ period of time and the total earnings earned across all shifts.
 
 ## Generating the report
 The report can be generated:
-Production | Shifts | Summary reports | Packers
+
+* Production | Shifts | Summary reports | Packers
 * From the report page menu  - select revelant dates
     * From the resulting grid select the relevant packers and submit
       The report can be generated:

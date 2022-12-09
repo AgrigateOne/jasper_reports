@@ -6,6 +6,7 @@ This report summarizes the input and output of a maf grower grading pool of rebi
 ## Generating the report
 The report can be generated:
 Production | Grower Grading | Grading Pools
+
 * From a grading pool grid row menu  - click on the "Preview" button.
 
 

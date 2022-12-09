@@ -6,7 +6,8 @@ This report displays a repacked pallet  barcode , pallet's repacked date and pal
 ## Generating the report
 
 The report can be generated:
-Finished Goods | Inspections | List
+
+* Finished Goods | Inspections | List
 * From a repacked pallet - click on the "Print barcode" button.
 
 

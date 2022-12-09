@@ -6,7 +6,8 @@ for a selected period of time across all shifts.
 
 ## Generating the report
 The report can be generated:
-Production | Shifts | Summary reports | Palletizers
+
+* `Production | Shifts | Summary reports | Palletizers`
 * From the report page menu  - select revelant dates
     * From the resulting grid select the relevant packers and submit
       The report can be generated:

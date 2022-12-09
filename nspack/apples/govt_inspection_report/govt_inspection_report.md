@@ -9,7 +9,8 @@ This report is for the apples industry
 ## Generating the report
 
 The report can be generated:
-Finished goods | Inspection | Govt Inspection sheets
+
+* Finished goods | Inspection | Govt Inspection sheets
 * From an inspection sheet  - click on the "Govt Inspection report" button.
 
 

@@ -21,7 +21,7 @@ Finished goods | Dispatch | List Loads
 | ----- | ----------- | ------ |
 |Name of shipper|Exporter name  | `organizations.medium_description` of the exporter on the govt_inspection_sheet |
 |Weight calculation| Method of calculation |'Method 2'(static value)  |
-|SAMSA No| |'WC00008' (static value) |
+|SAMSA No|South African Maritime Safety Authority Number |'WC00008' (static value) |
 |Container number|Container number  |`load_containers.container_code`  |
 |Seal number| Container seal code |`load_containers.container_seal_code`  |
 |POL| Port of Loading|pol `voyage_ports.port_code`  |

@@ -16,10 +16,10 @@ Finished Goods | Inspection | List Govt Inspection Sheets
 ## Report header
 | Label | Description | Source |
 | ----- | ----------- | ------ |
-|  Min Standard  | |Manually marked  |
-|  Template  | |Manually marked  |
-|  Special Market  | | Manually marked |
-|  Dispensation  | |Manually marked  |
+|  Min Standard  |Minimum Standard |Manually marked  |
+|  Template  |Template |Manually marked  |
+|  Special Market  | Special Market| Manually marked |
+|  Dispensation  |Dispensation |Manually marked  |
 |  Inspector No.  |Inspector number |Manually filled in  |
 |  Exporter  |Exporter name  | `organizations.medium_description` of the exporter on the govt_inspection_sheet |
 | Insp.Point  |Inspection point | `govt_inspection_sheets.inspection_point ` |
@@ -38,9 +38,8 @@ Finished Goods | Inspection | List Govt Inspection Sheets
 |  Size/Count/Diameter  |Fruit size that fits in a standard box |`fruit_size_references.size_reference`  |
 |  Nett Weight  |Pallet nett weight | sum of `pallet_sequences.nett_weight` |
 |  Decay  | | Manually filled in |
-|   Internal Insect Damage  | | Manually filled in|
-|  Athropodia  | | Manually filled in |
-|  Injuries  | | Manually filled in |
-|  Blemishes  | | Manually filled in |
-|  Blemishes  | |Manually filled in|
-|  C-Comply/R-Reject  | | Manually filled in |
+|   Internal Insect Damage  | Internal Insect Damage | Manually filled in|
+|  Athropodia  |Athropodia | Manually filled in |
+|  Injuries  | Injuries| Manually filled in |
+|  Blemishes  |Blemishes | Manually filled in |
+|  C-Comply/R-Reject  | C-Comply/R-Reject | Manually filled in |

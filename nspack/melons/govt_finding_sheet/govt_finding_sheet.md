@@ -42,9 +42,9 @@ Finished Goods | Inspection | List Govt Inspection Sheets
 |  Target Region/Country/Target market  |Destination region /Packed target market group |`destination_regions.destination_region_name`/`target_market_groups.target_market_group_name` |
 |  Decay  | | Manually filled in |
 |  Internal Insect Damage  | | Manually filled in|
-|  Athropodia  | | Manually filled in |
-|  Injuries  | | Manually filled in |
-|  Blemishes  | |Manually filled in|
+|  Athropodia  | Athropodia| Manually filled in |
+|  Injuries  |Injuries | Manually filled in |
+|  Blemishes  |Blemishes |Manually filled in|
 |  C-Comply/R-Reject  | | Manually filled in |
 
 

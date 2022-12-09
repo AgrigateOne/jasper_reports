@@ -8,33 +8,33 @@ The report can either represent a run with the output already dispatched  or not
 
 The report can be generated:
 Production | Runs | List Production Runs
+
 * From a production run  - click on the "Reports" button.
     * Report is either under Dispatched only report menu or Packout report menu
-    * Dispatched only report- 
-        Detailed report
-        Use derived weights 
-        Detailed with derived weights
+    * Dispatched only report-
+        * Detailed report
+        * Use derived weights
+        * Detailed with derived weights
     * Packout  report
-        Detailed report
-        Use derived weights
-        Detailed with derived weights
-
-    
+        * Detailed report
+        * Use derived weights
+        * Detailed with derived weights
 
 ## Report parameters
- **Dispatched only menu**
 
- |                               | use_packed_weight|use_derived_weight |dispatched_only     |client_code           |carton_or_bin                      |production_run_id    |   
- |  -----                        |----              |  ----             |-----------         |-----------           |            ------                 |----                 |
- |**Report Version**             |                  |                   |                    |AppConst::CLIENT_CODE |AppConst::DEFAULT_FG_PACKAGING_TYPE|  production_runs.id |               
- | Detailed                      | true             |  false            |  true              |AppConst::CLIENT_CODE |AppConst::DEFAULT_FG_PACKAGING_TYPE|  production_runs.id |               
- | Use derived weights           | false            |  true             |  true              |AppConst::CLIENT_CODE |AppConst::DEFAULT_FG_PACKAGING_TYPE|  production_runs.id |               
- | Detailed with derived weights | true             |  false            |  true              |AppConst::CLIENT_CODE |AppConst::DEFAULT_FG_PACKAGING_TYPE|  production_runs.id |
+**Dispatched only menu**
+
+|                               | use_packed_weight|use_derived_weight |dispatched_only     |client_code           |carton_or_bin                      |production_run_id    |   
+|  -----                        |----              |  ----             |-----------         |-----------           |            ------                |----                 |
+|**Report Version**             |                  |                   |                    |AppConst::CLIENT_CODE |AppConst::DEFAULT_FG_PACKAGING_TYPE|  production_runs.id |               
+| Detailed                      | true             |  false            |  true              |AppConst::CLIENT_CODE |AppConst::DEFAULT_FG_PACKAGING_TYPE|  production_runs.id |               
+| Use derived weights           | false            |  true             |  true              |AppConst::CLIENT_CODE |AppConst::DEFAULT_FG_PACKAGING_TYPE|  production_runs.id |               
+| Detailed with derived weights | true             |  false            |  true              |AppConst::CLIENT_CODE |AppConst::DEFAULT_FG_PACKAGING_TYPE|  production_runs.id |
 
 **Packout menu**
 
- |                               | use_packed_weight|use_derived_weight |dispatched_only     |client_code           |carton_or_bin                      |production_run_id    |   
- |  -----                        |----              |  ----             |-----------         |-----------           |            ------                 |----                 |
+|                               | use_packed_weight|use_derived_weight |dispatched_only     |client_code           |carton_or_bin                      |production_run_id    |   
+|  -----                        |----              |  ----             |-----------         |-----------           |            ------                 |----                 |
 |**Report Version**             |                   |                    |                   |AppConst::CLIENT_CODE |AppConst::DEFAULT_FG_PACKAGING_TYPE|  production_runs.id |               
 | Detailed                      | true              |  false             |  false            |AppConst::CLIENT_CODE |AppConst::DEFAULT_FG_PACKAGING_TYPE|  production_runs.id |               
 | Use derived weights           | false             |  true              |  false            |AppConst::CLIENT_CODE |AppConst::DEFAULT_FG_PACKAGING_TYPE|  production_runs.id |               

@@ -6,7 +6,9 @@ This report represents the production run - it's  input(bins) and the output(car
 ## Generating the report
 
 The report can be generated:
-Production | Runs | List Production Runs
+
+* Production | Runs | List Production Runs
+  
 * From a production run  - click on the "Reports | Run Product" button.
 
 

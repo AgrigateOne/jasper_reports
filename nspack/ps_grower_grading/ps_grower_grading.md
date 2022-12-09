@@ -5,7 +5,9 @@ This report summarizes the input and output of a maf grower grading pool
 
 ## Generating the report
 The report can be generated:
-Raw Materials | Presort Grower Grading | Presort Grading Pools
+
+* Raw Materials | Presort Grower Grading | Presort Grading Pools
+
 * From a presort grading pool grid row menu  - click on the "Preview" button.
 
 

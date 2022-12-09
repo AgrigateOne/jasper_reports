@@ -6,6 +6,7 @@ Addendum report represents .............
 ## Generating the report
 
 The report can be generated:
+
 * From a load - click on the "China Phyto Report" button.
 * From the `Finished Goods | Inspection | Phyto report` menu - select the pallets to appear on the report and press the save button in the grid header.
 

@@ -11,6 +11,7 @@ It presents a list of selected pallets for inspection on a load.
 ## Generating the report
 
 The report can be generated:
+
 * From a load - click on the "China Phyto Report" button.
 
 

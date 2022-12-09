@@ -6,7 +6,8 @@ and the total cost  for packing such for each packer in the shift.
 
 ## Generating the report
 The report can be generated:
-Production | Shifts | List Shifts
+
+* Production | Shifts | List Shifts
 * From a shift row menu  - click on the "Incentive " link.
 
 

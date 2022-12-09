@@ -7,7 +7,8 @@ It also lists the order products selected for an undispatched load.
 
 ## Generating the report
 The report can be generated:
-Raw materials | Dispatch | List Bin Loads
+
+* Raw materials | Dispatch | List Bin Loads
 * From a bin load   - click on the "Print Bin Load" button.
 
 ## Report parameters
@@ -19,9 +20,9 @@ Raw materials | Dispatch | List Bin Loads
 | ----- | ----------- | ------ |
 |Implementation owner address| Info related to the implemenation owner | `party role address.jasper`  using delivery address of implementation owner|
 |Customer Address|Info related to the customer party  | `party role address.jasper`  using delivery address of the customer party of the load |
-|Bin load id   |Bin load id  |`oads.id`  |
+|Bin load id   |Bin load id  |`loads.id`  |
 | Customer | Customer | `organizations.medium_description` of the customer on the load |
-|Consignee  |Consignee  |``  |
+|Consignee  |Consignee  |  |
 |Transporter  |Transporter  |`organizations.medium_description` of the transporter on the load |
 |Dest Depot  | Destination Depot  |`depots.description`  |
 |Bin Qty | The total sum of bins on load |sum `count(rmt_bins.id)`  |

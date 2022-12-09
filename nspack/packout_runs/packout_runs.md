@@ -9,6 +9,7 @@ The report is either for dispatched output or in-stock. If dispatched only loade
 
 The report can be generated as:
 ### Dispatched only
+
 * From the `Production runs | Runs | List production runs` menu .
     * From a production run - click on the "Reports" button.
        * Report is either under dispatched only report menu or packout report menu

@@ -9,7 +9,7 @@ It can either be a passed govt inspection sheet or a failed govt inspection shee
 
 The report can be generated:
 Finished goods | Inspection | Govt Inspection sheets
-* From an inspection sheet  - click on the "Govt Inspection report" button.
+   * From an inspection sheet  - click on the "Govt Inspection report" button.
 
 
 ## Report header

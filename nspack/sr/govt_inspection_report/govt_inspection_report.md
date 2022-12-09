@@ -1,3 +1,16 @@
+# Govt Inspection report
+
+## Description
+
+Govt Inspection report represents a list of inspected pallets.
+It can either be a passed govt inspection sheet or a failed govt inspection sheet.
+
+## Generating the report
+
+The report can be generated:
+
+* Finished goods | Inspection | Govt Inspection sheets
+* From an inspection sheet  - click on the "Govt Inspection report" button.
 
 ## Report header
 | Label | Description | Source |

@@ -6,7 +6,8 @@ and the total cost  for packing such by each worker for a selected period of tim
 
 ## Generating the report
 The report can be generated:
-Production | Shifts | Summary reports | Packers Count
+
+* Production | Shifts | Summary reports | Packers Count
 * From the report page menu  - select revelant dates
     * From the resulting grid select the relevant packers and submit
 

@@ -1,21 +1,10 @@
-# Dispatch Note
+# Dispatch Picklist
 
 ## Description
-This report is used as either the dispatch note or picklist depending on the button that is clicked.
+Dispatch Picklist  contains a detailed listing of all pallets on a load.
 
-Dispatch Note represents the load and its contents
-
-As a dispatch note it can either be detailed or summarised.
 
 ## Generating the report
-The report can be generated as:
-### Dispatch Note
-* Finished Goods | Dispatch | List  Loads
-      * From a load - click on the "Dispatch Note" button.
-### Dispatch Note -  Summarized
-* Finished Goods | Dispatch | List  Loads
-       * From a load - click on the "Dispatch Note- Summarized" button.
-### Dispatch Picklist Report
 * Finished Goods | Dispatch | List Loads
        * From a load - click on the "Dispatch Picklist" button.
        * Select "Potrait"

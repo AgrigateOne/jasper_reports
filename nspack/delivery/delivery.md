@@ -23,7 +23,7 @@ Raw materials | Deliveries | List Deliveries
 |  Intake document  | Delivery document number | `deliveries.id`|
 |  Date  |Date of delivery| `deliveries.date_delivered` |
 |  Date picked  |Date for when the fruit on the delivery was picked/harvested |`deliveries.date_picked` |
-|  Week  |Week number for when fruit was picked/harvested | week`deliveries.date_picked` |
+|  Week  |Week number for when fruit was picked/harvested | week (`deliveries.date_picked`) |
 |  Waste  |Quantity of bad/damaged fruit | manually filled in |
 |  Degreened  |Indication if delivery is to be degreened  | marked if `rmt_delivery_destinations.delivery_destination_code` is 'degreened'  |
 |  Drenched  |Indication if delivery is to be drenched  | marked if `rmt_delivery_destinations.delivery_destination_code` is 'drenching'  |

@@ -9,9 +9,11 @@ denoting to loaded out pallets is displayed.
 ## Generating the report
 
 The report can be generated as:
-* From the `Production runs | Reports | Aggregate Packout` menu .
-    * From the returned screen several or default parameters are selected.
-* The report can either display summarized info or the details are displayed
+
+  * Production runs | Reports | Aggregate Packout
+    
+       * From the returned screen several or default parameters are selected.
+       * The report can either display summarized info or the details are displayed
 
 ## Report parameters
 | Parameter | Description | Source |

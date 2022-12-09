@@ -4,10 +4,10 @@
 This report summarizes the contents of the load to be exported.
 
 ## Generating the report
-
 The report can be generated:
-Finished Goods | Dispatch | List Loads
-* From a load - click on the "Export Certificate" button.
+
+* Finished Goods | Dispatch | List Loads
+    * From a load - click on the "Export Certificate" button.
 
 
 ## Report parameters

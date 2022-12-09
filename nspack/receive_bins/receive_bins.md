@@ -7,7 +7,9 @@ transaction.
 
 ## Generating the report
 The report can be generated:
-Raw materials | Bin Assets | Bin Asset Transaction History
+
+* Raw materials | Bin Assets | Bin Asset Transaction History
+  
 * From a Bin asset issue transaction  row  - click on the "Issue/Receipt Report" button.
 
 ## Report parameters
