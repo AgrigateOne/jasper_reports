@@ -418,28 +418,6 @@ END,edi_in_consignment_note_number),
 					</graphicElement>
 				</line>
 				<staticText>
-					<reportElement x="445" y="71" width="53" height="15" uuid="df8c6e8d-f254-4b0a-ad17-c2c5c5285eb5">
-						<property name="com.jaspersoft.studio.unit.x" value="px"/>
-						<property name="com.jaspersoft.studio.element.name" value="Grabouw static"/>
-						<printWhenExpression><![CDATA[!$P{place_of_issue}.equalsIgnoreCase( "CPT" ) && 
-!$P{place_of_issue}.equalsIgnoreCase( "DBN" ) && 
-!$P{place_of_issue}.equalsIgnoreCase( "MPM" ) && 
-!$P{place_of_issue}.equalsIgnoreCase( "PLZ" ) &&
-$P{place_of_issue}.equalsIgnoreCase( "Grabouw" )]]></printWhenExpression>
-					</reportElement>
-					<box>
-						<pen lineWidth="1.0"/>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="1.0"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="1.0"/>
-					</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="SansSerif" size="5"/>
-					</textElement>
-					<text><![CDATA[Grabouw]]></text>
-				</staticText>
-				<staticText>
 					<reportElement x="464" y="92" width="157" height="10" uuid="aaf83e13-2134-4b46-994b-cf8da35cb829"/>
 					<textElement textAlignment="Center">
 						<font fontName="SansSerif" size="5"/>
@@ -1055,24 +1033,6 @@ $P{place_of_issue}.equalsIgnoreCase( "Grabouw" )]]></printWhenExpression>
 					</graphicElement>
 				</rectangle>
 				<staticText>
-					<reportElement x="445" y="71" width="53" height="15" uuid="3580e8ca-26ed-4381-b50d-f8f32cedd94a">
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
-						<property name="com.jaspersoft.studio.unit.x" value="px"/>
-						<property name="com.jaspersoft.studio.element.name" value="Other X static"/>
-						<printWhenExpression><![CDATA[!$P{place_of_issue}.equalsIgnoreCase( "CPT" ) && !$P{place_of_issue}.equalsIgnoreCase( "DBN" ) && !$P{place_of_issue}.equalsIgnoreCase( "MPM" ) && !$P{place_of_issue}.equalsIgnoreCase( "PLZ" )&& !$P{place_of_issue}.equalsIgnoreCase( "Grabouw" )]]></printWhenExpression>
-					</reportElement>
-					<box>
-						<topPen lineWidth="0.5"/>
-						<leftPen lineWidth="0.5"/>
-						<bottomPen lineWidth="0.5"/>
-						<rightPen lineWidth="0.5"/>
-					</box>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="SansSerif" size="5"/>
-					</textElement>
-					<text><![CDATA[X]]></text>
-				</staticText>
-				<staticText>
 					<reportElement key="" x="315" y="71" width="20" height="15" uuid="458472d5-6dcc-4296-a413-06feed742592">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1143,6 +1103,20 @@ $P{place_of_issue}.equalsIgnoreCase( "Grabouw" )]]></printWhenExpression>
 					</textElement>
 					<text><![CDATA[Other]]></text>
 				</staticText>
+				<rectangle>
+					<reportElement x="445" y="71" width="53" height="15" uuid="6e4205f4-cf37-4427-b1a9-c8e8fb8a82b1">
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.element.name" value="Other rectangle"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</rectangle>
 				<staticText>
 					<reportElement x="385" y="71" width="20" height="15" uuid="dfcca50c-fac7-4b4d-ae62-cb28bde3f066">
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1161,6 +1135,47 @@ $P{place_of_issue}.equalsIgnoreCase( "Grabouw" )]]></printWhenExpression>
 					</textElement>
 					<text><![CDATA[X]]></text>
 				</staticText>
+				<staticText>
+					<reportElement x="445" y="71" width="53" height="15" uuid="e1101c7e-0318-4a66-8e0e-a0f09cd9c3cb">
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.element.name" value="Other static"/>
+						<printWhenExpression><![CDATA[$P{place_of_issue}.equalsIgnoreCase( "Grabouw" )]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font size="5" isBold="false"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="445" y="71" width="53" height="15" uuid="d7dc0739-a0c4-4523-b4d6-64936fd5091a">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<printWhenExpression><![CDATA[!$P{place_of_issue}.equalsIgnoreCase( "CPT" ) && 
+!$P{place_of_issue}.equalsIgnoreCase( "DBN" ) && 
+!$P{place_of_issue}.equalsIgnoreCase( "MPM" ) && 
+!$P{place_of_issue}.equalsIgnoreCase( "PLZ" )]]></printWhenExpression>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.5"/>
+						<leftPen lineWidth="0.5"/>
+						<bottomPen lineWidth="0.5"/>
+						<rightPen lineWidth="0.5"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{place_of_issue}]]></textFieldExpression>
+				</textField>
 			</band>
 		</groupFooter>
 	</group>
