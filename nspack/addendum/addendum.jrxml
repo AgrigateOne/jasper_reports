@@ -529,9 +529,12 @@ END,edi_in_consignment_note_number),
 					<text><![CDATA[Name of D:IS  ]]></text>
 				</staticText>
 				<textField isBlankWhenNull="true">
-					<reportElement x="386" y="38" width="138" height="10" uuid="9dcde7c2-7d50-4e0b-b54d-e3a68c08c45d"/>
-					<textElement>
+					<reportElement x="386" y="38" width="138" height="10" uuid="9dcde7c2-7d50-4e0b-b54d-e3a68c08c45d">
+						<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Bottom">
 						<font fontName="SansSerif" size="5"/>
+						<paragraph firstLineIndent="2"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{exporter}]]></textFieldExpression>
 				</textField>
@@ -563,7 +566,7 @@ END,edi_in_consignment_note_number),
 						<pen lineWidth="0.5"/>
 					</graphicElement>
 				</rectangle>
-				<textField pattern="d MMM yyyy" isBlankWhenNull="true">
+				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
 					<reportElement x="171" y="58" width="122" height="10" uuid="cc79de4a-ad17-45a4-a414-4a63b1576ef0"/>
 					<box>
 						<topPen lineWidth="0.5"/>
@@ -571,8 +574,8 @@ END,edi_in_consignment_note_number),
 						<bottomPen lineWidth="0.5"/>
 						<rightPen lineWidth="0.5"/>
 					</box>
-					<textElement>
-						<font fontName="SansSerif" size="5"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="7"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{shipped_at}]]></textFieldExpression>
 				</textField>
