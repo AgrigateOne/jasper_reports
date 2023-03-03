@@ -1106,7 +1106,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<text><![CDATA[Size]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="4" width="24" height="15" uuid="51ad6b6c-5774-44a7-92fd-f4caabc692c9">
+				<reportElement x="0" y="4" width="30" height="15" uuid="51ad6b6c-5774-44a7-92fd-f4caabc692c9">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1114,10 +1114,10 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textElement>
 					<font size="10"/>
 				</textElement>
-				<text><![CDATA[GG:]]></text>
+				<text><![CDATA[GGN:]]></text>
 			</staticText>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
-				<reportElement x="24" y="4" width="321" height="22" uuid="6d4c395e-6b4f-4393-aca1-49518bd17b16">
+				<reportElement x="29" y="4" width="309" height="22" uuid="6d4c395e-6b4f-4393-aca1-49518bd17b16">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -1128,7 +1128,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[$F{gap_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="24" y="30" width="150" height="13" uuid="c8d87372-e5ae-424e-b481-70b067c67fa4">
+				<reportElement x="29" y="28" width="150" height="13" uuid="c8d87372-e5ae-424e-b481-70b067c67fa4">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
