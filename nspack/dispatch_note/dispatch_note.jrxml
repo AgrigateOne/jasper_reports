@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_consignment" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="live_kromco_nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="74"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="919"/>
@@ -100,7 +100,7 @@ loads.edi_file_name as file_name,
 pod_port.port_code AS port_name,
 pol_port.port_code AS depart_port_name,
 loads.customer_party_role_id,
-loads.exporter_party_role_id,pcs.pucs,coalesce(cargo_temperatures.temperature_code ,'')cargo_temp
+loads.exporter_party_role_id,pcs.pucs,coalesce(cargo_temperatures.temperature_code ,'')cargo_temp,multi_load_id
 FROM loads
 join 
 (select  pallets.load_id ,string_agg(distinct coalesce(marketingpuc.puc_code ,pucs.puc_code),',') pucs
@@ -391,6 +391,11 @@ where loads.id = $P{load_id}]]>
 	<field name="cargo_temp" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="cargo_temp"/>
 		<property name="com.jaspersoft.studio.field.label" value="cargo_temp"/>
+	</field>
+	<field name="multi_load_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="multi_load_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="multi_load_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="loads"/>
 	</field>
 	<group name="load_id">
 		<groupExpression><![CDATA[$F{load_id}]]></groupExpression>
@@ -1011,7 +1016,7 @@ where loads.id = $P{load_id}]]>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="17" splitType="Stretch">
+		<band height="20" splitType="Stretch">
 			<textField>
 				<reportElement x="41" y="2" width="31" height="13" uuid="40bfa11a-7e33-4cd3-a6c8-3db1f0646a61"/>
 				<textElement verticalAlignment="Bottom">
@@ -1061,19 +1066,33 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[Load Order:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="192" y="2" width="121" height="13" uuid="b34663db-e097-4c7b-92b6-fd99df80408d"/>
+				<reportElement stretchType="RelativeToBandHeight" x="220" y="2" width="93" height="13" uuid="b34663db-e097-4c7b-92b6-fd99df80408d"/>
 				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{dispatch_consignment_note_number}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="151" y="2" width="41" height="13" uuid="ad485c40-637f-44f2-aa25-9e5977822b4e"/>
+				<reportElement x="180" y="2" width="40" height="13" uuid="ad485c40-637f-44f2-aa25-9e5977822b4e"/>
 				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Cons No:]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="72" y="2" width="66" height="13" uuid="7b627d19-12c6-45b4-99a0-ca2f4a1175f8"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="8" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Truck Load Ref:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="138" y="2" width="40" height="13" uuid="39fd2e1d-3264-424e-8a0a-b4f9d538395c"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="8" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{multi_load_id}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnFooter>

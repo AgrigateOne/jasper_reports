@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="finding_sheet" language="groovy" printOrder="Horizontal" pageWidth="595" pageHeight="842" columnWidth="579" leftMargin="8" rightMargin="8" topMargin="8" bottomMargin="8" uuid="3e015a3f-e95b-45af-822d-5984fdad92cf">
 	<property name="ireport.zoom" value="1.7715610000000015"/>
 	<property name="ireport.x" value="0"/>
@@ -95,7 +95,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="7" isBold="true"/>
+					<font size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[*MARK APPLICABLE OPTION WITH A "v"]]></text>
 			</staticText>
@@ -256,7 +256,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				<text><![CDATA[*Min Standard]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="260" y="67" width="46" height="13" uuid="2f332d9f-a11e-4295-bf78-c75e4f818819"/>
+				<reportElement x="331" y="67" width="74" height="13" uuid="d14ff8d7-14be-44ed-af97-02ca7eda7a4e"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -264,21 +264,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="7" isBold="true"/>
-				</textElement>
-				<text><![CDATA[*Template]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="345" y="67" width="66" height="13" uuid="d14ff8d7-14be-44ed-af97-02ca7eda7a4e"/>
-				<box>
-					<pen lineWidth="1.0"/>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isBold="true"/>
 				</textElement>
 				<text><![CDATA[*Special Market]]></text>
@@ -296,39 +282,6 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 					<font size="7" isBold="true"/>
 				</textElement>
 				<text><![CDATA[*Dispensation]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="212" y="67" width="48" height="13" uuid="3fa27466-e592-4afc-bac4-ab7d3d15b162"/>
-				<box>
-					<pen lineWidth="1.0"/>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="306" y="67" width="39" height="13" uuid="eef9e44a-f894-4891-8af7-913e552a9320"/>
-				<box>
-					<pen lineWidth="1.0"/>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<text><![CDATA[]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="411" y="67" width="42" height="13" uuid="046bab14-3dbe-4231-b751-891112963d7d"/>
-				<box>
-					<pen lineWidth="1.0"/>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="514" y="67" width="65" height="13" uuid="5b282bca-93b2-46bc-9aa6-844c9e21fc6e"/>
@@ -431,7 +384,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				<textElement textAlignment="Center">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[REV 2]]></text>
+				<text><![CDATA[REV 3]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="489" y="0" width="50" height="11" uuid="afb05576-dba3-4f8f-9bad-382a330a2da5"/>
@@ -1374,9 +1327,9 @@ Country /Target Market]]></text>
 		<band splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
-		<band height="155" splitType="Stretch">
+		<band height="178" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="80" width="158" height="20" uuid="7c42922e-c329-4e72-bec6-be0fc491d09e"/>
+				<reportElement x="0" y="104" width="158" height="20" uuid="7c42922e-c329-4e72-bec6-be0fc491d09e"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1390,7 +1343,7 @@ Country /Target Market]]></text>
 				<text><![CDATA[Passed for Export Stickers:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="0" width="158" height="20" uuid="b444577e-8f9e-462d-81e7-52fef986e431"/>
+				<reportElement x="0" y="4" width="158" height="20" uuid="b444577e-8f9e-462d-81e7-52fef986e431"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1404,7 +1357,7 @@ Country /Target Market]]></text>
 				<text><![CDATA[Marking Requirements]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="419" y="0" width="31" height="20" uuid="760e2d18-54ed-42ae-a320-909670572754"/>
+				<reportElement x="389" y="4" width="34" height="20" uuid="760e2d18-54ed-42ae-a320-909670572754"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1418,7 +1371,7 @@ Country /Target Market]]></text>
 				<text><![CDATA[Cultivar]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="379" y="20" width="40" height="20" uuid="69280d90-8ccf-42ba-8d98-dbc583c4b3fc"/>
+				<reportElement x="352" y="44" width="37" height="20" uuid="69280d90-8ccf-42ba-8d98-dbc583c4b3fc"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1432,7 +1385,7 @@ Country /Target Market]]></text>
 				<text><![CDATA[Arthropoda]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="379" y="0" width="40" height="20" uuid="4ff1eb3c-343e-466d-b59b-bcd1f7712451"/>
+				<reportElement x="352" y="4" width="37" height="20" uuid="4ff1eb3c-343e-466d-b59b-bcd1f7712451"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1441,12 +1394,14 @@ Country /Target Market]]></text>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Address]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="217" y="20" width="42" height="20" uuid="f86a98cd-279a-478f-8beb-b8553f39c414"/>
+				<reportElement x="225" y="44" width="23" height="20" uuid="f86a98cd-279a-478f-8beb-b8553f39c414">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1455,12 +1410,14 @@ Country /Target Market]]></text>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Bark]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="217" y="0" width="42" height="20" uuid="cbd6d11a-5193-4ce3-a558-3e9352a5e268"/>
+				<reportElement x="225" y="4" width="23" height="20" uuid="cbd6d11a-5193-4ce3-a558-3e9352a5e268">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1469,12 +1426,14 @@ Country /Target Market]]></text>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Class]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="259" y="60" width="40" height="20" uuid="34b7b965-c9a6-4208-aa9d-ee4f9fef8e91"/>
+				<reportElement x="248" y="84" width="35" height="20" uuid="34b7b965-c9a6-4208-aa9d-ee4f9fef8e91">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1483,12 +1442,12 @@ Country /Target Market]]></text>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="true"/>
+					<font size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Same Size]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="191" y="60" width="68" height="20" uuid="a043ab3c-877f-4ca6-80eb-cd2c039667c3"/>
+				<reportElement x="188" y="84" width="60" height="20" uuid="a043ab3c-877f-4ca6-80eb-cd2c039667c3"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1497,12 +1456,14 @@ Country /Target Market]]></text>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Same Cultivar]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="158" y="40" width="33" height="20" uuid="125862e8-5a5a-4800-9ccd-9c3e6f698fb6"/>
+				<reportElement x="158" y="64" width="30" height="20" uuid="125862e8-5a5a-4800-9ccd-9c3e6f698fb6">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1516,7 +1477,7 @@ Country /Target Market]]></text>
 				<text><![CDATA[PUC]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="60" width="158" height="20" uuid="d5cfa70f-2838-4465-8b98-605aaf96dbaa"/>
+				<reportElement x="0" y="84" width="158" height="20" uuid="d5cfa70f-2838-4465-8b98-605aaf96dbaa"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1530,7 +1491,7 @@ Country /Target Market]]></text>
 				<text><![CDATA[Packing Requirements]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="450" y="20" width="29" height="20" uuid="85cf87c2-ecdf-414a-8038-5258aad92201"/>
+				<reportElement x="423" y="44" width="27" height="20" uuid="85cf87c2-ecdf-414a-8038-5258aad92201"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1544,7 +1505,7 @@ Country /Target Market]]></text>
 				<text><![CDATA[Secured Covered]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="20" width="158" height="20" uuid="f17769e5-5fd6-4fc8-8fe7-f48dbd00dddc"/>
+				<reportElement x="0" y="44" width="158" height="20" uuid="f17769e5-5fd6-4fc8-8fe7-f48dbd00dddc"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1558,7 +1519,7 @@ Country /Target Market]]></text>
 				<text><![CDATA[Pallet Requirements]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="479" y="20" width="40" height="20" uuid="4608a204-6f5d-42a6-a8b9-e59387d885b6"/>
+				<reportElement x="450" y="44" width="89" height="20" uuid="4608a204-6f5d-42a6-a8b9-e59387d885b6"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1572,7 +1533,9 @@ Country /Target Market]]></text>
 				<text><![CDATA[ISPM Requirements]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="479" y="0" width="40" height="20" uuid="e9c634ec-c7a8-4bba-89ec-2fbed4586ddd"/>
+				<reportElement x="510" y="4" width="29" height="20" uuid="e9c634ec-c7a8-4bba-89ec-2fbed4586ddd">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1581,12 +1544,12 @@ Country /Target Market]]></text>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font size="6" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Treated with...]]></text>
+				<text><![CDATA[Treated with]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="158" y="80" width="248" height="20" uuid="2bf6955c-56b7-43a5-b3ed-24de41f172bc"/>
+				<reportElement x="158" y="104" width="248" height="20" uuid="2bf6955c-56b7-43a5-b3ed-24de41f172bc"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1600,7 +1563,9 @@ Country /Target Market]]></text>
 				<text><![CDATA[From:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="259" y="40" width="40" height="20" uuid="7e8b7702-2a20-4681-87d9-beae6e344440"/>
+				<reportElement x="248" y="64" width="35" height="20" uuid="7e8b7702-2a20-4681-87d9-beae6e344440">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1609,12 +1574,12 @@ Country /Target Market]]></text>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="true"/>
+					<font size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Pallet ID]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="191" y="40" width="68" height="20" uuid="9a069b8e-43f9-4434-a67d-b5a00d92e664"/>
+				<reportElement x="188" y="64" width="60" height="20" uuid="9a069b8e-43f9-4434-a67d-b5a00d92e664"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1623,12 +1588,12 @@ Country /Target Market]]></text>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Date Code]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="299" y="0" width="40" height="20" uuid="ed7ad37f-9fe1-435a-8a79-9f7b1746c568"/>
+				<reportElement x="283" y="4" width="33" height="20" uuid="ed7ad37f-9fe1-435a-8a79-9f7b1746c568"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1637,12 +1602,14 @@ Country /Target Market]]></text>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Count]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="259" y="20" width="40" height="20" uuid="50a209b5-a9ed-41dd-ab0b-117051e20705"/>
+				<reportElement x="248" y="44" width="35" height="20" uuid="50a209b5-a9ed-41dd-ab0b-117051e20705">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1651,12 +1618,12 @@ Country /Target Market]]></text>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="true"/>
+					<font size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Un-damaged]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="40" width="158" height="20" uuid="75621975-eb7f-46ba-b500-9ed8bfb0a5b2"/>
+				<reportElement x="0" y="64" width="158" height="20" uuid="75621975-eb7f-46ba-b500-9ed8bfb0a5b2"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1670,7 +1637,7 @@ Country /Target Market]]></text>
 				<text><![CDATA[Traceability]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="519" y="80" width="60" height="20" uuid="bb67c851-aa5c-4562-9829-275ba60db3e1"/>
+				<reportElement x="539" y="104" width="40" height="20" uuid="bb67c851-aa5c-4562-9829-275ba60db3e1"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1684,7 +1651,9 @@ Country /Target Market]]></text>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="259" y="0" width="40" height="20" uuid="a8d2e816-e7e4-45d5-b42f-fe91d2f51e06"/>
+				<reportElement x="248" y="4" width="35" height="20" uuid="a8d2e816-e7e4-45d5-b42f-fe91d2f51e06">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1693,12 +1662,12 @@ Country /Target Market]]></text>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="true"/>
+					<font size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Size Diameter]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="339" y="60" width="67" height="20" uuid="0624d091-7c23-435b-b9c3-af8f877beab8"/>
+				<reportElement x="316" y="84" width="60" height="20" uuid="0624d091-7c23-435b-b9c3-af8f877beab8"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1707,12 +1676,12 @@ Country /Target Market]]></text>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Same Ripeness]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="100" width="579" height="49" uuid="0dadb8e6-ad3f-44df-b350-76fcb42995d3"/>
+				<reportElement x="0" y="124" width="579" height="49" uuid="0dadb8e6-ad3f-44df-b350-76fcb42995d3"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1726,7 +1695,21 @@ Country /Target Market]]></text>
 				<text><![CDATA[Remarks:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="299" y="20" width="80" height="20" uuid="e4b5d33e-1e07-42d6-afee-f1437f394522"/>
+				<reportElement x="283" y="44" width="69" height="20" uuid="e4b5d33e-1e07-42d6-afee-f1437f394522"/>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Same Dimension on the Same Layers]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="316" y="4" width="36" height="20" uuid="763d7c4a-c1b9-41b5-b001-19cdc21d8945"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1737,24 +1720,10 @@ Country /Target Market]]></text>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="6" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Same Dimension on the Same Layers]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="339" y="0" width="40" height="20" uuid="763d7c4a-c1b9-41b5-b001-19cdc21d8945"/>
-				<box leftPadding="2">
-					<pen lineWidth="1.0"/>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
 				<text><![CDATA[Origin]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="450" y="0" width="29" height="20" uuid="696e6da6-793d-4bb5-ac4e-36cb5379a94c"/>
+				<reportElement x="423" y="4" width="27" height="20" uuid="696e6da6-793d-4bb5-ac4e-36cb5379a94c"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1768,7 +1737,7 @@ Country /Target Market]]></text>
 				<text><![CDATA[Date Code]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="299" y="60" width="40" height="20" uuid="c9a2ec93-e2c9-40e4-81f0-1b4bdc0b746a"/>
+				<reportElement x="283" y="84" width="33" height="20" uuid="c9a2ec93-e2c9-40e4-81f0-1b4bdc0b746a"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1777,12 +1746,14 @@ Country /Target Market]]></text>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Same Quality]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="158" y="60" width="33" height="20" uuid="6c9e2699-0adc-4011-9da7-9a4d5eb51ca0"/>
+				<reportElement x="158" y="84" width="30" height="20" uuid="6c9e2699-0adc-4011-9da7-9a4d5eb51ca0">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1796,7 +1767,7 @@ Country /Target Market]]></text>
 				<text><![CDATA[Pre-pack]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="519" y="20" width="60" height="20" uuid="76a72ce1-3a85-4931-b3b5-32caaab02ecd"/>
+				<reportElement x="539" y="44" width="40" height="20" uuid="76a72ce1-3a85-4931-b3b5-32caaab02ecd"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1810,7 +1781,7 @@ Country /Target Market]]></text>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="419" y="20" width="31" height="20" uuid="7fb842f7-ffee-4354-9377-d7568554c8ef"/>
+				<reportElement x="389" y="44" width="34" height="20" uuid="7fb842f7-ffee-4354-9377-d7568554c8ef"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1824,7 +1795,7 @@ Country /Target Market]]></text>
 				<text><![CDATA[Containers Square]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="191" y="20" width="26" height="20" uuid="6ac26b6b-d55d-4d7a-b9b5-b7340ec3a6ec"/>
+				<reportElement x="188" y="44" width="37" height="20" uuid="6ac26b6b-d55d-4d7a-b9b5-b7340ec3a6ec"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1833,12 +1804,12 @@ Country /Target Market]]></text>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="7" isBold="true"/>
+					<font size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Fungi]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="299" y="40" width="40" height="20" uuid="8033879b-71eb-4702-bb29-1f1262cb2b9a"/>
+				<reportElement x="283" y="64" width="33" height="20" uuid="8033879b-71eb-4702-bb29-1f1262cb2b9a"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1847,12 +1818,12 @@ Country /Target Market]]></text>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Address]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="519" y="60" width="60" height="20" uuid="adcc143c-81d2-4828-9bd8-5491d0aaa025"/>
+				<reportElement x="539" y="84" width="40" height="20" uuid="adcc143c-81d2-4828-9bd8-5491d0aaa025"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1866,7 +1837,7 @@ Country /Target Market]]></text>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="519" y="40" width="60" height="20" uuid="a7c0ffc0-f3e8-43d3-8839-f04af1a2d49d"/>
+				<reportElement x="539" y="64" width="40" height="20" uuid="a7c0ffc0-f3e8-43d3-8839-f04af1a2d49d"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1880,7 +1851,7 @@ Country /Target Market]]></text>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="406" y="60" width="113" height="20" uuid="6695bbc1-7442-4d62-a8e5-307abfc5b0be"/>
+				<reportElement x="376" y="84" width="163" height="20" uuid="6695bbc1-7442-4d62-a8e5-307abfc5b0be"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1894,7 +1865,7 @@ Country /Target Market]]></text>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="519" y="0" width="60" height="20" uuid="9901df59-3560-4953-a3ca-9509a5bfdbdf"/>
+				<reportElement x="539" y="4" width="40" height="20" uuid="9901df59-3560-4953-a3ca-9509a5bfdbdf"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1908,7 +1879,9 @@ Country /Target Market]]></text>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="158" y="20" width="33" height="20" uuid="8ad7ddbe-b57f-4c4e-bf19-7ae53171c3ed"/>
+				<reportElement x="158" y="44" width="30" height="20" uuid="8ad7ddbe-b57f-4c4e-bf19-7ae53171c3ed">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1922,7 +1895,7 @@ Country /Target Market]]></text>
 				<text><![CDATA[Clean]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="406" y="40" width="113" height="20" uuid="fd23718b-cb00-4154-952c-4f5d44a1d286"/>
+				<reportElement x="376" y="64" width="163" height="20" uuid="fd23718b-cb00-4154-952c-4f5d44a1d286"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1936,7 +1909,9 @@ Country /Target Market]]></text>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="158" y="0" width="33" height="20" uuid="e2397530-f9cf-4572-9ff4-01ef6a88c569"/>
+				<reportElement x="158" y="4" width="30" height="20" uuid="e2397530-f9cf-4572-9ff4-01ef6a88c569">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1945,12 +1920,12 @@ Country /Target Market]]></text>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
+					<font size="5" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Product]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="406" y="80" width="113" height="20" uuid="5f82b8fa-c8ef-4d85-ab42-d4ca950db209"/>
+				<reportElement x="406" y="104" width="133" height="20" uuid="5f82b8fa-c8ef-4d85-ab42-d4ca950db209"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1964,7 +1939,7 @@ Country /Target Market]]></text>
 				<text><![CDATA[To:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="191" y="0" width="26" height="20" uuid="7f924de1-bafc-48e7-9f30-2633afcd8ed7"/>
+				<reportElement x="188" y="4" width="37" height="20" uuid="7f924de1-bafc-48e7-9f30-2633afcd8ed7"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1973,12 +1948,12 @@ Country /Target Market]]></text>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font size="5" isBold="true"/>
 				</textElement>
-				<text><![CDATA[PUC]]></text>
+				<text><![CDATA[PUC/PHC Orchard Number]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="339" y="40" width="67" height="20" uuid="cf9284c7-ddf1-4aae-bfbd-3a75f042d393"/>
+				<reportElement x="316" y="64" width="60" height="20" uuid="cf9284c7-ddf1-4aae-bfbd-3a75f042d393"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1987,9 +1962,155 @@ Country /Target Market]]></text>
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+					<font size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Consignment Note/s]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="450" y="4" width="60" height="20" uuid="b8ef85f4-73e2-40e3-a41a-c7fcc828f35e"/>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Flesh colour for Grapefruits]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="24" width="158" height="20" uuid="31562298-ba98-4c74-a96c-14a7ea2c6546"/>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Containers]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="450" y="24" width="89" height="20" uuid="a721d2bb-4775-45a4-aba0-bcbb88bf00b5"/>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No Fungus]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="188" y="24" width="37" height="20" uuid="e5613def-3178-4c29-a62e-af63bd62c180">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dry]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="283" y="24" width="56" height="20" uuid="c28d3712-48aa-4fa1-9c6d-96aab33b0428"/>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Suitable]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="225" y="24" width="58" height="20" uuid="d7ad7ebf-09f4-406c-a431-f644e6e77a5c">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Undamaged]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="389" y="24" width="61" height="20" uuid="dfec4b67-acf4-401f-939b-3a51c5a6a2b1"/>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No Arthropoda]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="539" y="24" width="40" height="20" uuid="e6abf15e-6f6a-4c54-a46a-3943a91dc6d5"/>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="158" y="24" width="30" height="20" uuid="d9f44be9-922f-4a38-af3e-b9cafc945780">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="5" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Clean]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="339" y="24" width="50" height="20" uuid="20315eaa-33c5-4f57-8a1b-04c099a9a1cb"/>
+				<box leftPadding="2">
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No Odour]]></text>
 			</staticText>
 		</band>
 	</pageFooter>
