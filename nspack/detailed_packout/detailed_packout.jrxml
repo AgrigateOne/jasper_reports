@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="detailed_packout" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" uuid="c08c8ed1-c3fa-4b77-b7f2-d6e11642b1b0">
 	<property name="ireport.zoom" value="5.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="kr_nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="production_run_id" class="java.util.Collection" nestedType="java.lang.Integer"/>
 	<parameter name="carton_or_bin" class="java.lang.String">
@@ -61,6 +61,13 @@ string_agg(distinct pucs.puc_code, '; '   order by pucs.puc_code )pucs
 ,min(pr.started_at) started_at
 ,max(pr.completed_at) completed_at
 ,string_agg(distinct date_part('week'::text, pr.started_at)::text, '; '   order by date_part('week'::text, pr.started_at)::text ) as pack_weeks
+,EXISTS (
+        SELECT
+            qc_samples.id
+        FROM
+            qc_samples
+        WHERE
+             qc_samples.production_run_id=  pr.id) has_qc_defect
 from
 production_run_stats p
 join production_runs pr on pr.id=p.production_run_id
@@ -69,7 +76,7 @@ LEFT JOIN farms ON farms.id = pr.farm_id
 LEFT JOIN pucs ON pucs.id = pr.puc_id
 left JOIN orchards ON orchards.id = pr.orchard_id
 where  $X{IN, p.production_run_id, production_run_id}
-group by  pr.cultivar_id ,pr.farm_id ,cultivars.cultivar_name,farms.farm_code,pucs.puc_code
+group by pr.id, pr.cultivar_id ,pr.farm_id ,cultivars.cultivar_name,farms.farm_code,pucs.puc_code
 )
 , packout_details as (
 select   production_runs.cultivar_id ,production_runs.farm_id ,   COALESCE(cultivars.cultivar_name, cultivar_groups.cultivar_group_code) AS cultivar,
@@ -271,7 +278,8 @@ coalesce(bin_tipped.cultivars,run_attrib.cultivar_name)cultivars
 ,output_r.rmt_class_id as rebins_rmt_class
 ,no_of_rebins
 ,total_rebin_weight
-,bin_tipped.container_type_code
+,bin_tipped.container_type_code,
+run_attrib.has_qc_defect
 FROM run_attrib
 full join bin_tipped on bin_tipped.farm_id=run_attrib.farm_id and bin_tipped.cultivar_id=run_attrib.cultivar_id
 full join output_r on run_attrib.farm_id=output_r.farm_id and run_attrib.cultivar_id=output_r.cultivar_id
@@ -433,6 +441,10 @@ grade_code,std_size,inventory_code]]>
 	<field name="container_type_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="container_type_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="container_type_code"/>
+	</field>
+	<field name="has_qc_defect" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="has_qc_defect"/>
+		<property name="com.jaspersoft.studio.field.label" value="has_qc_defect"/>
 	</field>
 	<variable name="nett_weight_1" class="java.lang.Double" resetType="Group" resetGroup="grade_code" calculation="Sum">
 		<variableExpression><![CDATA[$P{use_packed_weight} ?$F{nett_weight}:$F{derived_nett_weight}]]></variableExpression>
@@ -1319,7 +1331,7 @@ grade_code,std_size,inventory_code]]>
 		</band>
 	</detail>
 	<summary>
-		<band height="75">
+		<band height="142">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
 				<reportElement x="2" y="0" width="100" height="15" uuid="f6852b76-02ad-4314-8c7b-773a7b844abc">
@@ -1425,6 +1437,31 @@ grade_code,std_size,inventory_code]]>
 					<subreportExpression><![CDATA["counts_summary.jasper"]]></subreportExpression>
 				</subreport>
 			</frame>
+			<line>
+				<reportElement x="0" y="116" width="565" height="1" uuid="474208a2-7081-4d0b-922c-d4428ca7c356">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="100" width="566" height="8" uuid="8fd9b457-550e-4549-99d3-1c59c0404e05">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<printWhenExpression><![CDATA[$F{has_qc_defect}]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="dispatched_only">
+					<subreportParameterExpression><![CDATA[$P{dispatched_only}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="production_run_id">
+					<subreportParameterExpression><![CDATA[$P{production_run_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["qc_defect.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</summary>
 </jasperReport>

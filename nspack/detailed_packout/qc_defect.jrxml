@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="qc_defect" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="0" isIgnorePagination="true" uuid="4b02f42f-4814-4a5d-b031-8f2fe8c853bf">
+	<property name="ireport.jasperserver.url" value="http://172.16.16.44:8080/jasperserver-pro/"/>
+	<property name="ireport.jasperserver.user" value="superuser"/>
+	<property name="ireport.jasperserver.report.resource" value="/organizations/organization_1/reports/Packing_Process/Prelim_1_1_files/Prelim_fruitQuality.jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/organizations/organization_1/reports/Packing_Process/Prelim_1_1"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.report.unit.description" value="NSPACK"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="211"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="783"/>
+	<parameter name="production_run_id" class="java.util.Collection"/>
+	<queryString language="SQL">
+		<![CDATA[select fd.short_description, fd.reporting_description, qt.sample_size, qdm.qty_class_2, qdm.qty_class_3,
+       qdm.qty_class_3 + qdm.qty_class_2 as total,
+       round(coalesce((qdm.qty_class_2::decimal + qdm.qty_class_3::decimal) / NULLIF(qt.sample_size, 0), 0) * 100, 2) as total_percentage,
+       round(coalesce((qdm.qty_class_2::decimal) / NULLIF(qt.sample_size, 0), 0) * 100, 2) as class2_percentage,
+       round(coalesce((qdm.qty_class_3::decimal) / NULLIF(qt.sample_size, 0), 0) * 100, 2) as class3_percentage
+from qc_samples
+join qc_tests qt on qc_samples.id = qt.qc_sample_id
+left join qc_defect_measurements qdm on qt.id = qdm.qc_test_id
+left join qc_measurement_types qmt on qt.qc_measurement_type_id = qmt.id
+left join fruit_defects fd on qdm.fruit_defect_id = fd.id
+where  $X{IN, qc_samples.production_run_id , production_run_id}]]>
+	</queryString>
+	<field name="short_description" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="short_description"/>
+		<property name="com.jaspersoft.studio.field.label" value="short_description"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="fruit_defects"/>
+	</field>
+	<field name="reporting_description" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="reporting_description"/>
+		<property name="com.jaspersoft.studio.field.label" value="reporting_description"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="fruit_defects"/>
+	</field>
+	<field name="sample_size" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="sample_size"/>
+		<property name="com.jaspersoft.studio.field.label" value="sample_size"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="qc_tests"/>
+	</field>
+	<field name="qty_class_2" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="qty_class_2"/>
+		<property name="com.jaspersoft.studio.field.label" value="qty_class_2"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="qc_defect_measurements"/>
+	</field>
+	<field name="qty_class_3" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="qty_class_3"/>
+		<property name="com.jaspersoft.studio.field.label" value="qty_class_3"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="qc_defect_measurements"/>
+	</field>
+	<field name="total" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="total"/>
+		<property name="com.jaspersoft.studio.field.label" value="total"/>
+	</field>
+	<field name="total_percentage" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total_percentage"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_percentage"/>
+	</field>
+	<field name="class2_percentage" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="class2_percentage"/>
+		<property name="com.jaspersoft.studio.field.label" value="class2_percentage"/>
+	</field>
+	<field name="class3_percentage" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="class3_percentage"/>
+		<property name="com.jaspersoft.studio.field.label" value="class3_percentage"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="42" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<frame>
+				<reportElement x="1" y="4" width="552" height="37" uuid="2341a7b7-9a36-465b-9eca-7abdd14a1b0c"/>
+				<staticText>
+					<reportElement x="1" y="0" width="149" height="15" uuid="202933a7-f9f3-4ae5-9a42-939761ea156a">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement>
+						<font size="9" isBold="true" isUnderline="true"/>
+					</textElement>
+					<text><![CDATA[QA Test Results]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="1" y="22" width="69" height="14" uuid="3767da60-7f1a-40ff-b97d-b26d9cc9e4c7">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement>
+						<font size="9" isBold="false" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Sample Size:]]></text>
+				</staticText>
+				<textField pattern="#,##0" isBlankWhenNull="true">
+					<reportElement x="70" y="22" width="50" height="14" uuid="a9bc42ed-8bc5-4ff5-aedc-5a90cd313389">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="9" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{sample_size}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="282" y="23" width="76" height="14" uuid="0b22a99c-b9cc-4d23-a788-2c9469c41736"/>
+					<textElement textAlignment="Right">
+						<font size="9" isBold="false" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Result in %]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="369" y="23" width="50" height="14" uuid="5adc630e-2bf9-4b2f-a22b-1777df4a6d15">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Right">
+						<font size="9" isBold="false" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Class 2 %]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="439" y="23" width="50" height="14" uuid="bb35610a-2af4-4a7f-8c92-3f1715ae8545">
+						<property name="local_mesure_unitheight" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Right">
+						<font size="9" isBold="false" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Class 3 %]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="124" y="22" width="46" height="14" uuid="79a55ba2-4a67-4562-90a6-91b96e9d5ba8"/>
+					<textElement textAlignment="Left">
+						<font size="9" isBold="false" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[QA Code]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="170" y="22" width="112" height="14" uuid="974bd903-910a-45bd-82d1-b362954aa017"/>
+					<textElement textAlignment="Left">
+						<font size="9" isBold="false" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Description]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="370" y="0" width="50" height="14" uuid="8899b837-1a94-481b-b212-16b772f1c9ee">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{class2_percentage}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="440" y="0" width="50" height="14" uuid="0e804b39-8191-4351-a3e6-ae3eb81a7c60">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{class3_percentage}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="163" y="0" width="140" height="14" uuid="73f38f4d-273c-4ce7-8da2-c969a95d2a58">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{reporting_description}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="309" y="0" width="50" height="14" uuid="a9ef1485-9673-47b8-acff-6003c139c398">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_percentage}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="124" y="0" width="39" height="14" uuid="9140f68c-893b-4352-a1c7-bd01a12d2b8a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{short_description}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="40" splitType="Stretch"/>
+	</pageFooter>
+</jasperReport>
