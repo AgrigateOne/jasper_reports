@@ -13,15 +13,17 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ud local"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<parameter name="govt_inspection_sheet_id" class="java.lang.Integer"/>
 	<parameter name="empty_rows" class="java.lang.Integer"/>
 	<queryString language="SQL">
-		<![CDATA[SELECT
+		<![CDATA[ SELECT
     dense_rank() over (order by p.pallet_number desc) AS row_number,
     row_number() over (partition by p.pallet_number order by p.pallet_number desc) AS seq_no,
     p.pallet_number,
@@ -30,7 +32,8 @@
     commodities.code                                                        AS commodity,
     cultivars.cultivar_name                                                 AS cultivar,
     target_market_groups.target_market_group_name                           AS packed_tm_group,
-    fruit_size_references.size_reference AS size_ref,
+   fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference,
+   fruit_actual_counts_for_packs.actual_count_for_pack)size_ref,
     p.phc,
     grades.grade_code                                                       AS grade,
     fn_party_role_name(govt_inspection_sheets.exporter_party_role_id) AS exporter,
@@ -43,9 +46,9 @@ govt_inspection_sheets
 LEFT JOIN govt_inspection_pallets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
 LEFT JOIN destination_countries ON destination_countries.id = govt_inspection_pallets.destination_country_id
 LEFT JOIN destination_regions ON destination_regions.id = govt_inspection_pallets.destination_region_id
-
 JOIN pallets p ON govt_inspection_pallets.pallet_id = p.id
 JOIN pallet_sequences ps ON p.id = ps.pallet_id
+LEFT JOIN standard_pack_codes ON standard_pack_codes.id = ps.standard_pack_code_id
 JOIN pucs ON pucs.id = ps.puc_id
 JOIN orchards ON orchards.id = ps.orchard_id
 JOIN cultivar_groups ON cultivar_groups.id = ps.cultivar_group_id
@@ -57,22 +60,82 @@ LEFT JOIN fruit_size_references ON fruit_size_references.id = ps.fruit_size_refe
 LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = ps.fruit_actual_counts_for_pack_id
 WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 	</queryString>
-	<field name="pallet_number" class="java.lang.String"/>
-	<field name="packed_tm_group" class="java.lang.String"/>
-	<field name="exporter" class="java.lang.String"/>
-	<field name="phc" class="java.lang.String"/>
-	<field name="puc" class="java.lang.String"/>
-	<field name="cultivar" class="java.lang.String"/>
-	<field name="orchard" class="java.lang.String"/>
-	<field name="commodity" class="java.lang.String"/>
-	<field name="size_ref" class="java.lang.String"/>
-	<field name="destination_region_name" class="java.lang.String"/>
-	<field name="grade" class="java.lang.String"/>
-	<field name="row_number" class="java.lang.Long"/>
-	<field name="seq_no" class="java.lang.Long"/>
-	<field name="phyto_data" class="java.lang.String"/>
-	<field name="consignment_note_number" class="java.lang.String"/>
-	<field name="inspection_point" class="java.lang.String"/>
+	<field name="row_number" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="row_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="row_number"/>
+	</field>
+	<field name="seq_no" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="seq_no"/>
+		<property name="com.jaspersoft.studio.field.label" value="seq_no"/>
+	</field>
+	<field name="pallet_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pallet_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="pallet_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pallets"/>
+	</field>
+	<field name="puc" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="puc"/>
+		<property name="com.jaspersoft.studio.field.label" value="puc"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pucs"/>
+	</field>
+	<field name="orchard" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="orchard"/>
+		<property name="com.jaspersoft.studio.field.label" value="orchard"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="orchards"/>
+	</field>
+	<field name="commodity" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="commodity"/>
+		<property name="com.jaspersoft.studio.field.label" value="commodity"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="commodities"/>
+	</field>
+	<field name="cultivar" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cultivar"/>
+		<property name="com.jaspersoft.studio.field.label" value="cultivar"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cultivars"/>
+	</field>
+	<field name="packed_tm_group" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="packed_tm_group"/>
+		<property name="com.jaspersoft.studio.field.label" value="packed_tm_group"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="target_market_groups"/>
+	</field>
+	<field name="size_ref" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="size_ref"/>
+		<property name="com.jaspersoft.studio.field.label" value="size_ref"/>
+	</field>
+	<field name="phc" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="phc"/>
+		<property name="com.jaspersoft.studio.field.label" value="phc"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pallets"/>
+	</field>
+	<field name="grade" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="grade"/>
+		<property name="com.jaspersoft.studio.field.label" value="grade"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades"/>
+	</field>
+	<field name="exporter" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="exporter"/>
+		<property name="com.jaspersoft.studio.field.label" value="exporter"/>
+	</field>
+	<field name="destination_region_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="destination_region_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="destination_region_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="destination_regions"/>
+	</field>
+	<field name="phyto_data" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="phyto_data"/>
+		<property name="com.jaspersoft.studio.field.label" value="phyto_data"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pallet_sequences"/>
+	</field>
+	<field name="consignment_note_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="consignment_note_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="consignment_note_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="govt_inspection_sheets"/>
+	</field>
+	<field name="inspection_point" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="inspection_point"/>
+		<property name="com.jaspersoft.studio.field.label" value="inspection_point"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="govt_inspection_sheets"/>
+	</field>
 	<variable name="puc_var" class="java.lang.String" resetType="Page" incrementType="Page"/>
 	<variable name="pallet_number1" class="java.lang.Integer" calculation="DistinctCount">
 		<variableExpression><![CDATA[$F{pallet_number}]]></variableExpression>
