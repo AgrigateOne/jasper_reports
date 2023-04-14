@@ -32,8 +32,7 @@
 		<defaultValueExpression><![CDATA["Logistics"]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
-		<![CDATA[
-WITH ggn AS (
+		<![CDATA[WITH ggn AS (
     Select distinct govt_inspection_pallets.govt_inspection_sheet_id
 	,p.id
    ,CASE WHEN COALESCE(pucs.gap_code,pcs.gap_code) IS NOT NULL AND govt_inspection_sheets.created_at
@@ -641,7 +640,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="250" splitType="Stretch">
+		<band height="153" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
 				<reportElement x="191" y="2" width="189" height="15" uuid="ce7fa501-b1fc-42da-aaea-b7d9636358cf">
@@ -654,69 +653,69 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<text><![CDATA[Export Intake Document]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="500" y="173" width="43" height="13" uuid="0099968c-2e12-414f-9744-537927d467c4"/>
+				<reportElement x="559" y="73" width="43" height="13" uuid="0099968c-2e12-414f-9744-537927d467c4"/>
 				<text><![CDATA[Order:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="650" y="160" width="48" height="13" uuid="3caab678-e576-4db0-9802-2064dea222d6"/>
+				<reportElement x="674" y="60" width="37" height="13" uuid="3caab678-e576-4db0-9802-2064dea222d6"/>
 				<text><![CDATA[Depot:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="170" width="100" height="13" uuid="c9c37b57-c952-4290-a910-c8ce566410a5"/>
+				<reportElement x="354" y="73" width="90" height="13" uuid="c9c37b57-c952-4290-a910-c8ce566410a5"/>
 				<text><![CDATA[Inspector Name:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="183" width="100" height="13" uuid="13b831b7-c083-4b98-a086-a51e392baddf"/>
+				<reportElement x="354" y="86" width="90" height="13" uuid="13b831b7-c083-4b98-a086-a51e392baddf"/>
 				<text><![CDATA[Inspection Date:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="196" width="100" height="13" uuid="4016a60c-4b63-45e6-9551-25163693f0b1"/>
+				<reportElement x="354" y="99" width="90" height="13" uuid="4016a60c-4b63-45e6-9551-25163693f0b1"/>
 				<text><![CDATA[Inspection Point:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="543" y="173" width="100" height="13" uuid="ce86a56c-c652-49ba-bbdb-a05c7e9d7f1f"/>
+				<reportElement x="591" y="73" width="79" height="13" uuid="ce86a56c-c652-49ba-bbdb-a05c7e9d7f1f"/>
 				<textFieldExpression><![CDATA[$F{order_number}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="105" y="196" width="150" height="13" uuid="9ff87982-6993-4d32-b414-809b1f23e2b0">
+				<reportElement x="444" y="99" width="115" height="13" uuid="9ff87982-6993-4d32-b414-809b1f23e2b0">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[$F{inspection_point}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="105" y="170" width="150" height="13" uuid="150f65fa-8c7c-4add-8883-93c354fb52c7">
+				<reportElement x="444" y="73" width="115" height="13" uuid="150f65fa-8c7c-4add-8883-93c354fb52c7">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[$F{inspector}]]></textFieldExpression>
 			</textField>
 			<textField pattern="yyyy-M-dd">
-				<reportElement x="105" y="183" width="150" height="13" uuid="830c5490-e6bb-487b-b0ae-6817e92b379e">
+				<reportElement x="444" y="86" width="115" height="13" uuid="830c5490-e6bb-487b-b0ae-6817e92b379e">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[$F{inspection_date_time}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="698" y="160" width="100" height="13" uuid="2f808615-584d-4a0a-891c-c08536c8cb9e"/>
+				<reportElement x="711" y="60" width="75" height="13" uuid="2f808615-584d-4a0a-891c-c08536c8cb9e"/>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<line>
-				<reportElement x="0" y="158" width="799" height="1" uuid="93b69d37-4fc4-45a4-b4f4-5aae4eaa94c6"/>
+				<reportElement x="0" y="152" width="799" height="1" uuid="93b69d37-4fc4-45a4-b4f4-5aae4eaa94c6"/>
 			</line>
 			<staticText>
-				<reportElement x="591" y="3" width="70" height="13" uuid="5bd90808-eb26-47f5-98c8-c8f665b5c006">
+				<reportElement x="591" y="3" width="70" height="17" uuid="5bd90808-eb26-47f5-98c8-c8f665b5c006">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
-					<font size="9"/>
+					<font size="11"/>
 				</textElement>
 				<text><![CDATA[Date:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="591" y="22" width="70" height="13" uuid="a8b1337f-6050-47c2-bba1-b2e6dd308356">
+				<reportElement x="591" y="20" width="70" height="17" uuid="a8b1337f-6050-47c2-bba1-b2e6dd308356">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
-					<font size="9"/>
+					<font size="11"/>
 				</textElement>
 				<text><![CDATA[Waybill:]]></text>
 			</staticText>
@@ -728,11 +727,11 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<text><![CDATA[Print Date:]]></text>
 			</staticText>
 			<textField pattern="dd/MM/yyyy h.mm a">
-				<reportElement x="661" y="3" width="137" height="13" uuid="f20ae102-127e-4ec7-8906-3ced9f6e2664">
+				<reportElement x="661" y="3" width="137" height="17" uuid="f20ae102-127e-4ec7-8906-3ced9f6e2664">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
-					<font size="9"/>
+					<font size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{inspection_date_time}]]></textFieldExpression>
 			</textField>
@@ -746,12 +745,12 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="661" y="22" width="138" height="13" uuid="05e3658c-f32e-4c93-8f01-ef04ec5c1a42">
+				<reportElement x="661" y="20" width="138" height="17" uuid="05e3658c-f32e-4c93-8f01-ef04ec5c1a42">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
-					<font size="9"/>
+					<font size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{consignment_note_number}]]></textFieldExpression>
 			</textField>
@@ -762,7 +761,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<reportElement x="0" y="54" width="799" height="1" uuid="6cf556c8-04a5-4df4-b342-0d156cae945c"/>
 			</line>
 			<textField pattern="yyyy-M-dd">
-				<reportElement x="105" y="209" width="150" height="13" uuid="d689d4d9-11be-4594-89a0-213b3036c56d">
+				<reportElement x="444" y="112" width="115" height="13" uuid="d689d4d9-11be-4594-89a0-213b3036c56d">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement>
@@ -771,21 +770,21 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[$F{inspection_date_time}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="209" width="100" height="13" uuid="fe814b28-59ae-46f4-92f0-637df8c504d5"/>
+				<reportElement x="354" y="112" width="90" height="13" uuid="fe814b28-59ae-46f4-92f0-637df8c504d5"/>
 				<textElement>
 					<font size="10"/>
 				</textElement>
 				<text><![CDATA[Intake Date:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="157" width="56" height="13" uuid="9aa8d926-c5aa-46c7-aee0-54987bca59b8"/>
+				<reportElement x="354" y="60" width="46" height="13" uuid="9aa8d926-c5aa-46c7-aee0-54987bca59b8"/>
 				<textElement>
 					<font size="10"/>
 				</textElement>
 				<text><![CDATA[Waybill:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="105" y="157" width="150" height="13" uuid="2551f732-f89c-44e1-bbb0-e43b7aae8a54">
+				<reportElement x="444" y="60" width="115" height="13" uuid="2551f732-f89c-44e1-bbb0-e43b7aae8a54">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement>
@@ -794,19 +793,19 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[$F{consignment_note_number}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="500" y="186" width="60" height="13" uuid="b7fe1fec-1961-4633-bdaa-564ae95a3713"/>
+				<reportElement x="559" y="86" width="60" height="13" uuid="b7fe1fec-1961-4633-bdaa-564ae95a3713"/>
 				<text><![CDATA[Rejections:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="500" y="199" width="60" height="13" uuid="396ad2d0-bb87-41aa-8725-7cb690d8b30c"/>
+				<reportElement x="559" y="99" width="60" height="13" uuid="396ad2d0-bb87-41aa-8725-7cb690d8b30c"/>
 				<text><![CDATA[Remarks:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="500" y="160" width="60" height="13" uuid="9b855370-35c2-4427-9857-01ebde4feb47"/>
+				<reportElement x="559" y="60" width="60" height="13" uuid="9b855370-35c2-4427-9857-01ebde4feb47"/>
 				<text><![CDATA[Truck No:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="650" y="173" width="48" height="13" uuid="c4b13bf3-38a8-466f-ac38-2657dfbb0791"/>
+				<reportElement x="673" y="73" width="48" height="13" uuid="c4b13bf3-38a8-466f-ac38-2657dfbb0791"/>
 				<text><![CDATA[Total Plts:]]></text>
 			</staticText>
 			<componentElement>
@@ -820,11 +819,11 @@ coalesce(scrapped_pallet_number.gap_certification,
 				</jr:barbecue>
 			</componentElement>
 			<textField evaluationTime="Report">
-				<reportElement x="698" y="173" width="100" height="12" uuid="622db272-749f-4689-8c26-bc0f73fc5c6b"/>
+				<reportElement x="721" y="73" width="65" height="12" uuid="622db272-749f-4689-8c26-bc0f73fc5c6b"/>
 				<textFieldExpression><![CDATA[$V{pallet_number1}]]></textFieldExpression>
 			</textField>
 			<subreport>
-				<reportElement x="3" y="56" width="123" height="95" uuid="f8260582-5e73-4ef0-9981-e7d4f1be8337">
+				<reportElement x="1" y="55" width="117" height="95" uuid="f8260582-5e73-4ef0-9981-e7d4f1be8337">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -838,7 +837,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement x="320" y="56" width="146" height="95" uuid="f1e0e8c6-53da-44c0-ac5c-fce6141644f3">
+				<reportElement x="119" y="55" width="117" height="95" uuid="f1e0e8c6-53da-44c0-ac5c-fce6141644f3">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -856,7 +855,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement x="630" y="56" width="162" height="95" uuid="49c58c05-e219-42f4-b9de-643127f72fd8">
+				<reportElement x="237" y="55" width="117" height="95" uuid="49c58c05-e219-42f4-b9de-643127f72fd8">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -874,43 +873,43 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
 			</subreport>
 			<textField evaluationTime="Report">
-				<reportElement x="650" y="186" width="82" height="13" uuid="e44d19c0-656f-4e54-aa9e-8767d601d467">
+				<reportElement x="673" y="86" width="82" height="13" uuid="e44d19c0-656f-4e54-aa9e-8767d601d467">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$V{fail_pallet_id1}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="591" y="37" width="70" height="13" uuid="e1e1bf3f-197d-4182-bdb5-91e716ea4501">
+				<reportElement x="591" y="37" width="70" height="17" uuid="e1e1bf3f-197d-4182-bdb5-91e716ea4501">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement>
-					<font size="9"/>
+					<font size="11"/>
 				</textElement>
 				<text><![CDATA[UPN:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="661" y="37" width="138" height="13" uuid="612d5b0f-a48f-4a12-80ee-bf72fbc41cbe">
+				<reportElement x="661" y="37" width="138" height="17" uuid="612d5b0f-a48f-4a12-80ee-bf72fbc41cbe">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
-					<font size="9"/>
+					<font size="11"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{upn}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="501" y="212" width="90" height="13" uuid="5a2bc8ba-7ad8-4b6f-a482-9245deb9ed80">
+				<reportElement x="560" y="112" width="90" height="13" uuid="5a2bc8ba-7ad8-4b6f-a482-9245deb9ed80">
 					<printWhenExpression><![CDATA[$F{reinspection_result} == "Yes"]]></printWhenExpression>
 				</reportElement>
 				<text><![CDATA[Is Reinspection:]]></text>
 			</staticText>
 			<textField evaluationTime="Report">
-				<reportElement x="650" y="212" width="82" height="13" uuid="cdcfc196-1900-42c9-84b9-78b699d64692">
+				<reportElement x="673" y="112" width="82" height="13" uuid="cdcfc196-1900-42c9-84b9-78b699d64692">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<printWhenExpression><![CDATA[$F{reinspection_result} == "Yes"]]></printWhenExpression>
 				</reportElement>
@@ -918,14 +917,14 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[$F{reinspection_result}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="501" y="227" width="90" height="13" uuid="b0f38b68-fa61-484d-a0ed-832cabe3c7ce">
+				<reportElement x="560" y="127" width="90" height="13" uuid="b0f38b68-fa61-484d-a0ed-832cabe3c7ce">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<text><![CDATA[Total Cartons:]]></text>
 			</staticText>
 			<textField evaluationTime="Report">
-				<reportElement x="650" y="227" width="82" height="13" uuid="f4c18b14-cd64-4a71-b3db-ae175e0e50cf">
+				<reportElement x="673" y="127" width="82" height="13" uuid="f4c18b14-cd64-4a71-b3db-ae175e0e50cf">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
@@ -1016,7 +1015,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<text><![CDATA[TR]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="514" y="3" width="21" height="13" uuid="e6afac30-5cf7-457a-ba87-ff39f46ce0f7"/>
+				<reportElement x="396" y="3" width="21" height="13" uuid="e6afac30-5cf7-457a-ba87-ff39f46ce0f7"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
@@ -1037,7 +1036,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<text><![CDATA[Farm]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="535" y="3" width="22" height="13" uuid="4238b2dd-5c08-4ce9-8433-6ce9ab06b0e8">
+				<reportElement x="417" y="3" width="22" height="13" uuid="4238b2dd-5c08-4ce9-8433-6ce9ab06b0e8">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
@@ -1046,7 +1045,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<text><![CDATA[Plts]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="616" y="3" width="30" height="13" uuid="6cb26be7-38a9-4b32-836e-2382c3ee4b1f">
+				<reportElement x="498" y="3" width="30" height="13" uuid="6cb26be7-38a9-4b32-836e-2382c3ee4b1f">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -1056,21 +1055,21 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<text><![CDATA[Orch]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="700" y="3" width="98" height="13" uuid="9f167809-de02-4968-92aa-bb6af980d98a"/>
+				<reportElement x="582" y="3" width="98" height="13" uuid="9f167809-de02-4968-92aa-bb6af980d98a"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Barcode]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="558" y="3" width="26" height="13" uuid="e93064c5-0d37-4608-93d1-8e96113273f4"/>
+				<reportElement x="440" y="3" width="26" height="13" uuid="e93064c5-0d37-4608-93d1-8e96113273f4"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Base]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="585" y="3" width="30" height="13" uuid="867dea48-9e27-4564-a1aa-96612a046213"/>
+				<reportElement x="467" y="3" width="30" height="13" uuid="867dea48-9e27-4564-a1aa-96612a046213"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
@@ -1082,7 +1081,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				</reportElement>
 			</line>
 			<staticText>
-				<reportElement x="647" y="3" width="52" height="13" uuid="6861c8a6-0c1a-4d63-a841-1552a3683f2d">
+				<reportElement x="529" y="3" width="52" height="13" uuid="6861c8a6-0c1a-4d63-a841-1552a3683f2d">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -1104,17 +1103,19 @@ coalesce(scrapped_pallet_number.gap_certification,
 				</textElement>
 				<text><![CDATA[Size]]></text>
 			</staticText>
-			<line>
-				<reportElement x="0" y="0" width="799" height="1" uuid="8c89a3a6-3f7b-4f1d-a81b-8bddcc5be707">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-				</reportElement>
-			</line>
 			<staticText>
-				<reportElement x="284" y="3" width="30" height="13" uuid="aed079b8-a64f-4824-831d-c01fe237d7b4"/>
+				<reportElement x="284" y="3" width="36" height="13" uuid="aed079b8-a64f-4824-831d-c01fe237d7b4"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[GG]]></text>
+				<text><![CDATA[GGN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="690" y="3" width="96" height="13" uuid="c12faf4a-7715-4e20-ac28-ad4942d52e76"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[GGN Status]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
@@ -1123,7 +1124,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<printWhenExpression><![CDATA[$F{print_barcode}]]></printWhenExpression>
 			<componentElement>
-				<reportElement x="708" y="0" width="90" height="15" uuid="bf7b56b0-ed6e-472f-b006-eedfaf557c3b">
+				<reportElement x="590" y="0" width="90" height="15" uuid="bf7b56b0-ed6e-472f-b006-eedfaf557c3b">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.barHeight" value="px"/>
@@ -1156,7 +1157,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 		<band height="11" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isBlankWhenNull="true">
-				<reportElement x="514" y="0" width="21" height="11" uuid="a87ae22d-9134-43d0-8703-72800411e360"/>
+				<reportElement x="396" y="0" width="21" height="11" uuid="a87ae22d-9134-43d0-8703-72800411e360"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
@@ -1202,7 +1203,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[$F{variety}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="558" y="0" width="26" height="11" uuid="b6a1a1d5-1c55-45f4-a80b-11c2e262fe98">
+				<reportElement x="440" y="0" width="26" height="11" uuid="b6a1a1d5-1c55-45f4-a80b-11c2e262fe98">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
@@ -1230,7 +1231,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[$F{commodity}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="585" y="0" width="30" height="11" uuid="7277c671-32e6-45ae-87a8-47d2efbf9f57">
+				<reportElement x="467" y="0" width="30" height="11" uuid="7277c671-32e6-45ae-87a8-47d2efbf9f57">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
@@ -1253,7 +1254,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[$F{destination_region_name}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement x="700" y="0" width="98" height="11" uuid="9989200a-ba33-4bfd-9b9f-cddec1220328"/>
+				<reportElement x="582" y="0" width="98" height="11" uuid="9989200a-ba33-4bfd-9b9f-cddec1220328"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
@@ -1290,14 +1291,14 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[$F{puc}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="535" y="0" width="22" height="11" uuid="a3bfe17f-f5d6-4afc-98d8-87fbc10aff91"/>
+				<reportElement x="417" y="0" width="22" height="11" uuid="a3bfe17f-f5d6-4afc-98d8-87fbc10aff91"/>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{pallet_size}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement x="616" y="0" width="30" height="11" uuid="3f309a59-ca60-42ec-9a48-4ca1e76afe66">
+				<reportElement x="498" y="0" width="30" height="11" uuid="3f309a59-ca60-42ec-9a48-4ca1e76afe66">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
@@ -1306,7 +1307,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[$F{orchard}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement x="647" y="0" width="52" height="11" uuid="57ac9bce-5172-48cb-a60b-e2c034e9cab3">
+				<reportElement x="529" y="0" width="52" height="11" uuid="57ac9bce-5172-48cb-a60b-e2c034e9cab3">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
@@ -1324,17 +1325,6 @@ coalesce(scrapped_pallet_number.gap_certification,
 				</textElement>
 				<textFieldExpression><![CDATA[$F{size_ref}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="389" y="0" width="124" height="11" uuid="c8d87372-e5ae-424e-b481-70b067c67fa4">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{gap_certification}]]></textFieldExpression>
-			</textField>
 			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 				<reportElement x="280" y="0" width="108" height="11" uuid="6d4c395e-6b4f-4393-aca1-49518bd17b16">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1348,7 +1338,8 @@ coalesce(scrapped_pallet_number.gap_certification,
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="30">
+		<band height="27">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField>
 				<reportElement x="218" y="12" width="80" height="15" uuid="9265a950-d41c-4005-8567-a57db14d0bc2"/>
 				<textElement textAlignment="Right"/>
@@ -1363,71 +1354,82 @@ coalesce(scrapped_pallet_number.gap_certification,
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="690" y="-11" width="81" height="11" uuid="c8d87372-e5ae-424e-b481-70b067c67fa4">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{gap_certification}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageFooter>
 	<lastPageFooter>
-		<band height="79">
+		<band height="54">
 			<rectangle>
-				<reportElement x="278" y="0" width="383" height="25" uuid="38ed3f14-1ced-44f1-9fec-8f3850db459a"/>
+				<reportElement x="0" y="1" width="73" height="35" uuid="3ea17db4-d82d-45ed-a30a-75c196ed27c7"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="0" y="25" width="139" height="35" uuid="3ea17db4-d82d-45ed-a30a-75c196ed27c7"/>
-			</rectangle>
-			<rectangle>
-				<reportElement x="416" y="0" width="383" height="25" uuid="979079ac-40e6-4b9a-a7aa-e1b47548b27b"/>
-			</rectangle>
-			<rectangle>
-				<reportElement x="139" y="0" width="139" height="25" uuid="2a9587d5-575a-4b6c-bf78-60fad9ec1360"/>
-			</rectangle>
-			<rectangle>
-				<reportElement x="0" y="0" width="139" height="25" uuid="5e6c3259-6aa9-4767-b7d1-420cb436658c"/>
-			</rectangle>
-			<rectangle>
-				<reportElement x="278" y="25" width="383" height="35" uuid="9ad2ed17-299a-4f03-b534-da38f3ec5e69"/>
-			</rectangle>
-			<rectangle>
-				<reportElement x="139" y="25" width="139" height="35" uuid="d89c57a2-a531-49a7-a63c-b06d12b75192"/>
-			</rectangle>
-			<rectangle>
-				<reportElement x="416" y="25" width="383" height="35" uuid="de793fd6-0080-4063-8793-3abca56533d8"/>
+				<reportElement x="71" y="1" width="118" height="35" uuid="d89c57a2-a531-49a7-a63c-b06d12b75192"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="0" y="25" width="138" height="35" uuid="6c7bdde1-9a5e-4ab2-b6dd-67822385974f"/>
+				<reportElement x="0" y="1" width="71" height="35" uuid="6c7bdde1-9a5e-4ab2-b6dd-67822385974f"/>
 				<textElement verticalAlignment="Middle">
 					<paragraph leftIndent="4"/>
 				</textElement>
-				<text><![CDATA[Signature]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="278" y="25" width="382" height="35" uuid="23eca3c7-030b-42d0-8621-2c3eb6e193e0"/>
-				<textElement verticalAlignment="Middle">
-					<paragraph leftIndent="4"/>
-				</textElement>
-				<text><![CDATA[Signature]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="0" y="0" width="138" height="24" uuid="8e0cb925-2114-4b9e-9a37-822562c20f8e"/>
-				<textElement verticalAlignment="Middle">
-					<paragraph leftIndent="4"/>
-				</textElement>
-				<text><![CDATA[Approved by]]></text>
+				<text><![CDATA[Approved by:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="278" y="0" width="382" height="24" uuid="513e8cf4-89ab-4883-af31-fcf97d4bad4d"/>
-				<textElement verticalAlignment="Middle">
-					<paragraph leftIndent="4"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{signee_caption}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="216" y="64" width="80" height="15" uuid="96df7021-0880-4459-9abd-63d085e05409"/>
+				<reportElement x="216" y="39" width="80" height="15" uuid="96df7021-0880-4459-9abd-63d085e05409"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="296" y="64" width="40" height="15" uuid="0b7e0303-5192-45c3-bde1-ae779bbcc6a7"/>
+				<reportElement x="296" y="39" width="40" height="15" uuid="0b7e0303-5192-45c3-bde1-ae779bbcc6a7"/>
 				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
+			<rectangle>
+				<reportElement x="189" y="1" width="73" height="35" uuid="cf66e4e3-be1e-4aec-913c-efc2047c1d21"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="262" y="1" width="118" height="35" uuid="37acc823-5166-45eb-aea4-8835dd95550a"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="189" y="1" width="73" height="35" uuid="99b8d847-22ce-4e13-a3e2-36d5d23f2faa"/>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Signature:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="366" y="1" width="73" height="35" uuid="337a9ae8-2754-4c09-8f92-1ea8ef83b7ce"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="439" y="1" width="118" height="35" uuid="f052472a-5129-4454-8c33-a7aa05ff9b63"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="366" y="2" width="73" height="35" uuid="026e1c45-e5bd-4f95-abe2-ef605085c06b"/>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Logistics:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="557" y="1" width="73" height="35" uuid="7996b1dd-5108-4e6d-83fc-db5bb1e7f7d5"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="630" y="1" width="170" height="35" uuid="1f54ba67-f049-447a-a116-c7a50cabdff4"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="557" y="1" width="73" height="35" uuid="4bdbbeff-dcae-476d-b618-4e6c7aea3f8b"/>
+				<textElement verticalAlignment="Middle">
+					<paragraph leftIndent="4"/>
+				</textElement>
+				<text><![CDATA[Signature:]]></text>
+			</staticText>
 		</band>
 	</lastPageFooter>
 	<summary>
