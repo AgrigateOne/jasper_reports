@@ -1111,7 +1111,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<text><![CDATA[GGN]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="690" y="3" width="96" height="13" uuid="c12faf4a-7715-4e20-ac28-ad4942d52e76"/>
+				<reportElement x="680" y="3" width="106" height="13" uuid="c12faf4a-7715-4e20-ac28-ad4942d52e76"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
@@ -1355,7 +1355,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				</reportElement>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="690" y="-11" width="81" height="11" uuid="c8d87372-e5ae-424e-b481-70b067c67fa4">
+				<reportElement x="680" y="-11" width="119" height="11" uuid="c8d87372-e5ae-424e-b481-70b067c67fa4">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
