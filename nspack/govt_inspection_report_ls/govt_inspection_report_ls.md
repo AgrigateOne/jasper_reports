@@ -8,11 +8,13 @@ It can either be a passed govt inspection sheet or a failed govt inspection shee
 ## Generating the report
 
 The report can be generated:
-Finished goods | Inspection | Govt Inspection sheets
-   * From an inspection sheet  - click on the "Govt Inspection report" button.
+
+* Finished goods | Inspection | Govt Inspection sheets
+* From an inspection sheet  - click on the "Govt Inspection report" button.
 
 
 ## Report header
+
 | Label | Description | Source |
 | ----- | ----------- | ------ |
 |Implementation owner address| Info related to the implemenation owner | `party role address.jasper`  using delivery address of implementation owner |
@@ -34,7 +36,9 @@ Finished goods | Inspection | Govt Inspection sheets
 |GG|Global Gap code  | `pucs.gap_code` |
 |Gap Certification|Gap Certification status|'global gap certified' if govt_inspection_sheets.created_at is between pucs.gap_code_valid_from AND pucs.gap_code_valid_until|
 |UPN| UPN  |`govt_inspection_sheets.upn`  |
+
 ## Report Detail
+
 | Label | Description | Source |
 | ----- | ----------- | ------ |
 |Com|The commodity of the fruit on the sheet  | `commodities.code` |
@@ -58,7 +62,9 @@ Finished goods | Inspection | Govt Inspection sheets
 |Barcode| Pallet barcode ID|Unique string that identifies each pallet | `pallets.pallet_number` |
 |Total cartons| Total number of cartons on the sheet | sum of all cartons on pallets on the sheet |
 |Total pallets|Total number of pallets on the sheet  | count of pallets on the sheet |
+
 ## Inspection summary subreport
+
 | Label | Description | Source |
 | ----- | ----------- | ------ |
 |Comm|commodity of the fruit on the sheet  | `commodities.code` |
