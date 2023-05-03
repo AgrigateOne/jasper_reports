@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="gov_inspection_sheet" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b276ed72-36fe-4eb1-8898-57bb00d5eee1">
 	<property name="ireport.zoom" value="1.7524694974069621"/>
 	<property name="ireport.x" value="0"/>
@@ -64,8 +64,8 @@ scrapped_pallet_number AS (
   SELECT DISTINCT
 	  govt_inspection_pallets.passed as govt_inspection_pallets_passed,
 	  CASE WHEN pucs.gap_code IS NOT NULL
-    AND govt_inspection_sheets.created_at BETWEEN pucs.gap_code_valid_from AND pucs.gap_code_valid_until THEN
-    'GLOBAL G.A.P. Certified'
+     AND govt_inspection_sheets.created_at BETWEEN pucs.gap_code_valid_from AND pucs.gap_code_valid_until THEN
+     'GLOBAL G.A.P. Certified'
   ELSE
     NULL
   END gap_certification,
