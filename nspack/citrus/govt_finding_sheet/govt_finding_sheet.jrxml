@@ -23,7 +23,7 @@
 	<parameter name="govt_inspection_sheet_id" class="java.lang.Integer"/>
 	<parameter name="empty_rows" class="java.lang.Integer"/>
 	<queryString language="SQL">
-		<![CDATA[ SELECT
+		<![CDATA[SELECT
     dense_rank() over (order by p.pallet_number desc) AS row_number,
     row_number() over (partition by p.pallet_number order by p.pallet_number desc) AS seq_no,
     p.pallet_number,
@@ -302,7 +302,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[PUC/'S:]]></text>
+				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="153" y="67" width="59" height="13" uuid="36091bae-ac54-48bf-8b78-e347fbfaf052"/>
@@ -430,24 +430,24 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 			</image>
 			<staticText>
 				<reportElement x="411" y="0" width="78" height="11" uuid="1b9417fb-7078-48fe-ae06-47a20118351f"/>
-				<textElement>
+				<textElement verticalAlignment="Bottom">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[PPECB FINDINGS]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="406" y="11" width="93" height="11" uuid="d439990b-e580-4fb9-b657-1805adac4c7e"/>
-				<textElement>
+				<reportElement x="395" y="11" width="93" height="11" uuid="d439990b-e580-4fb9-b657-1805adac4c7e"/>
+				<textElement textAlignment="Right">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[PP04.01 - 05F06 C |]]></text>
+				<text><![CDATA[APS05C |]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="499" y="11" width="57" height="11" uuid="a78daf47-8fce-40c0-8b4c-3a24e5c8cb2f"/>
-				<textElement textAlignment="Center">
+				<reportElement x="491" y="11" width="88" height="11" uuid="a78daf47-8fce-40c0-8b4c-3a24e5c8cb2f"/>
+				<textElement textAlignment="Left">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<text><![CDATA[REV 3]]></text>
+				<text><![CDATA[Date: 13/03/2023]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="489" y="0" width="50" height="11" uuid="afb05576-dba3-4f8f-9bad-382a330a2da5"/>
