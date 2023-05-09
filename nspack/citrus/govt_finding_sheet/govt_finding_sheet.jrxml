@@ -436,14 +436,14 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				<text><![CDATA[Date: 13/03/2023]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="494" y="39" width="50" height="9" uuid="9bd1549a-35f2-4be0-b9c1-d4f45d4ee4fc"/>
+				<reportElement x="497" y="39" width="50" height="9" uuid="9bd1549a-35f2-4be0-b9c1-d4f45d4ee4fc"/>
 				<textElement textAlignment="Right">
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="544" y="37" width="26" height="11" uuid="bb6561ba-4c4b-4201-a318-06ba9c5c6e88"/>
+				<reportElement x="547" y="37" width="26" height="11" uuid="bb6561ba-4c4b-4201-a318-06ba9c5c6e88"/>
 				<textElement verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
