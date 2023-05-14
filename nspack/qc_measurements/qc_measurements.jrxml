@@ -265,7 +265,7 @@ SELECT
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="25" splitType="Stretch">
+		<band height="37" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="0" width="150" height="16" uuid="d4165b5a-8619-4c1b-9fa7-c8c7c110f5d7"/>
 				<textElement>
@@ -294,6 +294,13 @@ SELECT
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 			</line>
+			<textField>
+				<reportElement x="180" y="0" width="200" height="16" uuid="f38b3edb-f26e-4531-8878-5f454a28a550"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Sample " + $F{sample_id}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
@@ -486,7 +493,7 @@ SELECT
 				<textElement textAlignment="Right">
 					<font size="8" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{sugar_meter_reset} == null ? "" : ($F{sugar_meter_reset} ? "Z" : "") ]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{sugar_meter_reset} == null ? "" : ($F{sugar_meter_reset} ? "Z" : "")]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
