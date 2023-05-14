@@ -31,7 +31,9 @@ diameters AS (
       AND qt.qc_test_type_id = (SELECT id FROM qc_test_types WHERE qc_test_type_name = 'diameter')
 ),
 sugars AS (
-    SELECT qt.qc_sample_id, qim.measurement_seq, qt.sample_size, qim.measurement AS sugar
+    SELECT qt.qc_sample_id, qim.measurement_seq,
+                       qt.sugar_meter_reset,
+                       qt.sample_size, qim.measurement AS sugar
     FROM qc_tests qt
     JOIN qc_instrument_measurements qim ON qim.qc_test_id = qt.id 
     WHERE qt.qc_sample_id =  $P{qc_sample_id} 
@@ -65,7 +67,7 @@ SELECT
   pressures.press2,
   diameters.diam,
   sugars.sugar,
-  -- sugars.zeroed,
+  sugars.sugar_meter_reset,
   weights.weight,
   starches.starch_percentage,
   starches.qty_fruit_with_percentage,
@@ -158,6 +160,11 @@ SELECT
 		<property name="com.jaspersoft.studio.field.name" value="sugar"/>
 		<property name="com.jaspersoft.studio.field.label" value="sugar"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="qc_instrument_measurements"/>
+	</field>
+	<field name="sugar_meter_reset" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="sugar_meter_reset"/>
+		<property name="com.jaspersoft.studio.field.label" value="sugar_meter_reset"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="qc_tests"/>
 	</field>
 	<field name="weight" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="weight"/>
@@ -292,7 +299,7 @@ SELECT
 	<pageHeader>
 		<band height="94" splitType="Stretch">
 			<textField isBlankWhenNull="true">
-				<reportElement x="497" y="15" width="46" height="13" uuid="6cf85d88-c5a8-4af1-90f0-421459ba2174">
+				<reportElement x="505" y="15" width="37" height="13" uuid="6cf85d88-c5a8-4af1-90f0-421459ba2174">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box topPadding="0" leftPadding="2" bottomPadding="0" rightPadding="2">
@@ -311,7 +318,7 @@ SELECT
 				<textFieldExpression><![CDATA[$F{short_description}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="497" y="2" width="46" height="13" uuid="9b0d669c-db03-4f6d-8060-25d0e3b5e788">
+				<reportElement x="505" y="2" width="37" height="13" uuid="9b0d669c-db03-4f6d-8060-25d0e3b5e788">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box topPadding="0" leftPadding="2" bottomPadding="0" rightPadding="2">
@@ -324,7 +331,7 @@ SELECT
 				<textFieldExpression><![CDATA[$F{sample_size}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="497" y="28" width="46" height="13" uuid="e6c46143-5099-4fba-aa20-40256e28f765">
+				<reportElement x="505" y="28" width="37" height="13" uuid="e6c46143-5099-4fba-aa20-40256e28f765">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box topPadding="0" leftPadding="2" bottomPadding="0" rightPadding="2">
@@ -337,7 +344,7 @@ SELECT
 				<textFieldExpression><![CDATA[$F{diam_size}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="497" y="41" width="46" height="13" uuid="f925c9de-009e-4f8d-bc31-6076bc2a558d">
+				<reportElement x="505" y="41" width="37" height="13" uuid="f925c9de-009e-4f8d-bc31-6076bc2a558d">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box topPadding="0" leftPadding="2" bottomPadding="0" rightPadding="2">
@@ -350,7 +357,7 @@ SELECT
 				<textFieldExpression><![CDATA[$F{sugar_size}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="497" y="54" width="46" height="13" uuid="d4c8af99-a79e-4b0a-9b5f-a312eaa54e58">
+				<reportElement x="505" y="54" width="37" height="13" uuid="d4c8af99-a79e-4b0a-9b5f-a312eaa54e58">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box topPadding="0" leftPadding="2" bottomPadding="0" rightPadding="2">
@@ -390,7 +397,7 @@ SELECT
 				<textFieldExpression><![CDATA[$F{ref_number}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="377" y="2" width="120" height="13" uuid="4d4544d5-c73f-42aa-a7ec-0466a8c0d763">
+				<reportElement x="377" y="2" width="128" height="13" uuid="4d4544d5-c73f-42aa-a7ec-0466a8c0d763">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box topPadding="0" leftPadding="2" bottomPadding="0" rightPadding="2">
@@ -402,7 +409,7 @@ SELECT
 				<text><![CDATA[Sample size]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="377" y="15" width="120" height="13" uuid="51c380b5-e0dc-4823-bf99-8188ec574101">
+				<reportElement x="377" y="15" width="128" height="13" uuid="51c380b5-e0dc-4823-bf99-8188ec574101">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box topPadding="0" leftPadding="2" bottomPadding="0" rightPadding="2">
@@ -414,7 +421,7 @@ SELECT
 				<text><![CDATA[Pressure sample size]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="377" y="28" width="120" height="13" uuid="a0498470-fcf9-410c-8787-8a9235695714">
+				<reportElement x="377" y="28" width="128" height="13" uuid="a0498470-fcf9-410c-8787-8a9235695714">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box topPadding="0" leftPadding="2" bottomPadding="0" rightPadding="2">
@@ -426,19 +433,7 @@ SELECT
 				<text><![CDATA[Diameter sample size]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="377" y="41" width="120" height="13" uuid="8fe6acf6-ec37-4672-a8d9-852c510d2c1d">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box topPadding="0" leftPadding="2" bottomPadding="0" rightPadding="2">
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<text><![CDATA[Sugar sample size]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="377" y="54" width="120" height="13" uuid="31604253-41bc-45e8-9bfe-d1ba573817f2">
+				<reportElement x="377" y="54" width="128" height="13" uuid="31604253-41bc-45e8-9bfe-d1ba573817f2">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box topPadding="0" leftPadding="2" bottomPadding="0" rightPadding="2">
@@ -450,7 +445,7 @@ SELECT
 				<text><![CDATA[Weight sample size]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="377" y="67" width="120" height="13" uuid="b5f044cd-c600-4dc9-ba6c-28bec3ac5a21">
+				<reportElement x="377" y="67" width="128" height="13" uuid="b5f044cd-c600-4dc9-ba6c-28bec3ac5a21">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box topPadding="0" leftPadding="2" bottomPadding="0" rightPadding="2">
@@ -462,7 +457,7 @@ SELECT
 				<text><![CDATA[Starch sample size]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="497" y="67" width="46" height="13" uuid="18d4d02c-8e02-4fbb-9d98-d783666e1c0f">
+				<reportElement x="505" y="67" width="37" height="13" uuid="18d4d02c-8e02-4fbb-9d98-d783666e1c0f">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<box topPadding="0" leftPadding="2" bottomPadding="0" rightPadding="2">
@@ -473,6 +468,25 @@ SELECT
 				</box>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{starch_size}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="377" y="41" width="128" height="13" uuid="b9c2cc8d-b925-4dcf-95e2-21273ce5d050">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="2" bottomPadding="0" rightPadding="2">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<text><![CDATA[Sugar sample size]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="483" y="43" width="34" height="13" uuid="6880511c-e6f6-4bd5-9fc2-ee39586e3158"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sugar_meter_reset} == null ? "" : ($F{sugar_meter_reset} ? "Z" : "") ]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
