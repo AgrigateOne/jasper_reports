@@ -488,13 +488,6 @@ SELECT
 				</box>
 				<text><![CDATA[Sugar sample size]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="483" y="43" width="34" height="13" uuid="6880511c-e6f6-4bd5-9fc2-ee39586e3158"/>
-				<textElement textAlignment="Right">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{sugar_meter_reset} == null ? "" : ($F{sugar_meter_reset} ? "Z" : "")]]></textFieldExpression>
-			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -634,6 +627,15 @@ SELECT
 				</textElement>
 				<text><![CDATA[No fruit]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="312" y="2" width="34" height="11" uuid="d98a5b23-38ae-46fc-aa08-35e7f4462531">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sugar_meter_reset} == null ? "" : ($F{sugar_meter_reset} ? "(Z)" : "")]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
