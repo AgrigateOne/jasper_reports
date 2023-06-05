@@ -1107,7 +1107,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<reportElement x="284" y="3" width="70" height="13" uuid="aed079b8-a64f-4824-831d-c01fe237d7b4">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[GGN]]></text>
@@ -1116,7 +1116,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<reportElement x="354" y="3" width="90" height="13" uuid="c12faf4a-7715-4e20-ac28-ad4942d52e76">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[GGN Status]]></text>
