@@ -47,7 +47,7 @@ Finished goods | Inspection | Govt Inspection sheets
 |Mark|Code marks officially recognized by national authorities for fresh fruit and vegetable exports |pallet sequence `marks.mark_code`  |
 |TM|Target market  | `target_markets.target_market_name` if target_markets.inspection_tm has a value else  `target_market_groups.target_market_group_name` is displayed  |
 |TC|ISO country code of the destination country  | `destination_countries.iso_country_code` |
-|TR| Target region | `destination_regions.destination_region_name` |
+|TR| Target region | `destination_regions.destination_region_name` of gov inspection pallets |
 |Farm| Farm where fruit came | `farms.farm_code)` |
 |Ctns|The number of cartons on a pallet  | `pallet_sequences.carton_quantity` |
 |Plts|Pallet size  | `pallet_sequences.carton_quantity` / `pallets.carton_quantity` |
