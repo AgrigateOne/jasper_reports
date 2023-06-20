@@ -556,16 +556,6 @@ vessel_code,exporter_certificate_code,commodities.code,mv.description,commoditie
 					</textElement>
 					<text><![CDATA[Inspection Stamp]]></text>
 				</staticText>
-				<textField pattern="dd MMMMM yyyy">
-					<reportElement x="339" y="83" width="161" height="15" uuid="084f94a8-d7f8-4a31-9d47-e1750a2a2dc9">
-						<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
-					</reportElement>
-					<textElement>
-						<font size="9" isBold="true"/>
-						<paragraph leftIndent="5"/>
-					</textElement>
-					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
-				</textField>
 				<line>
 					<reportElement x="0" y="0" width="1" height="215" uuid="74fa8f7d-0b1b-4753-9e6e-f8282db0cf1b">
 						<property name="local_mesure_unitwidth" value="pixel"/>
