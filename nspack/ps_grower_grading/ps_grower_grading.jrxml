@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
+<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="presort_grading_pool_id" language="groovy" columnCount="5" printOrder="Horizontal" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="156" columnSpacing="7" leftMargin="15" rightMargin="15" topMargin="15" bottomMargin="15" uuid="945d24dc-a46b-4d12-918e-0ac2ec6f4b2a">
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="378"/>
@@ -8,7 +8,7 @@
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44/jasperserver-pro/"/>
 	<property name="ireport.jasperserver.user" value="superuser"/>
 	<property name="ireport.jasperserver.report.resource" value="/organizations/organization_1/reports/MES/Presort/ps_grower_grading_files/ps_grower_grading_"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
 	<property name="com.jaspersoft.studio.report.unit.description" value="Audience:  MES User.  Output:  PDF.  MES:  Grower Grading done per Lot."/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="166"/>
@@ -50,7 +50,7 @@ else
    when char_length(b.maf_article_count) = 4 then cast(b.maf_article_count as integer)+60000
    else cast(b.maf_article_count as integer)+1000 end
 end as isn,
-case class.rmt_class_code when 'SA' THEN '1' when '1A' then '2' when '1L' then '3' when '2L' then '4' when '3' then '5'  when 'ALL' then '6' when 'W' THEN '7'when '1Z' then '8'
+case class.rmt_class_code when 'SA' THEN '1' when '1A' then '2' when '1AX' then '3' when '1L' then '4' when '2L' then '5' when '3' then '6'  when 'ALL' then '7' when 'W' THEN '8'when '1Z' then '9'
 else grades.qa_level end
  as gradesort,
  '' as colour_sort
