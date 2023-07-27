@@ -4,7 +4,7 @@
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack local"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="UD live"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
 	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
@@ -555,7 +555,9 @@ FROM
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="68" y="7" width="120" height="18" uuid="216b7452-1de7-49ac-95a9-9ca088e41894"/>
+				<reportElement x="68" y="7" width="121" height="18" uuid="216b7452-1de7-49ac-95a9-9ca088e41894">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<staticText>
