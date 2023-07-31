@@ -207,6 +207,7 @@ GROUP BY intake]]>
 			<textField isBlankWhenNull="true">
 				<reportElement x="256" y="0" width="39" height="12" uuid="b4fffe9c-1c12-4cbe-93d3-26f60c2053e0">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<box>
 					<bottomPen lineWidth="1.0"/>

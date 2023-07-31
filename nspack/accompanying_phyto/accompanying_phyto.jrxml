@@ -67,19 +67,17 @@ doc_nums.load_ids,
 doc_nums.consignment_note_numbers,
 commodities.commodity,
 '00' ||  COALESCE(CAST(p.load_id as text), '0') as document_number,
---destination_countries.description  as importing_country,
 p.exporter,
 
 (SELECT pr.id
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) AS implementation_owner_party_role_id,
-
 (SELECT pr.id
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'CUSTOMER_CONTACT_PERSON') LIMIT 1) AS packhouse_contact_person_party_role_id,
-
 'Daff_Seq_No' as daff_seq_no,
-COALESCE(destination_countries.description,p.final_destination)  as importing_country,
+--COALESCE(destination_countries.description,p.final_destination)  as importing_country,
+destination_countries.description  as importing_country,
 packhouse_contact.first_name phc_first_name,
 packhouse_contact.surname as phc_surname,
 packhouse_contact.contact_method_code as phc_contact, 
