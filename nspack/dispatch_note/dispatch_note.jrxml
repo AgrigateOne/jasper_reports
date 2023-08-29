@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_consignment" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="UD live"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="74"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="919"/>
@@ -464,7 +464,7 @@ where loads.id = $P{load_id}]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="240" splitType="Stretch">
+		<band height="267" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isBlankWhenNull="true">
@@ -615,7 +615,9 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[Billing client:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="435" y="60" width="112" height="13" uuid="064eba7f-d4d2-49a6-99d3-3b507bc6a8c5"/>
+				<reportElement x="436" y="60" width="112" height="13" uuid="064eba7f-d4d2-49a6-99d3-3b507bc6a8c5">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -750,13 +752,13 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[Depart Port:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="5" y="226" width="65" height="13" uuid="c23827b9-96b1-4858-8fb3-b68bc82cdf3d">
+				<reportElement x="5" y="239" width="65" height="13" uuid="c23827b9-96b1-4858-8fb3-b68bc82cdf3d">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[Remark:]]></text>
+				<text><![CDATA[Customer Ref:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement key="" positionType="Float" x="206" y="184" width="66" height="13" uuid="d2e8fb7f-4f5b-48ee-aa21-1627423ac42d">
@@ -781,13 +783,13 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{vehicle_number}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="75" y="226" width="470" height="13" uuid="4e33796b-7c53-4ccf-b8b8-5449d200faba">
+				<reportElement x="75" y="239" width="319" height="14" uuid="4e33796b-7c53-4ccf-b8b8-5449d200faba">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{remarks}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{customer_reference}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement key="" x="206" y="170" width="66" height="13" uuid="4fbe32c4-1bb8-40bf-b8b6-b177d1b33c62">
@@ -835,7 +837,8 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{container_seal_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="206" y="212" width="185" height="13" uuid="a8d50e84-d891-4700-80a0-2f1b3850313b">
+				<reportElement x="206" y="197" width="185" height="13" uuid="a8d50e84-d891-4700-80a0-2f1b3850313b">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -997,21 +1000,46 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{implementation_owner_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="206" y="198" width="66" height="13" uuid="e6004f9d-5c6b-443a-b8f9-fde0c9c14d8c"/>
+				<reportElement x="5" y="225" width="66" height="13" uuid="e6004f9d-5c6b-443a-b8f9-fde0c9c14d8c">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Shipping Line:]]></text>
 			</staticText>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement x="272" y="198" width="121" height="13" uuid="bfd26096-dd76-4e2d-bb4e-b96c38af8db7">
+				<reportElement x="72" y="225" width="321" height="13" uuid="bfd26096-dd76-4e2d-bb4e-b96c38af8db7">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{shipping_line_party_role_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="5" y="252" width="65" height="13" uuid="110411dc-f8d7-40ff-b79d-2f0fc219aff2">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Remark:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="75" y="252" width="470" height="13" uuid="ca4603a1-5e74-485f-ace6-eb3164b7fd88">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{remarks}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_picklist" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="UD live"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="113"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="879"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -520,7 +520,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="99" splitType="Stretch">
+		<band height="113" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isBlankWhenNull="true">
@@ -580,7 +580,9 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="776" y="0" width="18" height="20" uuid="c15c9a20-83c0-429b-8d74-54a1f9124af1"/>
+				<reportElement x="777" y="0" width="18" height="20" uuid="c15c9a20-83c0-429b-8d74-54a1f9124af1">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -791,9 +793,11 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<text><![CDATA[Picklist]]></text>
 			</staticText>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement x="79" y="70" width="213" height="13" uuid="dd403948-df16-4c79-9183-fe6a4adf8d6e">
+				<reportElement x="79" y="84" width="338" height="13" uuid="dd403948-df16-4c79-9183-fe6a4adf8d6e">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement>
 					<font size="8"/>
@@ -801,20 +805,21 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<textFieldExpression><![CDATA[$F{shipping_line_party_role_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="5" y="70" width="59" height="13" uuid="35ccc114-5f2f-40b3-b3a3-9ec2c36f04b1"/>
+				<reportElement x="5" y="70" width="65" height="13" uuid="35ccc114-5f2f-40b3-b3a3-9ec2c36f04b1"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[Shipping Line:]]></text>
+				<text><![CDATA[Customer Ref:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="79" y="84" width="470" height="13" uuid="560b80a0-33c2-497a-a9f7-080047d0ed80">
+				<reportElement x="79" y="70" width="321" height="13" uuid="560b80a0-33c2-497a-a9f7-080047d0ed80">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{remarks}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{customer_reference}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="5" y="84" width="65" height="13" uuid="ad778dc3-0daa-447b-9ca1-0c54e5efcb20">
@@ -823,8 +828,28 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<textElement>
 					<font size="8"/>
 				</textElement>
+				<text><![CDATA[Shipping line:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="97" width="65" height="13" uuid="01b303d7-a4c6-48ff-a4a0-d1fc8b9bdaad">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
 				<text><![CDATA[Remark:]]></text>
 			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="79" y="97" width="721" height="13" uuid="519bc4f2-f637-474b-af18-a0acb3942bd3">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{remarks}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
