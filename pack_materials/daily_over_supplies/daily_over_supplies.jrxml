@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 7.1.0.final using JasperReports Library version 6.4.3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="daily_over_supplies" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="aa050e60-cdd1-43aa-ac28-ee7b0beb53ff">
+	<property name="ireport.jasperserver.url" value="http://172.16.16.40:80/jasperserver-pro/"/>
+	<property name="ireport.jasperserver.user" value="superuser"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Pack Materials"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="220"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="775"/>
+	<parameter name="delivery_id" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT mrd.id, mrd.delivery_number, mrd.verified, mdi.quantity_received, mdi.invoiced_unit_price, sum(mdi.quantity_received * mdi.invoiced_unit_price) AS total_price,
+pmp.product_code, mpo.purchase_order_number, pic.amount as costs, mpo.mr_vat_type_id, mvt.percentage_applicable
+FROM mr_deliveries AS mrd
+INNER JOIN mr_delivery_items mdi ON mrd.id = mdi.mr_delivery_id
+INNER JOIN mr_purchase_invoice_costs pic ON pic.mr_delivery_id = mrd.id
+INNER JOIN pack_material_product_variants pv ON pv.id = mdi.mr_product_variant_id join pack_material_products pmp on pmp.id = pv.pack_material_product_id
+INNER JOIN mr_purchase_order_items poi ON mdi.mr_purchase_order_item_id = poi.id JOIN mr_purchase_orders mpo ON poi.mr_purchase_order_id = mpo.id
+INNER JOIN mr_vat_types mvt ON mvt.id = mpo.mr_vat_type_id
+WHERE mrd.id = $P{delivery_id}
+GROUP BY
+mrd.id, mrd.delivery_number, mrd.verified, mdi.quantity_received, mdi.invoiced_unit_price, pmp.product_code, mpo.purchase_order_number, pic.amount, mpo.mr_vat_type_id,
+mvt.percentage_applicable]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+	</field>
+	<field name="delivery_number" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="delivery_number"/>
+	</field>
+	<field name="verified" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="verified"/>
+	</field>
+	<field name="quantity_received" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="quantity_received"/>
+	</field>
+	<field name="invoiced_unit_price" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="invoiced_unit_price"/>
+	</field>
+	<field name="total_price" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="total_price"/>
+	</field>
+	<field name="product_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="product_code"/>
+	</field>
+	<field name="purchase_order_number" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="purchase_order_number"/>
+	</field>
+	<field name="costs" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="costs"/>
+	</field>
+	<field name="mr_vat_type_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="mr_vat_type_id"/>
+	</field>
+	<field name="percentage_applicable" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="percentage_applicable"/>
+	</field>
+	<variable name="Total_Carton_Qty" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{quantity_received}]]></variableExpression>
+	</variable>
+	<variable name="Total_Excl_VAT" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_price}]]></variableExpression>
+	</variable>
+	<variable name="Total_ZAR" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$V{Transport_Costs}.add($V{Total_Excl_VAT}).multiply($V{Vat_Percentage}).divide(new BigDecimal(100), BigDecimal.ROUND_HALF_UP).add($V{Transport_Costs}).add($V{Total_Excl_VAT}).setScale(2, java.math.RoundingMode.HALF_UP)]]></variableExpression>
+	</variable>
+	<variable name="VAT" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$V{Transport_Costs}.add($V{Total_Excl_VAT}).multiply($V{Vat_Percentage}).divide(new BigDecimal(100), BigDecimal.ROUND_HALF_UP).setScale(2, java.math.RoundingMode.HALF_UP)]]></variableExpression>
+	</variable>
+	<variable name="Transport_Costs" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$F{costs}.setScale(2, java.math.RoundingMode.HALF_UP)]]></variableExpression>
+	</variable>
+	<variable name="Vat_Percentage" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$F{percentage_applicable}.setScale(2, java.math.RoundingMode.HALF_UP)]]></variableExpression>
+	</variable>
+	<variable name="Setup_Costs" class="java.lang.String"/>
+	<title>
+		<band height="90">
+			<image>
+				<reportElement x="5" y="0" width="112" height="75" uuid="c6c80ef6-7a14-4562-a71a-2084f0c93d98"/>
+				<imageExpression><![CDATA["/../images/kromco_logo_transparent.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="438" y="3" width="54" height="14" uuid="ba58b08d-a5a6-4388-b1c8-c8f0f5b1e70d"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Address:]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="-10" y="89" width="577" height="1" uuid="3b6186c3-3561-4122-8bbd-d14c6ea4bbff">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="492" y="3" width="60" height="15" uuid="72f779da-cb84-452a-8eb1-5c269440ab95"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[PO BOX 133]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="174" y="36" width="186" height="15" uuid="1b1380f9-748c-4469-b04c-420c83396dc9"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[VAT Nr 4540258912]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="174" y="23" width="186" height="13" uuid="513389c6-6937-4d24-87c5-71ed3785a69e"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REGULAR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="174" y="0" width="186" height="20" uuid="8481d990-bffb-4559-9616-b3a0bcc7f5b8"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PMS REPORT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="174" y="51" width="186" height="15" uuid="b3a4e6ff-6b82-4b55-bd1e-1639aed204d5"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[KROMCO (PTY) LTD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="174" y="66" width="186" height="15" uuid="6f80685a-7034-458c-9790-93526432e9ae"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Reg. No.: 1995/012961/07]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="492" y="14" width="60" height="15" uuid="eb421801-035a-4ef3-82d1-9a490a55f96e"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[GRABOUW]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="492" y="25" width="60" height="15" uuid="8bd52a64-1775-43ad-9702-bbaba9ce6d68"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[7160]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="492" y="36" width="60" height="15" uuid="87ffe3c9-608e-42bc-8ac4-813ee37811ba"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[SOUTH AFRICA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="437" y="51" width="54" height="15" uuid="e25d6794-61d5-41ab-b436-ba2f896513dd"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Telephone:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="491" y="51" width="61" height="15" uuid="840ed696-c945-4b36-95d5-8f8aff0db674"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[+27(21) 850 6700]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="437" y="66" width="54" height="15" uuid="adc3fa16-2109-4c29-9584-7b8abad9d623"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fax:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="491" y="66" width="61" height="15" uuid="a11600dd-32eb-44f0-bdf4-8169ab65438c"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[+27(21) 850 6871]]></text>
+			</staticText>
+		</band>
+	</title>
+</jasperReport>

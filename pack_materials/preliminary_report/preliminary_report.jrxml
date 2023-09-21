@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 7.1.0.final using JasperReports Library version 6.4.3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="preliminary_report" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="aa050e60-cdd1-43aa-ac28-ee7b0beb53ff">
+	<property name="ireport.jasperserver.url" value="http://172.16.16.40:80/jasperserver-pro/"/>
+	<property name="ireport.jasperserver.user" value="superuser"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Pack Materials"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="220"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="775"/>
+	<parameter name="mr_bulk_stock_adjustment_id" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT mrpv.old_product_code, sum(actual_quantity) AS total_quantity, mrpv.product_variant_number, mrpv.product_variant_code
+FROM mr_bulk_stock_adjustment_items bsai
+JOIN mr_skus ms ON bsai.mr_sku_id = ms.id
+JOIN material_resource_product_variants mrpv ON ms.mr_product_variant_id = mrpv.id
+WHERE bsai.mr_bulk_stock_adjustment_id = $P{mr_bulk_stock_adjustment_id}
+GROUP BY ms.sku_number, mrpv.old_product_code, mrpv.product_variant_number, mrpv.product_variant_code
+ORDER BY  mrpv.product_variant_number]]>
+	</queryString>
+	<field name="old_product_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="old_product_code"/>
+	</field>
+	<field name="total_quantity" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="total_quantity"/>
+	</field>
+	<field name="product_variant_number" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="product_variant_number"/>
+	</field>
+	<field name="product_variant_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="product_variant_code"/>
+	</field>
+	<pageHeader>
+		<band height="95">
+			<image>
+				<reportElement x="5" y="5" width="112" height="75" uuid="9b02f23d-5c70-4b71-b053-6a6916163a59"/>
+				<imageExpression><![CDATA["/../images/kromco_logo_transparent.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="438" y="8" width="54" height="14" uuid="88ef5225-ded5-4e28-b678-9460bd1bca7f"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Address:]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="-10" y="94" width="577" height="1" uuid="2b25c220-847c-4c10-ad6c-aa40ae54240c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="492" y="8" width="60" height="15" uuid="89feb7f7-bc18-4194-ad08-a585d620c0dd"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[PO BOX 133]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="174" y="41" width="206" height="15" uuid="2c1e303e-fd0f-45e3-8d52-eddd55c07321"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[VAT Nr 4540258912]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="174" y="25" width="206" height="16" uuid="600e9c9d-1125-4b17-968c-15ed3003630b"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REGULAR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="174" y="5" width="206" height="20" uuid="07a125d8-90aa-4142-9485-a5f1105a4e18"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BSA - PRELIMINARY REPORT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="174" y="56" width="206" height="15" uuid="2c96f1a7-5a25-4466-9d82-a8d1e622d687"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[KROMCO (PTY) LTD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="174" y="71" width="206" height="15" uuid="84f7854d-bca3-47bc-ae51-c8f19508842f"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Reg. No.: 1995/012961/07]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="492" y="19" width="60" height="15" uuid="7a4f8acb-5b78-48fc-be56-1716b659e941"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[GRABOUW]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="492" y="30" width="60" height="15" uuid="4c9b04df-8e81-4fc3-9cce-1b442884251d"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[7160]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="492" y="41" width="60" height="15" uuid="f46db2ff-4a10-45a6-a99d-3d748d152f85"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[SOUTH AFRICA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="437" y="56" width="54" height="15" uuid="a7a360ca-ebc0-4183-8077-a94e79bccdd2"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Telephone:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="491" y="56" width="61" height="15" uuid="eaedf151-00fe-4db2-9b9f-0b292a9b4846"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[+27(21) 850 6700]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="437" y="71" width="54" height="15" uuid="c07b7759-63fc-44b0-8fa6-2df7fa46462b"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fax:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="491" y="71" width="61" height="15" uuid="11e6e7aa-0aaf-496e-89f9-e002cb844b90"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[+27(21) 850 6871]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="46">
+			<rectangle>
+				<reportElement x="202" y="16" width="75" height="30" backcolor="#E0DEDC" uuid="41279701-cb96-4ac6-bc7e-1d8cbd0bf0cb"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="207" y="21" width="64" height="20" uuid="2d7bd0b8-18ea-489c-a05e-bcd8c05c9754">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="020bec96-62f5-4fe5-b6d2-0f385fd5aec7"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Actual Qty]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="277" y="16" width="100" height="30" backcolor="#E0DEDC" uuid="c3548a53-5d47-4538-bf3d-536ae4c2cb60"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="377" y="16" width="187" height="30" backcolor="#E0DEDC" uuid="ade38395-1480-4998-a20f-e4522c845b24"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="282" y="21" width="89" height="20" uuid="bb996e57-8888-427c-9b5d-72f1ba69165f">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="020bec96-62f5-4fe5-b6d2-0f385fd5aec7"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PM Variant No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="382" y="21" width="176" height="20" uuid="4472db89-5411-4c72-b5ca-7d34498cf9f6">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="020bec96-62f5-4fe5-b6d2-0f385fd5aec7"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PM Variant Code]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="-8" y="16" width="210" height="30" backcolor="#E0DEDC" uuid="6ccba49c-8195-427e-b7fe-14cee89e95b0"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="-6" y="21" width="207" height="20" uuid="54cb4c29-b68b-424a-9397-d38de48d3717">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b09aa21f-813e-4896-8e2f-9047c9a48e83"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[HWE Old Code]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<rectangle>
+				<reportElement x="377" y="0" width="187" height="20" uuid="45bc85b4-c63d-4862-be17-0db0ac6de256"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="277" y="0" width="100" height="20" uuid="3a8829ff-b48e-4505-b1fc-46458ea323be"/>
+				<graphicElement>
+					<pen lineWidth="0.75"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="202" y="0" width="75" height="20" uuid="1811b14c-e898-41bc-95c0-728ef334abb2"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="-8" y="0" width="210" height="20" uuid="0958fcc4-8477-4be3-ac56-60f10395ba22"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField isBlankWhenNull="true">
+				<reportElement x="-5" y="0" width="206" height="20" uuid="780c5b76-b952-4bcf-b871-65ef113f3757">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4278392b-ba3b-48a5-8fee-4a0389773359"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{old_product_code}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#;(#,##0.00#-)" isBlankWhenNull="true">
+				<reportElement x="207" y="0" width="64" height="20" uuid="ae943063-c146-4e9d-9bc3-35afabef0e31">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b97c7d2b-528a-4d15-944b-63c0bd384394"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_quantity}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#;(#,##0.00#-)" isBlankWhenNull="true">
+				<reportElement x="282" y="0" width="89" height="20" uuid="386dd798-31f9-408e-9d79-b30e35d5c536">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b97c7d2b-528a-4d15-944b-63c0bd384394"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{product_variant_number}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#;(#,##0.00#-)" isBlankWhenNull="true">
+				<reportElement x="382" y="0" width="176" height="20" uuid="e6be0759-8ac4-48b4-abd7-ec6823e5154b">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b97c7d2b-528a-4d15-944b-63c0bd384394"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{product_variant_code}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

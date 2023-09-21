@@ -1,0 +1,586 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 7.1.0.final using JasperReports Library version 6.4.3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sales_invoice_note" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="aa050e60-cdd1-43aa-ac28-ee7b0beb53ff">
+	<property name="ireport.jasperserver.url" value="http://172.16.16.40:80/jasperserver-pro/"/>
+	<property name="ireport.jasperserver.user" value="superuser"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Pack Materials"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="220"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="775"/>
+	<parameter name="delivery_id" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT mrd.id, mrd.delivery_number, mrd.verified, mdi.quantity_received, mdi.invoiced_unit_price, sum(mdi.quantity_received * mdi.invoiced_unit_price) AS total_price,
+pmp.product_code, mpo.purchase_order_number, pic.amount as costs, mpo.mr_vat_type_id, mvt.percentage_applicable
+FROM mr_deliveries AS mrd
+INNER JOIN mr_delivery_items mdi ON mrd.id = mdi.mr_delivery_id
+INNER JOIN mr_purchase_invoice_costs pic ON pic.mr_delivery_id = mrd.id
+INNER JOIN pack_material_product_variants pv ON pv.id = mdi.mr_product_variant_id join pack_material_products pmp on pmp.id = pv.pack_material_product_id
+INNER JOIN mr_purchase_order_items poi ON mdi.mr_purchase_order_item_id = poi.id JOIN mr_purchase_orders mpo ON poi.mr_purchase_order_id = mpo.id
+INNER JOIN mr_vat_types mvt ON mvt.id = mpo.mr_vat_type_id
+WHERE mrd.id = $P{delivery_id}
+GROUP BY
+mrd.id, mrd.delivery_number, mrd.verified, mdi.quantity_received, mdi.invoiced_unit_price, pmp.product_code, mpo.purchase_order_number, pic.amount, mpo.mr_vat_type_id,
+mvt.percentage_applicable]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+	</field>
+	<field name="delivery_number" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="delivery_number"/>
+	</field>
+	<field name="verified" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.label" value="verified"/>
+	</field>
+	<field name="quantity_received" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="quantity_received"/>
+	</field>
+	<field name="invoiced_unit_price" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="invoiced_unit_price"/>
+	</field>
+	<field name="total_price" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="total_price"/>
+	</field>
+	<field name="product_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="product_code"/>
+	</field>
+	<field name="purchase_order_number" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="purchase_order_number"/>
+	</field>
+	<field name="costs" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="costs"/>
+	</field>
+	<field name="mr_vat_type_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="mr_vat_type_id"/>
+	</field>
+	<field name="percentage_applicable" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="percentage_applicable"/>
+	</field>
+	<variable name="Total_Carton_Qty" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{quantity_received}]]></variableExpression>
+	</variable>
+	<variable name="Total_Excl_VAT" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_price}]]></variableExpression>
+	</variable>
+	<variable name="Total_ZAR" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$V{Costs}.add($V{Total_Excl_VAT}).multiply($V{Vat_Percentage}).divide(new BigDecimal(100), BigDecimal.ROUND_HALF_UP).add($V{Costs}).add($V{Total_Excl_VAT}).setScale(2, java.math.RoundingMode.HALF_UP)]]></variableExpression>
+	</variable>
+	<variable name="VAT" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$V{Costs}.add($V{Total_Excl_VAT}).multiply($V{Vat_Percentage}).divide(new BigDecimal(100), BigDecimal.ROUND_HALF_UP).setScale(2, java.math.RoundingMode.HALF_UP)]]></variableExpression>
+	</variable>
+	<variable name="Costs" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$F{costs}.setScale(2, java.math.RoundingMode.HALF_UP)]]></variableExpression>
+	</variable>
+	<variable name="Vat_Percentage" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$F{percentage_applicable}.setScale(2, java.math.RoundingMode.HALF_UP)]]></variableExpression>
+	</variable>
+	<title>
+		<band height="90">
+			<image>
+				<reportElement x="5" y="0" width="112" height="75" uuid="c6c80ef6-7a14-4562-a71a-2084f0c93d98"/>
+				<imageExpression><![CDATA["/../images/kromco_logo_transparent.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="438" y="3" width="54" height="14" uuid="ba58b08d-a5a6-4388-b1c8-c8f0f5b1e70d"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Address:]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="-10" y="89" width="577" height="1" uuid="3b6186c3-3561-4122-8bbd-d14c6ea4bbff">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="492" y="3" width="60" height="15" uuid="72f779da-cb84-452a-8eb1-5c269440ab95"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[PO BOX 133]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="174" y="36" width="186" height="15" uuid="1b1380f9-748c-4469-b04c-420c83396dc9"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[VAT Nr 4540258912]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="174" y="23" width="186" height="13" uuid="513389c6-6937-4d24-87c5-71ed3785a69e"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REGULAR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="174" y="0" width="186" height="20" uuid="8481d990-bffb-4559-9616-b3a0bcc7f5b8"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SALES INVOICE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="174" y="51" width="186" height="15" uuid="b3a4e6ff-6b82-4b55-bd1e-1639aed204d5"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[KROMCO (PTY) LTD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="174" y="66" width="186" height="15" uuid="6f80685a-7034-458c-9790-93526432e9ae"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Reg. No.: 1995/012961/07]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="492" y="14" width="60" height="15" uuid="eb421801-035a-4ef3-82d1-9a490a55f96e"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[GRABOUW]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="492" y="25" width="60" height="15" uuid="8bd52a64-1775-43ad-9702-bbaba9ce6d68"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[7160]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="492" y="36" width="60" height="15" uuid="87ffe3c9-608e-42bc-8ac4-813ee37811ba"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[SOUTH AFRICA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="437" y="51" width="54" height="15" uuid="e25d6794-61d5-41ab-b436-ba2f896513dd"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Telephone:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="491" y="51" width="60" height="15" uuid="840ed696-c945-4b36-95d5-8f8aff0db674"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[+27(21) 850 6700]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="437" y="66" width="54" height="15" uuid="adc3fa16-2109-4c29-9584-7b8abad9d623"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fax:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="491" y="66" width="60" height="15" uuid="a11600dd-32eb-44f0-bdf4-8169ab65438c"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[+27(21) 850 6871]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="144">
+			<staticText>
+				<reportElement x="87" y="22" width="110" height="17" uuid="2f2a364a-3591-4c35-84c8-47734da4035f"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[...................................................]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="0" y="114" width="282" height="30" backcolor="#E0DEDC" uuid="ca859828-56a1-4a9f-8fd8-24da0c5d5252"/>
+				<graphicElement>
+					<pen lineWidth="0.75"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="282" y="114" width="91" height="30" backcolor="#E0DEDC" uuid="231d472b-7898-4ac1-9dc7-c81956929eed"/>
+				<graphicElement>
+					<pen lineWidth="0.75"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="87" y="73" width="110" height="17" uuid="7ca1e72f-14ed-491d-9963-7b16f059f1ab"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[...................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="87" y="39" width="110" height="17" uuid="07d06274-749f-4841-bccc-2d572d4df3b1"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[...................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="39" width="86" height="17" uuid="45a86df4-db00-45e1-9321-c42b598dced8"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Invoice No:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="56" width="86" height="17" uuid="97146503-595a-4392-a0f1-bdd793052452"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Customer Vat No:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="87" y="56" width="110" height="17" uuid="b6e0dd8d-fa07-4492-8fc2-2dca764337f0"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[...................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="22" width="86" height="17" uuid="3b069087-6bbd-45dd-9003-c659840f5510"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Delivery No:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="88" y="23" width="106" height="15" uuid="c0651667-54b3-4a0c-a409-ab1a3563dcff"/>
+				<textFieldExpression><![CDATA[$F{delivery_number}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="73" width="86" height="17" uuid="b72e755f-4f49-495f-9445-ca57df277cbe"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date:]]></text>
+			</staticText>
+			<textField pattern="dd-MMM-yyyy">
+				<reportElement x="88" y="73" width="106" height="15" uuid="6e85277e-c25d-44a7-89dc-7d6d4f506312"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="-12" y="100" width="580" height="1" uuid="ee350d5c-40ea-46db-8e5f-30b2fbf32c43">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="287" y="119" width="80" height="20" uuid="d5cbb49e-fc58-42f0-b252-64c3beb8131a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="020bec96-62f5-4fe5-b6d2-0f385fd5aec7"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Carton Qty]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="7" y="119" width="265" height="20" uuid="b4067858-7fa0-488a-9eef-097fe9f6b784">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b09aa21f-813e-4896-8e2f-9047c9a48e83"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Description of Goods / Items]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="373" y="114" width="91" height="30" backcolor="#E0DEDC" uuid="38f9c244-b072-4b3f-915f-c0174905f40f"/>
+				<graphicElement>
+					<pen lineWidth="0.75"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="463" y="114" width="91" height="30" backcolor="#E0DEDC" uuid="3071928d-08c9-4928-b75e-8be0389cd9e2"/>
+				<graphicElement>
+					<pen lineWidth="0.75"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="378" y="119" width="80" height="20" uuid="313b68e9-fb45-475c-a798-9e3a902d7c6d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="020bec96-62f5-4fe5-b6d2-0f385fd5aec7"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Unit Price]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="468" y="119" width="80" height="20" uuid="78f2799e-6009-4582-b83c-5007ddf59d47">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="020bec96-62f5-4fe5-b6d2-0f385fd5aec7"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="87" y="5" width="110" height="17" uuid="588b087d-3ce7-4a0f-a6c5-d26d9f875cc3"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[...................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="5" width="86" height="17" uuid="f43fec7a-3b3e-4fc2-bf48-3bbb049cf014"/>
+				<textElement>
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Purchase Order No:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="88" y="6" width="106" height="15" uuid="6db7048c-2f55-43cc-b9fa-3f85d68f7ecd"/>
+				<textFieldExpression><![CDATA[$F{purchase_order_number}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<rectangle>
+				<reportElement x="0" y="0" width="282" height="20" uuid="9de1b0a7-aaad-4568-9393-feac6383626a"/>
+				<graphicElement>
+					<pen lineWidth="0.75"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="282" y="0" width="91" height="20" uuid="81625bd9-3b4c-496f-a475-aef7c41a3db9"/>
+				<graphicElement>
+					<pen lineWidth="0.75"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="373" y="0" width="91" height="20" uuid="5f4355de-cdd0-4247-8479-4ac8fa3ec775"/>
+				<graphicElement>
+					<pen lineWidth="0.75"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="463" y="0" width="91" height="20" uuid="3bd7b769-7231-41cd-92ae-d192f88066a2"/>
+				<graphicElement>
+					<pen lineWidth="0.75"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="7" y="0" width="265" height="20" uuid="fedde5ca-1e2c-4098-8ef8-df476f39c18c">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4278392b-ba3b-48a5-8fee-4a0389773359"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{product_code}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.###;(#,##0.###-)">
+				<reportElement x="287" y="0" width="80" height="20" uuid="36ee51b5-08c6-4aac-9a6b-8166f8a30fd7">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b97c7d2b-528a-4d15-944b-63c0bd384394"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{quantity_received}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.###;(#,##0.###-)">
+				<reportElement x="378" y="0" width="80" height="20" uuid="7739dbad-3d62-468a-a8fe-d150c45fb36d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b97c7d2b-528a-4d15-944b-63c0bd384394"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{invoiced_unit_price}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#;(#,##0.00#-)">
+				<reportElement x="468" y="0" width="80" height="20" uuid="aa4a318a-8ccc-43b5-b5ed-87a7d6608583">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b97c7d2b-528a-4d15-944b-63c0bd384394"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_price}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="244">
+			<rectangle>
+				<reportElement x="282" y="0" width="91" height="40" uuid="23c86ef3-a3dc-46cc-b76c-82c872d4092a"/>
+				<graphicElement>
+					<pen lineWidth="0.75"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="0" y="0" width="282" height="40" uuid="19981b24-8ded-455d-802c-b35c51ece741"/>
+				<graphicElement>
+					<pen lineWidth="0.75"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="206" y="19" width="71" height="17" uuid="0865d857-f78a-40e4-b6e3-680029e87de2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Carton Qty]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="-10" y="153" width="577" height="1" uuid="7ecc1440-1455-4005-8bc7-8d556e968e22">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<rectangle>
+				<reportElement x="463" y="0" width="91" height="40" uuid="a4e36f8e-3e90-4ebf-81e4-5200fba76335"/>
+				<graphicElement>
+					<pen lineWidth="0.75"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="373" y="0" width="90" height="40" uuid="2f119893-9571-4c67-a840-e40eecaa6eb4"/>
+				<graphicElement>
+					<pen lineWidth="0.75"/>
+				</graphicElement>
+			</rectangle>
+			<textField pattern="#,##0.###;(#,##0.###-)">
+				<reportElement x="287" y="19" width="80" height="17" uuid="33034c10-cbaf-4792-9634-53670a884236"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Total_Carton_Qty}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="57" width="250" height="17" uuid="598aad74-b001-4277-9c52-976e7ea05564"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[We reserve the right to charge interest at prime rate]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="79" width="80" height="17" uuid="5df7fbc0-bcf7-44b7-8aa5-4f53d4c03b48"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Payment Terms:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="100" width="250" height="17" uuid="c34e3158-a251-4319-8ac2-079d7fe90676"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Remittances to payments@kromco.co.za]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="282" y="57" width="272" height="83" uuid="4e1e2aba-382b-4963-a144-4d545d2c3868"/>
+				<graphicElement>
+					<pen lineWidth="0.75"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="373" y="62" width="90" height="15" uuid="c55b9fc9-150d-4d37-8011-c7d5092cbed8"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Costs]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="373" y="81" width="90" height="15" uuid="bfe5dbc5-25b7-4d68-b467-ea303fd8d66b"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total (Excl. VAT)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="373" y="100" width="90" height="15" uuid="4435d8c7-011a-4370-b7ba-b7e66e1c1d8f"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VAT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="373" y="120" width="90" height="15" uuid="5e96de71-3018-4305-97b7-1f9e1735e037"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total (ZAR)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="168" width="170" height="16" uuid="93b663ef-7bb1-48cb-8cf7-03349beebfd0"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PRODUCT FROM SOUTH AFRICA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="184" width="170" height="15" uuid="51b8c869-b739-4bbb-915e-7b9bec094d1b"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[BANKING DETAILS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="200" width="340" height="15" uuid="6f0b66aa-96ef-4ef7-9141-466fc70bd7c6"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[USD - Acc: 7082701187, EUR - Acc: 7082361483, GBP - Acc: 7082020686]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="215" width="340" height="15" uuid="8b684b71-0128-4cd3-a952-19159b4cc589"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Foreign Currency - Nedbank Ltd, 135 Rivonia Stree, Sandton, 2196.  Swift Code:  NEDSZAJJ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="230" width="340" height="14" uuid="7afd48d4-d686-41f0-99fc-fd10cf69358c"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[ZAR - Bank: Nedbank Ltd, Worcester, Branch: 198765, Acc: 1140859552]]></text>
+			</staticText>
+			<textField pattern="#,##0.00#;(#,##0.00#-)" isBlankWhenNull="true">
+				<reportElement x="468" y="62" width="80" height="15" uuid="97ffee05-cc44-4c77-a73b-afdc75b34c50"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Costs}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#;(#,##0.00#-)" isBlankWhenNull="true">
+				<reportElement x="468" y="81" width="80" height="15" uuid="78b4d9cd-4073-4a1a-b53a-b89912c23b0d"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Total_Excl_VAT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#;(#,##0.00#-)">
+				<reportElement x="468" y="101" width="80" height="15" uuid="506a35c9-4a03-4c6b-ab9d-7b5af56cf6df"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{VAT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#;(#,##0.00#-)">
+				<reportElement x="468" y="120" width="80" height="15" uuid="265ee4cb-7e01-4270-a382-6dfb9f90a4f8"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Total_ZAR}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 7.1.0.final using JasperReports Library version 6.4.3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="stock_adjustment_sheet" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="aa050e60-cdd1-43aa-ac28-ee7b0beb53ff">
+	<property name="ireport.jasperserver.url" value="http://172.16.16.40:80/jasperserver-pro/"/>
+	<property name="ireport.jasperserver.user" value="superuser"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Pack Materials"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="220"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="775"/>
+	<parameter name="mr_bulk_stock_adjustment_id" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT bsa.id, bsa.stock_adjustment_number, bsai.product_variant_code, bsai.system_quantity, bsai.mr_sku_id, bsai.location_id, bp.process
+FROM mr_bulk_stock_adjustments AS bsa
+INNER JOIN mr_bulk_stock_adjustment_items bsai ON bsai.mr_bulk_stock_adjustment_id = bsa.id
+INNER JOIN business_processes bp on bp.id = bsa.business_process_id
+WHERE bsa.id = $P{mr_bulk_stock_adjustment_id}]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+	</field>
+	<field name="stock_adjustment_number" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="stock_adjustment_number"/>
+	</field>
+	<field name="product_variant_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="product_variant_code"/>
+	</field>
+	<field name="system_quantity" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="system_quantity"/>
+	</field>
+	<field name="mr_sku_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="mr_sku_id"/>
+	</field>
+	<field name="location_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="location_id"/>
+	</field>
+	<field name="process" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="process"/>
+	</field>
+	<pageHeader>
+		<band height="101">
+			<image>
+				<reportElement x="0" y="6" width="90" height="85" uuid="542cd888-4363-44e0-b766-430cbf53f3f8"/>
+				<imageExpression><![CDATA["/../images/kromco_logo_transparent.png"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="-10" y="100" width="577" height="1" uuid="037333d7-9189-423a-89ac-e8dd9c0b7954">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="150" y="42" width="186" height="15" uuid="899f7f63-1fc6-40d2-980f-f4ed331de55d"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[VAT Nr 4540258912]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="29" width="186" height="13" uuid="6ecab0cc-2023-4a14-936d-6b652cf78ca4"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REGULAR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="116" y="8" width="44" height="20" uuid="559883f8-7602-4ff4-9459-8d13e46fd4e7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PMS:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="57" width="186" height="15" uuid="d8e679d8-6a51-449f-96e4-17c52b31c321"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[KROMCO (PTY) LTD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="72" width="186" height="15" uuid="937951b7-5e0e-473b-90dd-feedc8eaec1b"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Reg. No.: 1995/012961/07]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="397" y="72" width="114" height="20" uuid="3c83f17f-4852-4bdf-8a83-a18a3ddac34e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="020bec96-62f5-4fe5-b6d2-0f385fd5aec7"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Stock Adjustment Number: ]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="460" y="8" width="96" height="64" uuid="ffe32c37-eea0-48d8-b48a-5d897ee62738"/>
+				<jr:QRCode xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<jr:codeExpression><![CDATA["SA" + $F{stock_adjustment_number}]]></jr:codeExpression>
+				</jr:QRCode>
+			</componentElement>
+			<textField>
+				<reportElement x="514" y="72" width="40" height="20" uuid="a6b566de-8075-4103-8ffc-90d780c94613"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{stock_adjustment_number}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="8" width="270" height="20" uuid="5e248b35-6c1e-4c4e-bbfb-fc719a95ae39"/>
+				<textElement verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{process} + " SHEET"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="37">
+			<rectangle>
+				<reportElement x="-3" y="14" width="117" height="23" backcolor="#E0DEDC" uuid="526792c0-37b5-4987-ae76-2485d916dfce"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="373" y="14" width="111" height="23" backcolor="#E0DEDC" uuid="a3e38a42-0b81-4d3b-a9cd-15143a4c95ce"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="114" y="14" width="259" height="23" backcolor="#E0DEDC" uuid="ba7deab3-995a-46f5-9e2d-190a9700f06c"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="121" y="16" width="242" height="20" uuid="e77f7b1b-ff5f-4187-8ca4-3958d2fdced2">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b09aa21f-813e-4896-8e2f-9047c9a48e83"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Product Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="380" y="16" width="98" height="20" uuid="da466ead-d89e-4f60-9b26-d017614899b9">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="020bec96-62f5-4fe5-b6d2-0f385fd5aec7"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Location Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="16" width="102" height="20" uuid="bfeebf81-911c-4c81-b51f-76b1cfb0dac9">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="020bec96-62f5-4fe5-b6d2-0f385fd5aec7"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SKU #]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="484" y="14" width="75" height="23" backcolor="#E0DEDC" uuid="e026953d-9a45-4759-92df-f630cf15aa3d"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="489" y="16" width="64" height="20" uuid="3cb4f2b5-3ee3-4849-afb9-76f007c3b584">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="020bec96-62f5-4fe5-b6d2-0f385fd5aec7"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Qty]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="81">
+			<rectangle>
+				<reportElement x="373" y="0" width="111" height="81" uuid="ae089858-a4b1-4840-9ede-d8b83e5e6429"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="114" y="0" width="259" height="81" uuid="9bd12d69-91d5-4959-aef3-ede1c9eda32d"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="-3" y="0" width="117" height="81" uuid="992ebc59-fed0-4846-9ff4-c2d25f024e97"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="121" y="20" width="242" height="20" uuid="015c257c-18d1-4728-9a73-03902a58bcc9"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{product_variant_code}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="404" y="66" width="54" height="14" uuid="c2b94014-74e8-4b12-8842-3868a725a74d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{location_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="26" y="65" width="60" height="16" uuid="277ec3c8-3ed8-4032-9a3a-5b6670f0aecb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{mr_sku_id}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="379" y="2" width="100" height="65" uuid="16c3d952-46e1-41e2-8333-7a5ae3b9d0e1"/>
+				<jr:QRCode xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<jr:codeExpression><![CDATA["LC" + $F{location_id}]]></jr:codeExpression>
+				</jr:QRCode>
+			</componentElement>
+			<componentElement>
+				<reportElement x="4" y="2" width="104" height="67" uuid="31b1c1cd-3372-44ee-9e00-5e014ee90a64"/>
+				<jr:QRCode xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<jr:codeExpression><![CDATA["SK" + $F{mr_sku_id}]]></jr:codeExpression>
+				</jr:QRCode>
+			</componentElement>
+			<rectangle>
+				<reportElement x="484" y="0" width="75" height="81" uuid="af9259c7-fc6c-4018-9413-cfb143d3edaf"/>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</rectangle>
+		</band>
+	</detail>
+</jasperReport>
