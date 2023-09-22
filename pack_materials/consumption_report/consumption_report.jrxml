@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.1.0.final using JasperReports Library version 6.4.3  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="consumption_report" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="aa050e60-cdd1-43aa-ac28-ee7b0beb53ff">
 	<property name="ireport.jasperserver.url" value="http://172.16.16.40:80/jasperserver-pro/"/>
 	<property name="ireport.jasperserver.user" value="superuser"/>
@@ -8,9 +8,10 @@
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="220"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="775"/>
 	<parameter name="mr_bulk_stock_adjustment_id" class="java.lang.Integer"/>
+	<parameter name="client_code" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[
-SELECT bsa.id, bsa.stock_adjustment_number, bsa.carton_assembly, bsa.staging_consumption, bsa.erp_depreciation_number, bsa.ref_no,
+		<![CDATA[SELECT
+				bsa.id, bsa.stock_adjustment_number, bsa.carton_assembly, bsa.staging_consumption, bsa.erp_depreciation_number, bsa.ref_no,
 CASE  
 	WHEN bsa.staging_consumption = TRUE THEN 'STAGING CONSUMPTION REPORT'::text
 	WHEN bsa.carton_assembly = TRUE THEN 'CARTON ASSEMBLY CONSUMPTION REPORT'::text
@@ -21,147 +22,93 @@ LEFT JOIN mr_bulk_stock_adjustment_items bsai ON bsai.mr_bulk_stock_adjustment_i
 LEFT JOIN material_resource_product_variants mrpv ON mrpv.product_variant_code = bsai.product_variant_code
 WHERE bsa.id = $P{mr_bulk_stock_adjustment_id} AND (carton_assembly = TRUE OR staging_consumption = TRUE)]]>
 	</queryString>
+	<field name="implementation_owner_party_role_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="implementation_owner_party_role_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="implementation_owner_party_role_id"/>
+	</field>
+	<field name="implementation_owner_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="implementation_owner_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="implementation_owner_name"/>
+	</field>
+	<field name="company_reg_no" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="company_reg_no"/>
+		<property name="com.jaspersoft.studio.field.label" value="company_reg_no"/>
+	</field>
+	<field name="vat_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="vat_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="vat_number"/>
+	</field>
 	<field name="id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="id"/>
 		<property name="com.jaspersoft.studio.field.label" value="id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="mr_bulk_stock_adjustments"/>
 	</field>
 	<field name="stock_adjustment_number" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="stock_adjustment_number"/>
 		<property name="com.jaspersoft.studio.field.label" value="stock_adjustment_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="mr_bulk_stock_adjustments"/>
 	</field>
 	<field name="carton_assembly" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="carton_assembly"/>
 		<property name="com.jaspersoft.studio.field.label" value="carton_assembly"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="mr_bulk_stock_adjustments"/>
 	</field>
 	<field name="staging_consumption" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="staging_consumption"/>
 		<property name="com.jaspersoft.studio.field.label" value="staging_consumption"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="mr_bulk_stock_adjustments"/>
 	</field>
 	<field name="erp_depreciation_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="erp_depreciation_number"/>
 		<property name="com.jaspersoft.studio.field.label" value="erp_depreciation_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="mr_bulk_stock_adjustments"/>
 	</field>
 	<field name="ref_no" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="ref_no"/>
 		<property name="com.jaspersoft.studio.field.label" value="ref_no"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="mr_bulk_stock_adjustments"/>
 	</field>
 	<field name="consumption_description" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="consumption_description"/>
 		<property name="com.jaspersoft.studio.field.label" value="consumption_description"/>
 	</field>
 	<field name="product_variant_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="product_variant_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="product_variant_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="mr_bulk_stock_adjustment_items"/>
 	</field>
 	<field name="location_long_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="location_long_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="location_long_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="mr_bulk_stock_adjustment_items"/>
 	</field>
 	<field name="system_quantity" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="system_quantity"/>
 		<property name="com.jaspersoft.studio.field.label" value="system_quantity"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="mr_bulk_stock_adjustment_items"/>
 	</field>
 	<field name="actual_quantity" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="actual_quantity"/>
 		<property name="com.jaspersoft.studio.field.label" value="actual_quantity"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="mr_bulk_stock_adjustment_items"/>
 	</field>
 	<field name="weighted_average_cost" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="weighted_average_cost"/>
 		<property name="com.jaspersoft.studio.field.label" value="weighted_average_cost"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="material_resource_product_variants"/>
 	</field>
 	<pageHeader>
-		<band height="98">
+		<band height="102">
 			<image>
 				<reportElement x="10" y="7" width="112" height="75" uuid="417e8770-8ab4-4400-a742-ca1f2111c908"/>
-				<imageExpression><![CDATA["/../images/kromco_logo_transparent.png"]]></imageExpression>
+				<imageExpression><![CDATA["../logos/" +$P{client_code}  + "_logo.png"]]></imageExpression>
 			</image>
-			<staticText>
-				<reportElement x="443" y="10" width="54" height="14" uuid="6f58d949-8a46-4a34-967b-57b7d6591c28"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Address:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="497" y="10" width="60" height="15" uuid="e690358d-d860-4f5c-a660-29b2e6c8c1a2"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[PO BOX 133]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="179" y="43" width="186" height="15" uuid="8fc68b6d-69ae-431a-80a9-b1d264943c00"/>
-				<textElement textAlignment="Center">
-					<font size="10" isBold="false"/>
-				</textElement>
-				<text><![CDATA[VAT Nr 4540258912]]></text>
-			</staticText>
 			<staticText>
 				<reportElement x="179" y="27" width="186" height="16" uuid="a22d6efe-1df3-4c66-8e8c-86bf125efec7"/>
 				<textElement textAlignment="Center">
 					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[REGULAR]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="179" y="58" width="186" height="15" uuid="dda5efad-bd81-4c04-a7d8-792f792b63e2"/>
-				<textElement textAlignment="Center">
-					<font size="10" isBold="true"/>
-				</textElement>
-				<text><![CDATA[KROMCO (PTY) LTD]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="179" y="73" width="186" height="15" uuid="07929904-511a-4636-862b-d7dac3a0d46e"/>
-				<textElement textAlignment="Center">
-					<font size="10" isBold="false"/>
-				</textElement>
-				<text><![CDATA[Reg. No.: 1995/012961/07]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="497" y="21" width="60" height="15" uuid="b21e9cf3-b63e-4569-94cc-172593005726"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[GRABOUW]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="497" y="32" width="60" height="15" uuid="71f83963-8727-4b04-92cd-86e73bc4fa57"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[7160]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="497" y="43" width="60" height="15" uuid="28fa7f40-a219-455a-b518-17a93f387d42"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[SOUTH AFRICA]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="442" y="58" width="54" height="15" uuid="0abb7c8b-4165-43a7-b816-0dae0fa52649"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Telephone:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="496" y="58" width="61" height="15" uuid="b54dde56-a55f-4f47-9ba6-c7742232c03e"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[+27(21) 850 6700]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="442" y="73" width="54" height="15" uuid="d91b77c3-cb78-4d54-853f-e82c5ca99053"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Fax:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="496" y="73" width="61" height="15" uuid="63424615-decf-4d2d-a4a3-a19f9c008793"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[+27(21) 850 6871]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="145" y="7" width="290" height="20" uuid="45648c8b-f761-4a4a-88d3-4a5116e0a701"/>
@@ -178,6 +125,35 @@ WHERE bsa.id = $P{mr_bulk_stock_adjustment_id} AND (carton_assembly = TRUE OR st
 					<pen lineWidth="1.0"/>
 				</graphicElement>
 			</line>
+			<subreport>
+				<reportElement x="457" y="2" width="100" height="95" uuid="46d9abba-c0e1-4753-8938-1c3186ee2e8d">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<subreportParameter name="party_role_id">
+					<subreportParameterExpression><![CDATA[$F{implementation_owner_party_role_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="address_type">
+					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="225" y="43" width="186" height="53" uuid="3b48982a-8754-4d3f-9c17-c1f2fd6a68e7">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<subreportParameter name="party_role_id">
+					<subreportParameterExpression><![CDATA[$F{implementation_owner_party_role_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="address_type">
+					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["../shared/company_details.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -352,7 +328,7 @@ WHERE bsa.id = $P{mr_bulk_stock_adjustment_id} AND (carton_assembly = TRUE OR st
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="20">
+		<band height="22">
 			<rectangle>
 				<reportElement x="-4" y="0" width="252" height="20" uuid="f20faf10-751e-4494-8ab6-39d2bfa6ae8c"/>
 				<graphicElement>

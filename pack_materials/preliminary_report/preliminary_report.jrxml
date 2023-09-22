@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.1.0.final using JasperReports Library version 6.4.3  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="preliminary_report" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="aa050e60-cdd1-43aa-ac28-ee7b0beb53ff">
 	<property name="ireport.jasperserver.url" value="http://172.16.16.40:80/jasperserver-pro/"/>
 	<property name="ireport.jasperserver.user" value="superuser"/>
@@ -8,6 +8,7 @@
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="220"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="775"/>
 	<parameter name="mr_bulk_stock_adjustment_id" class="java.lang.Integer"/>
+	<parameter name="client_code" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT mrpv.old_product_code, sum(actual_quantity) AS total_quantity, mrpv.product_variant_number, mrpv.product_variant_code
 FROM mr_bulk_stock_adjustment_items bsai
@@ -33,16 +34,8 @@ ORDER BY  mrpv.product_variant_number]]>
 		<band height="95">
 			<image>
 				<reportElement x="5" y="5" width="112" height="75" uuid="9b02f23d-5c70-4b71-b053-6a6916163a59"/>
-				<imageExpression><![CDATA["/../images/kromco_logo_transparent.png"]]></imageExpression>
+				<imageExpression><![CDATA["../logos/" +$P{client_code}  + "_logo.png"]]></imageExpression>
 			</image>
-			<staticText>
-				<reportElement x="438" y="8" width="54" height="14" uuid="88ef5225-ded5-4e28-b678-9460bd1bca7f"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Address:]]></text>
-			</staticText>
 			<line>
 				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="-10" y="94" width="577" height="1" uuid="2b25c220-847c-4c10-ad6c-aa40ae54240c">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -51,21 +44,6 @@ ORDER BY  mrpv.product_variant_number]]>
 					<pen lineWidth="1.0"/>
 				</graphicElement>
 			</line>
-			<staticText>
-				<reportElement x="492" y="8" width="60" height="15" uuid="89feb7f7-bc18-4194-ad08-a585d620c0dd"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[PO BOX 133]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="174" y="41" width="206" height="15" uuid="2c1e303e-fd0f-45e3-8d52-eddd55c07321"/>
-				<textElement textAlignment="Center">
-					<font size="10" isBold="false"/>
-				</textElement>
-				<text><![CDATA[VAT Nr 4540258912]]></text>
-			</staticText>
 			<staticText>
 				<reportElement x="174" y="25" width="206" height="16" uuid="600e9c9d-1125-4b17-968c-15ed3003630b"/>
 				<textElement textAlignment="Center">
@@ -80,76 +58,24 @@ ORDER BY  mrpv.product_variant_number]]>
 				</textElement>
 				<text><![CDATA[BSA - PRELIMINARY REPORT]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="174" y="56" width="206" height="15" uuid="2c96f1a7-5a25-4466-9d82-a8d1e622d687"/>
-				<textElement textAlignment="Center">
-					<font size="10" isBold="true"/>
-				</textElement>
-				<text><![CDATA[KROMCO (PTY) LTD]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="174" y="71" width="206" height="15" uuid="84f7854d-bca3-47bc-ae51-c8f19508842f"/>
-				<textElement textAlignment="Center">
-					<font size="10" isBold="false"/>
-				</textElement>
-				<text><![CDATA[Reg. No.: 1995/012961/07]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="492" y="19" width="60" height="15" uuid="7a4f8acb-5b78-48fc-be56-1716b659e941"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[GRABOUW]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="492" y="30" width="60" height="15" uuid="4c9b04df-8e81-4fc3-9cce-1b442884251d"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[7160]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="492" y="41" width="60" height="15" uuid="f46db2ff-4a10-45a6-a99d-3d748d152f85"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[SOUTH AFRICA]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="437" y="56" width="54" height="15" uuid="a7a360ca-ebc0-4183-8077-a94e79bccdd2"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Telephone:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="491" y="56" width="61" height="15" uuid="eaedf151-00fe-4db2-9b9f-0b292a9b4846"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[+27(21) 850 6700]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="437" y="71" width="54" height="15" uuid="c07b7759-63fc-44b0-8fa6-2df7fa46462b"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Fax:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="491" y="71" width="61" height="15" uuid="11e6e7aa-0aaf-496e-89f9-e002cb844b90"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[+27(21) 850 6871]]></text>
-			</staticText>
+			<subreport>
+				<reportElement x="225" y="36" width="186" height="53" uuid="c1020ce8-3678-4e53-a75f-b0ac68e337f4">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["../shared/company_details.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="457" y="2" width="100" height="87" uuid="84689c08-774c-49d6-b40e-8f2a70a9bd03">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</pageHeader>
 	<columnHeader>

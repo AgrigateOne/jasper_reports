@@ -17,6 +17,7 @@
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<parameter name="mr_purchase_order_id" class="java.lang.Integer"/>
+	<parameter name="client_code" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT po.id, po.purchase_order_number, mpv.product_variant_code,  poi.quantity_required, poi.unit_price,  sum(poi.quantity_required * poi.unit_price) AS total_price,
 org.short_description AS supplier_name, po.mr_vat_type_id, mvt.percentage_applicable,  coalesce(poc.amount,0) :: DEC(9,2) as costs,mrpvpr.party_stock_code as stock_code
@@ -99,39 +100,19 @@ po.id, po.purchase_order_number, mpv.product_variant_code, poi.quantity_required
 	</variable>
 	<variable name="Total_ZAR" class="java.math.BigDecimal"/>
 	<title>
-		<band height="90">
-			<staticText>
-				<reportElement x="684" y="0" width="54" height="14" uuid="ba58b08d-a5a6-4388-b1c8-c8f0f5b1e70d"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Address:]]></text>
-			</staticText>
+		<band height="100">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<line>
-				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="-10" y="89" width="810" height="1" uuid="3b6186c3-3561-4122-8bbd-d14c6ea4bbff">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="95" width="810" height="1" uuid="3b6186c3-3561-4122-8bbd-d14c6ea4bbff">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<graphicElement>
 					<pen lineWidth="1.0"/>
 				</graphicElement>
 			</line>
-			<staticText>
-				<reportElement x="738" y="0" width="60" height="15" uuid="72f779da-cb84-452a-8eb1-5c269440ab95"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[PO BOX 133]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="250" y="39" width="186" height="15" uuid="1b1380f9-748c-4469-b04c-420c83396dc9"/>
-				<textElement textAlignment="Center">
-					<font size="10" isBold="false"/>
-				</textElement>
-				<text><![CDATA[VAT Nr 4610105498]]></text>
-			</staticText>
 			<staticText>
 				<reportElement x="250" y="26" width="186" height="13" uuid="513389c6-6937-4d24-87c5-71ed3785a69e"/>
 				<textElement textAlignment="Center">
@@ -148,76 +129,28 @@ po.id, po.purchase_order_number, mpv.product_variant_code, poi.quantity_required
 				</textElement>
 				<text><![CDATA[PURCHASE ORDER]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="250" y="54" width="186" height="15" uuid="b3a4e6ff-6b82-4b55-bd1e-1639aed204d5"/>
-				<textElement textAlignment="Center">
-					<font size="10" isBold="true"/>
-				</textElement>
-				<text><![CDATA[KROMCO (PTY) LTD]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="250" y="69" width="186" height="15" uuid="6f80685a-7034-458c-9790-93526432e9ae"/>
-				<textElement textAlignment="Center">
-					<font size="10" isBold="false"/>
-				</textElement>
-				<text><![CDATA[Reg. No.: 1995/012961/07]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="738" y="11" width="60" height="15" uuid="eb421801-035a-4ef3-82d1-9a490a55f96e"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[GRABOUW]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="738" y="22" width="60" height="15" uuid="8bd52a64-1775-43ad-9702-bbaba9ce6d68"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[7160]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="738" y="33" width="60" height="15" uuid="87ffe3c9-608e-42bc-8ac4-813ee37811ba"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[SOUTH AFRICA]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="683" y="48" width="54" height="15" uuid="e25d6794-61d5-41ab-b436-ba2f896513dd"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Telephone:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="737" y="48" width="61" height="15" uuid="840ed696-c945-4b36-95d5-8f8aff0db674"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[+27(21) 850 6700]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="683" y="63" width="54" height="15" uuid="adc3fa16-2109-4c29-9584-7b8abad9d623"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Fax:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="737" y="63" width="61" height="15" uuid="a11600dd-32eb-44f0-bdf4-8169ab65438c"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[+27(21) 850 6871]]></text>
-			</staticText>
+			<image>
+				<reportElement x="5" y="5" width="112" height="75" uuid="1ad5be7e-15cf-4ae2-95c0-36d272b5607e"/>
+				<imageExpression><![CDATA["../logos/" +$P{client_code}  + "_logo.png"]]></imageExpression>
+			</image>
+			<subreport>
+				<reportElement x="300" y="39" width="186" height="53" uuid="9d5ba5d8-4dc0-4df9-8cd3-a1ef0cfb239c">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["../shared/company_details.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="698" y="3" width="100" height="87" uuid="67d2ba61-79e3-46ff-a6be-65b3291027a6">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</title>
 	<columnHeader>

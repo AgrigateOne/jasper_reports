@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.1.0.final using JasperReports Library version 6.4.3  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sales_order_waybill" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="aa050e60-cdd1-43aa-ac28-ee7b0beb53ff">
 	<property name="ireport.jasperserver.url" value="http://172.16.16.40:80/jasperserver-pro/"/>
 	<property name="ireport.jasperserver.user" value="superuser"/>
@@ -8,6 +8,7 @@
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="220"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="775"/>
 	<parameter name="mr_sales_order_id" class="java.lang.Integer"/>
+	<parameter name="client_code" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT so.id, so.sales_order_number, so.erp_customer_number, org.short_description, soi.quantity_required, soi.unit_price, soi.remarks, mrpv.product_variant_code,
 sum(soi.quantity_required * soi.unit_price) AS total_price
@@ -44,23 +45,6 @@ GROUP BY so.id, so.sales_order_number, so.erp_customer_number, org.short_descrip
 			<rectangle>
 				<reportElement x="433" y="119" width="100" height="19" uuid="b05cee20-e0fc-4c12-aa86-68a74bda736d"/>
 			</rectangle>
-			<staticText>
-				<reportElement stretchType="RelativeToTallestObject" x="4" y="123" width="114" height="56" uuid="c940ffbe-2ddf-4fb5-9119-f073ed6d3798"/>
-				<textElement>
-					<font fontName="SansSerif" size="10" isBold="false"/>
-				</textElement>
-				<text><![CDATA[PO Box 133
-Grabouw 7160
-Tel:   (+27) 21 850 6700
-Fax:  (+27) 21 850 6701]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="3" y="107" width="114" height="17" uuid="ef3a6063-6897-4612-9a40-6b51c6982e67"/>
-				<textElement>
-					<font size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[KROMCO (PTY) LTD]]></text>
-			</staticText>
 			<staticText>
 				<reportElement x="436" y="122" width="87" height="13" uuid="958b201f-7b69-489e-af4e-79eef642f41c"/>
 				<text><![CDATA[Returned]]></text>
@@ -111,7 +95,9 @@ Fax:  (+27) 21 850 6701]]></text>
 				<text><![CDATA[Mark - Goods despatched for:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="235" y="107" width="34" height="13" uuid="674b13e1-68b9-4242-bad8-e9ddf1be5ede"/>
+				<reportElement x="235" y="107" width="35" height="13" uuid="674b13e1-68b9-4242-bad8-e9ddf1be5ede">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement>
 					<font size="8" isBold="true" isUnderline="true"/>
 				</textElement>
@@ -223,8 +209,10 @@ Fax:  (+27) 21 850 6701]]></text>
 				<text><![CDATA[Waybill No:]]></text>
 			</staticText>
 			<line>
-				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="-2" y="95" width="570" height="1" uuid="374a3de9-bc32-4d4a-94bc-bf54cf1d78fa">
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="90" width="570" height="1" uuid="374a3de9-bc32-4d4a-94bc-bf54cf1d78fa">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<graphicElement>
 					<pen lineWidth="1.0"/>
@@ -232,7 +220,7 @@ Fax:  (+27) 21 850 6701]]></text>
 			</line>
 			<image>
 				<reportElement stretchType="RelativeToBandHeight" x="9" y="4" width="113" height="83" uuid="0b2aad46-2dbb-4a81-83f8-84747ed64731"/>
-				<imageExpression><![CDATA["/../images/kromco_logo_transparent.png"]]></imageExpression>
+				<imageExpression><![CDATA["../logos/" +$P{client_code}  + "_logo.png"]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="511" y="30" width="48" height="17" uuid="fb2154fc-4297-4ab8-951b-9595a43fde9b"/>
@@ -245,6 +233,14 @@ Fax:  (+27) 21 850 6701]]></text>
 				<reportElement x="515" y="31" width="43" height="15" uuid="930c38c2-8f3d-4e3a-a196-353dfec7ef85"/>
 				<textFieldExpression><![CDATA[$F{sales_order_number}]]></textFieldExpression>
 			</textField>
+			<subreport>
+				<reportElement x="2" y="95" width="100" height="87" uuid="74deca4d-9db4-4ad2-b2ab-23cfd4f8e576">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</pageHeader>
 	<columnHeader>
