@@ -8,6 +8,7 @@
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="220"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="775"/>
 	<parameter name="mr_goods_returned_note_id" class="java.lang.Integer"/>
+	<parameter name="client_code" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select
 		mrpv.product_variant_code,deli.quantity_received,grni.quantity_returned, grni.remarks
@@ -93,133 +94,53 @@
 		<variableExpression><![CDATA[$V{Sub_Total}.add($V{VAT})]]></variableExpression>
 	</variable>
 	<title>
-		<band height="90">
+		<band height="101">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<image>
 				<reportElement x="5" y="0" width="112" height="81" uuid="3da93eaa-3f37-433d-b67c-88703e57643b"/>
-				<imageExpression><![CDATA["/../images/kromcoYBC_logo_transparent.png"]]></imageExpression>
+				<imageExpression><![CDATA["../logos/" +$P{client_code}  + "_logo.png"]]></imageExpression>
 			</image>
 			<staticText>
-				<reportElement x="438" y="3" width="54" height="14" uuid="6178b5ba-4dd4-4f0d-b631-64900af1ea3f"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Address:]]></text>
-			</staticText>
-			<line>
-				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="-10" y="89" width="577" height="1" uuid="08301a46-ce03-42bc-8eb2-d992cc41d8be">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<reportElement x="174" y="22" width="186" height="13" uuid="6f6e033c-fa92-4e73-9ff1-cfd5a8359885">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<graphicElement>
-					<pen lineWidth="1.0"/>
-				</graphicElement>
-			</line>
-			<staticText>
-				<reportElement x="492" y="3" width="60" height="15" uuid="e45b61bc-e868-4d7c-ba25-aa62551ed6e8"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[PO BOX 133]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="174" y="36" width="186" height="15" uuid="ced91e67-19b3-40a0-a86c-42922442f1f6"/>
-				<textElement textAlignment="Center">
-					<font size="10" isBold="false"/>
-				</textElement>
-				<text><![CDATA[VAT Nr 4610105498]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="174" y="23" width="186" height="13" uuid="6f6e033c-fa92-4e73-9ff1-cfd5a8359885"/>
 				<textElement textAlignment="Center">
 					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[REGULAR]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="174" y="0" width="136" height="20" uuid="28ad11dd-4ec9-480f-8439-c8d41ef7871d"/>
-				<textElement textAlignment="Center">
+				<reportElement x="174" y="0" width="106" height="20" uuid="28ad11dd-4ec9-480f-8439-c8d41ef7871d"/>
+				<textElement textAlignment="Right">
 					<font size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[GOODS RETURNED]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="174" y="51" width="186" height="15" uuid="a623692c-2b5c-4812-bb44-e5c7df2610d7"/>
-				<textElement textAlignment="Center">
-					<font size="10" isBold="true"/>
-				</textElement>
-				<text><![CDATA[KROMCO (PTY) LTD]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="174" y="66" width="186" height="15" uuid="28781cee-3bde-45f8-b9f7-fe70a154f62a"/>
-				<textElement textAlignment="Center">
-					<font size="10" isBold="false"/>
-				</textElement>
-				<text><![CDATA[Reg. No.: 1995/012961/07]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="492" y="14" width="60" height="15" uuid="fa3f8fb9-2c54-485f-af1e-ae6004dc24b6"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[GRABOUW]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="492" y="25" width="60" height="15" uuid="f4d321cb-bf2a-4c7c-b833-7548ff17d70f"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[7160]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="492" y="36" width="60" height="15" uuid="2b8fdf77-a3ad-4a36-8a21-5198302437f2"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[SOUTH AFRICA]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="437" y="51" width="54" height="15" uuid="15a96798-b83c-4f89-9740-2d627e2ef2dc"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Telephone:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="491" y="51" width="61" height="15" uuid="5722f262-3ebe-4ab6-8ea2-4cb71f61387a"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[+27(21) 850 6700]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="437" y="66" width="54" height="15" uuid="29133882-bd41-45a7-9cb4-8982155d66a5"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Fax:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="491" y="66" width="61" height="15" uuid="5bebaece-3706-4e76-bbbe-84e2065177c1"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[+27(21) 850 6871]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="312" y="3" width="68" height="17" uuid="ce01fc3f-4da6-4b0f-9719-9c020ab68636"/>
-				<textElement>
+				<reportElement x="280" y="2" width="90" height="17" uuid="ce01fc3f-4da6-4b0f-9719-9c020ab68636"/>
+				<textElement verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[(Credit Note)]]></text>
 			</staticText>
+			<subreport>
+				<reportElement x="225" y="36" width="186" height="53" uuid="e44de28b-75b5-4801-b427-764fcfff2b2c">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["../shared/company_details.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="457" y="2" width="100" height="87" uuid="7516c0f0-7598-4679-a4be-546934328314">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</title>
 	<columnHeader>
@@ -333,14 +254,6 @@
 					<pen lineWidth="1.0"/>
 				</graphicElement>
 			</rectangle>
-			<line>
-				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="-8" y="83" width="573" height="1" uuid="8cb6e001-9a4f-4737-bae4-6914ff470af9">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<graphicElement>
-					<pen lineWidth="1.0"/>
-				</graphicElement>
-			</line>
 			<staticText>
 				<reportElement x="412" y="100" width="62" height="20" uuid="0b7e6409-3a4c-43f5-b449-5526cb336167">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="020bec96-62f5-4fe5-b6d2-0f385fd5aec7"/>
@@ -431,6 +344,24 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{supplier_invoice_ref_number}]]></textFieldExpression>
 			</textField>
+			<line>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="-3" y="88" width="573" height="1" uuid="aa745371-8760-4b94-8837-738b9d9db7af">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="0" y="0" width="573" height="1" uuid="8cb6e001-9a4f-4737-bae4-6914ff470af9">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="1.0"/>
+				</graphicElement>
+			</line>
 		</band>
 	</columnHeader>
 	<detail>
