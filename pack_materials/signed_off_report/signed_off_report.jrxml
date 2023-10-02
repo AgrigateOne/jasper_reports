@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.1.0.final using JasperReports Library version 6.4.3  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="signed_off_report" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="aa050e60-cdd1-43aa-ac28-ee7b0beb53ff">
 	<property name="ireport.jasperserver.url" value="http://172.16.16.40:80/jasperserver-pro/"/>
 	<property name="ireport.jasperserver.user" value="superuser"/>
@@ -8,6 +8,7 @@
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="220"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="775"/>
 	<parameter name="mr_bulk_stock_adjustment_id" class="java.lang.Integer"/>
+	<parameter name="client_code" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT bsa.id, bsa.stock_adjustment_number, bsa.erp_depreciation_number, bsa.ref_no, bsai.product_variant_code, bsai.actual_quantity, bsai.mr_sku_id, bsai.location_id, bp.process
 FROM mr_bulk_stock_adjustments AS bsa
@@ -46,16 +47,8 @@ WHERE bsa.id = $P{mr_bulk_stock_adjustment_id}]]>
 		<band height="98">
 			<image>
 				<reportElement x="-11" y="7" width="111" height="79" uuid="9903e939-d838-4d31-888d-b3a0943e3601"/>
-				<imageExpression><![CDATA["/../images/kromco_logo_transparent.png"]]></imageExpression>
+				<imageExpression><![CDATA["../logos/" +$P{client_code}  + "_logo.png"]]></imageExpression>
 			</image>
-			<staticText>
-				<reportElement x="443" y="8" width="54" height="14" uuid="23ccaa5f-1b29-4ddc-9749-79f0186c1693"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Address:]]></text>
-			</staticText>
 			<line>
 				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="-11" y="97" width="577" height="1" uuid="c2e275b0-4f29-4575-81a5-08c520b435d0">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -65,96 +58,11 @@ WHERE bsa.id = $P{mr_bulk_stock_adjustment_id}]]>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement x="497" y="8" width="60" height="15" uuid="7e4bf165-0e2a-443a-9530-255de818bc5f"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[PO BOX 133]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="193" y="44" width="186" height="15" uuid="f71bb47a-e96e-4eeb-b84a-06ed443997b0"/>
-				<textElement textAlignment="Center">
-					<font size="10" isBold="false"/>
-				</textElement>
-				<text><![CDATA[VAT Nr 4540258912]]></text>
-			</staticText>
-			<staticText>
 				<reportElement x="193" y="31" width="186" height="13" uuid="0ced1841-0ea1-46a4-adab-bb0967c6aa19"/>
 				<textElement textAlignment="Center">
 					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[REGULAR]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="193" y="59" width="186" height="15" uuid="44ea7ee9-c1c4-4f84-a207-fd924af78ada"/>
-				<textElement textAlignment="Center">
-					<font size="10" isBold="true"/>
-				</textElement>
-				<text><![CDATA[KROMCO (PTY) LTD]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="193" y="74" width="186" height="15" uuid="b836682d-23a0-4dc8-8b89-f09fc61df10e"/>
-				<textElement textAlignment="Center">
-					<font size="10" isBold="false"/>
-				</textElement>
-				<text><![CDATA[Reg. No.: 1995/012961/07]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="497" y="19" width="60" height="15" uuid="04097d19-2685-41ea-9256-ecbff74b0524"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[GRABOUW]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="497" y="30" width="60" height="15" uuid="7e887f01-84bc-46c5-bce1-e9ed70316c01"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[7160]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="497" y="41" width="60" height="15" uuid="02897d96-247d-446e-aeff-13fea1abfda5"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[SOUTH AFRICA]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="442" y="56" width="54" height="15" uuid="aa5d0953-4950-4c44-bf27-aac5db02b09d"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Telephone:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="496" y="56" width="61" height="15" uuid="5d9d42b4-2671-403e-ae02-13259f257541"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[+27(21) 850 6700]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="442" y="71" width="54" height="15" uuid="730aba5d-7cb7-4d56-a13b-def3f84efdd5"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Fax:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="496" y="71" width="61" height="15" uuid="0ecba11c-cf63-49c0-8812-3854cee64ec0"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[+27(21) 850 6871]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="152" y="8" width="259" height="21" uuid="86e0a407-72e6-4c7b-a552-ad29d2c5f2d2"/>
@@ -163,6 +71,24 @@ WHERE bsa.id = $P{mr_bulk_stock_adjustment_id}]]>
 				</textElement>
 				<text><![CDATA[BULK STOCK ADJUSTMENT REPORT]]></text>
 			</staticText>
+			<subreport>
+				<reportElement x="457" y="2" width="100" height="87" uuid="f06c102f-03bb-45c2-ad16-48c44eb64081">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="225" y="42" width="186" height="53" uuid="fc56b981-7dd4-4fff-82f6-d9862afd7854">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["../shared/company_details.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</pageHeader>
 	<columnHeader>

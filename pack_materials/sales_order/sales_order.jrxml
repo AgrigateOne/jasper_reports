@@ -429,7 +429,7 @@ GROUP BY so.id, so.sales_order_number, so.erp_customer_number, org.short_descrip
 				</textElement>
 				<textFieldExpression><![CDATA[$F{costs}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.00#;(#,##0.00#-)" isBlankWhenNull="false">
+			<textField pattern="#,##0.00#;(#,##0.00#-)" isBlankWhenNull="true">
 				<reportElement x="469" y="42" width="80" height="15" uuid="7c7232fb-cebe-4e1d-abd0-1af8b78744b3"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
@@ -443,7 +443,7 @@ GROUP BY so.id, so.sales_order_number, so.erp_customer_number, org.short_descrip
 				</textElement>
 				<textFieldExpression><![CDATA[$V{VAT}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.00#;(#,##0.00#-)">
+			<textField pattern="#,##0.00#;(#,##0.00#-)" isBlankWhenNull="true">
 				<reportElement x="469" y="72" width="80" height="16" uuid="c859c22e-cb65-47ea-a5c1-d49c423dfec7"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>

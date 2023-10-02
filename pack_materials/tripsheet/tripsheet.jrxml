@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.1.0.final using JasperReports Library version 6.4.3  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="tripsheet" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="aa050e60-cdd1-43aa-ac28-ee7b0beb53ff">
 	<property name="ireport.jasperserver.url" value="http://172.16.16.40:80/jasperserver-pro/"/>
 	<property name="ireport.jasperserver.user" value="superuser"/>
@@ -8,6 +8,7 @@
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="220"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="775"/>
 	<parameter name="vehicle_job_id" class="java.lang.Integer"/>
+	<parameter name="client_code" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select vju.id, vju.vehicle_job_id, vju.quantity_to_move, vj.tripsheet_number, vju.sku_number, vju.location_id, vj.description, mrpv.product_variant_code,
 loc.location_short_code, loc.location_long_code, loc.print_code
@@ -144,7 +145,9 @@ Location]]></text>
 				<text><![CDATA[TRIPSHEET No:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="288" y="108" width="99" height="14" uuid="612decc2-c505-413d-8966-bd21afb01bba"/>
+				<reportElement x="295" y="108" width="99" height="14" uuid="612decc2-c505-413d-8966-bd21afb01bba">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<textElement verticalAlignment="Bottom">
 					<font size="9"/>
 				</textElement>
@@ -152,16 +155,8 @@ Location]]></text>
 			</textField>
 			<image>
 				<reportElement x="10" y="5" width="112" height="75" uuid="aadb3ba5-5495-42da-855f-29339e52b227"/>
-				<imageExpression><![CDATA["/../images/kromco_logo_transparent.png"]]></imageExpression>
+				<imageExpression><![CDATA["../logos/" +$P{client_code}  + "_logo.png"]]></imageExpression>
 			</image>
-			<staticText>
-				<reportElement x="443" y="8" width="54" height="14" uuid="b2b95b1c-ca87-4756-9f34-1d4ddb1b72ae"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Address:]]></text>
-			</staticText>
 			<line>
 				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="-5" y="98" width="577" height="1" uuid="fd45fb48-f103-4c9f-b72f-bf9514ed2913">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -170,21 +165,6 @@ Location]]></text>
 					<pen lineWidth="1.0"/>
 				</graphicElement>
 			</line>
-			<staticText>
-				<reportElement x="497" y="8" width="60" height="15" uuid="cd66feb8-b554-44fd-bb92-f2c1b93c309a"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[PO BOX 133]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="204" y="41" width="146" height="15" uuid="028e1d0c-c2db-42ba-8fab-39a2236d4f36"/>
-				<textElement textAlignment="Center">
-					<font size="10" isBold="false"/>
-				</textElement>
-				<text><![CDATA[VAT Nr 4540258912]]></text>
-			</staticText>
 			<staticText>
 				<reportElement x="204" y="28" width="146" height="13" uuid="cf52e807-c61a-4da7-8cd3-886c04efdbc2"/>
 				<textElement textAlignment="Center">
@@ -199,76 +179,32 @@ Location]]></text>
 				</textElement>
 				<text><![CDATA[PM: TRIPSHEET]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="204" y="56" width="146" height="15" uuid="f1cfcbad-77c1-4b89-b504-8de2166fb64f"/>
-				<textElement textAlignment="Center">
-					<font size="10" isBold="true"/>
-				</textElement>
-				<text><![CDATA[KROMCO (PTY) LTD]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="204" y="71" width="146" height="15" uuid="cbdc1f38-8c89-4853-b1f4-1e736592c2c9"/>
-				<textElement textAlignment="Center">
-					<font size="10" isBold="false"/>
-				</textElement>
-				<text><![CDATA[Reg. No.: 1995/012961/07]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="497" y="19" width="60" height="15" uuid="56e43d85-189d-47d4-8d5b-14fba816b125"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[GRABOUW]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="497" y="30" width="60" height="15" uuid="d2888758-881b-4155-af81-42bdf68cd55e"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[7160]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="497" y="41" width="60" height="15" uuid="5984e2cd-538d-49d7-b52d-bd1e9e714c43"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[SOUTH AFRICA]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="442" y="56" width="54" height="15" uuid="83f23c0d-ace9-4d50-a2bd-bb453e3fd9c6"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Telephone:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="496" y="56" width="61" height="15" uuid="9647fe3b-1f72-4dcf-9a0b-e1cd6f7b31b8"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[+27(21) 850 6700]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="442" y="71" width="54" height="15" uuid="879b8bc6-e658-4034-8357-53584fac9878"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Fax:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="496" y="71" width="61" height="15" uuid="888d6224-f2ea-47b4-8023-34a6bfca2095"/>
-				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[+27(21) 850 6871]]></text>
-			</staticText>
+			<subreport>
+				<reportElement x="457" y="2" width="100" height="87" uuid="d9b94810-dabc-4dea-9b3c-1a02e84688de">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="457" y="2" width="100" height="87" uuid="f8f92550-3d8d-406f-a721-0a70953ada5f">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="225" y="42" width="186" height="53" uuid="6e227f8a-d372-4dde-b61b-a400358f67b6">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["../shared/company_details.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</columnHeader>
 	<detail>

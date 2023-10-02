@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.1.0.final using JasperReports Library version 6.4.3  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="stock_adjustment_sheet" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="aa050e60-cdd1-43aa-ac28-ee7b0beb53ff">
 	<property name="ireport.jasperserver.url" value="http://172.16.16.40:80/jasperserver-pro/"/>
 	<property name="ireport.jasperserver.user" value="superuser"/>
@@ -8,6 +8,7 @@
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="220"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="775"/>
 	<parameter name="mr_bulk_stock_adjustment_id" class="java.lang.Integer"/>
+	<parameter name="client_code" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT bsa.id, bsa.stock_adjustment_number, bsai.product_variant_code, bsai.system_quantity, bsai.mr_sku_id, bsai.location_id, bp.process
 FROM mr_bulk_stock_adjustments AS bsa
@@ -40,7 +41,7 @@ WHERE bsa.id = $P{mr_bulk_stock_adjustment_id}]]>
 		<band height="101">
 			<image>
 				<reportElement x="0" y="6" width="90" height="85" uuid="542cd888-4363-44e0-b766-430cbf53f3f8"/>
-				<imageExpression><![CDATA["/../images/kromco_logo_transparent.png"]]></imageExpression>
+				<imageExpression><![CDATA["../logos/" +$P{client_code}  + "_logo.png"]]></imageExpression>
 			</image>
 			<line>
 				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="-10" y="100" width="577" height="1" uuid="037333d7-9189-423a-89ac-e8dd9c0b7954">
@@ -50,13 +51,6 @@ WHERE bsa.id = $P{mr_bulk_stock_adjustment_id}]]>
 					<pen lineWidth="1.0"/>
 				</graphicElement>
 			</line>
-			<staticText>
-				<reportElement x="150" y="42" width="186" height="15" uuid="899f7f63-1fc6-40d2-980f-f4ed331de55d"/>
-				<textElement textAlignment="Center">
-					<font size="10" isBold="false"/>
-				</textElement>
-				<text><![CDATA[VAT Nr 4540258912]]></text>
-			</staticText>
 			<staticText>
 				<reportElement x="150" y="29" width="186" height="13" uuid="6ecab0cc-2023-4a14-936d-6b652cf78ca4"/>
 				<textElement textAlignment="Center">
@@ -70,20 +64,6 @@ WHERE bsa.id = $P{mr_bulk_stock_adjustment_id}]]>
 					<font size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[PMS:]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="150" y="57" width="186" height="15" uuid="d8e679d8-6a51-449f-96e4-17c52b31c321"/>
-				<textElement textAlignment="Center">
-					<font size="10" isBold="true"/>
-				</textElement>
-				<text><![CDATA[KROMCO (PTY) LTD]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="150" y="72" width="186" height="15" uuid="937951b7-5e0e-473b-90dd-feedc8eaec1b"/>
-				<textElement textAlignment="Center">
-					<font size="10" isBold="false"/>
-				</textElement>
-				<text><![CDATA[Reg. No.: 1995/012961/07]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="397" y="72" width="114" height="20" uuid="3c83f17f-4852-4bdf-8a83-a18a3ddac34e">
@@ -114,6 +94,16 @@ WHERE bsa.id = $P{mr_bulk_stock_adjustment_id}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{process} + " SHEET"]]></textFieldExpression>
 			</textField>
+			<subreport>
+				<reportElement x="200" y="42" width="186" height="53" uuid="634e3a4b-9b70-4064-a84a-1b807cd69100">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["../shared/company_details.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</pageHeader>
 	<columnHeader>
