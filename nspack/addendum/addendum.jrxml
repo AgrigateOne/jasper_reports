@@ -6,7 +6,7 @@
 	<property name="ireport.y" value="0"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/addendum"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44:80/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack local"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack_local"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="283"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="717"/>
@@ -61,7 +61,8 @@ END,edi_in_consignment_note_number) as addendum_manifest,
   temp_code,
   booking_reference,
   case when orchard='DEPOT_UNKNOWN'then '' else coalesce(marketing_orchard,orchard) end orchard ,
-  phyto_data
+  phyto_data,
+  COALESCE(govt_reinspection_date,govt_first_inspection_date) as ppecb_inspection_date
   FROM vw_pallet_sequence_flat
   JOIN marketing_varieties ON marketing_varieties.marketing_variety_code = vw_pallet_sequence_flat.marketing_variety
   WHERE vw_pallet_sequence_flat.load_id=$P{load_id} 
@@ -114,7 +115,7 @@ END,edi_in_consignment_note_number),
   coalesce(inspection_class,grade),
   case when orchard='DEPOT_UNKNOWN'then '' else coalesce(marketing_orchard,orchard) end,
   phyto_data,
-  production_region,production_area
+  production_region,production_area,COALESCE(govt_reinspection_date,govt_first_inspection_date)
 )  AS sq]]>
 	</queryString>
 	<field name="total_row" class="java.lang.Long">
@@ -283,6 +284,7 @@ END,edi_in_consignment_note_number),
 		<property name="com.jaspersoft.studio.field.label" value="phyto_data"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
 	</field>
+	<field name="ppecb_inspection_date" class="java.lang.String"/>
 	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{carton_quantity}]]></variableExpression>
 	</variable>
@@ -1424,7 +1426,7 @@ END,edi_in_consignment_note_number),
 				<textFieldExpression><![CDATA[$F{booking_reference}]]></textFieldExpression>
 			</textField>
 			<image scaleImage="FillFrame">
-				<reportElement x="1" y="0" width="151" height="80" uuid="4d93be6c-bfde-441a-a429-1310524d45eb">
+				<reportElement x="1" y="0" width="152" height="80" uuid="4d93be6c-bfde-441a-a429-1310524d45eb">
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -1741,7 +1743,7 @@ END,edi_in_consignment_note_number),
 				<textElement textAlignment="Center">
 					<font size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{inspection_date}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ppecb_inspection_date}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="238" y="0" width="41" height="10" uuid="d7fbf5c5-651d-45f5-bd48-6270e863e459"/>
