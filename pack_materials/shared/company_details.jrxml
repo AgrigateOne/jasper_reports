@@ -8,16 +8,19 @@
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Pack Materials"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<queryString language="SQL">
-		<![CDATA[select (SELECT pr.id
+		<![CDATA[SELECT (SELECT pr.id
 FROM public.party_roles pr
-WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) AS implementation_owner_party_role_id,
+WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER' )LIMIT 1)  AS implementation_owner_party_role_id,
+
 fn_party_role_name((SELECT pr.id
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1)) AS implementation_owner_name,
+
 (SELECT o.company_reg_no
 FROM public.party_roles pr
 JOIN organizations o on o.id=pr.organization_id
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) AS company_reg_no,
+
 (SELECT o.vat_number
 FROM public.party_roles pr
 JOIN organizations o on o.id=pr.organization_id
@@ -53,7 +56,7 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				</textElement>
 				<text><![CDATA[Reg. No.:]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="1" y="15" width="186" height="15" uuid="a09c70e0-0a0c-44a6-b36b-2d121ad2d8b9">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -62,7 +65,7 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				</textElement>
 				<textFieldExpression><![CDATA[$F{implementation_owner_name}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="49" y="30" width="138" height="15" uuid="068eb802-1fb1-4fa6-b2b8-bb6afe9ea9ad"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="9"/>
@@ -76,7 +79,7 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 				</textElement>
 				<text><![CDATA[VAT Nr ]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="41" y="0" width="146" height="15" uuid="936d5f4f-b099-41b9-b83d-b8a7a3bec19c">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
