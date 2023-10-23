@@ -370,8 +370,9 @@ Weight]]></text>
 	<summary>
 		<band height="16" splitType="Stretch">
 			<staticText>
-				<reportElement x="85" y="3" width="131" height="13" uuid="e28822d1-3d1c-4e55-95b4-b155a7ee783f">
+				<reportElement x="84" y="3" width="131" height="13" uuid="e28822d1-3d1c-4e55-95b4-b155a7ee783f">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="8"/>
