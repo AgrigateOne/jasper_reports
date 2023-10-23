@@ -2,7 +2,7 @@
 <!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="bin_loads" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack local"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack_local"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -69,12 +69,12 @@
     rmt_container_material_types.container_material_type_code,
     bin_load_products.qty_bins,
     commodities.code AS commodity,
-    fn_party_role_name(customer_party_role_id)customer, 
+    fn_party_role_name(bin_loads.customer_party_role_id)customer,
     fn_party_role_name(transporter_party_role_id)transporter,
     depots.description as depot,
     bin_loads.customer_party_role_id,
     count(rmt_bins.id) as rmt_bin_qty,
-    rs.size_code
+    rs.size_code,total_bins_at_farm.total_bins_at_farm
 FROM bin_loads
     JOIN bin_load_products ON bin_load_products.bin_load_id = bin_loads.id
 	 LEFT JOIN rmt_bins on rmt_bins.bin_load_product_id=bin_load_products.id 
@@ -91,6 +91,8 @@ FROM bin_loads
     LEFT JOIN rmt_container_material_types ON rmt_container_material_types.id = bin_load_products.rmt_container_material_type_id
 	LEFT JOIN depots on dest_depot_id = depots.id
 	LEFT JOIN rmt_sizes rs on rmt_bins.rmt_size_id = rs.id
+	LEFT JOIN customers on bin_loads.customer_party_role_id = customers.customer_party_role_id
+	LEFT JOIN total_bins_at_farm on total_bins_at_farm.location_id = customers.location_id
  where bin_loads.id = $P{bin_load_id}
 GROUP by depots.description,bin_loads.transporter_party_role_id,
     bin_loads.customer_party_role_id,
@@ -107,7 +109,7 @@ GROUP by depots.description,bin_loads.transporter_party_role_id,
     pucs.puc_code,
     rmt_classes.rmt_class_code,
     bin_load_products.bin_load_id,
-    bin_load_products.qty_bins,rs.size_code]]>
+    bin_load_products.qty_bins,rs.size_code,total_bins_at_farm.total_bins_at_farm]]>
 	</queryString>
 	<field name="shipped_at" class="java.sql.Timestamp">
 		<property name="com.jaspersoft.studio.field.name" value="shipped_at"/>
@@ -213,6 +215,16 @@ GROUP by depots.description,bin_loads.transporter_party_role_id,
 		<property name="com.jaspersoft.studio.field.name" value="rmt_bin_qty"/>
 		<property name="com.jaspersoft.studio.field.label" value="rmt_bin_qty"/>
 	</field>
+	<field name="size_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="size_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="size_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="rmt_sizes"/>
+	</field>
+	<field name="total_bins_at_farm" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total_bins_at_farm"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_bins_at_farm"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="total_bins_at_farm"/>
+	</field>
 	<variable name="rmt_bin_qty1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{rmt_bin_qty}]]></variableExpression>
 	</variable>
@@ -268,7 +280,7 @@ GROUP by depots.description,bin_loads.transporter_party_role_id,
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="124" splitType="Stretch">
+		<band height="138" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField pattern="dd/MM/yyyy h.mm a">
@@ -310,7 +322,7 @@ GROUP by depots.description,bin_loads.transporter_party_role_id,
 				<reportElement x="0" y="26" width="555" height="1" uuid="6fc4d8bd-3226-452f-93a3-2c780ffafc6b"/>
 			</line>
 			<line>
-				<reportElement x="0" y="123" width="555" height="1" uuid="1fedf5ed-1d56-4fbe-b122-d1b657496588">
+				<reportElement x="0" y="137" width="555" height="1" uuid="1fedf5ed-1d56-4fbe-b122-d1b657496588">
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
@@ -321,48 +333,57 @@ GROUP by depots.description,bin_loads.transporter_party_role_id,
 			<textField isBlankWhenNull="true">
 				<reportElement x="435" y="27" width="112" height="13" uuid="6c251326-4a79-4e22-9edf-8fc2ecba228c"/>
 				<textElement>
-					<font size="8"/>
+					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{bin_load_id}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="378" y="27" width="54" height="13" uuid="23d17353-c12f-4d4e-acaa-6252be99dcc0"/>
-				<textElement>
-					<font size="8" isBold="false"/>
+				<reportElement x="360" y="27" width="72" height="13" uuid="23d17353-c12f-4d4e-acaa-6252be99dcc0">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="9" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Bin Load ID:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement x="435" y="40" width="112" height="13" uuid="876e2141-5775-4f50-b765-51133b66a41f"/>
 				<textElement>
-					<font size="8"/>
+					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{customer}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="435" y="53" width="112" height="13" uuid="064eba7f-d4d2-49a6-99d3-3b507bc6a8c5"/>
 				<textElement>
-					<font size="8"/>
+					<font size="9"/>
 				</textElement>
 			</textField>
 			<staticText>
-				<reportElement x="378" y="40" width="54" height="13" uuid="493c7865-edba-47dd-8258-2de8db013414"/>
-				<textElement>
-					<font size="8" isBold="false"/>
+				<reportElement x="360" y="40" width="72" height="13" uuid="493c7865-edba-47dd-8258-2de8db013414">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="9" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Customer:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement x="435" y="66" width="112" height="13" uuid="53cf85a2-1ba6-4545-b829-872fabd502f9"/>
 				<textElement>
-					<font size="8"/>
+					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{transporter}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="378" y="53" width="54" height="13" uuid="2b5d75cc-c43f-4bdf-8a8d-7b5102b47f78"/>
-				<textElement>
-					<font size="8" isBold="false"/>
+				<reportElement x="360" y="53" width="72" height="13" uuid="2b5d75cc-c43f-4bdf-8a8d-7b5102b47f78">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="9" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Consignee:]]></text>
 			</staticText>
@@ -422,46 +443,57 @@ GROUP by depots.description,bin_loads.transporter_party_role_id,
 				<textFieldExpression><![CDATA[$F{implementation_owner_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="378" y="105" width="54" height="13" uuid="177c6f13-4a20-463d-b8f4-e63eae6bd8cb">
+				<reportElement x="360" y="105" width="72" height="13" uuid="177c6f13-4a20-463d-b8f4-e63eae6bd8cb">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<printWhenExpression><![CDATA[$F{shipped}]]></printWhenExpression>
 				</reportElement>
-				<textElement>
-					<font size="8" isBold="false" isItalic="false"/>
+				<textElement textAlignment="Left">
+					<font size="9" isBold="false" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[Shipped At:]]></text>
 			</staticText>
 			<textField pattern="d MMM yyyy h:MM a" isBlankWhenNull="true">
 				<reportElement x="435" y="105" width="112" height="13" uuid="f61083f7-321d-4725-a6d6-feebc27c95ec"/>
 				<textElement>
-					<font size="8"/>
+					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{shipped_at}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="378" y="66" width="54" height="13" uuid="b0e90919-2d47-4741-92fc-1bb982caa8c1"/>
-				<textElement>
-					<font size="8" isBold="false"/>
+				<reportElement x="360" y="66" width="72" height="13" uuid="b0e90919-2d47-4741-92fc-1bb982caa8c1">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="9" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Transporter:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="378" y="79" width="54" height="13" uuid="b6200dc3-38f0-45cd-a954-47db0bc8b5da"/>
-				<textElement>
-					<font size="8" isBold="false"/>
+				<reportElement x="360" y="79" width="72" height="13" uuid="b6200dc3-38f0-45cd-a954-47db0bc8b5da">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="9" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Dest Depot:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement x="435" y="79" width="112" height="13" uuid="7e062443-5b81-4ff6-aabe-2880f477e830"/>
 				<textElement>
-					<font size="8"/>
+					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{depot}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="378" y="92" width="54" height="13" uuid="a4ce1c75-88e0-4676-a2a4-0bd407a230af"/>
-				<textElement>
-					<font size="8" isBold="false"/>
+				<reportElement x="360" y="92" width="72" height="13" uuid="a4ce1c75-88e0-4676-a2a4-0bd407a230af">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="9" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Bin Qty:]]></text>
 			</staticText>
@@ -473,12 +505,12 @@ GROUP by depots.description,bin_loads.transporter_party_role_id,
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement>
-					<font size="8"/>
+					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{rmt_bin_qty1}]]></textFieldExpression>
 			</textField>
 			<subreport>
-				<reportElement x="5" y="27" width="116" height="95" uuid="e087c1c3-8810-4ba4-8be9-d510a23e3f4b">
+				<reportElement x="5" y="27" width="116" height="104" uuid="e087c1c3-8810-4ba4-8be9-d510a23e3f4b">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -493,9 +525,10 @@ GROUP by depots.description,bin_loads.transporter_party_role_id,
 				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement x="230" y="27" width="100" height="95" uuid="f6878fa8-9f5d-4a9e-8cbe-079d15354afd">
+				<reportElement x="230" y="27" width="101" height="104" uuid="f6878fa8-9f5d-4a9e-8cbe-079d15354afd">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<subreportParameter name="party_role_id">
 					<subreportParameterExpression><![CDATA[$F{customer_party_role_id}]]></subreportParameterExpression>
@@ -506,6 +539,30 @@ GROUP by depots.description,bin_loads.transporter_party_role_id,
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
 			</subreport>
+			<staticText>
+				<reportElement x="360" y="118" width="72" height="13" uuid="3847ac4b-6e1a-4061-bbd1-d5c6b3646599">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="9"/>
+				</textElement>
+				<text><![CDATA[Qty Bins at farm]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="435" y="118" width="112" height="13" uuid="4c6c1471-a86c-4a4a-9167-18f9daa85566">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_bins_at_farm}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>
