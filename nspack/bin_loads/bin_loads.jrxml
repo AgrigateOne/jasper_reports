@@ -74,7 +74,7 @@
     depots.description as depot,
     bin_loads.customer_party_role_id,
     count(rmt_bins.id) as rmt_bin_qty,
-    rs.size_code,total_bins_at_farm.total_bins_at_farm
+    rs.size_code,vw_bins_at_farm.total_bins_at_farm
 FROM bin_loads
     JOIN bin_load_products ON bin_load_products.bin_load_id = bin_loads.id
 	 LEFT JOIN rmt_bins on rmt_bins.bin_load_product_id=bin_load_products.id 
@@ -109,7 +109,7 @@ GROUP by depots.description,bin_loads.transporter_party_role_id,
     pucs.puc_code,
     rmt_classes.rmt_class_code,
     bin_load_products.bin_load_id,
-    bin_load_products.qty_bins,rs.size_code,total_bins_at_farm.total_bins_at_farm]]>
+    bin_load_products.qty_bins,rs.size_code,vw_bins_at_farm.total_bins_at_farm]]>
 	</queryString>
 	<field name="shipped_at" class="java.sql.Timestamp">
 		<property name="com.jaspersoft.studio.field.name" value="shipped_at"/>

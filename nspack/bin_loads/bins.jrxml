@@ -220,7 +220,7 @@ type]]></text>
 				<text><![CDATA[ID]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="250" y="0" width="37" height="20" uuid="bf2edab0-2fb0-44db-ba4c-025522315e41">
+				<reportElement x="250" y="0" width="38" height="20" uuid="bf2edab0-2fb0-44db-ba4c-025522315e41">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
