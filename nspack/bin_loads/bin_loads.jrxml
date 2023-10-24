@@ -92,7 +92,7 @@ FROM bin_loads
 	LEFT JOIN depots on dest_depot_id = depots.id
 	LEFT JOIN rmt_sizes rs on rmt_bins.rmt_size_id = rs.id
 	LEFT JOIN customers on bin_loads.customer_party_role_id = customers.customer_party_role_id
-	LEFT JOIN total_bins_at_farm on total_bins_at_farm.location_id = customers.location_id
+	LEFT JOIN vw_bins_at_farm on vw_bins_at_farm.location_id = customers.location_id
  where bin_loads.id = $P{bin_load_id}
 GROUP by depots.description,bin_loads.transporter_party_role_id,
     bin_loads.customer_party_role_id,

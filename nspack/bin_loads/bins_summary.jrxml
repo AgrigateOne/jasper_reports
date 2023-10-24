@@ -224,7 +224,7 @@ rmt_container_material_types.container_material_type_code]]>
 				<textFieldExpression><![CDATA[$F{total_nett_weight}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="360" y="0" width="74" height="11" uuid="92541b78-d005-47e8-a2f0-a5f13e440674">
+				<reportElement x="360" y="0" width="76" height="11" uuid="92541b78-d005-47e8-a2f0-a5f13e440674">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
