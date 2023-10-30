@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="qc_instrument_measurements" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="848f3140-7106-4d65-a4a4-e44dba4d3d8c">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NSpack_SR.xml"/>
@@ -377,7 +377,7 @@ SELECT
 				<textFieldExpression><![CDATA[$F{weight_size}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="1" y="3" width="220" height="14" uuid="7c0d0ec2-0115-46e0-8a04-de3432b46a6d">
+				<reportElement x="1" y="3" width="359" height="14" uuid="7c0d0ec2-0115-46e0-8a04-de3432b46a6d">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement>
@@ -386,19 +386,19 @@ SELECT
 				<textFieldExpression><![CDATA[$F{qc_sample_type_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="1" y="52" width="220" height="14" uuid="78d4f693-9278-407a-b8e0-88709d7b267f">
+				<reportElement x="1" y="52" width="359" height="14" uuid="78d4f693-9278-407a-b8e0-88709d7b267f">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textFieldExpression><![CDATA["Sample drawn at: " + DATEFORMAT($F{drawn_at},"Y-MM-dd HH:mm")]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="1" y="35" width="220" height="14" uuid="dada83ba-5bbb-44bd-a2b3-5af5fe1c73a2">
+				<reportElement x="1" y="35" width="359" height="14" uuid="dada83ba-5bbb-44bd-a2b3-5af5fe1c73a2">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[$F{context} + ": " + $F{context_ref}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="1" y="19" width="220" height="14" uuid="f283dc32-f322-47d9-aeb1-61b9bc1f0e97">
+				<reportElement x="1" y="19" width="359" height="14" uuid="f283dc32-f322-47d9-aeb1-61b9bc1f0e97">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textFieldExpression><![CDATA[$F{ref_number}]]></textFieldExpression>
