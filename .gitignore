@@ -4,5 +4,5 @@
 log/*
 deploystats.sh
 # Temporary:
-/pack_materials/
+# /pack_materials/
 /.metadata/
