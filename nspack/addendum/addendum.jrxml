@@ -62,7 +62,7 @@ END,edi_in_consignment_note_number) as addendum_manifest,
   booking_reference,
   case when orchard='DEPOT_UNKNOWN'then '' else coalesce(marketing_orchard,orchard) end orchard ,
   phyto_data,
-  COALESCE(govt_reinspection_date,govt_first_inspection_date) as ppecb_inspection_date
+  COALESCE(TO_CHAR(govt_reinspection_date :: DATE, 'dd/mm/yyyy'),TO_CHAR(govt_first_inspection_date :: DATE, 'dd/mm/yyyy')) as ppecb_inspection_date
   FROM vw_pallet_sequence_flat
   JOIN marketing_varieties ON marketing_varieties.marketing_variety_code = vw_pallet_sequence_flat.marketing_variety
   WHERE vw_pallet_sequence_flat.load_id=$P{load_id} 
@@ -115,7 +115,8 @@ END,edi_in_consignment_note_number),
   coalesce(inspection_class,grade),
   case when orchard='DEPOT_UNKNOWN'then '' else coalesce(marketing_orchard,orchard) end,
   phyto_data,
-  production_region,production_area,COALESCE(govt_reinspection_date,govt_first_inspection_date)
+  production_region,production_area,
+   COALESCE(TO_CHAR(govt_reinspection_date :: DATE, 'dd/mm/yyyy'),TO_CHAR(govt_first_inspection_date :: DATE, 'dd/mm/yyyy'))
 )  AS sq]]>
 	</queryString>
 	<field name="total_row" class="java.lang.Long">
@@ -1445,6 +1446,7 @@ END,edi_in_consignment_note_number),
 				<reportElement x="188" y="63" width="613" height="18" uuid="08dcbcb8-ec8e-438c-a46b-99a8c4df9a4c"/>
 				<textElement textAlignment="Left">
 					<font size="7"/>
+					<paragraph firstLineIndent="2"/>
 				</textElement>
 				<text><![CDATA[ADDENDUM TO EXPORT INSPECTION CERTIFICATE FOR FRESH FRUIT AND VEGETABLES - EXCLUDING STONE FRUIT]]></text>
 			</staticText>
