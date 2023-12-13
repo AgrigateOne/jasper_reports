@@ -1,85 +1,164 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 7.9.0.final using JasperReports Library version 6.13.0  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="delivery_instrumentation_report" language="groovy" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="d109052e-9b0f-425e-bdc4-875aca838363">
+<!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="delivery_instrumentation_report" language="groovy" pageWidth="280" pageHeight="842" columnWidth="280" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="d109052e-9b0f-425e-bdc4-875aca838363">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="KR_nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack_dev"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="199"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="794"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<parameter name="transaction_id" class="java.lang.String"/>
+	<parameter name="rmt_delivery_id" class="java.lang.Integer"/>
 	<queryString language="SQL">
-		<![CDATA[with fi as (
-select f.transaction_id ,'avg_firmness' mtype, avg(firmness)::dec(5,2) as m_values 
-from kromco_mes.instruments_fta_measurements fm join kromco_mes.instruments_fta_sessions f on fm.instruments_fta_session_id =f.id 
-where firmness between 0.5 and 20
-group by f.transaction_id 
-union all 
-select f.transaction_id,'avg_diameter', avg(diameter)::dec(5,2) from kromco_mes.instruments_fta_measurements fm join kromco_mes.instruments_fta_sessions f on 
-fm.instruments_fta_session_id =f.id 
-where  diameter between 20 and 120
-group by f.transaction_id 
-union all 
-select r.transaction_id,'avg_brix', avg(measurement)::dec(5,2)from kromco_mes.instruments_rfm_measurements rm 
-join kromco_mes.instruments_rfm_sessions r on rm.instruments_rfm_session_id =r.id 
-where scale_type in ('Brix','Manual') and measurement between 0.5 and 30
-group by r.transaction_id 
-)
-select transaction_id,mtype,m_values from fi where transaction_id =$P{transaction_id}]]>
+		<![CDATA[WITH del_res AS (
+    SELECT
+        qc_samples.rmt_delivery_id,
+        rmt_deliveries.cultivar_id,
+        rmt_deliveries.season_id,
+        qc_instrument_measurements.measurement_seq,
+        avg(qc_instrument_measurements.measurement) AS avg_firmness,
+        COUNT(measurement_seq) OVER (PARTITION BY rmt_delivery_id) AS im_count
+              FROM
+        qc_instrument_measurements
+    JOIN
+        qc_tests ON qc_tests.id = qc_instrument_measurements.qc_test_id
+    JOIN
+        qc_samples ON qc_samples.id = qc_tests.qc_sample_id
+    JOIN
+        public.rmt_deliveries ON rmt_deliveries.id = qc_samples.rmt_delivery_id
+    LEFT JOIN
+        cultivars ON cultivars.id = rmt_deliveries.cultivar_id
+    LEFT JOIN
+        cultivar_groups ON cultivar_groups.id = cultivars.cultivar_group_id
+    LEFT JOIN
+        commodities ON commodities.id = cultivar_groups.commodity_id
+    LEFT JOIN
+        seasons ON rmt_deliveries.season_id = seasons.id
+        group by 1,2,3,4),
+    main_query as (
+    SELECT
+        qcr.id, 
+        kv_pairs.key::integer AS bucket_number,
+        qcr.cultivar_id ,qcr.season_id,rmt_classification_type_code,
+        rmt_classifications.rmt_classification,
+        (kv_pairs.value->>'max')::numeric AS max_value,
+        (kv_pairs.value->>'min')::numeric AS min_value
+    FROM
+        qc_classification_rules qcr
+    JOIN
+        cultivars c ON qcr.cultivar_id = c.id
+    CROSS JOIN LATERAL jsonb_each(qcr.pressure_bucket_classifications) AS kv_pairs
+    LEFT JOIN
+        rmt_classifications ON rmt_classifications.bucket_number = kv_pairs.key::integer -- Explicitly cast to integer
+    LEFT JOIN
+        rmt_classification_types ON rmt_classification_types.id = rmt_classifications.rmt_classification_type_id
+    WHERE rmt_classification_types.rmt_classification_type_code = 'PRESSURE'
+order by   kv_pairs.key::integer    ) 
+   select rmt_classification_type_code,rmt_classification,count(del_res.rmt_delivery_id)qty_fruit
+      ,avg(avg_firmness)avg_firmness 
+      from del_res join main_query ON del_res.avg_firmness BETWEEN main_query.min_value AND main_query.max_value and del_res.season_id= main_query.season_id
+    and del_res.cultivar_id= main_query.cultivar_id
+    WHERE
+        rmt_delivery_id =$P{rmt_delivery_id}
+    GROUP BY
+        1,2,main_query.bucket_number
+         order by main_query.bucket_number]]>
 	</queryString>
-	<field name="transaction_id" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="transaction_id"/>
-		<property name="com.jaspersoft.studio.field.label" value="transaction_id"/>
+	<field name="rmt_classification_type_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="rmt_classification_type_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="rmt_classification_type_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="rmt_classification_types"/>
 	</field>
-	<field name="mtype" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="mtype"/>
-		<property name="com.jaspersoft.studio.field.label" value="mtype"/>
+	<field name="rmt_classification" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="rmt_classification"/>
+		<property name="com.jaspersoft.studio.field.label" value="rmt_classification"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="rmt_classifications"/>
 	</field>
-	<field name="m_values" class="java.math.BigDecimal">
-		<property name="com.jaspersoft.studio.field.name" value="m_values"/>
-		<property name="com.jaspersoft.studio.field.label" value="m_values"/>
+	<field name="qty_fruit" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="qty_fruit"/>
+		<property name="com.jaspersoft.studio.field.label" value="qty_fruit"/>
+	</field>
+	<field name="avg_firmness" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="avg_firmness"/>
+		<property name="com.jaspersoft.studio.field.label" value="avg_firmness"/>
 	</field>
 	<columnHeader>
-		<band height="15" splitType="Stretch">
+		<band height="18" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<line>
-				<reportElement x="0" y="14" width="480" height="1" uuid="6c4d9d56-d3f3-4201-98f4-4128f5b980d1">
+				<reportElement x="0" y="15" width="260" height="1" uuid="6c4d9d56-d3f3-4201-98f4-4128f5b980d1">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 			</line>
 			<staticText>
-				<reportElement x="27" y="0" width="100" height="15" uuid="eb34c13b-3ada-45f3-96ed-da41c03603d0">
+				<reportElement x="27" y="0" width="100" height="13" uuid="eb34c13b-3ada-45f3-96ed-da41c03603d0">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e39ef0fe-6c9d-4eca-a58f-8527c869e17e"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<text><![CDATA[Measurement]]></text>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Pressure Group]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="137" y="0" width="100" height="15" uuid="dcff5a64-a5c3-4650-8026-3cf16c27d8f2">
+				<reportElement x="137" y="0" width="42" height="13" uuid="dcff5a64-a5c3-4650-8026-3cf16c27d8f2">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1a74576b-1345-4d14-9620-aeb051c6cc13"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<text><![CDATA[Value]]></text>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Fruit Qty]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="180" y="0" width="60" height="13" uuid="659aba81-7a16-45fe-9ae1-68fae2f151c0">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1a74576b-1345-4d14-9620-aeb051c6cc13"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<text><![CDATA[Avg Pressure]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="25" splitType="Stretch">
+		<band height="15" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField>
-				<reportElement x="27" y="3" width="100" height="20" uuid="6b5eb207-7638-4d60-ad82-ba1b8ccee180">
+				<reportElement x="27" y="1" width="100" height="13" uuid="6b5eb207-7638-4d60-ad82-ba1b8ccee180">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e39ef0fe-6c9d-4eca-a58f-8527c869e17e"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textFieldExpression><![CDATA[$F{mtype}]]></textFieldExpression>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{rmt_classification}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="137" y="3" width="100" height="20" uuid="6e4fec3e-685e-4093-961b-53bdc9c0e6df">
+				<reportElement x="137" y="1" width="42" height="13" uuid="6e4fec3e-685e-4093-961b-53bdc9c0e6df">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1a74576b-1345-4d14-9620-aeb051c6cc13"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textFieldExpression><![CDATA[$F{m_values}]]></textFieldExpression>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty_fruit}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,###.#">
+				<reportElement x="180" y="1" width="60" height="13" uuid="086c2126-d308-4219-a7bf-04982d37d51f">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1a74576b-1345-4d14-9620-aeb051c6cc13"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{avg_firmness}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
