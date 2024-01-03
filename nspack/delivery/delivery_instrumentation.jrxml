@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="delivery_instrumentation_report" language="groovy" pageWidth="280" pageHeight="842" columnWidth="280" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="d109052e-9b0f-425e-bdc4-875aca838363">
+<!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="delivery_instrumentation" language="groovy" pageWidth="280" pageHeight="842" columnWidth="280" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="d109052e-9b0f-425e-bdc4-875aca838363">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack_dev"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="199"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="794"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<parameter name="rmt_delivery_id" class="java.lang.Integer"/>
+	<parameter name="delivery_id" class="java.lang.Integer"/>
 	<queryString language="SQL">
 		<![CDATA[WITH del_res AS (
     SELECT
@@ -22,6 +22,7 @@
         qc_instrument_measurements
     JOIN
         qc_tests ON qc_tests.id = qc_instrument_measurements.qc_test_id
+  join qc_test_types qtt on qc_tests.qc_test_type_id =qtt.id and qtt.qc_test_type_name ='pressure'
     JOIN
         qc_samples ON qc_samples.id = qc_tests.qc_sample_id
     JOIN
@@ -54,16 +55,21 @@
         rmt_classification_types ON rmt_classification_types.id = rmt_classifications.rmt_classification_type_id
     WHERE rmt_classification_types.rmt_classification_type_code = 'PRESSURE'
 order by   kv_pairs.key::integer    ) 
-   select rmt_classification_type_code,rmt_classification,count(del_res.rmt_delivery_id)qty_fruit
+   select del_res.rmt_delivery_id, rmt_classification_type_code,rmt_classification,count(del_res.rmt_delivery_id)qty_fruit
       ,avg(avg_firmness)avg_firmness 
       from del_res join main_query ON del_res.avg_firmness BETWEEN main_query.min_value AND main_query.max_value and del_res.season_id= main_query.season_id
     and del_res.cultivar_id= main_query.cultivar_id
     WHERE
-        rmt_delivery_id =$P{rmt_delivery_id}
+        rmt_delivery_id =$P{delivery_id}
     GROUP BY
-        1,2,main_query.bucket_number
+        1,2,3,main_query.bucket_number
          order by main_query.bucket_number]]>
 	</queryString>
+	<field name="rmt_delivery_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="rmt_delivery_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="rmt_delivery_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="qc_samples"/>
+	</field>
 	<field name="rmt_classification_type_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="rmt_classification_type_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="rmt_classification_type_code"/>
@@ -86,7 +92,7 @@ order by   kv_pairs.key::integer    )
 		<band height="18" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<line>
-				<reportElement x="0" y="15" width="259" height="1" uuid="6c4d9d56-d3f3-4201-98f4-4128f5b980d1">
+				<reportElement x="0" y="15" width="260" height="1" uuid="6c4d9d56-d3f3-4201-98f4-4128f5b980d1">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
