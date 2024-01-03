@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="delivery_report" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="d109052e-9b0f-425e-bdc4-875aca838363">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack_dev"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack_local"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="199"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="794"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -586,7 +586,7 @@ group by     a.id,j.rmt_delivery_id,
 				<text><![CDATA[REFERENCE NUMBER:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="130" y="60" width="70" height="20" uuid="1a3f60b9-96f3-4308-967b-e8aa6ea82e63">
+				<reportElement x="130" y="60" width="71" height="20" uuid="1a3f60b9-96f3-4308-967b-e8aa6ea82e63">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
