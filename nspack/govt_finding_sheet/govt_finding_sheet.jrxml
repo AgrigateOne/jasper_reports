@@ -5,7 +5,7 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack local"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack_local"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="266"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="726"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -33,13 +33,12 @@
 	govt_inspection_sheets.consignment_note_number
 	, p.nett_weight
 	,sum(ps.nett_weight) over (partition by p.pallet_number) AS sum_seq_nett_weight
-
+    ,	fn_party_role_name (inspectors.inspector_party_role_id) AS inspector
 FROM
 govt_inspection_sheets
 LEFT JOIN govt_inspection_pallets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
 LEFT JOIN destination_countries ON destination_countries.id = govt_inspection_pallets.destination_country_id
 LEFT JOIN destination_regions ON destination_regions.id = govt_inspection_pallets.destination_region_id
-
 JOIN pallets p ON govt_inspection_pallets.pallet_id = p.id
 JOIN pallet_sequences ps ON p.id = ps.pallet_id
 JOIN pucs ON pucs.id = ps.puc_id
@@ -51,6 +50,7 @@ JOIN target_market_groups ON target_market_groups.id = ps.packed_tm_group_id
 JOIN grades ON grades.id = ps.grade_id
 LEFT JOIN fruit_size_references ON fruit_size_references.id = ps.fruit_size_reference_id
 LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = ps.fruit_actual_counts_for_pack_id
+LEFT JOIN inspectors ON inspectors.id = govt_inspection_sheets.inspector_id
 WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 	</queryString>
 	<field name="row_number" class="java.lang.Long">
@@ -139,6 +139,10 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 		<property name="com.jaspersoft.studio.field.name" value="sum_seq_nett_weight"/>
 		<property name="com.jaspersoft.studio.field.label" value="sum_seq_nett_weight"/>
 	</field>
+	<field name="inspector" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="inspector"/>
+		<property name="com.jaspersoft.studio.field.label" value="inspector"/>
+	</field>
 	<variable name="puc_var" class="java.lang.String" resetType="Page" incrementType="Page"/>
 	<variable name="pallet_number1" class="java.lang.Integer" calculation="DistinctCount">
 		<variableExpression><![CDATA[$F{pallet_number}]]></variableExpression>
@@ -169,7 +173,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				<text><![CDATA[*MARK APPLICABLE OPTION WITH A "√"]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="80" width="192" height="20" uuid="205e0d96-fe9c-4c4c-b6ed-9d148a3be4de">
+				<reportElement x="0" y="80" width="100" height="20" uuid="205e0d96-fe9c-4c4c-b6ed-9d148a3be4de">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -188,11 +192,10 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				<text><![CDATA[INSPECTOR & NO:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="100" width="93" height="20" uuid="9a54c97a-d5aa-42c2-b124-cc491fc87293">
+				<reportElement x="0" y="100" width="100" height="20" uuid="9a54c97a-d5aa-42c2-b124-cc491fc87293">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
 					<pen lineWidth="1.0"/>
@@ -225,7 +228,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				<text><![CDATA[CONSIGNMENT NOTE/S:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="191" y="80" width="60" height="20" uuid="e3022152-0689-4388-857f-4d4019d127b8">
+				<reportElement x="247" y="80" width="60" height="20" uuid="e3022152-0689-4388-857f-4d4019d127b8">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -245,10 +248,11 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				<text><![CDATA[SIGNATURE:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="191" y="100" width="60" height="20" uuid="612c0e87-7a21-455d-90ec-1e70292ae33a">
+				<reportElement x="247" y="100" width="60" height="20" uuid="612c0e87-7a21-455d-90ec-1e70292ae33a">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<box>
 					<pen lineWidth="1.0"/>
@@ -264,8 +268,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				<text><![CDATA[PRODUCT:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="191" y="120" width="60" height="20" uuid="3ffb7624-ad0a-472e-b1a1-35983176d475">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				<reportElement x="247" y="120" width="60" height="20" uuid="3ffb7624-ad0a-472e-b1a1-35983176d475">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -284,11 +287,11 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				<text><![CDATA[CULTIVAR:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="383" y="100" width="50" height="20" uuid="fa21b963-f469-41f4-9099-4e0169b006f9">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				<reportElement x="439" y="100" width="50" height="20" uuid="fa21b963-f469-41f4-9099-4e0169b006f9">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<box>
 					<pen lineWidth="1.0"/>
@@ -304,8 +307,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				<text><![CDATA[PUC/FBO:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="383" y="120" width="50" height="20" uuid="0626fb18-3881-4841-86e9-290ee7ad756c">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				<reportElement x="439" y="120" width="50" height="20" uuid="0626fb18-3881-4841-86e9-290ee7ad756c">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
@@ -325,7 +327,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				<text><![CDATA[PHC:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="383" y="80" width="50" height="20" uuid="2884a06e-7512-46e9-8e0d-0804d1628c10">
+				<reportElement x="439" y="80" width="50" height="20" uuid="2884a06e-7512-46e9-8e0d-0804d1628c10">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
@@ -460,7 +462,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="434" y="120" width="141" height="20" uuid="1cdb948d-19b6-4a92-9054-2bc4ac824b9e">
+				<reportElement x="489" y="120" width="86" height="20" uuid="1cdb948d-19b6-4a92-9054-2bc4ac824b9e">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -470,29 +472,28 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{phc}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="251" y="100" width="131" height="20" uuid="51d2f764-2f25-4e98-8d54-19e7edf36f67">
+				<reportElement x="307" y="100" width="131" height="20" uuid="51d2f764-2f25-4e98-8d54-19e7edf36f67">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="0.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{commodity}]]></textFieldExpression>
 			</textField>
 			<textField pattern="d MMM yyyy">
-				<reportElement x="434" y="80" width="141" height="20" uuid="e45f7a42-28a1-45e2-8325-80dd55920e19">
+				<reportElement x="489" y="80" width="86" height="20" uuid="e45f7a42-28a1-45e2-8325-80dd55920e19">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -500,22 +501,22 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[Calendar.getInstance().getTime()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="251" y="120" width="131" height="20" uuid="2f0a7f00-db7f-4bd3-a492-e331d46f3914">
+				<reportElement x="307" y="120" width="131" height="20" uuid="2f0a7f00-db7f-4bd3-a492-e331d46f3914">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<box>
 					<bottomPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cultivar}]]></textFieldExpression>
@@ -612,18 +613,20 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="94" y="120" width="98" height="20" uuid="97ff1cf2-45d8-48bc-aa06-85ddea6db261">
+				<reportElement x="100" y="120" width="147" height="20" uuid="97ff1cf2-45d8-48bc-aa06-85ddea6db261">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 				</reportElement>
 				<box>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="9"/>
+					<paragraph firstLineIndent="3"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{inspection_point}]]></textFieldExpression>
 			</textField>
@@ -642,7 +645,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				<textFieldExpression><![CDATA[$F{consignment_note_number}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="120" width="93" height="20" uuid="4fe70c51-e96e-4e92-ba1a-f09c364eafe5">
+				<reportElement x="0" y="120" width="100" height="20" uuid="4fe70c51-e96e-4e92-ba1a-f09c364eafe5">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -663,7 +666,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				<text><![CDATA[INSPECTION POINT:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="251" y="80" width="131" height="20" uuid="ad33634f-21c9-4233-a728-bce3c9f3d01b">
+				<reportElement x="307" y="80" width="131" height="20" uuid="ad33634f-21c9-4233-a728-bce3c9f3d01b">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -684,7 +687,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="94" y="100" width="98" height="20" uuid="24f02f4f-8af1-45a4-aab3-d27ec9613569">
+				<reportElement x="100" y="80" width="147" height="20" uuid="24f02f4f-8af1-45a4-aab3-d27ec9613569">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -694,13 +697,14 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="9"/>
+					<paragraph firstLineIndent="3"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{exporter}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{inspector}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="434" y="100" width="141" height="20" uuid="07ba4afb-f98c-449f-8cee-941257541003">
+				<reportElement x="489" y="100" width="86" height="20" uuid="07ba4afb-f98c-449f-8cee-941257541003">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -710,7 +714,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{puc}]]></textFieldExpression>
@@ -729,6 +733,23 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[Calendar.getInstance().getTime()]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="100" y="100" width="147" height="20" uuid="e51b1ac6-4017-458a-9449-d6fab2c55a50">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+					<paragraph firstLineIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{exporter}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
