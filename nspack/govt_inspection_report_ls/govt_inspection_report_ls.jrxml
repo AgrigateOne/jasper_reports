@@ -377,7 +377,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 	LEFT JOIN inspection_failure_reasons  on inspection_failure_reasons.id = govt_inspection_pallets.failure_reason_id
      WHERE
   govt_inspection_sheets.id = $P{govt_inspection_sheet_id}
-  AND $P!{QueryCondition} 
+  AND $P!{QueryCondition}
   ORDER BY inspection_tm,commodity, variety, grade, p.pallet_number,ps.pallet_sequence_number]]>
 	</queryString>
 	<field name="seq_no" class="java.lang.Long">
@@ -1022,7 +1022,9 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<text><![CDATA[Ctns]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="138" y="3" width="14" height="13" uuid="b006ecd9-9474-4990-b773-f698441dce88"/>
+				<reportElement x="135" y="3" width="14" height="13" uuid="b006ecd9-9474-4990-b773-f698441dce88">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
@@ -1093,7 +1095,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<text><![CDATA[Phyto Data]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="108" y="3" width="27" height="13" uuid="0012db30-c291-415f-9bd3-86edde986d60">
+				<reportElement x="108" y="3" width="24" height="13" uuid="0012db30-c291-415f-9bd3-86edde986d60">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>

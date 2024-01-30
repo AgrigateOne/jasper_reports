@@ -291,8 +291,10 @@ order by commodity, variety,std_pack, grade, edi_size_count]]>
 				<text><![CDATA[Pack]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="231" y="0" width="26" height="13" uuid="728916a3-0f11-4cea-80ad-beb924f6d23f"/>
-				<textElement textAlignment="Right">
+				<reportElement x="225" y="0" width="26" height="13" uuid="728916a3-0f11-4cea-80ad-beb924f6d23f">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Size]]></text>
@@ -361,8 +363,9 @@ order by commodity, variety,std_pack, grade, edi_size_count]]>
 				<textFieldExpression><![CDATA[$F{std_pack}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="188" y="0" width="26" height="11" uuid="2d66686b-d513-4e1c-a03e-c38e3aa824c5">
+				<reportElement x="188" y="0" width="28" height="11" uuid="2d66686b-d513-4e1c-a03e-c38e3aa824c5">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left">
 					<font size="8"/>
@@ -370,7 +373,8 @@ order by commodity, variety,std_pack, grade, edi_size_count]]>
 				<textFieldExpression><![CDATA[$F{count}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="231" y="0" width="26" height="12" uuid="d059d582-b982-4b73-bb25-b808f75cf068">
+				<reportElement x="225" y="0" width="35" height="12" uuid="d059d582-b982-4b73-bb25-b808f75cf068">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement>
@@ -379,7 +383,10 @@ order by commodity, variety,std_pack, grade, edi_size_count]]>
 				<textFieldExpression><![CDATA[$F{size_ref}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#0.##" isBlankWhenNull="true">
-				<reportElement x="260" y="0" width="40" height="11" uuid="814e04ec-4f8f-4c9f-8cdb-c2da9656d625"/>
+				<reportElement x="265" y="0" width="35" height="11" uuid="814e04ec-4f8f-4c9f-8cdb-c2da9656d625">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
