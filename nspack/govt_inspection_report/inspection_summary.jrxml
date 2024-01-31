@@ -370,7 +370,8 @@ order by commodity, variety,std_pack, grade, edi_size_count]]>
 				<textFieldExpression><![CDATA[$F{count}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="231" y="0" width="26" height="12" uuid="d059d582-b982-4b73-bb25-b808f75cf068">
+				<reportElement x="220" y="0" width="32" height="12" uuid="d059d582-b982-4b73-bb25-b808f75cf068">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement>
