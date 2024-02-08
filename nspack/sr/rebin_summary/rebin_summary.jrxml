@@ -1,0 +1,487 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Rebin Summary" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b5e6bd8d-7aea-4da5-b432-f57f8e99f13d">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack_local"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="236"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="753"/>
+	<parameter name="client_code" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select rmt_classes.rmt_class_code  as grade,
+cultivars.description as variety,
+coalesce(rmt_container_material_types.container_material_type_code,rmt_container_types.container_type_code) as pack,
+pucs.puc_code,
+orchards.orchard_code,
+sum(b.gross_weight::numeric(12,2)) AS total_gross_weight,
+sum(b.nett_weight::numeric(12,2)) AS total_nett_weight,
+max(DATE(b.created_at)) as date,
+count(distinct b.id) AS no_of_rebins,
+cultivars.cultivar_name,
+cultivars.cultivar_code
+FROM rmt_bins b 
+LEFT JOIN rmt_classes ON rmt_classes.id = b.rmt_class_id
+LEFT JOIN pucs ON pucs.id = b.puc_id
+LEFT JOIN orchards ON orchards.id = b.orchard_id
+LEFT JOIN rmt_container_material_types ON rmt_container_material_types.id = b.rmt_container_material_type_id
+LEFT JOIN rmt_container_types ON rmt_container_types.id = b.rmt_container_type_id
+LEFT JOIN rmt_container_material_types rmt_inner_container_material_types ON rmt_inner_container_material_types.id = b.rmt_inner_container_material_id
+LEFT JOIN cultivars ON cultivars.id = b.cultivar_id
+WHERE not ( b.scrapped =true)  AND b.production_run_rebin_id IS NOT NULL 
+AND EXTRACT(YEAR FROM b.created_at) = EXTRACT(YEAR FROM NOW())
+GROUP BY 
+rmt_classes.rmt_class_code,
+cultivars.description,
+pucs.puc_code,
+orchards.orchard_code,
+rmt_container_types.container_type_code,
+rmt_container_material_types.container_material_type_code,
+cultivars.cultivar_name,
+cultivars.cultivar_code,
+cultivars.description
+]]>
+	</queryString>
+	<field name="grade" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="grade"/>
+		<property name="com.jaspersoft.studio.field.label" value="grade"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="rmt_classes"/>
+	</field>
+	<field name="variety" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="variety"/>
+		<property name="com.jaspersoft.studio.field.label" value="variety"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cultivars"/>
+	</field>
+	<field name="pack" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pack"/>
+		<property name="com.jaspersoft.studio.field.label" value="pack"/>
+	</field>
+	<field name="puc_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="puc_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="puc_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pucs"/>
+	</field>
+	<field name="orchard_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="orchard_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="orchard_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="orchards"/>
+	</field>
+	<field name="total_gross_weight" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total_gross_weight"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_gross_weight"/>
+	</field>
+	<field name="total_nett_weight" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total_nett_weight"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_nett_weight"/>
+	</field>
+	<field name="date" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="date"/>
+		<property name="com.jaspersoft.studio.field.label" value="date"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="rmt_bins"/>
+	</field>
+	<field name="no_of_rebins" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="no_of_rebins"/>
+		<property name="com.jaspersoft.studio.field.label" value="no_of_rebins"/>
+	</field>
+	<field name="cultivar_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cultivar_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="cultivar_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cultivars"/>
+	</field>
+	<field name="cultivar_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cultivar_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="cultivar_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cultivars"/>
+	</field>
+	<variable name="total_nett_weight" class="java.lang.Double" resetType="Group" resetGroup="grade_variety_grp" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_nett_weight}]]></variableExpression>
+	</variable>
+	<variable name="total_gross_weight" class="java.lang.Double" resetType="Group" resetGroup="grade_variety_grp" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_gross_weight}]]></variableExpression>
+	</variable>
+	<variable name="total_bins" class="java.lang.Long" resetType="Group" resetGroup="grade_variety_grp" calculation="Sum">
+		<variableExpression><![CDATA[$F{no_of_rebins}]]></variableExpression>
+	</variable>
+	<variable name="grand_nett_weight" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_nett_weight}]]></variableExpression>
+	</variable>
+	<variable name="grand_gross_weight" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_gross_weight}]]></variableExpression>
+	</variable>
+	<variable name="grand_total_bins" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{no_of_rebins}]]></variableExpression>
+	</variable>
+	<group name="grade">
+		<groupExpression><![CDATA[$F{grade} + $F{variety}]]></groupExpression>
+	</group>
+	<group name="variety">
+		<groupExpression><![CDATA[$F{variety}]]></groupExpression>
+	</group>
+	<group name="pack">
+		<groupExpression><![CDATA[$F{pack}]]></groupExpression>
+	</group>
+	<group name="puc_code">
+		<groupExpression><![CDATA[$F{puc_code}]]></groupExpression>
+	</group>
+	<group name="orchard_code">
+		<groupExpression><![CDATA[$F{orchard_code}]]></groupExpression>
+	</group>
+	<group name="cultivar_name">
+		<groupExpression><![CDATA[$F{cultivar_name}]]></groupExpression>
+	</group>
+	<group name="cultivar_code">
+		<groupExpression><![CDATA[$F{cultivar_code}]]></groupExpression>
+	</group>
+	<group name="grade_variety_grp">
+		<groupExpression><![CDATA[$F{grade}+$F{variety}]]></groupExpression>
+		<groupHeader>
+			<band height="44">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<staticText>
+					<reportElement x="0" y="23" width="30" height="20" uuid="58b9134d-18b7-464a-a53c-bb8113611658">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="33b6a9e6-dd4d-4399-a86e-ce7d7b18950c"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Bottom">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Class:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="30" y="23" width="150" height="20" uuid="e294fc6f-7133-4b57-a232-6fc355359603">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="75f54c27-850d-4d2b-b63e-d992d9735ebd"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Variety]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="170" y="24" width="50" height="20" uuid="7e7b9f25-1dbe-471a-a51f-2abbc3eda10e">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d2359348-aab4-4091-807b-f86a109391a9"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Pack]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="220" y="23" width="50" height="20" uuid="b151ff41-704b-476f-b976-282b9b06e1f1">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ca09da1b-b2d9-40e0-a0fd-dd51549baeff"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Puc]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="370" y="23" width="60" height="20" uuid="8e47571f-6ce1-4050-86e1-6eb75f82753c">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7c9eadb0-8c18-48fe-9d7a-dbf15ee75311"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Gross weight]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="260" y="23" width="50" height="20" uuid="7fef5664-7061-43d5-be85-6a07bd17cd07">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="322956f6-ee10-441f-bfc9-30c005ea759f"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Orchard]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="310" y="24" width="60" height="20" uuid="c7c4c4fa-2a9d-4aba-b4d7-ecd07e096ad6">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7db89bd5-3efd-483d-8572-ed979131c072"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Date]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="500" y="10" width="51" height="30" uuid="3baba9b8-0cc9-41f9-8357-b7f61c6c380e">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e49122bd-24c3-41e3-84cd-49fdb87993a2"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Bottom">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Rebins Qty]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="430" y="23" width="70" height="20" uuid="fe1e1621-972b-4bb0-b36d-5f7724b17fc7">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d32ae5f3-cc00-458f-9846-2dad68f4d800"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Bottom">
+						<font size="11"/>
+					</textElement>
+					<text><![CDATA[Nett weight]]></text>
+				</staticText>
+				<line>
+					<reportElement x="0" y="43" width="550" height="1" uuid="ff0d5263-83d6-44bf-af95-c22714b75d6b">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineStyle="Dotted"/>
+					</graphicElement>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="30">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<rectangle>
+					<reportElement x="310" y="0" width="241" height="25" uuid="4cd4abb5-c63c-4744-bc0b-06953e9510d1"/>
+					<graphicElement>
+						<pen lineWidth="1.0" lineColor="#CFCACA"/>
+					</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement x="320" y="2" width="50" height="23" uuid="285d3e37-f389-49d1-b1f0-fe562bc9507f">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Bottom">
+						<font size="12"/>
+					</textElement>
+					<text><![CDATA[Total:]]></text>
+				</staticText>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement x="430" y="1" width="70" height="23" uuid="5c04344f-7416-4c44-bb26-74e82176fc16">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+					<textFieldExpression><![CDATA[$V{total_nett_weight}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="501" y="1" width="49" height="23" uuid="c0ebe3d9-95c1-453d-8ec4-e6c7f5e2e4c0">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+					<textFieldExpression><![CDATA[$V{total_bins}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement x="370" y="0" width="60" height="23" uuid="3bc0456e-8b58-44ea-afd5-1a3f9317b066">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+					<textFieldExpression><![CDATA[$V{total_gross_weight}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="80" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="60" y="30" width="340" height="41" uuid="648a9ffb-93c2-47a9-94f3-c53707d65d8d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="22"/>
+				</textElement>
+				<text><![CDATA[Rebin summary report]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="79" width="550" height="1" uuid="9e19ea06-92c5-457e-a131-9e78a247e0e7">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="110" y="0" width="259" height="31" uuid="5f46dd87-f68d-4cb2-b3d8-a262985d31fd"/>
+				<textElement textAlignment="Center">
+					<font size="24"/>
+				</textElement>
+				<text><![CDATA[Sitrusrand]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="22">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField isBlankWhenNull="true">
+				<reportElement x="260" y="0" width="60" height="20" uuid="c1cec89a-1676-46c7-8feb-478cef1cca82">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="322956f6-ee10-441f-bfc9-30c005ea759f"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{orchard_code}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="430" y="0" width="70" height="20" uuid="c5a42336-9829-4dca-9adc-0bedde2b1b62">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d32ae5f3-cc00-458f-9846-2dad68f4d800"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_nett_weight}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="370" y="-1" width="60" height="20" uuid="69ecfde2-d399-4202-96e1-92dccb45b50a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7c9eadb0-8c18-48fe-9d7a-dbf15ee75311"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_gross_weight}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="310" y="0" width="60" height="20" uuid="bba2a181-e266-4c65-8cb1-48702aea70cf">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7db89bd5-3efd-483d-8572-ed979131c072"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="500" y="-1" width="50" height="20" uuid="b3155dbb-b3c7-4669-bbb2-232153aa1643">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e49122bd-24c3-41e3-84cd-49fdb87993a2"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{no_of_rebins}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="220" y="2" width="51" height="20" uuid="5da8a039-0843-4509-8f15-c2dba2043475">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ca09da1b-b2d9-40e0-a0fd-dd51549baeff"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{puc_code}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="170" y="0" width="50" height="20" uuid="6c804d21-fac8-46c3-af82-919a9989ba3b">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d2359348-aab4-4091-807b-f86a109391a9"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pack}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="1" width="20" height="20" uuid="d11d56c4-240d-407b-91c3-459ab044576a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="33b6a9e6-dd4d-4399-a86e-ce7d7b18950c"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font size="10"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{grade}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="25" y="2" width="141" height="20" uuid="3fb34c5d-644d-487c-a5e0-763960781833">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="75f54c27-850d-4d2b-b63e-d992d9735ebd"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="10"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{variety}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="21">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="430" y="0" width="70" height="20" uuid="9892ff9b-6010-4014-96e7-d64ee9f1a162">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$V{grand_nett_weight}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="210" y="1" width="90" height="20" uuid="66c1ce07-6576-433e-a485-26935d575e7d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Grand Totals:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="360" y="1" width="70" height="20" uuid="b7c8a0ba-7fb3-4ff7-8b65-2947243e5c54">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$V{grand_gross_weight}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="501" y="0" width="49" height="20" uuid="cc687a39-66ba-48f9-9322-52d9a0695650">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$V{grand_total_bins}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>
