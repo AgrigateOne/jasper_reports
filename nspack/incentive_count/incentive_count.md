@@ -28,12 +28,12 @@ Production | Shifts | List Shifts
 |  Name |Contract worker first and last name | `contract_workers.first_name`  +  `contract_workers.last_name`|
 |  Shift D/N |Shift type| `shift_types.day_night_or_custom` |
 |  Comm |Commodity code packed in the shift | `commodities.code` |
-|  Var Var |Variety packed in the shift  | `marketing_varieties.marketing_variety_code` |
+|  Var  |Variety packed in the shift  | `marketing_varieties.marketing_variety_code` |
 |  Pack |Basic pack code packed   | `basic_pack_codes.basic_pack_code` |
 |  Size count interval group     |Size count interval group   |`std_fruit_size_counts.size_count_interval_group`/
 |  Count |Actual number of individual packed fruit | `fruit_actual_counts_for_packs.actual_count_for_pack` |
 |  Total Cartons |Total number of cartons packed | `count(cartons.id)`|
-|  Total Fruit |Total Sum of  Fruit Qty packed by worker | Total counts * Count: `count(cartons.id)` * `fruit_actual_counts_for_packs.actual_count_for_pack` |
+|  Total Fruit |Total Sum of  Fruit Qty packed by worker | Total Cartons * Count: `count(cartons.id)` * `fruit_actual_counts_for_packs.actual_count_for_pack` |
 |  Running hours |Length of shift in hours| `shifts.end_date_time - shifts.start_date_time` |
 |  Fruit per hour | The actual number of fruit items packed in an hour | Total Fruit/Running hours: `sum(fruit_actual_counts_for_packs.actual_count_for_pack)`/`shifts.end_date_time - shifts.start_date_time` |
 
