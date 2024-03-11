@@ -26,10 +26,10 @@
 SELECT
     count(DISTINCT pallets.pallet_number) AS scrapped_plt_qty,
     MAX(govt_inspection_pallets.govt_inspection_sheet_id) AS govt_inspection_sheet_id
-FROM
-    govt_inspection_pallets
-    JOIN pallets ON pallets.id = govt_inspection_pallets.id
-    JOIN pallet_sequences ON pallet_sequences.scrapped_from_pallet_id = pallets.id
+	FROM pallets
+	JOIN pallet_sequences ps ON pallets.id = ps.scrapped_from_pallet_id
+	LEFT JOIN govt_inspection_pallets ON govt_inspection_pallets.id = pallets.last_govt_inspection_pallet_id
+	LEFT JOIN govt_inspection_sheets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
 WHERE
     govt_inspection_pallets.govt_inspection_sheet_id =  $P{subgovt_inspection_sheet_id}
         AND (
