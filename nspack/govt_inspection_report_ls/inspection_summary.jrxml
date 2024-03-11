@@ -22,168 +22,177 @@
 	</parameter>
 	<parameter name="paraminspecstatus" class="java.lang.String"/>
 	<queryString language="SQL">
-		<![CDATA[WITH scrapped_plt_cnt AS(
-select count(distinct pallet_number) as scrapped_plt_qty,max(govt_inspection_sheet_id) as govt_inspection_sheet_id 
-from vw_scrapped_pallet_sequence_flat
-WHERE  govt_inspection_sheet_id= $P{subgovt_inspection_sheet_id}
-AND (  case when  $P{paraminspecstatus} ='passed' then govt_inspection_passed=true 
-       when       $P{paraminspecstatus} ='failed' then govt_inspection_passed=false end )
-),scrapped_plts AS(
-SELECT 
-distinct
-count(distinct p.id) as each_plt_qty,
-govt_inspection_pallets.govt_inspection_sheet_id,
-commodities.code AS commodity,
-COALESCE(marketing_varieties.marketing_variety_code,marketing_varieties.inspection_variety) as marketing_variety,
-COALESCE(cvv.marketing_variety_code,marketing_varieties.inspection_variety, marketing_varieties.marketing_variety_code) AS variety,
-standard_pack_codes.standard_pack_code AS std_pack,
-COALESCE(fruit_size_references.edi_out_code,fruit_size_references.size_reference) AS size_ref,
-grades.grade_code AS grade,
-fruit_actual_counts_for_packs.actual_count_for_pack AS actual_count,
-fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi,
-				  commodities.use_size_ref_for_edi, 
-				  fruit_size_references.edi_out_code,
-				  fruit_size_references.size_reference, 
-				  fruit_actual_counts_for_packs.actual_count_for_pack) AS edi_size_count,
-  	COALESCE(CAST(fruit_actual_counts_for_packs.actual_count_for_pack AS  text),
-	         fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi,
-							   commodities.use_size_ref_for_edi,
-							   fruit_size_references.edi_out_code,
-							   fruit_size_references.size_reference,
-							   fruit_actual_counts_for_packs.actual_count_for_pack
-	                          )
-			 ) AS count,
-sum(ps.carton_quantity) carton_quantity,
-max(scrapped_plt_cnt.scrapped_plt_qty) as scrapped_plt_qty,
-p.govt_inspection_passed
-from govt_inspection_sheets
-LEFT join govt_inspection_pallets  ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
-LEFT join pallets p on govt_inspection_pallets.pallet_id =p.id
-LEFT join pallet_sequences ps on p.id=ps.scrapped_from_pallet_id
-LEFT JOIN scrapped_plt_cnt on govt_inspection_sheets.id = scrapped_plt_cnt.govt_inspection_sheet_id
-LEFT JOIN cultivar_groups ON cultivar_groups.id = ps.cultivar_group_id
-LEFT JOIN cultivars ON cultivars.id = ps.cultivar_id
-LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
-LEFT JOIN customer_varieties ON customer_varieties.id = ps.customer_variety_id
-LEFT JOIN marketing_varieties cvv ON cvv.id = customer_varieties.variety_as_customer_variety_id	
-LEFT JOIN marketing_varieties ON marketing_varieties.id = ps.marketing_variety_id
-LEFT JOIN standard_pack_codes ON standard_pack_codes.id = ps.standard_pack_code_id
-LEFT JOIN fruit_size_references ON fruit_size_references.id = ps.fruit_size_reference_id
-LEFT JOIN grades ON grades.id = ps.grade_id
-LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = ps.fruit_actual_counts_for_pack_id
-    WHERE  govt_inspection_sheets.id= $P{subgovt_inspection_sheet_id}
-group by
-govt_inspection_pallets.govt_inspection_sheet_id,	
-commodities.code,
-COALESCE(marketing_varieties.marketing_variety_code,marketing_varieties.inspection_variety),
-COALESCE(cvv.marketing_variety_code,marketing_varieties.inspection_variety, marketing_varieties.marketing_variety_code),
-standard_pack_codes.standard_pack_code,
-fruit_size_references.size_reference,
-grades.grade_code,
-cvv.marketing_variety_code,
-fruit_actual_counts_for_packs.actual_count_for_pack,
-p.govt_inspection_passed,
-standard_pack_codes.use_size_ref_for_edi,
-commodities.use_size_ref_for_edi,
-fruit_size_references.edi_out_code
+		<![CDATA[WITH scrapped_plt_cnt AS (
+    SELECT
+        count(DISTINCT pallets.pallet_number) AS scrapped_plt_qty,
+        MAX(govt_inspection_pallets.govt_inspection_sheet_id) AS govt_inspection_sheet_id
+    FROM
+        govt_inspection_pallets
+        JOIN pallets ON pallets.id = govt_inspection_pallets.id
+        JOIN pallet_sequences ON pallet_sequences.scrapped_from_pallet_id = pallets.id
+    WHERE
+        govt_inspection_pallets.govt_inspection_sheet_id = $P{subgovt_inspection_sheet_id}
+        AND (
+            CASE WHEN $P{paraminspecstatus} = 'passed' THEN
+                govt_inspection_passed = TRUE
+            WHEN $P{paraminspecstatus} = 'failed' THEN
+                govt_inspection_passed = FALSE
+            END)
+),
+scrapped_plts AS (
+    SELECT DISTINCT
+        count(DISTINCT p.id) AS each_plt_qty,
+        govt_inspection_pallets.govt_inspection_sheet_id,
+        commodities.code AS commodity,
+        COALESCE(marketing_varieties.marketing_variety_code, marketing_varieties.inspection_variety) AS marketing_variety,
+        COALESCE(cvv.marketing_variety_code, marketing_varieties.inspection_variety, marketing_varieties.marketing_variety_code) AS variety,
+        standard_pack_codes.standard_pack_code AS std_pack,
+        COALESCE(fruit_size_references.edi_out_code, fruit_size_references.size_reference) AS size_ref,
+        grades.grade_code AS grade,
+        fruit_actual_counts_for_packs.actual_count_for_pack AS actual_count,
+        fn_edi_size_count (standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack) AS edi_size_count,
+        COALESCE(CAST(fruit_actual_counts_for_packs.actual_count_for_pack AS text), fn_edi_size_count (standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack)) AS count,
+        sum(ps.carton_quantity) carton_quantity,
+        max(scrapped_plt_cnt.scrapped_plt_qty) AS scrapped_plt_qty,
+        p.govt_inspection_passed
+    FROM
+        govt_inspection_sheets
+        LEFT JOIN govt_inspection_pallets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+        LEFT JOIN pallets p ON govt_inspection_pallets.pallet_id = p.id
+        LEFT JOIN pallet_sequences ps ON p.id = ps.scrapped_from_pallet_id
+        LEFT JOIN scrapped_plt_cnt ON govt_inspection_sheets.id = scrapped_plt_cnt.govt_inspection_sheet_id
+        LEFT JOIN cultivar_groups ON cultivar_groups.id = ps.cultivar_group_id
+        LEFT JOIN cultivars ON cultivars.id = ps.cultivar_id
+        LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
+        LEFT JOIN customer_varieties ON customer_varieties.id = ps.customer_variety_id
+        LEFT JOIN marketing_varieties cvv ON cvv.id = customer_varieties.variety_as_customer_variety_id
+        LEFT JOIN marketing_varieties ON marketing_varieties.id = ps.marketing_variety_id
+        LEFT JOIN standard_pack_codes ON standard_pack_codes.id = ps.standard_pack_code_id
+        LEFT JOIN fruit_size_references ON fruit_size_references.id = ps.fruit_size_reference_id
+        LEFT JOIN grades ON grades.id = ps.grade_id
+        LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = ps.fruit_actual_counts_for_pack_id
+    WHERE
+        govt_inspection_sheets.id = $P{subgovt_inspection_sheet_id}
+    GROUP BY
+        govt_inspection_pallets.govt_inspection_sheet_id,
+        commodities.code,
+        COALESCE(marketing_varieties.marketing_variety_code, marketing_varieties.inspection_variety),
+        COALESCE(cvv.marketing_variety_code, marketing_varieties.inspection_variety, marketing_varieties.marketing_variety_code),
+        standard_pack_codes.standard_pack_code,
+        fruit_size_references.size_reference,
+        grades.grade_code,
+        cvv.marketing_variety_code,
+        fruit_actual_counts_for_packs.actual_count_for_pack,
+        p.govt_inspection_passed,
+        standard_pack_codes.use_size_ref_for_edi,
+        commodities.use_size_ref_for_edi,
+        fruit_size_references.edi_out_code
+),
+plt_cnt AS (
+    SELECT
+        count(DISTINCT p.pallet_number) AS plt_qty,
+        max(govt_inspection_pallets.govt_inspection_sheet_id) AS govt_inspection_sheet_id
+    FROM
+        govt_inspection_sheets
+        LEFT JOIN govt_inspection_pallets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+        LEFT JOIN pallets p ON govt_inspection_pallets.pallet_id = p.id
+    WHERE
+        govt_inspection_pallets.govt_inspection_sheet_id = $P{subgovt_inspection_sheet_id}
+        AND (
+            CASE WHEN $P{paraminspecstatus} = 'passed' THEN
+                govt_inspection_passed = TRUE
+            WHEN $P{paraminspecstatus} = 'failed' THEN
+                govt_inspection_passed = FALSE
+            END)
+),
+plts AS (
+    SELECT DISTINCT
+        count(DISTINCT p.id) AS each_plt_qty,
+        govt_inspection_pallets.govt_inspection_sheet_id,
+        commodities.code AS commodity,
+        COALESCE(marketing_varieties.marketing_variety_code, marketing_varieties.inspection_variety) AS marketing_variety,
+        COALESCE(cvv.marketing_variety_code, marketing_varieties.inspection_variety, marketing_varieties.marketing_variety_code) AS variety,
+        standard_pack_codes.standard_pack_code AS std_pack,
+        COALESCE(fruit_size_references.edi_out_code, fruit_size_references.size_reference) AS size_ref,
+        grades.grade_code AS grade,
+        fruit_actual_counts_for_packs.actual_count_for_pack AS actual_count,
+        fn_edi_size_count (standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack) AS edi_size_count,
+        COALESCE(CAST(fruit_actual_counts_for_packs.actual_count_for_pack AS text), fn_edi_size_count (standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack)) AS count,
+        sum(ps.carton_quantity) carton_quantity,
+        max(plt_cnt.plt_qty) AS plt_qty,
+        p.govt_inspection_passed
+    FROM
+        govt_inspection_sheets
+        LEFT JOIN govt_inspection_pallets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+        LEFT JOIN pallets p ON govt_inspection_pallets.pallet_id = p.id
+        LEFT JOIN pallet_sequences ps ON p.id = ps.pallet_id
+        LEFT JOIN plt_cnt ON govt_inspection_pallets.govt_inspection_sheet_id = plt_cnt.govt_inspection_sheet_id
+        LEFT JOIN cultivar_groups ON cultivar_groups.id = ps.cultivar_group_id
+        LEFT JOIN cultivars ON cultivars.id = ps.cultivar_id
+        LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
+        LEFT JOIN customer_varieties ON customer_varieties.id = ps.customer_variety_id
+        LEFT JOIN marketing_varieties cvv ON cvv.id = customer_varieties.variety_as_customer_variety_id
+        LEFT JOIN marketing_varieties ON marketing_varieties.id = ps.marketing_variety_id
+        LEFT JOIN standard_pack_codes ON standard_pack_codes.id = ps.standard_pack_code_id
+        LEFT JOIN fruit_size_references ON fruit_size_references.id = ps.fruit_size_reference_id
+        LEFT JOIN grades ON grades.id = ps.grade_id
+        LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = ps.fruit_actual_counts_for_pack_id
+    WHERE
+        govt_inspection_sheets.id = $P{subgovt_inspection_sheet_id}
+        AND (
+            CASE WHEN $P{paraminspecstatus} = 'passed' THEN
+                govt_inspection_passed = TRUE
+            WHEN $P{paraminspecstatus} = 'failed' THEN
+                govt_inspection_passed = FALSE
+            END)
+    GROUP BY
+        govt_inspection_pallets.govt_inspection_sheet_id,
+        commodities.code,
+        COALESCE(marketing_varieties.marketing_variety_code, marketing_varieties.inspection_variety),
+        COALESCE(cvv.marketing_variety_code, marketing_varieties.inspection_variety, marketing_varieties.marketing_variety_code),
+        standard_pack_codes.standard_pack_code,
+        fruit_size_references.size_reference,
+        grades.grade_code,
+        cvv.marketing_variety_code,
+        fruit_actual_counts_for_packs.actual_count_for_pack,
+        p.govt_inspection_passed,
+        standard_pack_codes.use_size_ref_for_edi,
+        commodities.use_size_ref_for_edi,
+        fruit_size_references.edi_out_code
 )
-,plt_cnt AS(
-select 
-count(distinct p.pallet_number) as plt_qty,
-max(govt_inspection_pallets.govt_inspection_sheet_id) as govt_inspection_sheet_id 
-	
-from govt_inspection_sheets
-left join govt_inspection_pallets  ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
-left join pallets p on govt_inspection_pallets.pallet_id =p.id
-	
-WHERE  govt_inspection_pallets.govt_inspection_sheet_id= $P{subgovt_inspection_sheet_id}
-AND (  case when $P{paraminspecstatus} ='passed' then govt_inspection_passed=true 
-      when      $P{paraminspecstatus} ='failed' then govt_inspection_passed=false end )
-)
-,plts AS  (
-SELECT 
-distinct
-count(distinct p.id) as each_plt_qty,
-govt_inspection_pallets.govt_inspection_sheet_id,
-commodities.code AS commodity,
-COALESCE(marketing_varieties.marketing_variety_code,marketing_varieties.inspection_variety) as marketing_variety,
-COALESCE(cvv.marketing_variety_code,marketing_varieties.inspection_variety, marketing_varieties.marketing_variety_code) AS variety,
-standard_pack_codes.standard_pack_code AS std_pack,
-COALESCE(fruit_size_references.edi_out_code,fruit_size_references.size_reference) AS size_ref,
-grades.grade_code AS grade,
-fruit_actual_counts_for_packs.actual_count_for_pack AS actual_count,
-fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi,
-				  commodities.use_size_ref_for_edi, 
-				  fruit_size_references.edi_out_code,
-				  fruit_size_references.size_reference, 
-				  fruit_actual_counts_for_packs.actual_count_for_pack) AS edi_size_count,
-  	COALESCE(CAST(fruit_actual_counts_for_packs.actual_count_for_pack AS  text),
-	         fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi,
-							   commodities.use_size_ref_for_edi,
-							   fruit_size_references.edi_out_code,
-							   fruit_size_references.size_reference,
-							   fruit_actual_counts_for_packs.actual_count_for_pack
-	                          )
-			 ) AS count,
-sum(ps.carton_quantity) carton_quantity,
-max(plt_cnt.plt_qty) as plt_qty,
-p.govt_inspection_passed
-from govt_inspection_sheets
-LEFT join govt_inspection_pallets  ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
-LEFT join pallets p on govt_inspection_pallets.pallet_id =p.id
-LEFT join pallet_sequences ps on p.id=ps.pallet_id
-LEFT JOIN plt_cnt on govt_inspection_pallets.govt_inspection_sheet_id = plt_cnt.govt_inspection_sheet_id
-LEFT JOIN cultivar_groups ON cultivar_groups.id = ps.cultivar_group_id
-LEFT JOIN cultivars ON cultivars.id = ps.cultivar_id
-LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
-LEFT JOIN customer_varieties ON customer_varieties.id = ps.customer_variety_id
-LEFT JOIN marketing_varieties cvv ON cvv.id = customer_varieties.variety_as_customer_variety_id	
-LEFT JOIN marketing_varieties ON marketing_varieties.id = ps.marketing_variety_id
-LEFT JOIN standard_pack_codes ON standard_pack_codes.id = ps.standard_pack_code_id
-LEFT JOIN fruit_size_references ON fruit_size_references.id = ps.fruit_size_reference_id
-LEFT JOIN grades ON grades.id = ps.grade_id
-LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = ps.fruit_actual_counts_for_pack_id
-    WHERE  govt_inspection_sheets.id= $P{subgovt_inspection_sheet_id}
-    AND (  case when  $P{paraminspecstatus} ='passed' then govt_inspection_passed=true 
-                when  $P{paraminspecstatus} ='failed' then govt_inspection_passed=false end )
-group by 
-govt_inspection_pallets.govt_inspection_sheet_id,	
-commodities.code,
-COALESCE(marketing_varieties.marketing_variety_code,marketing_varieties.inspection_variety),
-COALESCE(cvv.marketing_variety_code,marketing_varieties.inspection_variety, marketing_varieties.marketing_variety_code),
-standard_pack_codes.standard_pack_code,
-fruit_size_references.size_reference,
-grades.grade_code,
-cvv.marketing_variety_code,
-fruit_actual_counts_for_packs.actual_count_for_pack,
-p.govt_inspection_passed,
-standard_pack_codes.use_size_ref_for_edi,
-commodities.use_size_ref_for_edi,
-fruit_size_references.edi_out_code
-)
-SELECT
-distinct
-COALESCE(p.each_plt_qty,scrapped_plts.each_plt_qty) as each_plt_qty,
-COALESCE(p.edi_size_count,scrapped_plts.edi_size_count ) as edi_size_count,
-COALESCE(p.count,scrapped_plts.count) as count ,
-COALESCE(p.commodity,scrapped_plts.commodity) as commodity,
-COALESCE(p.marketing_variety,scrapped_plts.marketing_variety) as marketing_variety,
-COALESCE(p.std_pack ,scrapped_plts.std_pack) as std_pack,
-COALESCE(p.size_ref,scrapped_plts.size_ref) as size_ref,
-COALESCE(p.grade,scrapped_plts.grade) as grade,
-COALESCE(p.actual_count,scrapped_plts.actual_count) as actual_count,
-COALESCE(p.carton_quantity,scrapped_plts.carton_quantity) as carton_quantity,
-COALESCE(p.plt_qty,scrapped_plts.scrapped_plt_qty) as plt_qty,
-COALESCE(p.govt_inspection_passed,scrapped_plts.govt_inspection_passed) as  govt_inspection_passed,
-COALESCE(p.variety,scrapped_plts.variety) as variety
-from govt_inspection_sheets
-LEFT JOIN govt_inspection_pallets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
-LEFT JOIN plts p on govt_inspection_sheets.id = p.govt_inspection_sheet_id
-LEFT JOIN scrapped_plts on govt_inspection_sheets.id =scrapped_plts.govt_inspection_sheet_id
-WHERE  govt_inspection_sheets.id= $P{subgovt_inspection_sheet_id}
-AND      (  case when  $P{paraminspecstatus} ='passed' then COALESCE(p.govt_inspection_passed,scrapped_plts.govt_inspection_passed)=true 
-                when  $P{paraminspecstatus} ='failed' then COALESCE(p.govt_inspection_passed,scrapped_plts.govt_inspection_passed)=false end )
-order by commodity, variety,std_pack, grade, edi_size_count]]>
+SELECT DISTINCT
+    COALESCE(p.each_plt_qty, scrapped_plts.each_plt_qty) AS each_plt_qty,
+    COALESCE(p.edi_size_count, scrapped_plts.edi_size_count) AS edi_size_count,
+    COALESCE(p.count, scrapped_plts.count) AS count,
+    COALESCE(p.commodity, scrapped_plts.commodity) AS commodity,
+    COALESCE(p.marketing_variety, scrapped_plts.marketing_variety) AS marketing_variety,
+    COALESCE(p.std_pack, scrapped_plts.std_pack) AS std_pack,
+    COALESCE(p.size_ref, scrapped_plts.size_ref) AS size_ref,
+    COALESCE(p.grade, scrapped_plts.grade) AS grade,
+    COALESCE(p.actual_count, scrapped_plts.actual_count) AS actual_count,
+    COALESCE(p.carton_quantity, scrapped_plts.carton_quantity) AS carton_quantity,
+    COALESCE(p.plt_qty, scrapped_plts.scrapped_plt_qty) AS plt_qty,
+    COALESCE(p.govt_inspection_passed, scrapped_plts.govt_inspection_passed) AS govt_inspection_passed,
+    COALESCE(p.variety, scrapped_plts.variety) AS variety
+FROM
+    govt_inspection_sheets
+    LEFT JOIN govt_inspection_pallets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+    LEFT JOIN plts p ON govt_inspection_sheets.id = p.govt_inspection_sheet_id
+    LEFT JOIN scrapped_plts ON govt_inspection_sheets.id = scrapped_plts.govt_inspection_sheet_id
+WHERE
+    govt_inspection_sheets.id = $P{subgovt_inspection_sheet_id}
+    AND (
+        CASE WHEN $P{paraminspecstatus} = 'passed' THEN
+            COALESCE(p.govt_inspection_passed, scrapped_plts.govt_inspection_passed) = TRUE
+        WHEN $P{paraminspecstatus} = 'failed' THEN
+            COALESCE(p.govt_inspection_passed, scrapped_plts.govt_inspection_passed) = FALSE
+        END)
+ORDER BY
+    commodity,
+    variety,
+    std_pack,
+    grade,
+    edi_size_count]]>
 	</queryString>
 	<field name="each_plt_qty" class="java.lang.Long">
 		<property name="com.jaspersoft.studio.field.name" value="each_plt_qty"/>
@@ -246,7 +255,7 @@ order by commodity, variety,std_pack, grade, edi_size_count]]>
 	<title>
 		<band height="30" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="6" width="165" height="20" uuid="5540cf67-45c7-4210-b9a0-39498f2ccbeb">
+				<reportElement x="0" y="6" width="166" height="20" uuid="5540cf67-45c7-4210-b9a0-39498f2ccbeb">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement>

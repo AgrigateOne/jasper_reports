@@ -873,8 +873,9 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
 			</subreport>
 			<textField evaluationTime="Report">
-				<reportElement x="673" y="86" width="82" height="13" uuid="e44d19c0-656f-4e54-aa9e-8767d601d467">
+				<reportElement x="673" y="86" width="85" height="13" uuid="e44d19c0-656f-4e54-aa9e-8767d601d467">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$V{fail_pallet_id1}]]></textFieldExpression>

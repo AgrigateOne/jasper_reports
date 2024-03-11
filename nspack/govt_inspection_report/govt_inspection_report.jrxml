@@ -803,9 +803,10 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[$V{pallet_number1}]]></textFieldExpression>
 			</textField>
 			<subreport>
-				<reportElement x="3" y="56" width="123" height="95" uuid="f8260582-5e73-4ef0-9981-e7d4f1be8337">
+				<reportElement x="3" y="56" width="125" height="95" uuid="f8260582-5e73-4ef0-9981-e7d4f1be8337">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<subreportParameter name="party_role_id">
 					<subreportParameterExpression><![CDATA[$F{implementation_owner_party_role_id}]]></subreportParameterExpression>
@@ -817,7 +818,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement x="215" y="56" width="146" height="95" uuid="f1e0e8c6-53da-44c0-ac5c-fce6141644f3">
+				<reportElement x="215" y="56" width="145" height="95" uuid="f1e0e8c6-53da-44c0-ac5c-fce6141644f3">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
