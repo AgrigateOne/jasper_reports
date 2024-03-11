@@ -6,7 +6,7 @@
 	<property name="ireport.y" value="46"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/first_intake"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="158"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="831"/>
@@ -873,7 +873,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
 			</subreport>
 			<textField evaluationTime="Report">
-				<reportElement x="673" y="86" width="85" height="13" uuid="e44d19c0-656f-4e54-aa9e-8767d601d467">
+				<reportElement x="673" y="86" width="87" height="13" uuid="e44d19c0-656f-4e54-aa9e-8767d601d467">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -910,8 +910,9 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<text><![CDATA[Is Reinspection:]]></text>
 			</staticText>
 			<textField evaluationTime="Report">
-				<reportElement x="673" y="112" width="82" height="13" uuid="cdcfc196-1900-42c9-84b9-78b699d64692">
+				<reportElement x="673" y="112" width="83" height="13" uuid="cdcfc196-1900-42c9-84b9-78b699d64692">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<printWhenExpression><![CDATA[$F{reinspection_result} == "Yes"]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Left"/>
