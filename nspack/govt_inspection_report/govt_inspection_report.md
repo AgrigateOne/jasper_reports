@@ -13,27 +13,27 @@ Finished goods | Inspection | Govt Inspection sheets
 
 
 ## Report header
-| Label | Description | Source |
-| ----- | ----------- | ------ |
-|Implementation owner address| Info related to the implemenation owner | `party role address.jasper`  using delivery address of implementation owner |
-|Billing| Info related to the billing party | `party role address.jasper`  using delivery address of the inspection billing party of the govt inspection sheet|
-|Exporter|Info related to the exporter  |`party role address.jasper` using delivery address of the exporter party of the govt inspection sheet  |
-|Waybill|The document number  |`govt_inspection_sheets.consignment_note_number` ,appended with an F if it is a failed inspection  |
-|Inspector name|The govt inspector's name  |person `first and last name`  of the inspector party role |
-|Inspection date| Date of inspection | `govt_inspection_sheets.created_at` |
-|Inspection point|Point of inspection  | the first of: `govt_inspection_sheets.inspection_point` OR  `pallets.edi_in_inspection_point` that has a value |
-|Intake date|Date when this consignment was inspected  | `ovt_inspection_sheets.created_at` |
-|Truck No|Truck number  |empty  |
-|Order| Order number |`pallet_sequences.marketing_order_number`  |
-|Rejections|Number of failed pallets  |Number of failed pallets if it is a failed inspection  |
-|Is reinspection |Value denotating if it is a reinspection|Yes if the govt inspection sheet is marked as reinspected|
-|Remarks| Remarks |empty  |
-|Depot|Depot  |empty |
-|Total| Total number of pallets on the govt inspection sheet |Total number of pallets on the govt inspection sheet  |
-|Total cartons|Total number of cartons on the govt inspection sheet  | sum of all cartons on pallets on the sheet |
-|GG|Global Gap code  | `pucs.gap_code` |
-|Gap Certification|Gap Certification status|'global gap certified' if govt_inspection_sheets.created_at is between pucs.gap_code_valid_from AND pucs.gap_code_valid_until|
-|UPN| UPN  |`govt_inspection_sheets.upn`  |
+| Label | Description | Source                                                                                                                        |
+| ----- | ----------- |-------------------------------------------------------------------------------------------------------------------------------|
+|Implementation owner address| Info related to the implemenation owner | `party role address.jasper`  using delivery address of implementation owner                                                   |
+|Billing| Info related to the billing party | `party role address.jasper`  using delivery address of the inspection billing party of the govt inspection sheet              |
+|Exporter|Info related to the exporter  | `party role address.jasper` using delivery address of the exporter party of the govt inspection sheet                         |
+|Waybill|The document number  | `govt_inspection_sheets.consignment_note_number` ,appended with an F if it is a failed inspection                             |
+|Inspector name|The govt inspector's name  | person `first and last name`  of the inspector party role                                                                     |
+|Inspection date| Date of inspection | `govt_inspection_sheets.created_at`                                                                                           |
+|Inspection point|Point of inspection  | the first of: `govt_inspection_sheets.inspection_point` OR  `pallets.edi_in_inspection_point` that has a value                |
+|Intake date|Date when this consignment was inspected  | `ovt_inspection_sheets.created_at`                                                                                            |
+|Truck No|Truck number  | empty                                                                                                                         |
+|Order| Order number | `pallet_sequences.marketing_order_number`                                                                                     |
+|Rejections|Number of failed pallets  | Number of failed pallets if it is a failed inspection                                                                         |
+|Is reinspection |Value denotating if it is a reinspection| Yes if the govt inspection sheet is marked as reinspected                                                                     |
+|Remarks| Remarks | empty                                                                                                                         |
+|Depot|Depot  | empty                                                                                                                         |
+|Total| Total number of pallets on the govt inspection sheet | Total number of pallets on the govt inspection sheet                                                                          |
+|Total cartons|Total number of cartons on the govt inspection sheet  | sum of all cartons on pallets on the sheet                                                                                    |
+|GG|Global Gap code  | `pucs.gap_code` The gap code will be displayed if the govt sheet:created at date is between the pucs.gap_code_valid_from and gap_code_valid_until                                                                                                              |
+|Gap Certification|Gap Certification status| 'global gap certified' if govt_inspection_sheets.created_at is between pucs.gap_code_valid_from AND pucs.gap_code_valid_until |
+|UPN| UPN  | `govt_inspection_sheets.upn`                                                                                                  |
 ## Report Detail
 | Label | Description | Source |
 | ----- | ----------- | ------ |

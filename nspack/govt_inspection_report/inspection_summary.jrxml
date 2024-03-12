@@ -416,8 +416,9 @@ ORDER BY
 				</reportElement>
 			</line>
 			<textField pattern="#0.##" isBlankWhenNull="true">
-				<reportElement x="255" y="1" width="43" height="14" uuid="473d10d1-a46b-4106-ad00-9d9b5077481e">
+				<reportElement x="254" y="1" width="44" height="14" uuid="473d10d1-a46b-4106-ad00-9d9b5077481e">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right">
 					<font size="8"/>
