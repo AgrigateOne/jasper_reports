@@ -24,23 +24,42 @@
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[WITH ggn AS (
-    Select distinct govt_inspection_pallets.govt_inspection_sheet_id
-	,p.id
-   ,CASE WHEN COALESCE(pucs.gap_code,pcs.gap_code) IS NOT NULL AND govt_inspection_sheets.created_at
-	            BETWEEN COALESCE(pucs.gap_code_valid_from,pcs.gap_code_valid_from) AND COALESCE(pucs.gap_code_valid_until,pcs.gap_code_valid_until) THEN
-      COALESCE(pucs.gap_code,pcs.gap_code)
-    ELSE
-      NULL
-    END gap_code
-	from govt_inspection_sheets
-    left join govt_inspection_pallets  ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
-    left join pallets p on govt_inspection_pallets.pallet_id =p.id
-    left join pallet_sequences ps on ps.pallet_id=p.id
-	left join pallet_sequences sps on ps.scrapped_from_pallet_id=p.id
-    left join pucs ON pucs.id = ps.puc_id
-	left join pucs pcs on pcs.id = sps.puc_id
-  WHERE
-    govt_inspection_sheets.id = $P{govt_inspection_sheet_id}
+( SELECT DISTINCT
+        govt_inspection_pallets.govt_inspection_sheet_id,
+        p.id,
+        CASE WHEN pucs.gap_code IS NOT NULL
+            AND govt_inspection_sheets.created_at BETWEEN pucs.gap_code_valid_from AND pucs.gap_code_valid_until THEN
+            pucs.gap_code
+        ELSE
+            NULL
+        END gap_code
+    FROM
+        govt_inspection_sheets
+    LEFT JOIN govt_inspection_pallets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+    LEFT JOIN pallets p ON govt_inspection_pallets.pallet_id = p.id
+    LEFT JOIN pallet_sequences ps ON ps.pallet_id = p.id
+    LEFT JOIN pucs ON pucs.id = ps.puc_id
+WHERE
+    govt_inspection_sheets.id = $P{govt_inspection_sheet_id})
+UNION
+( SELECT DISTINCT
+        govt_inspection_pallets.govt_inspection_sheet_id,
+        p.id,
+        CASE WHEN pucs.gap_code IS NOT NULL
+            AND govt_inspection_sheets.created_at BETWEEN pucs.gap_code_valid_from AND pucs.gap_code_valid_until THEN
+            pucs.gap_code
+        ELSE
+            NULL
+        END gap_code
+    FROM
+        govt_inspection_sheets
+    LEFT JOIN govt_inspection_pallets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+    LEFT JOIN pallets p ON govt_inspection_pallets.pallet_id = p.id
+    LEFT JOIN pallet_sequences ps ON ps.scrapped_from_pallet_id = p.id
+    LEFT JOIN pucs ON pucs.id = ps.puc_id
+WHERE
+    govt_inspection_sheets.id = $P{govt_inspection_sheet_id})
+
 ),
 ggn_validation AS (
   SELECT
