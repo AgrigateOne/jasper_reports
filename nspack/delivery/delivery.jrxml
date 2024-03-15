@@ -489,7 +489,7 @@ group by     a.id,j.rmt_delivery_id,
 				<textFieldExpression><![CDATA[$F{gap}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="1" y="293" width="290" height="20" uuid="0b0f78df-37b6-41cb-ab18-edd2b1a7c1e3">
+				<reportElement x="20" y="292" width="231" height="20" uuid="0b0f78df-37b6-41cb-ab18-edd2b1a7c1e3">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -498,7 +498,7 @@ group by     a.id,j.rmt_delivery_id,
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Global GAP Certified]]></text>
+				<text><![CDATA[GlobalG.A.P Certified]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement x="128" y="147" width="162" height="20" uuid="b659fbad-3def-4ace-8be8-312267a05fc3"/>
