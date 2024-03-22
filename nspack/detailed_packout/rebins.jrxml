@@ -59,7 +59,7 @@ group by rmt_classes.rmt_class_code,rmt_classes.id,pr.cultivar_id ,pr.farm_id]]>
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
-				<reportElement x="160" y="2" width="48" height="15" uuid="d88ef14d-4b61-4dfe-a569-48d6da5c48c1">
+				<reportElement x="160" y="2" width="47" height="15" uuid="d88ef14d-4b61-4dfe-a569-48d6da5c48c1">
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
