@@ -498,7 +498,7 @@ group by     a.id,j.rmt_delivery_id,
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[GlobalG.A.P Certified]]></text>
+				<text><![CDATA[GLOBALG.A.P Certified]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement x="128" y="147" width="162" height="20" uuid="b659fbad-3def-4ace-8be8-312267a05fc3"/>
