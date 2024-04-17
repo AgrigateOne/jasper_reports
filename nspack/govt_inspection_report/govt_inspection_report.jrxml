@@ -1284,7 +1284,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<reportElement x="349" y="0" width="34" height="11" uuid="7277c671-32e6-45ae-87a8-47d2efbf9f57">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center">
+				<textElement textAlignment="Left">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{phc}]]></textFieldExpression>
