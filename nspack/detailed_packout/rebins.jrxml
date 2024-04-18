@@ -67,7 +67,7 @@ group by rmt_classes.rmt_class_code,rmt_classes.id,pr.cultivar_id ,pr.farm_id]]>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10"/>
+					<font size="9"/>
 				</textElement>
 				<text><![CDATA[Weight ]]></text>
 			</staticText>
@@ -79,7 +79,7 @@ group by rmt_classes.rmt_class_code,rmt_classes.id,pr.cultivar_id ,pr.farm_id]]>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10"/>
+					<font size="9"/>
 				</textElement>
 				<text><![CDATA[Rmt Class]]></text>
 			</staticText>
@@ -91,7 +91,7 @@ group by rmt_classes.rmt_class_code,rmt_classes.id,pr.cultivar_id ,pr.farm_id]]>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10"/>
+					<font size="9"/>
 				</textElement>
 				<text><![CDATA[Rmt Class Code]]></text>
 			</staticText>
@@ -137,7 +137,7 @@ group by rmt_classes.rmt_class_code,rmt_classes.id,pr.cultivar_id ,pr.farm_id]]>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right">
-					<font size="9"/>
+					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{total_rebin_weight}]]></textFieldExpression>
 			</textField>
