@@ -54,3 +54,15 @@ The report can be generated as:
 |  Weight  |Total packed weight |if parameter 'use_packed_weight' is true then `sum(pallet_sequences.nett_weight)` else `sum(standard_product_weights.nett_weight * pallet_sequences.carton_quantity)`|
 |  Total cartons  |Total number of packed cartons |`sum(pallet_sequences.carton_quantity)`  |
 |  Percentage  |Percentage of packed weight to tipped weight |if parameter 'use_packed_weight' then `sum(pallet_sequences.nett_weight)/sum(rmt_bins.nett_weight)`  else `sum(standard_product_weights.nett_weight * pallet_sequences.carton_quantity)/sum(rmt_bins.nett_weight)` |
+
+Weight:
+if parameter 'use_packed_weight' is true then `sum(pallet_sequences.nett_weight)` 
+else `sum(standard_product_weights.nett_weight * pallet_sequences.carton_quantity)`
+
+use_packed_weight?nett_weight:derived_nett_weight
+It is not a bug. 
+Weight: Packed weight( pallet sequences' nett weight)
+Percentage: Percentage of packed weight ex tipped weight
+If you check on that run menu:lists | pallet sequences you will see that pallets for which the weight is null have no nett weight
+Under the reports you can choose to see the 'use derived weights' version of the report. And again only records for which the master files weights were set will have values 
+
