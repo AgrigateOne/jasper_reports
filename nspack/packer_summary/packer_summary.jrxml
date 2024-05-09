@@ -275,7 +275,7 @@ sum(CASE WHEN incentive < 0 THEN
 				<textElement textAlignment="Center">
 					<font size="24"/>
 				</textElement>
-				<text><![CDATA[Unifrutti]]></text>
+				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="188" y="31" width="388" height="20" uuid="2b26c7e0-dbf4-4b77-9af0-1d716e510cd0"/>
