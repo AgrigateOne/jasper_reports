@@ -1006,7 +1006,7 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{container_code}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="112" y="13" width="323" height="13" uuid="f2482e2a-5b68-4d3f-94e3-675a0b89e72d">
+				<reportElement x="220" y="13" width="215" height="13" uuid="f2482e2a-5b68-4d3f-94e3-675a0b89e72d">
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center">
@@ -1068,7 +1068,10 @@ where loads.id = $P{load_id}]]>
 				<subreportExpression><![CDATA["../../shared/party_role_address.jasper"]]></subreportExpression>
 			</subreport>
 			<staticText>
-				<reportElement x="112" y="13" width="323" height="13" uuid="359feca1-7622-4585-8aca-4105271d7040">
+				<reportElement x="210" y="15" width="220" height="12" uuid="359feca1-7622-4585-8aca-4105271d7040">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<printWhenExpression><![CDATA[$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center">
@@ -1077,7 +1080,8 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[Picklist]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="174" y="0" width="272" height="12" uuid="6666bb96-8e1a-432e-a66f-ff1325ab3d89">
+				<reportElement x="200" y="4" width="272" height="12" uuid="6666bb96-8e1a-432e-a66f-ff1325ab3d89">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center">
