@@ -11,7 +11,7 @@
 	<queryString language="SQL">
 		<![CDATA[SELECT 
  fn_party_role_name(loads.exporter_party_role_id) AS exporter,
-,fn_party_role_name((SELECT pr.id
+fn_party_role_name((SELECT pr.id
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1)) AS implementation_owner_name
 ,(SELECT pr.id
