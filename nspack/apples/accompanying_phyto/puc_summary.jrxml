@@ -31,7 +31,7 @@ ELSE ''::text
 END,edi_in_consignment_note_number)
 )as d
 group by intake , pucs
-order by pucs desc]]>
+order by intake ASC ,pucs ASC]]>
 	</queryString>
 	<field name="intake" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="intake"/>
@@ -159,19 +159,23 @@ order by pucs desc]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{intake}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" pattern="#,##0.00" isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement x="270" y="0" width="42" height="30" uuid="1b261a61-e9a7-46af-9292-05c3d9da2393">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
 				<box>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<font size="8"/>
+					<paragraph firstLineIndent="0" leftIndent="0" rightIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ctns}]]></textFieldExpression>
 			</textField>
@@ -198,17 +202,19 @@ order by pucs desc]]>
 				<textFieldExpression><![CDATA[$F{pucs}]]></textFieldExpression>
 			</textField>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement x="313" y="0" width="34" height="30" uuid="d9eb339d-295f-4a3d-960d-f5e244eb58e7">
+				<reportElement x="313" y="0" width="35" height="30" uuid="d9eb339d-295f-4a3d-960d-f5e244eb58e7">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
 				<box>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<font size="8"/>
+					<paragraph rightIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{plts}]]></textFieldExpression>
 			</textField>
@@ -221,13 +227,15 @@ order by pucs desc]]>
 				<reportElement x="312" y="0" width="37" height="12" uuid="b4fffe9c-1c12-4cbe-93d3-26f60c2053e0">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
 				<box>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="9"/>
+					<paragraph rightIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{total_plts}]]></textFieldExpression>
 			</textField>
@@ -235,13 +243,15 @@ order by pucs desc]]>
 				<reportElement x="270" y="0" width="42" height="12" uuid="9c309fab-43b2-4af7-b83d-53e18b7f0671">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
 				</reportElement>
 				<box>
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="9"/>
+					<paragraph rightIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{total_ctns}]]></textFieldExpression>
 			</textField>

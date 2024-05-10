@@ -64,7 +64,7 @@ WHERE party_roles.id = $P{party_role_id}]]>
 				<textFieldExpression><![CDATA[$F{tel_no_1}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="29" y="30" width="70" height="13" uuid="e158145e-6dd0-4de7-b25a-13bd851fa6e3">
+				<reportElement x="29" y="30" width="71" height="13" uuid="e158145e-6dd0-4de7-b25a-13bd851fa6e3">
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>

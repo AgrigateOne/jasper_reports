@@ -66,7 +66,7 @@
                             FROM
                                 public.party_roles pr
                             WHERE
-                                pr.role_id = (
+                                pr.role_id =(
                                     SELECT
                                         id
                                     FROM
@@ -75,26 +75,27 @@
                                         name = 'PACKHOUSE_CONTACT_PERSON')
                                 LIMIT 1))
                         SELECT DISTINCT
+                            govt_inspection_sheets.id AS govt_inspection_sheet_id,
                             commodities.commodity,
                             p.load_id,
                             '00' || CAST(p.load_id AS text) AS document_number,
-                                                      (
-            SELECT
-               string_agg(c.description, '; ') 
-            FROM
-                "destination_countries" c
-                JOIN "target_markets_for_countries" t ON "t"."destination_country_id" = "c"."id"
-                join   target_markets on t.target_market_id =target_markets.id 
-                AND target_markets.target_market_name = p.target_market
-                    AND "c"."active") AS countries,
-                            p.exporter,
-                            (
+(
                                 SELECT
-                                    pr.id
+                                    string_agg(c.description, '; ')
                                 FROM
-                                    public.party_roles pr
+                                    "destination_countries" c
+                                    JOIN "target_markets_for_countries" t ON "t"."destination_country_id" = "c"."id"
+                                    JOIN target_markets ON t.target_market_id = target_markets.id
+                                        AND target_markets.id = ps.target_market_id
+                                        AND "c"."active") AS countries,
+                                    fn_party_role_name(loads.exporter_party_role_id) AS exporter,
+(
+                                    SELECT
+                                        pr.id
+                                    FROM
+                                        public.party_roles pr
                                 WHERE
-                                    pr.role_id = (
+                                    pr.role_id =(
                                         SELECT
                                             id
                                         FROM
@@ -102,22 +103,22 @@
                                         WHERE
                                             name = 'IMPLEMENTATION_OWNER')
                                     LIMIT 1) AS implementation_owner_party_role_id,
-                            (
-                                SELECT
-                                    pr.id
-                                FROM
-                                    public.party_roles pr
-                                WHERE
-                                    pr.role_id = (
-                                        SELECT
-                                            id
-                                        FROM
-                                            roles
-                                        WHERE
-                                            name = 'CUSTOMER_CONTACT_PERSON')
-                                    LIMIT 1) AS packhouse_contact_person_party_role_id,
+(
+                                    SELECT
+                                        pr.id
+                                    FROM
+                                        public.party_roles pr
+                                    WHERE
+                                        pr.role_id =(
+                                            SELECT
+                                                id
+                                            FROM
+                                                roles
+                                            WHERE
+                                                name = 'CUSTOMER_CONTACT_PERSON')
+                                        LIMIT 1) AS packhouse_contact_person_party_role_id,
                                 'Daff_Seq_No' AS daff_seq_no,
-                                COALESCE(destination_countries.description,p.final_destination) AS importing_country,
+                                COALESCE(destination_countries.description, dci.city_name) AS importing_country,
                                 packhouse_contact.first_name phc_first_name,
                                 packhouse_contact.surname AS phc_surname,
                                 packhouse_contact.contact_method_code AS phc_contact,
@@ -129,16 +130,18 @@
                                 '' AS inspector_code,
                                 '' AS inspector_tel_no_1
                             FROM
-                                vw_pallet_sequence_flat p
+                                pallets p
+                            LEFT JOIN pallet_sequences ps ON ps.pallet_id = p.id
+                            LEFT JOIN loads ON loads.id = p.load_id
                             LEFT JOIN govt_inspection_pallets ON govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
                             LEFT JOIN govt_inspection_sheets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
-							LEFT join destination_cities dci on dci.city_name = p.final_destination
+                            LEFT JOIN destination_cities dci ON dci.id = loads.final_destination_id
                             LEFT JOIN destination_countries ON destination_countries.id = dci.destination_country_id
                             LEFT JOIN inspectors ON inspectors.id = govt_inspection_sheets.inspector_id
                             LEFT JOIN party_roles ON inspectors.inspector_party_role_id = party_roles.id
                             LEFT JOIN parties ON party_roles.party_id = parties.id
                             LEFT JOIN packhouse_contact ON p.load_id = packhouse_contact.load_id
-                            LEFT JOIN depots ON depots.depot_code = p.depot
+                            LEFT JOIN depots ON depots.id = loads.depot_id
                             LEFT JOIN ph ON p.load_id = ph.load_id
                             LEFT JOIN commodities ON commodities.load_id = p.load_id
                         WHERE
@@ -148,8 +151,8 @@
             *
         FROM ( WITH puc_groups AS (
                 SELECT
-                    string_agg(coalesce(p.marketing_puc,p.puc) , ',' ORDER BY p.pallet_sequence_number) pucs,
-                string_agg(coalesce(p.marketing_orchard,p.orchard), ',' ORDER BY p.pallet_sequence_number) blocks,
+                    string_agg(coalesce(p.marketing_puc, p.puc), ',' ORDER BY p.pallet_sequence_number) pucs,
+                string_agg(coalesce(p.marketing_orchard, p.orchard), ',' ORDER BY p.pallet_sequence_number) blocks,
                 p.pallet_number AS pallet_id,
                 sum(p.carton_quantity) carton_quantity
             FROM
@@ -160,36 +163,46 @@
                 pallet_number
 )
             SELECT
+                govt_inspection_sheets.id AS govt_inspection_sheet_id,
                 row_number() OVER (PARTITION BY p.pallet_number ORDER BY p.pallet_number DESC) AS seq_no,
-                dense_rank() OVER (ORDER BY p.pallet_number ASC) AS row_num,
-                row_number() OVER (PARTITION BY p.puc ORDER BY p.pallet_number DESC) AS puc_seq,
+                dense_rank() OVER (ORDER BY govt_inspection_sheets.id ASC) AS row_num,
+                row_number() OVER (PARTITION BY pucs.puc_code ORDER BY p.pallet_number DESC) AS puc_seq,
+                headers.*,
                 puc_groups.pucs,
                 puc_groups.blocks,
                 puc_groups.carton_quantity,
                 p.pallet_number AS pallet_id,
-                p.marketing_variety,
-                COALESCE(CAST(p.size_ref AS text), CAST(p.actual_count AS text)) AS count,
-                p.pick_ref AS sell_by_code,
-                COALESCE(p.inspection_variety, p.customer_variety, p.marketing_variety) AS variety,
-                headers.*,
+                marketing_varieties.marketing_variety_code AS marketing_variety,
+                COALESCE(CAST(fruit_size_references.size_reference AS text), CAST(fruit_actual_counts_for_packs.actual_count_for_pack AS text)) AS count,
+                ps.pick_ref AS sell_by_code,
+                COALESCE(marketing_varieties.inspection_variety, cvv.marketing_variety_code, marketing_varieties.marketing_variety_code) AS variety,
                 '' AS puc,
                 '' AS inspector_code,
                 '' AS inspector_tel_no_1,
                 loads.exporter_party_role_id,
                 orders.internal_order_number
             FROM
-                vw_pallet_sequence_flat p
-                JOIN puc_groups ON puc_groups.pallet_id = p.pallet_number
-                JOIN headers ON p.load_id = headers.load_id
-                JOIN loads ON p.load_id = loads.id
-                left join orders_loads on   orders_loads.load_id =loads.id
-                left join orders on orders_loads.order_id =orders.id
-            WHERE
-                p.load_id = $P{load_id}) AS d
+                pallets p
+            LEFT JOIN govt_inspection_pallets ON govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
+            LEFT JOIN govt_inspection_sheets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
+            JOIN pallet_sequences ps ON ps.pallet_id = p.id
+            JOIN marketing_varieties ON marketing_varieties.id = ps.marketing_variety_id
+            LEFT JOIN fruit_size_references ON fruit_size_references.id = ps.fruit_size_reference_id
+            LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = ps.fruit_actual_counts_for_pack_id
+            LEFT JOIN customer_varieties ON customer_varieties.id = ps.customer_variety_id
+            LEFT JOIN marketing_varieties cvv ON cvv.id = customer_varieties.variety_as_customer_variety_id
+            JOIN pucs ON pucs.id = ps.puc_id
+            JOIN puc_groups ON puc_groups.pallet_id = p.pallet_number
+            JOIN headers ON p.load_id = headers.load_id
+            JOIN loads ON p.load_id = loads.id
+            LEFT JOIN orders_loads ON orders_loads.load_id = loads.id
+            LEFT JOIN orders ON orders_loads.order_id = orders.id
+        WHERE
+            p.load_id = $P{load_id}) AS d
     WHERE
         seq_no = 1
     ORDER BY
-        row_num ASC]]>
+        row_num ASC,puc_seq ASC]]>
 	</queryString>
 	<field name="seq_no" class="java.lang.Long">
 		<property name="com.jaspersoft.studio.field.name" value="seq_no"/>
@@ -1004,6 +1017,7 @@ Address:]]></text>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 				</reportElement>
 				<box>
 					<leftPen lineWidth="1.0"/>
@@ -1012,8 +1026,9 @@ Address:]]></text>
 				</box>
 				<textElement>
 					<font size="9" isBold="false" isItalic="false"/>
+					<paragraph firstLineIndent="2"/>
 				</textElement>
-				<text><![CDATA[  Contact Details & No:]]></text>
+				<text><![CDATA[Contact Details & No:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
 				<reportElement x="303" y="207" width="90" height="22" uuid="d8764d3d-bdd5-4f00-906f-2a09220093c8">
@@ -1066,7 +1081,7 @@ Address:]]></text>
 				<textFieldExpression><![CDATA[" "+$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="10" y="5" width="415" height="80" uuid="3fdacba7-4038-4963-b540-a9978e8b5a30">
+				<reportElement x="10" y="5" width="429" height="80" uuid="3fdacba7-4038-4963-b540-a9978e8b5a30">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -1385,7 +1400,7 @@ Address:]]></text>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{row_num}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
