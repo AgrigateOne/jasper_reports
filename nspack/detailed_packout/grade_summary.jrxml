@@ -228,7 +228,7 @@ rmt_class_code
 				<textFieldExpression><![CDATA[$V{weight_percentage}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="false">
-				<reportElement x="80" y="1" width="60" height="11" uuid="473d10d1-a46b-4106-ad00-9d9b5077481e">
+				<reportElement x="70" y="1" width="70" height="11" uuid="473d10d1-a46b-4106-ad00-9d9b5077481e">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>

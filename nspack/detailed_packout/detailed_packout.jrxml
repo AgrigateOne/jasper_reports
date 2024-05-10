@@ -494,12 +494,12 @@ grade_code,std_size,inventory_code]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{ctn_qty_1}]]></textFieldExpression>
 				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="354" y="0" width="53" height="13" uuid="54d6ab53-f21b-41e1-91fa-bb70e3282554">
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement x="354" y="0" width="50" height="13" uuid="54d6ab53-f21b-41e1-91fa-bb70e3282554">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					</reportElement>
 					<box>
 						<topPen lineWidth="1.0"/>
