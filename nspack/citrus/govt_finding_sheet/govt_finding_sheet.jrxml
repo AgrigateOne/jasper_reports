@@ -16,7 +16,7 @@
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack_local"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
@@ -33,7 +33,9 @@
     cultivars.cultivar_name                                                 AS cultivar,
     target_market_groups.target_market_group_name                           AS packed_tm_group,
    fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference,
-   fruit_actual_counts_for_packs.actual_count_for_pack)size_ref,
+   fruit_actual_counts_for_packs.actual_count_for_pack)size,
+   fruit_actual_counts_for_packs.actual_count_for_pack as actual_count,
+   COALESCE(fruit_size_references.edi_out_code, fruit_size_references.size_reference) as size_ref,
     p.phc,
     grades.grade_code                                                       AS grade,
     fn_party_role_name(govt_inspection_sheets.exporter_party_role_id) AS exporter,
@@ -104,6 +106,15 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 	<field name="size_ref" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="size_ref"/>
 		<property name="com.jaspersoft.studio.field.label" value="size_ref"/>
+	</field>
+	<field name="actual_count" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="actual_count"/>
+		<property name="com.jaspersoft.studio.field.label" value="actual_count"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="fruit_actual_counts_for_packs"/>
+	</field>
+	<field name="size" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="size"/>
+		<property name="com.jaspersoft.studio.field.label" value="size"/>
 	</field>
 	<field name="phc" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="phc"/>
@@ -1366,19 +1377,6 @@ Country /Target Market]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{packed_tm_group}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement mode="Opaque" x="298" y="0" width="22" height="26" uuid="0aea8e20-04ee-469f-bea3-6b1f0ad00693">
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<box>
-					<pen lineWidth="1.0"/>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="0.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<text><![CDATA[]]></text>
-			</staticText>
 			<textField>
 				<reportElement x="298" y="27" width="22" height="26" uuid="b7dbf5f7-a9d6-4def-8e33-3a5c170cb8fd">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -1391,7 +1389,7 @@ Country /Target Market]]></text>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{size_ref}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{actual_count}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="320" y="0" width="20" height="53" uuid="0a7d713a-835c-4f14-b23f-52d4f3803ce3">
@@ -1465,6 +1463,22 @@ Country /Target Market]]></text>
 				</box>
 				<text><![CDATA[]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="298" y="0" width="22" height="26" uuid="b0eefe26-8446-44d5-bd0c-092fd69f2337">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{size_ref}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<columnFooter>
