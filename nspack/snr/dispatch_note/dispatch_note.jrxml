@@ -111,7 +111,7 @@ loads.edi_file_name as file_name,
 pod_port.port_code AS port_name,
 pol_port.port_code AS depart_port_name,
 loads.customer_party_role_id,
-coalesce(load_containers.internal_container_code,'') || coalesce(cargo_temperatures.temperature_code ,'')  as cargo_temp_setting,
+coalesce(load_containers.internal_container_code,'') ||',' ||coalesce(cargo_temperatures.temperature_code ,'')  as cargo_temp_setting,
 loads.exporter_party_role_id,pcs.pucs,coalesce(cargo_temperatures.temperature_code ,'')cargo_temp,coalesce(multi_load_id,loads.id )multi_load_id
 FROM loads
 join 
