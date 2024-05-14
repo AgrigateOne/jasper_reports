@@ -557,7 +557,7 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[Receive Depot:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="700" y="170" width="99" height="11" uuid="d118e85e-1bd9-4912-b064-f197c7bbf230">
+				<reportElement x="730" y="194" width="99" height="11" uuid="d118e85e-1bd9-4912-b064-f197c7bbf230">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="pixel"/>
@@ -1024,9 +1024,10 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[NS Pack]]></text>
 			</staticText>
 			<subreport>
-				<reportElement x="5" y="31" width="100" height="95" uuid="260d3991-0655-4307-b6ee-97722454fc83">
+				<reportElement x="5" y="30" width="100" height="95" uuid="260d3991-0655-4307-b6ee-97722454fc83">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<subreportParameter name="party_role_id">
 					<subreportParameterExpression><![CDATA[$F{implementation_owner_party_role_id}]]></subreportParameterExpression>
@@ -1052,11 +1053,12 @@ where loads.id = $P{load_id}]]>
 				</jr:barbecue>
 			</componentElement>
 			<subreport>
-				<reportElement x="360" y="30" width="120" height="95" uuid="8aa248d9-044f-4bff-b07f-035007ce5912">
+				<reportElement x="380" y="30" width="120" height="95" uuid="8aa248d9-044f-4bff-b07f-035007ce5912">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<subreportParameter name="party_role_id">
 					<subreportParameterExpression><![CDATA[$F{customer_party_role_id}]]></subreportParameterExpression>

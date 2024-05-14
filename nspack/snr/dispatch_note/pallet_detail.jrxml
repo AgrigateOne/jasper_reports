@@ -740,7 +740,7 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 				<textFieldExpression><![CDATA[$V{plt_qty_1}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="100" y="3" width="100" height="13" uuid="e28822d1-3d1c-4e55-95b4-b155a7ee783f">
+				<reportElement x="110" y="3" width="90" height="13" uuid="e28822d1-3d1c-4e55-95b4-b155a7ee783f">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right">
