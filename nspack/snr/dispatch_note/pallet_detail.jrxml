@@ -1,0 +1,784 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pallet_detail" language="groovy" pageWidth="802" pageHeight="555" orientation="Landscape" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="57a0c595-5448-465f-8162-0e6517403bd3">
+	<property name="ireport.zoom" value="2.253944402704733"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="ireport.jasperserver.reportUnit" value="/FG/dispatch_consignment"/>
+	<property name="ireport.jasperserver.url" value="http://172.16.16.44:80/jasperserver/services/repository"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
+	<property name="com.jaspersoft.studio.report.description" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="load_id" class="java.lang.Integer"/>
+	<parameter name="scartons_equals_pallets" class="java.lang.Boolean"/>
+	<queryString language="SQL">
+		<![CDATA[WITH plt_qty as  (
+	select   pallets.pallet_number,pallet_sequences.pallet_sequence_number,
+	count(distinct pallets.id) as plt_qty,
+   rank() OVER (PARTITION BY pallets.pallet_number ORDER BY pallet_sequences.pallet_sequence_number) AS rank
+FROM pallets
+JOIN pallet_sequences ON pallet_sequences.pallet_id = pallets.id
+WHERE pallets.load_id = $P{load_id}
+ group by pallets.pallet_number,pallet_sequences.pallet_sequence_number
+)
+select fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack) AS edi_size_count,
+  pallets.pallet_number,
+  sum(pallet_sequences.carton_quantity)carton_quantity,
+  fn_party_role_org_code(pallet_sequences.marketing_org_party_role_id) AS organization_code, -- ? OK?
+  commodities.code AS commodity_code,
+  coalesce(cvv.marketing_variety_code, marketing_varieties.marketing_variety_code) as variety_short_long,
+  grades.grade_code,
+  fruit_size_references.size_reference AS size_count_code,
+   standard_pack_codes.standard_pack_code AS old_pack_code,
+  marks.mark_code AS brand_code,
+  pallet_sequences.pick_ref AS pick_reference,
+  pallet_sequences.pick_ref AS encrypt_pick_ref,
+  inventory_codes.inventory_code,
+  target_market_groups.target_market_group_name AS  target_market_code,
+    plt_qty.plt_qty,
+       rank() OVER (PARTITION BY pallets.pallet_number ORDER BY pallet_sequences.pallet_sequence_number) AS rank,
+     coalesce(marketingpuc.puc_code ,pucs.puc_code) AS puc,
+  cargo_temperatures.temperature_code AS temp_tail,
+  pallet_sequences.product_chars AS pt_product_characteristics,
+  fruit_actual_counts_for_packs.actual_count_for_pack AS actual_size_count_code,
+  sum(pallet_sequences.carton_quantity) AS ctn_qty,
+  pallet_sequences.sell_by_code,
+  pallet_bases.pallet_base_code AS edi_out_pallet_base,
+  organizations.long_description AS org_long,
+  pallets.phc AS line_phc,
+ sum( pallets.nett_weight)nett_weight
+,pallets.gross_weight
+,(select sum(gross_weight) from pallets p where p.load_id=pallets.load_id) load_gross_weight
+,sum(pallet_sequences.nett_weight) as seq_nett_weight,
+pallet_sequences.phyto_data
+,floor(fn_calc_age_days(max(pallets.id), COALESCE(pallets.govt_reinspection_at, pallets.govt_first_inspection_at), COALESCE(pallets.shipped_at, pallets.scrapped_at))) AS inspection_age
+,STRING_AGG(DISTINCT pallet_sequences.pick_ref::TEXT,'; ') AS pick_references
+FROM pallets
+JOIN pallet_sequences ON pallet_sequences.pallet_id = pallets.id
+LEFT JOIN plt_qty on plt_qty.pallet_number = pallets.pallet_number and plt_qty.rank = 1 and plt_qty.pallet_sequence_number = pallet_sequences.pallet_sequence_number
+LEFT JOIN cultivar_groups ON cultivar_groups.id = pallet_sequences.cultivar_group_id
+LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
+JOIN marketing_varieties ON marketing_varieties.id = pallet_sequences.marketing_variety_id
+LEFT JOIN customer_varieties ON customer_varieties.id = pallet_sequences.customer_variety_id
+LEFT JOIN marketing_varieties cvv ON cvv.id = customer_varieties.variety_as_customer_variety_id
+JOIN marks ON marks.id = pallet_sequences.mark_id
+JOIN target_market_groups ON target_market_groups.id = pallet_sequences.packed_tm_group_id
+JOIN grades ON grades.id = pallet_sequences.grade_id
+JOIN basic_pack_codes ON basic_pack_codes.id = pallet_sequences.basic_pack_code_id
+ LEFT JOIN standard_pack_codes ON standard_pack_codes.id = pallet_sequences.standard_pack_code_id
+LEFT JOIN fruit_size_references ON fruit_size_references.id = pallet_sequences.fruit_size_reference_id
+LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = pallet_sequences.fruit_actual_counts_for_pack_id
+LEFT JOIN party_roles ON party_roles.id = pallet_sequences.marketing_org_party_role_id
+LEFT JOIN organizations ON organizations.party_id = party_roles.party_id
+LEFT JOIN inventory_codes ON inventory_codes.id = pallet_sequences.inventory_code_id
+left JOIN pucs ON pucs.id = pallet_sequences.puc_id
+left JOIN pucs marketingpuc ON marketingpuc.id = pallet_sequences.marketing_puc_id
+LEFT JOIN loads ON loads.id = pallets.load_id
+LEFT JOIN load_vehicles ON load_vehicles.id = loads.load_vehicle_id
+LEFT JOIN load_containers ON load_containers.id = load_vehicles.load_container_id
+LEFT JOIN cargo_temperatures ON cargo_temperatures.id = load_containers.cargo_temperature_id
+LEFT JOIN pallet_formats ON pallet_formats.id = pallets.pallet_format_id
+LEFT JOIN pallet_bases ON pallet_bases.id = pallet_formats.pallet_base_id
+ WHERE pallets.load_id = $P{load_id}
+group by pallets.pallet_number,pallets.load_id,
+  fn_party_role_org_code(pallet_sequences.marketing_org_party_role_id) , -- ? OK?
+  commodities.code ,
+  coalesce(cvv.marketing_variety_code, marketing_varieties.marketing_variety_code) ,
+  grades.grade_code,
+  fruit_size_references.size_reference,
+   standard_pack_codes.standard_pack_code,
+  marks.mark_code ,
+  pallet_sequences.pick_ref,
+  pallet_sequences.pick_ref ,
+  inventory_codes.inventory_code,
+  target_market_groups.target_market_group_name ,
+  coalesce(marketingpuc.puc_code ,pucs.puc_code) ,
+  cargo_temperatures.temperature_code,
+  pallet_sequences.product_chars ,
+  fruit_actual_counts_for_packs.actual_count_for_pack ,
+  pallet_sequences.sell_by_code,
+  pallet_bases.pallet_base_code ,
+  organizations.long_description ,
+  pallets.phc ,
+pallets.gross_weight,plt_qty.plt_qty,pallet_sequences.pallet_sequence_number,
+pallet_sequences.phyto_data,  marketing_varieties.marketing_variety_code
+,fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack) 
+,pallets.govt_reinspection_at, pallets.govt_first_inspection_at,pallets.shipped_at, pallets.scrapped_at
+ORDER BY
+pallets.pallet_number,pallet_sequences.pallet_sequence_number,
+  commodities.code,
+  marketing_varieties.marketing_variety_code,
+  grades.grade_code,
+  fruit_size_references.size_reference,
+  standard_pack_codes.standard_pack_code,
+  marks.mark_code]]>
+	</queryString>
+	<field name="edi_size_count" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="edi_size_count"/>
+		<property name="com.jaspersoft.studio.field.label" value="edi_size_count"/>
+	</field>
+	<field name="pallet_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pallet_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="pallet_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pallets"/>
+	</field>
+	<field name="carton_quantity" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="carton_quantity"/>
+		<property name="com.jaspersoft.studio.field.label" value="carton_quantity"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pallet_sequences"/>
+	</field>
+	<field name="organization_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="organization_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="organization_code"/>
+	</field>
+	<field name="commodity_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="commodity_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="commodity_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="commodities"/>
+	</field>
+	<field name="variety_short_long" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="variety_short_long"/>
+		<property name="com.jaspersoft.studio.field.label" value="variety_short_long"/>
+	</field>
+	<field name="grade_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="grade_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="grade_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="grades"/>
+	</field>
+	<field name="size_count_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="size_count_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="size_count_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="fruit_size_references"/>
+	</field>
+	<field name="old_pack_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="old_pack_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="old_pack_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="standard_pack_codes"/>
+	</field>
+	<field name="brand_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="brand_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="brand_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="marks"/>
+	</field>
+	<field name="pick_reference" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pick_reference"/>
+		<property name="com.jaspersoft.studio.field.label" value="pick_reference"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pallet_sequences"/>
+	</field>
+	<field name="encrypt_pick_ref" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="encrypt_pick_ref"/>
+		<property name="com.jaspersoft.studio.field.label" value="encrypt_pick_ref"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pallet_sequences"/>
+	</field>
+	<field name="inventory_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="inventory_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="inventory_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="inventory_codes"/>
+	</field>
+	<field name="target_market_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="target_market_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="target_market_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="target_market_groups"/>
+	</field>
+	<field name="plt_qty" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="plt_qty"/>
+		<property name="com.jaspersoft.studio.field.label" value="plt_qty"/>
+	</field>
+	<field name="rank" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="rank"/>
+		<property name="com.jaspersoft.studio.field.label" value="rank"/>
+	</field>
+	<field name="puc" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="puc"/>
+		<property name="com.jaspersoft.studio.field.label" value="puc"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pucs"/>
+	</field>
+	<field name="temp_tail" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="temp_tail"/>
+		<property name="com.jaspersoft.studio.field.label" value="temp_tail"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cargo_temperatures"/>
+	</field>
+	<field name="pt_product_characteristics" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pt_product_characteristics"/>
+		<property name="com.jaspersoft.studio.field.label" value="pt_product_characteristics"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pallet_sequences"/>
+	</field>
+	<field name="actual_size_count_code" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="actual_size_count_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="actual_size_count_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="fruit_actual_counts_for_packs"/>
+	</field>
+	<field name="ctn_qty" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="ctn_qty"/>
+		<property name="com.jaspersoft.studio.field.label" value="ctn_qty"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pallet_sequences"/>
+	</field>
+	<field name="sell_by_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="sell_by_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="sell_by_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pallet_sequences"/>
+	</field>
+	<field name="edi_out_pallet_base" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="edi_out_pallet_base"/>
+		<property name="com.jaspersoft.studio.field.label" value="edi_out_pallet_base"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pallet_bases"/>
+	</field>
+	<field name="org_long" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="org_long"/>
+		<property name="com.jaspersoft.studio.field.label" value="org_long"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="organizations"/>
+	</field>
+	<field name="line_phc" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="line_phc"/>
+		<property name="com.jaspersoft.studio.field.label" value="line_phc"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pallets"/>
+	</field>
+	<field name="nett_weight" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="nett_weight"/>
+		<property name="com.jaspersoft.studio.field.label" value="nett_weight"/>
+	</field>
+	<field name="gross_weight" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="gross_weight"/>
+		<property name="com.jaspersoft.studio.field.label" value="gross_weight"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pallets"/>
+	</field>
+	<field name="load_gross_weight" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="load_gross_weight"/>
+		<property name="com.jaspersoft.studio.field.label" value="load_gross_weight"/>
+	</field>
+	<field name="seq_nett_weight" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="seq_nett_weight"/>
+		<property name="com.jaspersoft.studio.field.label" value="seq_nett_weight"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pallet_sequences"/>
+	</field>
+	<field name="phyto_data" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="phyto_data"/>
+		<property name="com.jaspersoft.studio.field.label" value="phyto_data"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pallet_sequences"/>
+	</field>
+	<field name="inspection_age" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.name" value="inspection_age"/>
+		<property name="com.jaspersoft.studio.field.label" value="inspection_age"/>
+	</field>
+	<field name="pick_references" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pick_references"/>
+		<property name="com.jaspersoft.studio.field.label" value="pick_references"/>
+	</field>
+	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
+		<variableExpression><![CDATA[$F{ctn_qty}]]></variableExpression>
+	</variable>
+	<variable name="plt_qty_1" class="java.lang.Number" calculation="Sum">
+		<variableExpression><![CDATA[$F{plt_qty}]]></variableExpression>
+	</variable>
+	<variable name="nett_weight_1" class="java.lang.Number" calculation="Sum">
+		<variableExpression><![CDATA[$F{seq_nett_weight}]]></variableExpression>
+	</variable>
+	<variable name="ctn_qty1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{ctn_qty}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="19" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="250" y="0" width="50" height="13" uuid="f97a0554-b35a-40fc-9835-53113d9ec278">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Size/Count]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="220" y="0" width="25" height="13" uuid="ea84ba02-ce39-4351-b6e8-d4146e083fa2">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Grade]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="370" y="0" width="25" height="13" uuid="33f7e29d-785e-4ea7-8756-82eeb686a57a">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[TM]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="400" y="0" width="25" height="13" uuid="1df34564-fa14-4587-b4bd-26aa6a70f779">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Inv]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="145" y="0" width="30" height="13" uuid="c01dc3cb-fcb8-4a9d-b6d9-8bd8b8b6afd8">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Org]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="0" width="30" height="13" uuid="fc717367-f9b2-4fe3-a83d-2c02abed876a">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Comm]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="73" y="0" width="25" height="13" uuid="ea214d68-7033-4e1b-a4d2-80c0c4fa6185">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Pack]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="0" width="30" height="13" uuid="c84f0135-2ea6-4797-9093-7dc7ec026682">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Var]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="0" width="40" height="13" uuid="b2ae1bf7-2871-4933-84e5-9ed954e77758">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Mark]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="0" width="33" height="13" uuid="cd902a99-0472-4d5f-baea-4d25f140c924">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Nett]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="600" y="0" width="95" height="13" uuid="139c2eb7-34a0-4179-9b52-0397d983e785">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Pallet Barcode]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="426" y="0" width="34" height="13" uuid="d4c4dabd-789a-4b7f-be5b-db7af907626e">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[PUC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="335" y="0" width="31" height="13" uuid="7224d875-64b4-466d-aed0-85006952e8f5">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Gross]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="556" y="0" width="20" height="13" uuid="8849a077-2613-4c31-8a90-deedac2d3589">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<printWhenExpression><![CDATA[!$P{scartons_equals_pallets}]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Ctns]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="578" y="0" width="20" height="13" uuid="5517ec36-82fa-4790-a51f-0dac405c0e76">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{scartons_equals_pallets} ? "Bins" : "Plts"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="460" y="0" width="45" height="13" uuid="01944770-ced0-4b9d-8de7-f71877c543c3">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Phyto Data]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="180" y="0" width="35" height="13" uuid="d2e86a4d-19c8-4049-bd52-084ac7183e62">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Sell By]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="510" y="0" width="45" height="13" uuid="c0f8148a-c801-43da-b62c-a1f300f3976a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Insp Age]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="705" y="0" width="95" height="13" uuid="5c3b7333-66b0-41ed-9d8e-c51fa898c2c6">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Pick Ref]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField isBlankWhenNull="true">
+				<reportElement x="220" y="0" width="25" height="12" uuid="de9932c2-c446-4757-b958-d0584900efba">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{grade_code}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="250" y="0" width="50" height="12" uuid="9c731255-1902-476b-923d-a15baf50e179">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{edi_size_count}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="370" y="0" width="25" height="12" uuid="0eae09a3-de76-406a-889b-960d0d9447e4">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{target_market_code}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="400" y="0" width="25" height="12" uuid="dea65c3d-a870-47d2-bb1e-c846a1163fc1">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{inventory_code}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.##" isBlankWhenNull="true">
+				<reportElement x="576" y="0" width="25" height="12" uuid="c40ef02a-6cbe-4349-baa2-b7b1bdef3821">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{plt_qty}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="145" y="0" width="30" height="12" uuid="b7d84869-99fe-4617-98bc-a5ba07906bdb">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{organization_code}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="100" y="0" width="40" height="12" uuid="53a09c84-7caf-4005-abcb-2186b53528a3">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{brand_code}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="73" y="0" width="25" height="12" uuid="7882e60d-a0be-42af-8421-b21a1b176e6e">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{old_pack_code}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="5" y="0" width="30" height="12" uuid="6b01930b-71ac-4e7e-8e9b-2acab2da4cb9">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{commodity_code}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="600" y="0" width="95" height="12" uuid="0804e167-2e0e-453b-b9d4-cb0d10a06dab">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pallet_number}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="40" y="0" width="30" height="12" uuid="1918c503-7845-492c-89e6-1142b721ee97">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{variety_short_long}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.0" isBlankWhenNull="true">
+				<reportElement x="300" y="0" width="33" height="12" uuid="a3451f06-dded-4e0f-a608-643d24fecd15">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{seq_nett_weight}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="426" y="0" width="34" height="12" uuid="b17b0077-a9f2-4801-9fda-08d1e27a795c">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{puc}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.0" isBlankWhenNull="true">
+				<reportElement x="335" y="0" width="34" height="12" uuid="b0e40b6d-ab68-4744-bc95-7b4e2384b52c">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{gross_weight}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="556" y="0" width="20" height="12" uuid="da421630-6238-4bec-bda3-daad0f2aa138">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<printWhenExpression><![CDATA[!$P{scartons_equals_pallets}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ctn_qty}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="461" y="1" width="45" height="12" uuid="03da3778-1617-48cb-83b7-a97bcdfe4fce">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{phyto_data}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="180" y="1" width="35" height="12" uuid="62fe8875-5889-44f4-bd0c-ee8740aedc58">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sell_by_code}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="510" y="0" width="45" height="12" uuid="40f9180d-cf3a-4016-a423-39e8f1c3f409">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{inspection_age}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="705" y="0" width="95" height="12" uuid="98c44edd-66b6-4a4b-b79e-ba48350618ce">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pick_references}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="21" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField pattern="#,###.###;(#,###.###-)" isBlankWhenNull="true">
+				<reportElement x="578" y="3" width="25" height="13" uuid="eafb0fde-cf16-4785-bf1c-2e291259339a">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{plt_qty_1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="100" y="3" width="100" height="13" uuid="e28822d1-3d1c-4e55-95b4-b155a7ee783f">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Total:]]></text>
+			</staticText>
+			<textField pattern="#0.0#" isBlankWhenNull="true">
+				<reportElement x="295" y="3" width="38" height="13" uuid="a65e424e-4a64-4109-828a-765cbc1a963c">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{nett_weight_1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.0#" isBlankWhenNull="true">
+				<reportElement x="335" y="3" width="38" height="13" uuid="0397c810-b9a1-4d27-b6e5-cab35d4f1fa3">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{load_gross_weight}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="550" y="3" width="26" height="13" uuid="d68028be-4c92-425b-a17f-ac1cd26250bf">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<printWhenExpression><![CDATA[!$P{scartons_equals_pallets}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{ctn_qty1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

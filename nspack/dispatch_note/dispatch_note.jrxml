@@ -76,6 +76,8 @@ load_containers.container_temperature_rhine2,
 NULL AS cto_consec_code ,
 container_stack_types.stack_type_code,
 load_containers.internal_container_code,
+load_containers.tare_weight,
+load_containers.verified_gross_weight,
 0 AS order_id,
 loads.order_number,
 'NOTYET' AS customer_memo_pad,
@@ -265,6 +267,16 @@ where loads.id = $P{load_id}]]>
 	<field name="internal_container_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="internal_container_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="internal_container_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_containers"/>
+	</field>
+	<field name="tare_weight" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="tare_weight"/>
+		<property name="com.jaspersoft.studio.field.label" value="tare_weight"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_containers"/>
+	</field>
+	<field name="verified_gross_weight" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="verified_gross_weight"/>
+		<property name="com.jaspersoft.studio.field.label" value="verified_gross_weight"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="load_containers"/>
 	</field>
 	<field name="order_id" class="java.lang.Integer">
@@ -464,7 +476,7 @@ where loads.id = $P{load_id}]]>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="267" splitType="Stretch">
+		<band height="274" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isBlankWhenNull="true">
@@ -517,14 +529,20 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{dispatch_consignment_note_number}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="397" y="211" width="57" height="13" uuid="c6c0b016-68b1-45b3-a141-feaa0d8d2b9a"/>
+				<reportElement x="397" y="210" width="57" height="11" uuid="c6c0b016-68b1-45b3-a141-feaa0d8d2b9a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Receive Depot:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="455" y="211" width="99" height="13" uuid="d118e85e-1bd9-4912-b064-f197c7bbf230"/>
+				<reportElement x="455" y="210" width="99" height="11" uuid="d118e85e-1bd9-4912-b064-f197c7bbf230">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
@@ -595,7 +613,7 @@ where loads.id = $P{load_id}]]>
 			</textField>
 			<staticText>
 				<reportElement x="378" y="34" width="54" height="13" uuid="23d17353-c12f-4d4e-acaa-6252be99dcc0"/>
-				<textElement>
+				<textElement textAlignment="Left">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Exporter:]]></text>
@@ -609,7 +627,7 @@ where loads.id = $P{load_id}]]>
 			</textField>
 			<staticText>
 				<reportElement x="378" y="47" width="54" height="13" uuid="6631e84c-45d7-4596-b024-3816e182c6c5"/>
-				<textElement>
+				<textElement textAlignment="Left">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Billing client:]]></text>
@@ -625,7 +643,7 @@ where loads.id = $P{load_id}]]>
 			</textField>
 			<staticText>
 				<reportElement x="378" y="60" width="54" height="13" uuid="493c7865-edba-47dd-8258-2de8db013414"/>
-				<textElement>
+				<textElement textAlignment="Left">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Customer:]]></text>
@@ -641,7 +659,7 @@ where loads.id = $P{load_id}]]>
 			</textField>
 			<staticText>
 				<reportElement x="378" y="73" width="54" height="13" uuid="2b5d75cc-c43f-4bdf-8a8d-7b5102b47f78"/>
-				<textElement>
+				<textElement textAlignment="Left">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Consignee:]]></text>
@@ -738,14 +756,18 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{port_name}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="455" y="197" width="99" height="13" uuid="6c87201f-6f5c-49c6-9685-34608d98a3dc"/>
+				<reportElement x="455" y="197" width="99" height="11" uuid="6c87201f-6f5c-49c6-9685-34608d98a3dc">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{depart_port_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="397" y="197" width="57" height="13" uuid="84360773-537c-4cfa-bb25-65f121e3b139"/>
+				<reportElement x="397" y="197" width="57" height="11" uuid="84360773-537c-4cfa-bb25-65f121e3b139">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -856,7 +878,9 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[Container Seal:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="455" y="225" width="99" height="13" uuid="f973921a-80e6-48aa-96b1-1ccda2b1797c">
+				<reportElement x="455" y="223" width="99" height="11" uuid="f973921a-80e6-48aa-96b1-1ccda2b1797c">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -874,7 +898,9 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[Container Code:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="455" y="239" width="99" height="13" uuid="8f1b9357-dd69-4cb8-8ada-73f0d99bec3a">
+				<reportElement x="455" y="237" width="99" height="11" uuid="8f1b9357-dd69-4cb8-8ada-73f0d99bec3a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -883,7 +909,9 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{container_temperature_rhine2}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="397" y="225" width="57" height="13" uuid="0f896c28-43c6-44ba-a8a9-00d700047180">
+				<reportElement x="397" y="223" width="57" height="11" uuid="0f896c28-43c6-44ba-a8a9-00d700047180">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -892,7 +920,9 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[Temp rhine:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="397" y="239" width="57" height="13" uuid="d2bcdb1a-9073-4221-bca3-1d4ed43fb5d4">
+				<reportElement x="397" y="237" width="57" height="11" uuid="d2bcdb1a-9073-4221-bca3-1d4ed43fb5d4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
 				<textElement>
@@ -956,10 +986,11 @@ where loads.id = $P{load_id}]]>
 				</jr:barbecue>
 			</componentElement>
 			<subreport>
-				<reportElement x="230" y="31" width="110" height="95" uuid="8aa248d9-044f-4bff-b07f-035007ce5912">
+				<reportElement x="210" y="31" width="110" height="95" uuid="8aa248d9-044f-4bff-b07f-035007ce5912">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<subreportParameter name="party_role_id">
 					<subreportParameterExpression><![CDATA[$F{customer_party_role_id}]]></subreportParameterExpression>
@@ -988,7 +1019,7 @@ where loads.id = $P{load_id}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{implementation_owner_name}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="130" y="0" width="180" height="12" uuid="6f18dbc1-2654-4f1d-849d-c66f1b421dc2">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -1032,7 +1063,7 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[Remark:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="75" y="252" width="470" height="13" uuid="ca4603a1-5e74-485f-ace6-eb3164b7fd88">
+				<reportElement x="75" y="252" width="320" height="13" uuid="ca4603a1-5e74-485f-ace6-eb3164b7fd88">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -1040,6 +1071,58 @@ where loads.id = $P{load_id}]]>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{remarks}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="397" y="250" width="93" height="11" uuid="54c4f8e1-d70d-47e4-b636-fb079dc26b50">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="8" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Tare container weight:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="397" y="263" width="93" height="11" uuid="91fcb806-ea40-4499-9e9f-fc1530983026">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="8" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Verified gross mass:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="491" y="250" width="58" height="11" uuid="a6baaf95-cd0d-4893-a698-b3f7964940c5">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tare_weight}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="491" y="263" width="58" height="11" uuid="d73c1ba0-58ab-40ce-919e-ba95f10bfa06">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{verified_gross_weight}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
