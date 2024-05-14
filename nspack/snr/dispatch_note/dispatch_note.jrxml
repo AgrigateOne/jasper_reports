@@ -111,6 +111,7 @@ loads.edi_file_name as file_name,
 pod_port.port_code AS port_name,
 pol_port.port_code AS depart_port_name,
 loads.customer_party_role_id,
+coalesce(load_containers.internal_container_code,'') || coalesce(cargo_temperatures.temperature_code ,'')  as cargo_temp_setting,
 loads.exporter_party_role_id,pcs.pucs,coalesce(cargo_temperatures.temperature_code ,'')cargo_temp,coalesce(multi_load_id,loads.id )multi_load_id
 FROM loads
 join 
@@ -400,6 +401,10 @@ where loads.id = $P{load_id}]]>
 		<property name="com.jaspersoft.studio.field.label" value="customer_party_role_id"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="loads"/>
 	</field>
+	<field name="cargo_temp_setting" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cargo_temp_setting"/>
+		<property name="com.jaspersoft.studio.field.label" value="cargo_temp_setting"/>
+	</field>
 	<field name="exporter_party_role_id" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="exporter_party_role_id"/>
 		<property name="com.jaspersoft.studio.field.label" value="exporter_party_role_id"/>
@@ -557,7 +562,7 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[Receive Depot:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="730" y="194" width="99" height="11" uuid="d118e85e-1bd9-4912-b064-f197c7bbf230">
+				<reportElement x="700" y="171" width="99" height="11" uuid="d118e85e-1bd9-4912-b064-f197c7bbf230">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="pixel"/>
@@ -928,7 +933,7 @@ where loads.id = $P{load_id}]]>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[CONCATENATE($F{container_setting},",",$F{cargo_temp})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cargo_temp_setting}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="5" y="170" width="65" height="13" uuid="5f36e453-b160-492d-8512-b8287b750dda">
@@ -964,8 +969,8 @@ where loads.id = $P{load_id}]]>
 			<textField isBlankWhenNull="true">
 				<reportElement x="700" y="197" width="99" height="11" uuid="8f1b9357-dd69-4cb8-8ada-73f0d99bec3a">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Left">
