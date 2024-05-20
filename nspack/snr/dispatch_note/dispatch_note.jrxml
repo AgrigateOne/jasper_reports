@@ -112,11 +112,13 @@ pod_port.port_code AS port_name,
 pol_port.port_code AS depart_port_name,
 loads.customer_party_role_id,
 coalesce(load_containers.internal_container_code,'') ||',' ||coalesce(cargo_temperatures.temperature_code ,'')  as cargo_temp_setting,
-loads.exporter_party_role_id,pcs.pucs,coalesce(cargo_temperatures.temperature_code ,'')cargo_temp,coalesce(multi_load_id,loads.id )multi_load_id
+loads.exporter_party_role_id,pcs.pucs,coalesce(cargo_temperatures.temperature_code ,'')cargo_temp,coalesce(multi_load_id,loads.id )multi_load_id,
+pcs.gap_code
 FROM loads
 join 
-(select  pallets.load_id ,string_agg(distinct coalesce(marketingpuc.puc_code ,pucs.puc_code),',') pucs
-from pallets  
+(select  pallets.load_id ,string_agg(distinct coalesce(marketingpuc.puc_code ,pucs.puc_code),',') pucs,
+string_agg(DISTINCT pucs.gap_code::text, '; '::text ORDER BY pucs.gap_code::text) gap_code
+from pallets
 join pallet_sequences ps on ps.pallet_id=pallets.id 
 join pucs on ps.puc_id=pucs.id 
 left JOIN pucs marketingpuc ON marketingpuc.id = ps.marketing_puc_id 
@@ -423,6 +425,10 @@ where loads.id = $P{load_id}]]>
 		<property name="com.jaspersoft.studio.field.label" value="multi_load_id"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="loads"/>
 	</field>
+	<field name="gap_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="gap_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="gap_code"/>
+	</field>
 	<group name="load_id" keepTogether="true">
 		<groupExpression><![CDATA[$F{load_id}]]></groupExpression>
 		<groupHeader>
@@ -642,9 +648,9 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[PO Files:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="687" y="34" width="112" height="13" uuid="6c251326-4a79-4e22-9edf-8fc2ecba228c">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<reportElement x="667" y="30" width="138" height="13" uuid="6c251326-4a79-4e22-9edf-8fc2ecba228c">
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left">
 					<font size="8"/>
@@ -653,15 +659,16 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{exporter_org_med}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="630" y="34" width="54" height="13" uuid="23d17353-c12f-4d4e-acaa-6252be99dcc0"/>
+				<reportElement x="610" y="30" width="54" height="13" uuid="23d17353-c12f-4d4e-acaa-6252be99dcc0"/>
 				<textElement textAlignment="Right">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Exporter:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="687" y="47" width="112" height="13" uuid="876e2141-5775-4f50-b765-51133b66a41f">
+				<reportElement x="667" y="43" width="138" height="13" uuid="876e2141-5775-4f50-b765-51133b66a41f">
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left">
 					<font size="8"/>
@@ -670,16 +677,17 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{billing_party}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="630" y="47" width="54" height="13" uuid="6631e84c-45d7-4596-b024-3816e182c6c5"/>
+				<reportElement x="610" y="43" width="54" height="13" uuid="6631e84c-45d7-4596-b024-3816e182c6c5"/>
 				<textElement textAlignment="Right">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Billing client:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="688" y="60" width="112" height="13" uuid="064eba7f-d4d2-49a6-99d3-3b507bc6a8c5">
+				<reportElement x="668" y="56" width="138" height="13" uuid="064eba7f-d4d2-49a6-99d3-3b507bc6a8c5">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left">
 					<font size="8"/>
@@ -688,15 +696,14 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{customer_party}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="630" y="60" width="54" height="13" uuid="493c7865-edba-47dd-8258-2de8db013414"/>
+				<reportElement x="610" y="56" width="54" height="13" uuid="493c7865-edba-47dd-8258-2de8db013414"/>
 				<textElement textAlignment="Right">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Customer:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="687" y="73" width="113" height="13" uuid="53cf85a2-1ba6-4545-b829-872fabd502f9">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<reportElement x="667" y="69" width="138" height="13" uuid="53cf85a2-1ba6-4545-b829-872fabd502f9">
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left">
@@ -706,7 +713,7 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{consignee_party}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="630" y="73" width="54" height="13" uuid="2b5d75cc-c43f-4bdf-8a8d-7b5102b47f78"/>
+				<reportElement x="610" y="69" width="54" height="13" uuid="2b5d75cc-c43f-4bdf-8a8d-7b5102b47f78"/>
 				<textElement textAlignment="Right">
 					<font size="8" isBold="false"/>
 				</textElement>
@@ -1216,6 +1223,29 @@ where loads.id = $P{load_id}]]>
 				</textElement>
 				<text><![CDATA[Temp Settings:
 ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="667" y="87" width="132" height="38" uuid="cee5063c-9366-48ab-92e7-c3b261e8a2a6">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+					<paragraph firstLineIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{gap_code}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="610" y="83" width="54" height="13" uuid="4ecab528-039b-434e-b86d-d954fb304409">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[GGN:]]></text>
 			</staticText>
 		</band>
 	</title>
