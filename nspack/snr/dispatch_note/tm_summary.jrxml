@@ -18,7 +18,7 @@
 	<queryString language="SQL">
 		<![CDATA[  SELECT
  grades.grade_code,
-   target_market_groups.target_market_group_name AS  target_market_code,
+   target_market_groups.target_market_group_name AS  target_market_code ,
  fn_edi_size_count(
 	  standard_pack_codes.use_size_ref_for_edi,
 	  commodities.use_size_ref_for_edi,
