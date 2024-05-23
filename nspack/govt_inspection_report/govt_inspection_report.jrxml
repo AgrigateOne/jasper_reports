@@ -1003,7 +1003,10 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<text><![CDATA[Ctns]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="138" y="45" width="14" height="13" uuid="b006ecd9-9474-4990-b773-f698441dce88"/>
+				<reportElement x="135" y="45" width="17" height="13" uuid="b006ecd9-9474-4990-b773-f698441dce88">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
@@ -1096,7 +1099,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<text><![CDATA[Phyto Data]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="108" y="45" width="27" height="13" uuid="0012db30-c291-415f-9bd3-86edde986d60">
+				<reportElement x="108" y="45" width="24" height="13" uuid="0012db30-c291-415f-9bd3-86edde986d60">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1223,11 +1226,11 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[$F{std_pack}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="139" y="0" width="13" height="11" uuid="449f85e3-a4fe-4c0a-90f9-dcdd6f8e0989">
+				<reportElement x="135" y="0" width="19" height="11" uuid="449f85e3-a4fe-4c0a-90f9-dcdd6f8e0989">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Left">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{inventory_code}]]></textFieldExpression>
@@ -1366,7 +1369,7 @@ coalesce(scrapped_pallet_number.gap_certification,
 				<textFieldExpression><![CDATA[$F{phyto_data}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="104" y="0" width="34" height="11" uuid="5131c5cb-cb79-407a-842f-929c57266a71">
+				<reportElement x="104" y="0" width="30" height="11" uuid="5131c5cb-cb79-407a-842f-929c57266a71">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>

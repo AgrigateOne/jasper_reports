@@ -22,7 +22,7 @@
 	</parameter>
 	<parameter name="paraminspecstatus" class="java.lang.String"/>
 	<queryString language="SQL">
-		<![CDATA[WITH scrapped_plt_cnt AS (
+		<![CDATA[ WITH scrapped_plt_cnt AS (
     SELECT
         count(DISTINCT pallets.pallet_number) AS scrapped_plt_qty,
         MAX(govt_inspection_pallets.govt_inspection_sheet_id) AS govt_inspection_sheet_id
