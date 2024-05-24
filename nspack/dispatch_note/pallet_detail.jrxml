@@ -14,7 +14,7 @@
 	<parameter name="load_id" class="java.lang.Integer"/>
 	<parameter name="scartons_equals_pallets" class="java.lang.Boolean"/>
 	<queryString language="SQL">
-		<![CDATA[ WITH plt_qty as (
+		<![CDATA[  WITH plt_qty as (
 	select   pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 	count(distinct pallets.id) as plt_qty,
    rank() OVER (PARTITION BY pallets.pallet_number ORDER BY pallet_sequences.pallet_sequence_number) AS rank
