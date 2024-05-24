@@ -59,7 +59,7 @@ select fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.u
   pallets.phc AS line_phc,
  sum( pallets.nett_weight)nett_weight
 ,pallets.gross_weight
-,(select sum(gross_weight) from pallets p where p.load_id=pallets.load_id) load_gross_weight
+,(select sum(gross_weight)  from pallets p where p.load_id=pallets.load_id) load_gross_weight
 ,sum(pallet_sequences.nett_weight) as seq_nett_weight,
 pallet_sequences.phyto_data
 ,floor(fn_calc_age_days(max(pallets.id), COALESCE(pallets.govt_reinspection_at, pallets.govt_first_inspection_at), COALESCE(pallets.shipped_at, pallets.scrapped_at))) AS inspection_age
