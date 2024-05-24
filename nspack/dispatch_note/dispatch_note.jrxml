@@ -36,7 +36,7 @@
 	<parameter name="cartons_equals_pallets" class="java.lang.Boolean"/>
 	<parameter name="hide_dispatch_summary_gross" class="java.lang.Boolean"/>
 	<queryString language="SQL">
-		<![CDATA[SELECT
+		<![CDATA[ SELECT
 (select 
 array_to_string( 
   ARRAY(SELECT eot.edi_out_filename
