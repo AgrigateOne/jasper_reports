@@ -175,10 +175,11 @@ rs.size_code
 				<text><![CDATA[Puc]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="239" y="2" width="25" height="20" uuid="11698453-210b-4515-997e-981e10648dc4">
+				<reportElement x="239" y="0" width="25" height="20" uuid="11698453-210b-4515-997e-981e10648dc4">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font fontName="SansSerif" size="8"/>

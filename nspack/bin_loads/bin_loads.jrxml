@@ -416,7 +416,9 @@ GROUP by depots.description,bin_loads.transporter_party_role_id,
 				<text><![CDATA[Picklist]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="300" y="1" width="212" height="12" uuid="6666bb96-8e1a-432e-a66f-ff1325ab3d89"/>
+				<reportElement x="250" y="1" width="212" height="12" uuid="6666bb96-8e1a-432e-a66f-ff1325ab3d89">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Center">
 					<font isBold="true"/>
 				</textElement>

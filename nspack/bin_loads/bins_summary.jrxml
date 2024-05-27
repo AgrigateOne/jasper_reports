@@ -298,7 +298,7 @@ rmt_container_material_types.container_material_type_code]]>
 		</band>
 	</detail>
 	<summary>
-		<band height="13">
+		<band height="19">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
 				<reportElement x="120" y="0" width="100" height="11" uuid="6bcacf4b-d4da-4cc9-9d81-e167547fc638">
@@ -366,6 +366,14 @@ rmt_container_material_types.container_material_type_code]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{gross}]]></textFieldExpression>
 			</textField>
+			<line>
+				<reportElement x="0" y="0" width="440" height="1" uuid="b0c768df-9abf-49ee-bd39-c961927e6ddb">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+			</line>
 		</band>
 	</summary>
 </jasperReport>
