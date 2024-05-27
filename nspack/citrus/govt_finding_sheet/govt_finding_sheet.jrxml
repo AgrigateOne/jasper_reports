@@ -1229,7 +1229,7 @@ Country /Target Market]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{pallet_number}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="138" y="1" width="20" height="24" uuid="0abd17e3-5075-4ddd-aec4-6bba62c9acc0"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
@@ -1316,7 +1316,7 @@ Country /Target Market]]></text>
 				</box>
 				<text><![CDATA[]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="158" y="1" width="33" height="52" uuid="d3c9d8a0-09fa-4bc7-8fa2-005335e2c776"/>
 				<textElement textAlignment="Left" rotation="None">
 					<font size="8"/>
@@ -1324,7 +1324,7 @@ Country /Target Market]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{puc}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="191" y="0" width="19" height="52" uuid="b52df561-885f-4902-9509-a0e9ff2bc9b4"/>
 				<textElement textAlignment="Left" rotation="None">
 					<font size="8"/>
@@ -1332,7 +1332,7 @@ Country /Target Market]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{orchard}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="211" y="0" width="26" height="52" uuid="aa48eb40-2005-4276-b2fb-434d9741642e"/>
 				<textElement textAlignment="Left" rotation="None">
 					<font size="8"/>
@@ -1340,7 +1340,7 @@ Country /Target Market]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{phyto_data}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="237" y="0" width="26" height="52" uuid="7399fc0b-06aa-447d-a930-bdd3d35d13a2"/>
 				<textElement textAlignment="Left" rotation="None">
 					<font size="8"/>
@@ -1348,7 +1348,7 @@ Country /Target Market]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cultivar}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="264" y="0" width="33" height="26" uuid="70355c27-72b8-4ced-b8d4-6c13d56162c5">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -1364,7 +1364,7 @@ Country /Target Market]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{destination_region_name}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="264" y="26" width="33" height="27" uuid="d09285c2-ad8b-4946-bb4b-4fa7f587692c">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -1377,7 +1377,7 @@ Country /Target Market]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{packed_tm_group}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="298" y="27" width="22" height="26" uuid="b7dbf5f7-a9d6-4def-8e33-3a5c170cb8fd">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -1391,7 +1391,7 @@ Country /Target Market]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{actual_count}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="320" y="0" width="20" height="53" uuid="0a7d713a-835c-4f14-b23f-52d4f3803ce3">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
@@ -1463,7 +1463,7 @@ Country /Target Market]]></text>
 				</box>
 				<text><![CDATA[]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="298" y="0" width="22" height="26" uuid="b0eefe26-8446-44d5-bd0c-092fd69f2337">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
