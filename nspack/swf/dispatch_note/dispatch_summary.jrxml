@@ -14,7 +14,7 @@
 	<parameter name="scartons_equals_pallets" class="java.lang.Boolean"/>
 	<parameter name="sshow_summary_gross" class="java.lang.Boolean"/>
 	<queryString language="SQL">
-		<![CDATA[SELECT
+		<![CDATA[ SELECT
   commodities.code  AS commodity_code ,
    fruit_size_references.size_reference AS size_count_code,
  marketing_varieties.marketing_variety_code as variety_short_long,

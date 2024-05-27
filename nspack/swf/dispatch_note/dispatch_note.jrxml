@@ -1093,7 +1093,7 @@ where loads.id = $P{load_id}]]>
 				</textElement>
 				<text><![CDATA[Picklist]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="200" y="4" width="272" height="12" uuid="6666bb96-8e1a-432e-a66f-ff1325ab3d89">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
