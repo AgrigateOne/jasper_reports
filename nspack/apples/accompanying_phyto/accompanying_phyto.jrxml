@@ -165,7 +165,7 @@
             SELECT
                 govt_inspection_sheets.id AS govt_inspection_sheet_id,
                 row_number() OVER (PARTITION BY p.pallet_number ORDER BY p.pallet_number DESC) AS seq_no,
-                dense_rank() OVER (ORDER BY govt_inspection_sheets.id ASC) AS row_num,
+                dense_rank() OVER (ORDER BY govt_inspection_sheets.id DESC) AS row_num,
                 row_number() OVER (PARTITION BY pucs.puc_code ORDER BY p.pallet_number DESC) AS puc_seq,
                 headers.*,
                 puc_groups.pucs,

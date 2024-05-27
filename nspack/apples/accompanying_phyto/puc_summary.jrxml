@@ -31,7 +31,7 @@ ELSE ''::text
 END,edi_in_consignment_note_number)
 )as d
 group by intake , pucs
-order by intake ASC ,pucs ASC]]>
+order by intake DESC ,pucs ASC]]>
 	</queryString>
 	<field name="intake" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="intake"/>
