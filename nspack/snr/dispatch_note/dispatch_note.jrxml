@@ -648,7 +648,7 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[PO Files:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="667" y="30" width="138" height="13" uuid="6c251326-4a79-4e22-9edf-8fc2ecba228c">
+				<reportElement x="647" y="30" width="138" height="13" uuid="6c251326-4a79-4e22-9edf-8fc2ecba228c">
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -659,14 +659,14 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{exporter_org_med}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="610" y="30" width="54" height="13" uuid="23d17353-c12f-4d4e-acaa-6252be99dcc0"/>
+				<reportElement x="590" y="30" width="54" height="13" uuid="23d17353-c12f-4d4e-acaa-6252be99dcc0"/>
 				<textElement textAlignment="Right">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Exporter:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="667" y="43" width="138" height="13" uuid="876e2141-5775-4f50-b765-51133b66a41f">
+				<reportElement x="647" y="43" width="138" height="13" uuid="876e2141-5775-4f50-b765-51133b66a41f">
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -677,7 +677,7 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{billing_party}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="610" y="43" width="54" height="13" uuid="6631e84c-45d7-4596-b024-3816e182c6c5"/>
+				<reportElement x="590" y="43" width="54" height="13" uuid="6631e84c-45d7-4596-b024-3816e182c6c5"/>
 				<textElement textAlignment="Right">
 					<font size="8" isBold="false"/>
 				</textElement>
@@ -696,14 +696,14 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{customer_party}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="610" y="56" width="54" height="13" uuid="493c7865-edba-47dd-8258-2de8db013414"/>
+				<reportElement x="590" y="56" width="54" height="13" uuid="493c7865-edba-47dd-8258-2de8db013414"/>
 				<textElement textAlignment="Right">
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Customer:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="667" y="69" width="138" height="13" uuid="53cf85a2-1ba6-4545-b829-872fabd502f9">
+				<reportElement x="647" y="69" width="138" height="13" uuid="53cf85a2-1ba6-4545-b829-872fabd502f9">
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left">
@@ -713,7 +713,7 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{consignee_party}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="610" y="69" width="54" height="13" uuid="2b5d75cc-c43f-4bdf-8a8d-7b5102b47f78"/>
+				<reportElement x="590" y="69" width="54" height="13" uuid="2b5d75cc-c43f-4bdf-8a8d-7b5102b47f78"/>
 				<textElement textAlignment="Right">
 					<font size="8" isBold="false"/>
 				</textElement>
@@ -1225,7 +1225,7 @@ where loads.id = $P{load_id}]]>
 ]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="667" y="83" width="132" height="38" uuid="cee5063c-9366-48ab-92e7-c3b261e8a2a6">
+				<reportElement x="647" y="83" width="93" height="38" uuid="cee5063c-9366-48ab-92e7-c3b261e8a2a6">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -1237,7 +1237,7 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{gap_code}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="610" y="83" width="54" height="13" uuid="4ecab528-039b-434e-b86d-d954fb304409">
+				<reportElement x="590" y="83" width="54" height="13" uuid="4ecab528-039b-434e-b86d-d954fb304409">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -1247,10 +1247,10 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[GGN:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="680" y="122" width="111" height="13" uuid="d31099e1-0385-4192-9b4e-ae96c2367764">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				<reportElement x="647" y="122" width="140" height="13" uuid="d31099e1-0385-4192-9b4e-ae96c2367764">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font size="8" isBold="false"/>
