@@ -1048,7 +1048,7 @@ where loads.id = $P{load_id}]]>
 					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["../../shared/party_role_address.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
 			</subreport>
 			<componentElement>
 				<reportElement x="500" y="0" width="175" height="26" uuid="4a864b43-2183-4d30-8a03-63772df42db7">
@@ -1079,7 +1079,7 @@ where loads.id = $P{load_id}]]>
 					<subreportParameterExpression><![CDATA["Delivery Address"]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["../../shared/party_role_address.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
 			</subreport>
 			<staticText>
 				<reportElement x="210" y="15" width="220" height="12" uuid="359feca1-7622-4585-8aca-4105271d7040">

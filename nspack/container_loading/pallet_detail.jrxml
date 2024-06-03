@@ -442,7 +442,7 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 				<text><![CDATA[Gross]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="601" y="0" width="20" height="13" uuid="8849a077-2613-4c31-8a90-deedac2d3589">
+				<reportElement x="596" y="0" width="20" height="13" uuid="8849a077-2613-4c31-8a90-deedac2d3589">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<printWhenExpression><![CDATA[!$P{scartons_equals_pallets}]]></printWhenExpression>
@@ -453,9 +453,9 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 				<text><![CDATA[Ctns]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="623" y="0" width="20" height="13" uuid="5517ec36-82fa-4790-a51f-0dac405c0e76">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<reportElement x="618" y="0" width="15" height="13" uuid="5517ec36-82fa-4790-a51f-0dac405c0e76">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
@@ -491,10 +491,10 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 				<text><![CDATA[Sell By]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="555" y="0" width="45" height="13" uuid="c0f8148a-c801-43da-b62c-a1f300f3976a">
+				<reportElement x="555" y="0" width="40" height="13" uuid="c0f8148a-c801-43da-b62c-a1f300f3976a">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
 					<font size="8"/>
@@ -574,10 +574,10 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 				<textFieldExpression><![CDATA[$F{inventory_code}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#0.##" isBlankWhenNull="true">
-				<reportElement x="623" y="0" width="25" height="12" uuid="c40ef02a-6cbe-4349-baa2-b7b1bdef3821">
+				<reportElement x="618" y="0" width="20" height="12" uuid="c40ef02a-6cbe-4349-baa2-b7b1bdef3821">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right">
 					<font size="8"/>
@@ -633,7 +633,7 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Right">
+				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{pallet_number}]]></textFieldExpression>
@@ -681,7 +681,7 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 				<textFieldExpression><![CDATA[$F{gross_weight}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="601" y="0" width="20" height="12" uuid="da421630-6238-4bec-bda3-daad0f2aa138">
+				<reportElement x="596" y="0" width="20" height="12" uuid="da421630-6238-4bec-bda3-daad0f2aa138">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<printWhenExpression><![CDATA[!$P{scartons_equals_pallets}]]></printWhenExpression>
@@ -714,10 +714,10 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 				<textFieldExpression><![CDATA[$F{sell_by_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="555" y="0" width="45" height="12" uuid="40f9180d-cf3a-4016-a423-39e8f1c3f409">
+				<reportElement x="555" y="0" width="40" height="12" uuid="40f9180d-cf3a-4016-a423-39e8f1c3f409">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
 					<font size="8"/>
@@ -758,9 +758,8 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 		<band height="21" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField pattern="#,###.###;(#,###.###-)" isBlankWhenNull="true">
-				<reportElement x="578" y="3" width="25" height="13" uuid="eafb0fde-cf16-4785-bf1c-2e291259339a">
+				<reportElement x="623" y="3" width="25" height="13" uuid="eafb0fde-cf16-4785-bf1c-2e291259339a">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right">
 					<font size="8"/>
@@ -768,7 +767,7 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 				<textFieldExpression><![CDATA[$V{plt_qty_1}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="120" y="3" width="80" height="13" uuid="e28822d1-3d1c-4e55-95b4-b155a7ee783f">
+				<reportElement x="170" y="3" width="30" height="13" uuid="e28822d1-3d1c-4e55-95b4-b155a7ee783f">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right">
@@ -797,9 +796,9 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 				<textFieldExpression><![CDATA[$F{load_gross_weight}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="550" y="3" width="26" height="13" uuid="d68028be-4c92-425b-a17f-ac1cd26250bf">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				<reportElement x="601" y="3" width="26" height="13" uuid="d68028be-4c92-425b-a17f-ac1cd26250bf">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<printWhenExpression><![CDATA[!$P{scartons_equals_pallets}]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right">
