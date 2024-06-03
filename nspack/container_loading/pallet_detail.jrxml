@@ -113,7 +113,7 @@ group by pallets.pallet_number,pallets.load_id,
   pallet_sequences.sell_by_code,
   pallet_bases.pallet_base_code ,
   organizations.long_description ,
-  pallets.phc,
+  pallets.phc ,
 pallets.gross_weight,plt_qty.plt_qty,pallet_sequences.pallet_sequence_number,
 pallet_sequences.phyto_data,  marketing_varieties.marketing_variety_code
 ,fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack) 
