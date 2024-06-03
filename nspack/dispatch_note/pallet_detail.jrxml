@@ -36,7 +36,7 @@ select fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.u
   pallet_sequences.pick_ref AS pick_reference,
   pallet_sequences.pick_ref AS encrypt_pick_ref,
   inventory_codes.inventory_code,
-  target_market_groups.target_market_group_name AS  target_market_code,
+  COALESCE(target_markets.target_market_name,target_market_groups.target_market_group_name) AS  target_market_code,
     plt_qty.plt_qty,
        rank() OVER (PARTITION BY pallets.pallet_number ORDER BY pallet_sequences.pallet_sequence_number) AS rank,
      coalesce(marketingpuc.puc_code ,pucs.puc_code) AS puc,
@@ -80,6 +80,7 @@ LEFT JOIN load_containers ON load_containers.id = load_vehicles.load_container_i
 LEFT JOIN cargo_temperatures ON cargo_temperatures.id = load_containers.cargo_temperature_id
 LEFT JOIN pallet_formats ON pallet_formats.id = pallets.pallet_format_id
 LEFT JOIN pallet_bases ON pallet_bases.id = pallet_formats.pallet_base_id
+LEFT JOIN target_markets ON target_markets.id = pallet_sequences.target_market_id
  WHERE pallets.load_id = $P{load_id}
 group by pallets.pallet_number,pallets.load_id,
   fn_party_role_org_code(pallet_sequences.marketing_org_party_role_id) , -- ? OK?
@@ -104,7 +105,7 @@ group by pallets.pallet_number,pallets.load_id,
 pallets.gross_weight,plt_qty.plt_qty,pallet_sequences.pallet_sequence_number,
 pallet_sequences.phyto_data,  marketing_varieties.marketing_variety_code
 ,fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack) 
-,pallets.govt_reinspection_at, pallets.govt_first_inspection_at,pallets.shipped_at, pallets.scrapped_at
+,pallets.govt_reinspection_at, pallets.govt_first_inspection_at,pallets.shipped_at, pallets.scrapped_at,target_markets.target_market_name
 ORDER BY
 pallets.pallet_number,pallet_sequences.pallet_sequence_number,
   commodities.code,

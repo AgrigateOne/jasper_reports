@@ -853,7 +853,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 		</band>
 	</title>
 	<pageHeader>
-		<band height="36" splitType="Stretch">
+		<band height="38" splitType="Stretch">
 			<textField>
 				<reportElement x="41" y="2" width="31" height="13" uuid="40bfa11a-7e33-4cd3-a6c8-3db1f0646a61"/>
 				<textElement>
@@ -979,7 +979,7 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				<text><![CDATA[Inspection]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="534" y="15" width="35" height="13" uuid="7a2dd6da-906c-4d1a-85d3-2fed66cebb6c">
+				<reportElement x="526" y="15" width="35" height="13" uuid="7a2dd6da-906c-4d1a-85d3-2fed66cebb6c">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -1036,6 +1036,16 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				</textElement>
 				<text><![CDATA[Grade]]></text>
 			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="150" y="26" width="130" height="12" uuid="13b7c423-7404-43bd-9dc4-a63ce7473250">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pallet_number}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<detail>
@@ -1149,16 +1159,6 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{buildup_remarks}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="0" y="2" width="130" height="12" uuid="13b7c423-7404-43bd-9dc4-a63ce7473250">
-					<property name="local_mesure_unitheight" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<textElement>
-					<font size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{pallet_number}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#0.##" isBlankWhenNull="true">
 				<reportElement x="610" y="2" width="33" height="12" uuid="add7ba95-da51-4049-b519-d8ceceedca4f">
