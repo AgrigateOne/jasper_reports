@@ -654,10 +654,10 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[Billing client:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="668" y="56" width="138" height="13" uuid="064eba7f-d4d2-49a6-99d3-3b507bc6a8c5">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				<reportElement x="647" y="56" width="138" height="13" uuid="064eba7f-d4d2-49a6-99d3-3b507bc6a8c5">
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left">
 					<font size="8"/>
