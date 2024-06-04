@@ -37,7 +37,7 @@
 	<parameter name="load_id" class="java.lang.Integer"/>
 	<parameter name="cartons_equals_pallets" class="java.lang.Boolean"/>
 	<queryString language="SQL">
-		<![CDATA[ SELECT
+		<![CDATA[SELECT
 (select 
 array_to_string( 
   ARRAY(SELECT eot.edi_out_filename
