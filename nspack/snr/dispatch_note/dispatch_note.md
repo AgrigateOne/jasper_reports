@@ -1,33 +1,20 @@
-# Dispatch Note
-
-## Description
-This report is used as either the dispatch note or picklist depending on the button that is clicked.
-
+# Dispatch note
+This dispatch note is specific to Sunriver Citrus
 Dispatch Note represents the load and its contents
 
 As a dispatch note it can either be detailed or summarised.
 
 ## Generating the report
 The report can be generated as:
-### Dispatch Note
+### Dispatch note
 * Finished Goods | Dispatch | List  Loads
-      * From a load - click on the "Dispatch Note" button.
-### Dispatch Note -  Summarized
-* Finished Goods | Dispatch | List  Loads
-       * From a load - click on the "Dispatch Note- Summarized" button.
-### Dispatch Picklist Report
-* Finished Goods | Dispatch | List Loads
-       * From a load - click on the "Dispatch Picklist" button.
-       * Select "Potrait"
+      * From a load - click on the "Dispatch note" button.
 
 ## Report parameters
 | Parameter | Description | Source |
 | ----- | ----------- | ------ |
 |load_id |load id|loads.id  |
-|pallet_report |Denoting to report details| It is either 'detailed' or 'summary' |
-|for_picklist |Denoting to report type  |The same report is returned either a picklist or dispatch note  |
 |cartons_equals_pallets |At some clients cartons are treated as pallets|It is either true or false  |
-|hide_dispatch_summary |Depending on the report detail, the summary will be hidden or displayed|It is either true or false  |
 ## Table Header
 | Label | Description | Source |
 | ----- | ----------- | ------ |
@@ -63,6 +50,7 @@ The report can be generated as:
 | Cons No |Dispatch consignment note number  | `DN' + `loads.id` |
 | Order number | Order number | `loads.order_number` |
 | Load Order |Load id  | `loads.id` |
+|GGN|Global Gap Number | `pucs.gap_code`
 ## Subreport: Pallet Detail
 | Label | Description | Source                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | ----- | ----------- |----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -80,12 +68,14 @@ The report can be generated as:
 | Inv | Inventory code | `inventory_codes.inventory_code`                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | PUC |Puc  | the first of marketing puc or pucs.puc_code                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | Phyt |Phyto data  | `pallet_sequences.phyto_data`                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+|Orchard | Orchard Code | `orchards.orchard_code`
 | Insp age |Inspection age  | fn_calc_age_days: the first of:`pallets.shipped_at`or`pallets.scrapped_at` that has a value minus the first of:`pallets.govt_reinspection_at` or `pallets.govt_first_inspection_at` that has a value                                                                                                                                                                                                                                                                             |
 | Ctns |Carton quantity | `sum(pallet_sequences.carton_quantity)`                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | Plts |Number of pallets on the load | count of pallets on the load                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | Pallet Barcode | Pallet number | `pallets.pallet_number`                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | Shipped Date time |Shipped date time  of load| `loads.shipped_at`                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | Files | Edi out files | `edi_out_transactions.edi_out_filename`                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| Pick Ref          | Pick Reference  | `pallet_sequences.pick_ref` 
 ## Subreport:  Dispatch Summary
 | Label | Description | Source |
 | ----- | ----------- | ------ |
