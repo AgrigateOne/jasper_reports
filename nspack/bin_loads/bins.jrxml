@@ -22,7 +22,7 @@
 	<parameter name="bin_load_id" class="java.lang.Integer"/>
 	<queryString language="SQL">
 		<![CDATA[select
-   cultivar_groups.cultivar_group_code,
+   cultivar_groups.cultivar_group_code ,
    coalesce( cultivars.cultivar_name,cultivar_groups.cultivar_group_code)as cultivar_name,
     cultivars.description ,
     farm_groups.farm_group_code,
