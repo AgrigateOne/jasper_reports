@@ -68,7 +68,7 @@
                    ) AS t ON
 		          CASE WHEN t.commodity_id IS NOT NULL THEN t.inventory_code_id = carton_labels.inventory_code_id AND t.commodity_id = cultivar_groups.commodity_id
 		          ELSE t.inventory_code_id = carton_labels.inventory_code_id END
-  where s.id= $P{shift_id} AND  cartons.scrapped is not true AND  carton_labels.is_virtual is not true
+  where s.id= $P{shift_id} AND  cartons.scrapped is not true AND  cartons.is_virtual is not true
         GROUP BY
         s.id,
         t.cost,
