@@ -10,7 +10,7 @@
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="726"/>
 	<parameter name="load_id" class="java.lang.Integer"/>
 	<queryString language="SQL">
-		<![CDATA[select intake,pucs,sum(total_ctns)  ctns,sum(total_pallets) plts
+		<![CDATA[ select intake,pucs,sum(total_ctns)  ctns,sum(total_pallets) plts
 from (
 select
 COALESCE (

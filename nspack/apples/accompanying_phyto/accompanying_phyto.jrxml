@@ -6,7 +6,7 @@
 	<property name="ireport.y" value="0"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/dispatch_consignment"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44:80/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack_KR_Live"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
@@ -151,7 +151,8 @@
             *
         FROM ( WITH puc_groups AS (
                 SELECT
-                    string_agg(coalesce(p.marketing_puc, p.puc), ',' ORDER BY p.pallet_sequence_number) pucs,
+                    string_agg(coalesce(p.marketing_puc, p.puc), ',' ORDER BY p.pallet_sequence_number
+                     )  as pucs,
                 string_agg(coalesce(p.marketing_orchard, p.orchard), ',' ORDER BY p.pallet_sequence_number) blocks,
                 p.pallet_number AS pallet_id,
                 sum(p.carton_quantity) carton_quantity
@@ -1081,7 +1082,7 @@ Address:]]></text>
 				<textFieldExpression><![CDATA[" "+$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="10" y="5" width="429" height="80" uuid="3fdacba7-4038-4963-b540-a9978e8b5a30">
+				<reportElement x="10" y="5" width="445" height="80" uuid="3fdacba7-4038-4963-b540-a9978e8b5a30">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -1238,9 +1239,9 @@ Address:]]></text>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="36" splitType="Prevent">
+		<band height="36" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<textField isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement x="326" y="0" width="84" height="35" uuid="fcbe90ac-5b3b-45d1-9e79-d0ace2ad2cc5">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1311,7 +1312,7 @@ Address:]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{sell_by_code}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement x="283" y="0" width="43" height="35" uuid="5bf7f62a-7afc-420f-a6f7-de7fd25e3341">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1328,7 +1329,7 @@ Address:]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{variety}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 				<reportElement x="149" y="0" width="134" height="35" uuid="f0ecc350-22ab-46bd-a697-9976644a4161">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1348,7 +1349,7 @@ Address:]]></text>
 				<textFieldExpression><![CDATA[$F{pucs}]]></textFieldExpression>
 			</textField>
 			<componentElement>
-				<reportElement x="25" y="1" width="120" height="34" uuid="90e49f4f-e8ca-4f4c-9f68-a340a3756ad3">
+				<reportElement stretchType="RelativeToBandHeight" x="25" y="1" width="120" height="34" uuid="90e49f4f-e8ca-4f4c-9f68-a340a3756ad3">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.barHeight" value="px"/>
