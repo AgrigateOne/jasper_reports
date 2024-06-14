@@ -25,7 +25,7 @@
 		<![CDATA[WITH headers AS (
     SELECT
         *
-    FROM ( WITH ph AS (
+    FROM (WITH ph AS (
             SELECT
                 $P{load_id} AS load_id,
                 string_agg(DISTINCT p.phc, ',') packhouse_code
@@ -1241,7 +1241,7 @@ Address:]]></text>
 	<detail>
 		<band height="36" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 				<reportElement x="326" y="0" width="84" height="35" uuid="fcbe90ac-5b3b-45d1-9e79-d0ace2ad2cc5">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1261,7 +1261,7 @@ Address:]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{blocks}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 				<reportElement x="529" y="0" width="43" height="35" uuid="4d057aa4-f90b-470c-87ec-374ecc2bfff9">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1278,7 +1278,7 @@ Address:]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{count}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 				<reportElement x="409" y="0" width="56" height="35" uuid="bf8b07c7-69d7-411c-958a-894abba9360f">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1295,7 +1295,7 @@ Address:]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{carton_quantity}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
+			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 				<reportElement x="464" y="0" width="65" height="35" uuid="af4877c7-53f4-4a2b-8807-24665d75b329">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1312,7 +1312,7 @@ Address:]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{sell_by_code}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 				<reportElement x="283" y="0" width="43" height="35" uuid="5bf7f62a-7afc-420f-a6f7-de7fd25e3341">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
