@@ -46,10 +46,10 @@ packhouse_contact AS(
         SELECT  30  as ids,
         people.first_name,people.surname ,contact_methods.contact_method_code, contact_method_types.contact_method_type
         FROM party_contact_methods
-        JOIN contact_methods ON contact_methods.id = party_contact_methods.contact_method_id
-        JOIN contact_method_types ON contact_method_types.id = contact_methods.contact_method_type_id  
-		JOIN party_roles pr on party_contact_methods.party_id = pr.party_id
-		JOIN people on pr.person_id = people.id
+        LEFT JOIN contact_methods ON contact_methods.id = party_contact_methods.contact_method_id
+        LEFT JOIN contact_method_types ON contact_method_types.id = contact_methods.contact_method_type_id
+		LEFT JOIN party_roles pr on party_contact_methods.party_id = pr.party_id
+		LEFT JOIN people on pr.person_id = people.id
 		WHERE pr.id in (
 		SELECT pr.id
 					FROM public.party_roles pr
