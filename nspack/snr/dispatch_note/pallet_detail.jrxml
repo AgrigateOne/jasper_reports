@@ -45,7 +45,7 @@ select fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.u
   pallet_sequences.pick_ref AS pick_reference,
   pallet_sequences.pick_ref AS encrypt_pick_ref,
   inventory_codes.inventory_code,
-  COALESCE( target_markets.target_market_name,target_market_groups.target_market_group_name) AS  target_market_code,
+  COALESCE(target_markets.target_market_name,target_market_groups.target_market_group_name) AS  target_market_code,
     plt_qty.plt_qty,
        rank() OVER (PARTITION BY pallets.pallet_number ORDER BY pallet_sequences.pallet_sequence_number) AS rank,
      coalesce(marketingpuc.puc_code ,pucs.puc_code) AS puc,
