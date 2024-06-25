@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
@@ -22,6 +22,9 @@
 	<queryString language="SQL">
 		<![CDATA[WITH base_sql AS (
     SELECT
+        fn_party_role_name((SELECT pr.id
+		FROM public.party_roles pr
+		WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1)) AS implementation_owner_name,
         contract_workers.personnel_number AS personnel_barcode_number,
         s.id AS shift_id,
         contract_workers.first_name || ' ' || contract_workers.surname AS party_name,
@@ -83,6 +86,7 @@
 ),
 calc_sql AS (
     SELECT
+        base_sql.implementation_owner_name,
         base_sql.start_date_time,
         base_sql.end_date_time,
         base_sql.cw_id,
@@ -117,29 +121,108 @@ select calc_sql.*,
 FROM
     calc_sql order by cw_id,calc_sql.cw_rank;]]>
 	</queryString>
-	<field name="party_name" class="java.lang.String"/>
-	<field name="start_date_time" class="java.sql.Timestamp"/>
-	<field name="running_hours" class="java.lang.Double"/>
-	<field name="personnel_barcode_number" class="java.lang.String"/>
-	<field name="cw_id" class="java.lang.Integer"/>
-	<field name="shift_type_code" class="java.lang.String"/>
-	<field name="end_date_time" class="java.sql.Timestamp"/>
-	<field name="cw_rank" class="java.lang.Long"/>
-	<field name="shift_id" class="java.lang.Integer"/>
-	<field name="packers_shift" class="java.lang.Long"/>
-	<field name="fruit_qty_cwi" class="java.lang.Long"/>
-	<field name="carton_qty" class="java.lang.Long"/>
-	<field name="fruit_item_incentive_rate" class="java.math.BigDecimal"/>
-	<field name="inv_codes" class="java.lang.String"/>
-	<field name="total_fruit_rand_cwi" class="java.math.BigDecimal"/>
-	<field name="total_carton_cwi" class="java.math.BigDecimal"/>
-	<field name="cw_cnt" class="java.lang.Long"/>
-	<field name="total_fruit_rand_shift" class="java.math.BigDecimal"/>
-	<field name="total_fruit_cwi" class="java.math.BigDecimal"/>
-	<field name="total_fruit_shift" class="java.math.BigDecimal"/>
-	<field name="total_carton_shift" class="java.math.BigDecimal"/>
-	<field name="cw_rank_boolean" class="java.lang.Boolean"/>
-	<field name="fruit_rand_cwi" class="java.math.BigDecimal"/>
+	<field name="implementation_owner_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="implementation_owner_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="implementation_owner_name"/>
+	</field>
+	<field name="start_date_time" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="start_date_time"/>
+		<property name="com.jaspersoft.studio.field.label" value="start_date_time"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="shifts"/>
+	</field>
+	<field name="end_date_time" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="end_date_time"/>
+		<property name="com.jaspersoft.studio.field.label" value="end_date_time"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="shifts"/>
+	</field>
+	<field name="cw_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="cw_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="cw_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="contract_workers"/>
+	</field>
+	<field name="fruit_qty_cwi" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="fruit_qty_cwi"/>
+		<property name="com.jaspersoft.studio.field.label" value="fruit_qty_cwi"/>
+	</field>
+	<field name="running_hours" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="running_hours"/>
+		<property name="com.jaspersoft.studio.field.label" value="running_hours"/>
+	</field>
+	<field name="party_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="party_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="party_name"/>
+	</field>
+	<field name="personnel_barcode_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="personnel_barcode_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="personnel_barcode_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="contract_workers"/>
+	</field>
+	<field name="carton_qty" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="carton_qty"/>
+		<property name="com.jaspersoft.studio.field.label" value="carton_qty"/>
+	</field>
+	<field name="fruit_item_incentive_rate" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="fruit_item_incentive_rate"/>
+		<property name="com.jaspersoft.studio.field.label" value="fruit_item_incentive_rate"/>
+	</field>
+	<field name="shift_type_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="shift_type_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="shift_type_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="shift_types"/>
+	</field>
+	<field name="inv_codes" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="inv_codes"/>
+		<property name="com.jaspersoft.studio.field.label" value="inv_codes"/>
+	</field>
+	<field name="fruit_rand_cwi" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="fruit_rand_cwi"/>
+		<property name="com.jaspersoft.studio.field.label" value="fruit_rand_cwi"/>
+	</field>
+	<field name="total_fruit_cwi" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total_fruit_cwi"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_fruit_cwi"/>
+	</field>
+	<field name="total_fruit_rand_cwi" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total_fruit_rand_cwi"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_fruit_rand_cwi"/>
+	</field>
+	<field name="total_carton_cwi" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total_carton_cwi"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_carton_cwi"/>
+	</field>
+	<field name="total_fruit_shift" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total_fruit_shift"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_fruit_shift"/>
+	</field>
+	<field name="total_carton_shift" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total_carton_shift"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_carton_shift"/>
+	</field>
+	<field name="total_fruit_rand_shift" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total_fruit_rand_shift"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_fruit_rand_shift"/>
+	</field>
+	<field name="cw_rank" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="cw_rank"/>
+		<property name="com.jaspersoft.studio.field.label" value="cw_rank"/>
+	</field>
+	<field name="shift_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="shift_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="shift_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="shifts"/>
+	</field>
+	<field name="packers_shift" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="packers_shift"/>
+		<property name="com.jaspersoft.studio.field.label" value="packers_shift"/>
+	</field>
+	<field name="cw_cnt" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="cw_cnt"/>
+		<property name="com.jaspersoft.studio.field.label" value="cw_cnt"/>
+	</field>
+	<field name="cw_rank_boolean" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="cw_rank_boolean"/>
+		<property name="com.jaspersoft.studio.field.label" value="cw_rank_boolean"/>
+	</field>
 	<variable name="cw_id1" class="java.lang.Integer" calculation="DistinctCount">
 		<variableExpression><![CDATA[$F{cw_id}]]></variableExpression>
 	</variable>
@@ -147,7 +230,7 @@ FROM
 		<band splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="124" splitType="Stretch">
+		<band height="119" splitType="Stretch">
 			<line>
 				<reportElement x="1" y="87" width="798" height="1" uuid="5a34193e-cfe0-4370-bbc4-c4c5decf103f">
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -195,13 +278,6 @@ FROM
 			<staticText>
 				<reportElement x="188" y="89" width="110" height="30" uuid="15635740-bbde-443d-aa1e-d183c382bdeb"/>
 				<text><![CDATA[Shift D/N]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="188" y="0" width="388" height="31" uuid="7f52ae9c-18fd-4247-83c6-e0e3ab47a76f"/>
-				<textElement textAlignment="Center">
-					<font size="24"/>
-				</textElement>
-				<text><![CDATA[Sitrusrand]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="188" y="31" width="388" height="20" uuid="2b26c7e0-dbf4-4b77-9af0-1d716e510cd0"/>
@@ -273,6 +349,15 @@ FROM
 				<textElement textAlignment="Right"/>
 				<text><![CDATA[Cost]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="200" y="4" width="340" height="27" uuid="28dc350a-73ce-4980-9091-aa3b1511b55d">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{implementation_owner_name}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<detail>
