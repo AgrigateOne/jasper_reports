@@ -24,7 +24,7 @@ Finished Goods | Inspection | List Govt Inspection Sheets
 |  Inspector No.  |Inspector number |Manually filled in  |
 |  Exporter  |Exporter name  | `organizations.medium_description` of the exporter on the govt_inspection_sheet |
 | Insp.Point  |Inspection point | `govt_inspection_sheets.inspection_point ` |
-|  Cultivar  |Cultivar |`cultivars.cultivar_name`  |
+|  Cultivar  |Cultivar |`marketing_varieties.marketing_variety_code`  |
 |  PHC  |Packhouse Code | `pallets.phc` |
 |  Date  |Date of Inspection | Time at the printing of report |
 |  Product  |Commodity | `commodities.code` |
@@ -37,7 +37,7 @@ Finished Goods | Inspection | List Govt Inspection Sheets
 |  Puc  |Puc  |`pucs.puc_code`  |
 |  Orchard  |Orchard | `orchards.orchard_code` |
 |  Phyto Data  |Phyto data | `pallet_sequences.phyto_data` |
-|  Cultivar  | Cultivar|`cultivars.cultivar_name`  |
+|  Cultivar  | Cultivar|`marketing_varieties.marketing_variety_code`  |
 |  Target Region/Country/Target market  |Destination region /Packed target market group | `destination_regions.destination_region_name`/`target_market_groups.target_market_group_name` |
 |  Count Size  |Fruit size that fits in a standard box |`fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference,
    fruit_actual_counts_for_packs.actual_count_for_pack)`  |

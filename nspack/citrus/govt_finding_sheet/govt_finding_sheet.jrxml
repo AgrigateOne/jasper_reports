@@ -45,6 +45,8 @@
    	govt_inspection_sheets.inspection_point,
    	fn_party_role_name (inspectors.inspector_party_role_id) AS inspector
     ,inspectors.inspector_code
+    ,marketing_varieties.marketing_variety_code AS marketing_variety
+
    FROM
 govt_inspection_sheets
 LEFT JOIN govt_inspection_pallets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
@@ -63,6 +65,7 @@ JOIN grades ON grades.id = ps.grade_id
 LEFT JOIN fruit_size_references ON fruit_size_references.id = ps.fruit_size_reference_id
 LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = ps.fruit_actual_counts_for_pack_id
 LEFT JOIN inspectors ON inspectors.id = govt_inspection_sheets.inspector_id
+LEFT JOIN marketing_varieties ON marketing_varieties.id = ps.marketing_variety_id
 WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 	</queryString>
 	<field name="row_number" class="java.lang.Long">
@@ -103,18 +106,18 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 		<property name="com.jaspersoft.studio.field.label" value="packed_tm_group"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="target_market_groups"/>
 	</field>
-	<field name="size_ref" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="size_ref"/>
-		<property name="com.jaspersoft.studio.field.label" value="size_ref"/>
+	<field name="size" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="size"/>
+		<property name="com.jaspersoft.studio.field.label" value="size"/>
 	</field>
 	<field name="actual_count" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="actual_count"/>
 		<property name="com.jaspersoft.studio.field.label" value="actual_count"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="fruit_actual_counts_for_packs"/>
 	</field>
-	<field name="size" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="size"/>
-		<property name="com.jaspersoft.studio.field.label" value="size"/>
+	<field name="size_ref" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="size_ref"/>
+		<property name="com.jaspersoft.studio.field.label" value="size_ref"/>
 	</field>
 	<field name="phc" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="phc"/>
@@ -158,6 +161,11 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 		<property name="com.jaspersoft.studio.field.name" value="inspector_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="inspector_code"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="inspectors"/>
+	</field>
+	<field name="marketing_variety" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="marketing_variety"/>
+		<property name="com.jaspersoft.studio.field.label" value="marketing_variety"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="marketing_varieties"/>
 	</field>
 	<variable name="puc_var" class="java.lang.String" resetType="Page" incrementType="Page"/>
 	<variable name="pallet_number1" class="java.lang.Integer" calculation="DistinctCount">
@@ -427,7 +435,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{cultivar}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{marketing_variety}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="0" y="40" width="579" height="13" uuid="3800ac4b-2d8b-40bb-8c23-c367e7587cf6"/>
@@ -1346,7 +1354,7 @@ Country /Target Market]]></text>
 					<font size="8"/>
 					<paragraph leftIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{cultivar}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{marketing_variety}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="264" y="0" width="33" height="26" uuid="70355c27-72b8-4ced-b8d4-6c13d56162c5">
