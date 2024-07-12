@@ -46,8 +46,8 @@
 	<parameter name="hide_dispatch_summary_gross" class="java.lang.Boolean"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT
-(select 
-array_to_string( 
+(select
+array_to_string(
   ARRAY(SELECT eot.edi_out_filename
 from loads fl left join edi_out_transactions eot on fl.id =eot.record_id
 where fl.id=loads.id and flow_type='PO'), ', ') )
@@ -113,16 +113,17 @@ pol_port.port_code AS depart_port_name,
 loads.customer_party_role_id,
 coalesce(load_containers.internal_container_code,'') || '  ' ||coalesce(cargo_temperatures.temperature_code ,'')  as cargo_temp_setting,
 loads.exporter_party_role_id,pcs.pucs,coalesce(cargo_temperatures.temperature_code ,'')cargo_temp,coalesce(multi_load_id,loads.id )multi_load_id,
-pcs.gap_code
+pcs.gap_code,load_pallets.temp_tail
 FROM loads
-join 
-(select  pallets.load_id ,string_agg(distinct coalesce(marketingpuc.puc_code ,pucs.puc_code),',') pucs,
-string_agg(DISTINCT pucs.gap_code::text, '; '::text ORDER BY pucs.gap_code::text) gap_code
-from pallets
-join pallet_sequences ps on ps.pallet_id=pallets.id 
-join pucs on ps.puc_id=pucs.id 
-left JOIN pucs marketingpuc ON marketingpuc.id = ps.marketing_puc_id 
-group by pallets.load_id  ) pcs  on pcs.load_id=loads.id
+JOIN (
+	SELECT  pallets.load_id ,string_agg(distinct coalesce(marketingpuc.puc_code ,pucs.puc_code),',') pucs,
+     string_agg(DISTINCT pucs.gap_code::text, '; '::text ORDER BY pucs.gap_code::text) gap_code
+    FROM pallets
+	JOIN pallet_sequences ps on ps.pallet_id=pallets.id
+	JOIN pucs on ps.puc_id=pucs.id
+	LEFT JOIN pucs marketingpuc ON marketingpuc.id = ps.marketing_puc_id
+	GROUP BY pallets.load_id
+	) pcs  on pcs.load_id=loads.id
 JOIN depots ON depots.id = loads.depot_id
 JOIN destination_cities ON destination_cities.id = loads.final_destination_id
 JOIN voyage_ports pol_voyage_ports ON pol_voyage_ports.id = loads.pol_voyage_port_id
@@ -140,6 +141,13 @@ LEFT JOIN party_roles exp_pr ON exp_pr.id = loads.exporter_party_role_id
 LEFT JOIN organizations exp_org ON exp_org.party_id = exp_pr.party_id
 JOIN party_roles exp_role ON exp_role.id = loads.exporter_party_role_id
 LEFT JOIN party_roles cust_pr ON cust_pr.id = loads.customer_party_role_id
+LEFT JOIN (
+  SELECT
+	  pallets.load_id AS load_id,
+	  STRING_AGG(DISTINCT temp_tail, ' ; ') AS temp_tail
+  FROM pallets
+  GROUP BY pallets.load_id
+)load_pallets ON load_pallets.load_id = loads.id
 where loads.id = $P{load_id}]]>
 	</queryString>
 	<field name="files" class="java.lang.String">
@@ -428,6 +436,10 @@ where loads.id = $P{load_id}]]>
 	<field name="gap_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="gap_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="gap_code"/>
+	</field>
+	<field name="temp_tail" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="temp_tail"/>
+		<property name="com.jaspersoft.studio.field.label" value="temp_tail"/>
 	</field>
 	<group name="load_id" keepTogether="true">
 		<groupExpression><![CDATA[$F{load_id}]]></groupExpression>
@@ -730,7 +742,7 @@ where loads.id = $P{load_id}]]>
 				<reportElement x="365" y="142" width="66" height="13" uuid="4bfebe7a-c26c-436a-b2b6-3373e556cce8">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Voyage no:]]></text>
@@ -746,7 +758,7 @@ where loads.id = $P{load_id}]]>
 				<reportElement x="365" y="128" width="66" height="13" uuid="458cff24-978e-4626-b21b-33068eca41d6">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Export Party:]]></text>
@@ -763,7 +775,7 @@ where loads.id = $P{load_id}]]>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="434" y="128" width="121" height="13" uuid="059225d3-105e-4c1a-a78e-94446165fef4"/>
-				<textElement textAlignment="Left">
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font size="8"/>
 					<paragraph firstLineIndent="3"/>
 				</textElement>
@@ -803,7 +815,7 @@ where loads.id = $P{load_id}]]>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="434" y="142" width="121" height="13" uuid="18e321c3-9167-452a-b6d1-c96d257a7636"/>
-				<textElement textAlignment="Left">
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font size="8"/>
 					<paragraph firstLineIndent="3"/>
 				</textElement>
@@ -857,7 +869,7 @@ where loads.id = $P{load_id}]]>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Vehicle Wgt:]]></text>
@@ -866,14 +878,14 @@ where loads.id = $P{load_id}]]>
 				<reportElement x="434" y="170" width="121" height="13" uuid="4b2c38e1-bd71-4e4c-bdf8-da06f9330ff5">
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
-				<textElement textAlignment="Left">
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font size="8"/>
 					<paragraph firstLineIndent="3"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{vehicle_number}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="75" y="239" width="319" height="14" uuid="4e33796b-7c53-4ccf-b8b8-5449d200faba">
+				<reportElement x="75" y="239" width="203" height="14" uuid="4e33796b-7c53-4ccf-b8b8-5449d200faba">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left">
@@ -886,7 +898,7 @@ where loads.id = $P{load_id}]]>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Vehicle Reg:]]></text>
@@ -895,7 +907,7 @@ where loads.id = $P{load_id}]]>
 				<reportElement x="434" y="184" width="121" height="13" uuid="abea4367-961b-4ac4-a0f4-f935037cdc91">
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
-				<textElement textAlignment="Left">
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font size="8"/>
 					<paragraph firstLineIndent="3"/>
 				</textElement>
@@ -906,7 +918,7 @@ where loads.id = $P{load_id}]]>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Haulier:
@@ -917,7 +929,7 @@ where loads.id = $P{load_id}]]>
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
-				<textElement textAlignment="Left">
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font size="8"/>
 					<paragraph firstLineIndent="3"/>
 				</textElement>
@@ -933,11 +945,11 @@ where loads.id = $P{load_id}]]>
 				<textFieldExpression><![CDATA[$F{container_seal_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="434" y="198" width="185" height="13" uuid="a8d50e84-d891-4700-80a0-2f1b3850313b">
+				<reportElement x="434" y="198" width="121" height="13" uuid="a8d50e84-d891-4700-80a0-2f1b3850313b">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
 				</reportElement>
-				<textElement>
+				<textElement verticalAlignment="Bottom">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cargo_temp_setting}]]></textFieldExpression>
@@ -1125,7 +1137,7 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[Shipping Line:]]></text>
 			</staticText>
 			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
-				<reportElement x="72" y="225" width="321" height="13" uuid="bfd26096-dd76-4e2d-bb4e-b96c38af8db7">
+				<reportElement x="72" y="225" width="206" height="13" uuid="bfd26096-dd76-4e2d-bb4e-b96c38af8db7">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1147,7 +1159,7 @@ where loads.id = $P{load_id}]]>
 				<text><![CDATA[Remark:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="75" y="252" width="320" height="13" uuid="ca4603a1-5e74-485f-ace6-eb3164b7fd88">
+				<reportElement x="75" y="252" width="203" height="13" uuid="ca4603a1-5e74-485f-ace6-eb3164b7fd88">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -1218,7 +1230,7 @@ where loads.id = $P{load_id}]]>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Temp Settings:
@@ -1246,6 +1258,30 @@ where loads.id = $P{load_id}]]>
 				</textElement>
 				<text><![CDATA[GGN:]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="365" y="212" width="66" height="13" uuid="14db7de2-3522-4fc7-befe-34919d8be4ba">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Temp Tale:
+]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="434" y="212" width="166" height="13" uuid="64faef15-cf61-42a7-9626-53514f3af972">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{temp_tail}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>

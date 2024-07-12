@@ -17,40 +17,42 @@ The report can be generated as:
 |load_id |load id|loads.id  |
 |cartons_equals_pallets |At some clients cartons are treated as pallets|It is either true or false  |
 ## Table Header
-| Label | Description | Source |
-| ----- | ----------- | ------ |
-|Implementation owner address| Info related to the implemenation owner | `party role address.jasper`  using delivery address of implementation owner|
-|Customer Address|Info related to the customer party  | `party role address.jasper`  using delivery address of the customer party of the load |
-|Exporter|Exporter name  | `organizations.medium_description` of the exporter on the load |
-|Billing client |Billing client name  |`organizations.medium_description` of the billing client on the load|
-| Customer | Customer | `organizations.medium_description` of the customer on the load |
-| Consignee |Consignee  | `organizations.medium_description` of the consignee on the load |
-| Dispatch note | Dispatch note number | 'DN' + `loads.id` |
-| Vessel |Vessel name  | `vessels.vessel_code` |
-| Container code | Container code where ther load is loaded  - hidden when parameter 'for_picklist' is true | `load_containers.container_code` |
-| Container seal | Container seal code  - hidden when parameter 'for_picklist' is true | `load_containers.container_seal_code` |
-| Customer |Customer | `organizations.medium_description` of the customer on the load |
-| Shipper | Shipper | `organizations.medium_description` of the shipper on the load |
-| Booking ref |Booking reference  | `load_voyages.booking_reference` |
-| Remark |Remarks on the load  | `load_voyages.memo_pad` |
-| Export party |Exporter name  | `organizations.medium_description` of the exporter on the load  |
-| Voyage no. |Voyage number  | `voyages.voyage_number` |
-| Haulier |Transprter of the load  - hidden when parameter 'for_picklist' is true | `organizations.medium_description` of the haulier on the load |
-| Vehicle Reg | Vehicle Registration number  - hidden when parameter 'for_picklist' is true|`load_vehicles.vehicle_number`  | 
-| Vehicle Wgt |Vehicle of loeaded weight  - hidden when parameter 'for_picklist' is true  | `load_vehicles.vehicle_weight_out` |
-| Shipping line | Shipping line name  | `organizations.medium_description` of the shipping line on the load |
-| Temp Settings | Container code and cargo temperature  - hidden when parameter 'for_picklist' is true | `load_containers.internal_container_code`  + `cargo_temperatures.temperature_code`|
-| Cust Order | Customer Order number | `loads.customer_order_number` |
-| Port name | Port of discharge | pod voyage_ports.port_code |
-| PO file | PO document name | `loads.edi_file_name` |
-| Depart port |Port of loading  | pol voyage_ports.port_code |
-| Receive |Depot code  | `depots.depot_code` |
-| Temp rhine |Carrying container temperature on the sea  - hidden when parameter 'for_picklist' is true | `load_containers.container_temperature_rhine` |
-| Temp rhine 2 | Carrying container temperature on the sea   - hidden when parameter 'for_picklist' is true| `load_containers.container_temperature_rhine` |
-| Load ID | Load id | `loads.id` |
-| Cons No |Dispatch consignment note number  | `DN' + `loads.id` |
-| Order number | Order number | `loads.order_number` |
-| Load Order |Load id  | `loads.id` |
+| Label                        | Description                                                                                | Source                                                                                |
+|------------------------------|--------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------|
+| Implementation owner address | Info related to the implemenation owner                                                    | `party role address.jasper`  using delivery address of implementation owner           |
+| Customer Address             | Info related to the customer party                                                         | `party role address.jasper`  using delivery address of the customer party of the load |
+| Exporter                     | Exporter name                                                                              | `organizations.medium_description` of the exporter on the load                        |
+| Billing client               | Billing client name                                                                        | `organizations.medium_description` of the billing client on the load                  |
+| Customer                     | Customer                                                                                   | `organizations.medium_description` of the customer on the load                        |
+| Consignee                    | Consignee                                                                                  | `organizations.medium_description` of the consignee on the load                       |
+| Dispatch note                | Dispatch note number                                                                       | 'DN' + `loads.id`                                                                     |
+| Vessel                       | Vessel name                                                                                | `vessels.vessel_code`                                                                 |
+| Container code               | Container code where ther load is loaded  - hidden when parameter 'for_picklist' is true   | `load_containers.container_code`                                                      |
+| Container seal               | Container seal code  - hidden when parameter 'for_picklist' is true                        | `load_containers.container_seal_code`                                                 |
+| Customer                     | Customer                                                                                   | `organizations.medium_description` of the customer on the load                        |
+| Shipper                      | Shipper                                                                                    | `organizations.medium_description` of the shipper on the load                         |
+| Booking ref                  | Booking reference                                                                          | `load_voyages.booking_reference`                                                      |
+| Remark                       | Remarks on the load                                                                        | `load_voyages.memo_pad`                                                               |
+| Export party                 | Exporter name                                                                              | `organizations.medium_description` of the exporter on the load                        |
+| Voyage no.                   | Voyage number                                                                              | `voyages.voyage_number`                                                               |
+| Haulier                      | Transprter of the load  - hidden when parameter 'for_picklist' is true                     | `organizations.medium_description` of the haulier on the load                         |
+| Vehicle Reg                  | Vehicle Registration number  - hidden when parameter 'for_picklist' is true                | `load_vehicles.vehicle_number`                                                        | 
+| Vehicle Wgt                  | Vehicle of loeaded weight  - hidden when parameter 'for_picklist' is true                  | `load_vehicles.vehicle_weight_out`                                                    |
+| Shipping line                | Shipping line name                                                                         | `organizations.medium_description` of the shipping line on the load                   |
+| Temp Settings                | Container code and cargo temperature  - hidden when parameter 'for_picklist' is true       | `load_containers.internal_container_code`  + `cargo_temperatures.temperature_code`    |
+| Cust Order                   | Customer Order number                                                                      | `loads.customer_order_number`                                                         |
+| Port name                    | Port of discharge                                                                          | pod voyage_ports.port_code                                                            |
+| PO file                      | PO document name                                                                           | `loads.edi_file_name`                                                                 |
+| Depart port                  | Port of loading                                                                            | pol voyage_ports.port_code                                                            |
+| Receive                      | Depot code                                                                                 | `depots.depot_code`                                                                   |
+| Temp rhine                   | Carrying container temperature on the sea  - hidden when parameter 'for_picklist' is true  | `load_containers.container_temperature_rhine`                                         |
+| Temp rhine 2                 | Carrying container temperature on the sea   - hidden when parameter 'for_picklist' is true | `load_containers.container_temperature_rhine`                                         |
+| Load ID                      | Load id                                                                                    | `loads.id`                                                                            |
+| Cons No                      | Dispatch consignment note number                                                           | `DN' + `loads.id`                                                                     |
+| Order number                 | Order number                                                                               | `loads.order_number`                                                                  |
+| Load Order                   | Load id                                                                                    | `loads.id`                                                                            |
+| Temp Tale                    | Temperature control                                                                        | `pallets.temp_tail`                                                                        |
+
 |GGN|Global Gap Number | `pucs.gap_code`
 ## Subreport: Pallet Detail
 | Label | Description | Source                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
