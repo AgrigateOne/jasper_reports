@@ -11,7 +11,7 @@
 	<parameter name="production_run_id" class="java.util.Collection" nestedType="java.lang.Integer"/>
 	<parameter name="dispatched_only" class="java.lang.Boolean"/>
 	<queryString language="SQL">
-		<![CDATA[ select
+		<![CDATA[select
 b.rmt_delivery_id,
 orchards.orchard_code orchard,
 rmt_container_types.container_type_code,

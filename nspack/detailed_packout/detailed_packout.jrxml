@@ -1444,7 +1444,7 @@ grade_code,std_size,inventory_code]]>
 			<staticText>
 				<reportElement x="272" y="0" width="5" height="13" uuid="15e1da6a-e551-4d89-8c91-7c2f8f675a89">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<printWhenExpression><![CDATA[$F{actual_count} != null || $F{size_ref} != null]]></printWhenExpression>
+					<printWhenExpression><![CDATA[$F{actual_count} != null ]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center"/>
 				<text><![CDATA[/]]></text>
