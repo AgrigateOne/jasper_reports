@@ -11,7 +11,7 @@
 	<parameter name="production_run_id" class="java.util.Collection" nestedType="java.lang.Integer"/>
 	<parameter name="dispatched_only" class="java.lang.Boolean"/>
 	<queryString language="SQL">
-		<![CDATA[select rmt_classes.rmt_class_code ,rmt_classes.id as rmt_class,pr.cultivar_id ,pr.farm_id ,
+		<![CDATA[ select rmt_classes.rmt_class_code ,rmt_classes.id as rmt_class,pr.cultivar_id ,pr.farm_id ,
 count(distinct b.id) AS no_of_rebins
 ,sum(b.nett_weight::numeric(12,2)) AS total_rebin_weight
 FROM  production_runs pr

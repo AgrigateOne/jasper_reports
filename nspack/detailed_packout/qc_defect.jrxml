@@ -12,7 +12,7 @@
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="783"/>
 	<parameter name="production_run_id" class="java.util.Collection"/>
 	<queryString language="SQL">
-		<![CDATA[select fd.short_description, fd.reporting_description, qt.sample_size, qdm.qty_class_2, qdm.qty_class_3,
+		<![CDATA[ select fd.short_description, fd.reporting_description, qt.sample_size, qdm.qty_class_2, qdm.qty_class_3,
        qdm.qty_class_3 + qdm.qty_class_2 as total,
        round(coalesce((qdm.qty_class_2::decimal + qdm.qty_class_3::decimal) / NULLIF(qt.sample_size, 0), 0) * 100, 2) as total_percentage,
        round(coalesce((qdm.qty_class_2::decimal) / NULLIF(qt.sample_size, 0), 0) * 100, 2) as class2_percentage,
