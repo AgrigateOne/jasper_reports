@@ -283,7 +283,6 @@ run_attrib.has_qc_defect
 FROM run_attrib
 full join bin_tipped on bin_tipped.farm_id=run_attrib.farm_id and bin_tipped.cultivar_id=run_attrib.cultivar_id
 full join output_r on run_attrib.farm_id=output_r.farm_id and run_attrib.cultivar_id=output_r.cultivar_id
---full join rebins on rebins.farm_id=run_attrib.farm_id and rebins.cultivar_id=run_attrib.cultivar_id
 ORDER BY
 record_type,
 grade_code,std_size,inventory_code]]>
@@ -478,8 +477,9 @@ grade_code,std_size,inventory_code]]>
 		<groupFooter>
 			<band height="14">
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				<printWhenExpression><![CDATA[$F{rebins_rmt_class}==null]]></printWhenExpression>
 				<textField isBlankWhenNull="true">
-					<reportElement x="310" y="0" width="42" height="13" uuid="984f2188-bb8b-4c59-b27b-e7dfec964bec">
+					<reportElement x="310" y="0" width="44" height="13" uuid="984f2188-bb8b-4c59-b27b-e7dfec964bec">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -495,7 +495,7 @@ grade_code,std_size,inventory_code]]>
 					<textFieldExpression><![CDATA[$V{ctn_qty_1}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement x="354" y="0" width="50" height="13" uuid="54d6ab53-f21b-41e1-91fa-bb70e3282554">
+					<reportElement x="354" y="0" width="52" height="13" uuid="54d6ab53-f21b-41e1-91fa-bb70e3282554">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1289,6 +1289,7 @@ grade_code,std_size,inventory_code]]>
 	<detail>
 		<band height="14">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<printWhenExpression><![CDATA[$F{rebins_rmt_class}==null]]></printWhenExpression>
 			<textField isBlankWhenNull="true">
 				<reportElement x="0" y="0" width="37" height="13" uuid="a2876b5f-c946-48ef-be3f-1b9612f4e8c9">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1444,7 +1445,7 @@ grade_code,std_size,inventory_code]]>
 			<staticText>
 				<reportElement x="272" y="0" width="5" height="13" uuid="15e1da6a-e551-4d89-8c91-7c2f8f675a89">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<printWhenExpression><![CDATA[$F{actual_count} != null ]]></printWhenExpression>
+					<printWhenExpression><![CDATA[$F{actual_count} != null]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Center"/>
 				<text><![CDATA[/]]></text>
@@ -1490,35 +1491,35 @@ grade_code,std_size,inventory_code]]>
 				<subreportExpression><![CDATA["rebins.jasper"]]></subreportExpression>
 			</subreport>
 			<line>
-				<reportElement x="0" y="22" width="565" height="1" uuid="6122d906-4bab-4546-9d7e-24637203674b">
+				<reportElement x="0" y="23" width="565" height="1" uuid="6122d906-4bab-4546-9d7e-24637203674b">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 			</line>
 			<line>
-				<reportElement x="565" y="0" width="1" height="23" uuid="c3c9e722-bc2c-40ea-a1fa-b01f38137ebd">
+				<reportElement x="565" y="1" width="1" height="23" uuid="c3c9e722-bc2c-40ea-a1fa-b01f38137ebd">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 			</line>
 			<line>
-				<reportElement x="0" y="0" width="1" height="23" uuid="48262f5c-00e0-4687-8179-0baa52f77b69">
+				<reportElement x="0" y="1" width="1" height="23" uuid="48262f5c-00e0-4687-8179-0baa52f77b69">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 			</line>
 			<line>
-				<reportElement x="0" y="0" width="564" height="1" uuid="572fe251-3ef1-4b7c-aa42-4a4c736246ef">
+				<reportElement x="0" y="1" width="564" height="1" uuid="572fe251-3ef1-4b7c-aa42-4a4c736246ef">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 			</line>
 			<frame>
