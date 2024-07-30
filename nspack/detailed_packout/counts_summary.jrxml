@@ -12,7 +12,7 @@
 	<parameter name="production_run_id" class="java.util.Collection" nestedType="java.lang.Integer"/>
 	<parameter name="dispatched_only" class="java.lang.Boolean"/>
 	<queryString language="SQL">
-		<![CDATA[ with bin_tipped as (
+		<![CDATA[with bin_tipped as (
 				select pr.cultivar_id ,pr.farm_id 
 				,sum(b.nett_weight::numeric(12,2)) AS total_bin_weight
 				FROM  production_runs pr

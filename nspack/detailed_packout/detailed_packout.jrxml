@@ -17,111 +17,116 @@
 	<parameter name="client_code" class="java.lang.String"/>
 	<queryString language="plsql">
 		<![CDATA[with rebins as (
-select rmt_classes.rmt_class_code ,rmt_classes.id as rmt_class,pr.cultivar_id ,pr.farm_id ,
-count(distinct b.id) AS no_of_rebins
-,sum(b.nett_weight::numeric(12,2)) AS total_rebin_weight
-FROM  production_runs pr
-left join rmt_bins b on pr.id=b.production_run_rebin_id
-LEFT JOIN rmt_classes ON rmt_classes.id = b.rmt_class_id
-LEFT JOIN cultivar_groups ON cultivar_groups.id = b.cultivar_group_id
-LEFT JOIN cultivars ON cultivars.id = b.cultivar_id
-LEFT JOIN farms ON farms.id = b.farm_id
-WHERE not  ( b.scrapped =true)  and  $X{IN, pr.id , production_run_id}
-group by rmt_classes.rmt_class_code,rmt_classes.id,pr.cultivar_id ,pr.farm_id 
+    select rmt_classes.rmt_class_code ,rmt_classes.id as rmt_class,pr.cultivar_id ,pr.farm_id ,
+           count(distinct b.id) AS no_of_rebins
+            ,sum(b.nett_weight::numeric(12,2)) AS total_rebin_weight
+    FROM  production_runs pr
+              left join rmt_bins b on pr.id=b.production_run_rebin_id
+              LEFT JOIN rmt_classes ON rmt_classes.id = b.rmt_class_id
+              LEFT JOIN cultivar_groups ON cultivar_groups.id = b.cultivar_group_id
+              LEFT JOIN cultivars ON cultivars.id = b.cultivar_id
+              LEFT JOIN farms ON farms.id = b.farm_id
+    WHERE not  ( b.scrapped =true)  and  $X{IN, pr.id , production_run_id}
+    group by rmt_classes.rmt_class_code,rmt_classes.id,pr.cultivar_id ,pr.farm_id
 )
-,bin_tipped  as (
-select pr.cultivar_id ,pr.farm_id ,
-string_agg(distinct farms.farm_code::text, '; '   order by farms.farm_code::text )farms,
-string_agg(distinct pucs.puc_code::text, '; '   order by pucs.puc_code ::text)pucs,
-string_agg(distinct orchards.orchard_code::text, '; '   order by orchards.orchard_code::text )orchards,
-string_agg(distinct b.rmt_delivery_id::text, '; '    order by b.rmt_delivery_id::text) deliveries,
-string_agg(DISTINCT  cultivars.cultivar_name::text, '; '    order by cultivars.cultivar_name::text) cultivars
-,string_agg(DISTINCT b.production_run_tipped_id::text, '; '   order by b.production_run_tipped_id::text  ) runs
-,count(b.id) AS no_of_bins
-,sum(b.nett_weight::numeric(12,2)) AS total_bin_weight
-,sum(b.nett_weight::numeric(12,2))/count(b.id) as avg_weight
-,max(rmt_container_types.container_type_code) as container_type_code
-FROM  production_runs pr
-left join rmt_bins b on pr.id=b.production_run_tipped_id
-LEFT JOIN cultivar_groups ON cultivar_groups.id = b.cultivar_group_id
-LEFT JOIN cultivars ON cultivars.id = b.cultivar_id
-left JOIN orchards ON orchards.id = b.orchard_id
-LEFT JOIN farms ON farms.id = b.farm_id
-Left join pucs on b.puc_id = pucs.id
-LEFT JOIN rmt_container_types ON rmt_container_types.id = b.rmt_container_type_id
-WHERE not  ( b.scrapped =true)  and $X{IN, pr.id , production_run_id}
-group by pr.cultivar_id ,pr.farm_id
+   ,bin_tipped  as (
+    select
+        string_agg(DISTINCT b.production_run_tipped_id::text, '; '   order by b.production_run_tipped_id::text  ) runs
+
+            ,pr.cultivar_id ,pr.farm_id ,
+        string_agg(distinct farms.farm_code::text, '; '   order by farms.farm_code::text )farms,
+        string_agg(distinct pucs.puc_code::text, '; '   order by pucs.puc_code ::text)pucs,
+        string_agg(distinct orchards.orchard_code::text, '; '   order by orchards.orchard_code::text )orchards,
+        string_agg(distinct b.rmt_delivery_id::text, '; '    order by b.rmt_delivery_id::text) deliveries,
+        string_agg(DISTINCT  cultivars.cultivar_name::text, '; '    order by cultivars.cultivar_name::text) cultivars
+            ,count(b.id) AS no_of_bins
+            ,sum(b.nett_weight::numeric(12,2)) AS total_bin_weight
+            ,sum(b.nett_weight::numeric(12,2))/count(b.id) as avg_weight
+            ,max(rmt_container_types.container_type_code) as container_type_code
+    FROM  production_runs pr
+              left join rmt_bins b on pr.id=b.production_run_tipped_id
+              LEFT JOIN cultivar_groups ON cultivar_groups.id = b.cultivar_group_id
+              LEFT JOIN cultivars ON cultivars.id = b.cultivar_id
+              left JOIN orchards ON orchards.id = b.orchard_id
+              LEFT JOIN farms ON farms.id = b.farm_id
+              Left join pucs on b.puc_id = pucs.id
+              LEFT JOIN rmt_container_types ON rmt_container_types.id = b.rmt_container_type_id
+    WHERE not  ( b.scrapped =true)  and $X{IN, pr.id , production_run_id}
+    group by pr.cultivar_id ,pr.farm_id
 ),
-run_attrib as (
-SELECT  pr.cultivar_id ,pr.farm_id ,cultivars.cultivar_name,
-string_agg(distinct farms.farm_code, '; '   order by farms.farm_code )farms,
-string_agg(distinct pucs.puc_code, '; '   order by pucs.puc_code )pucs
-,string_agg(DISTINCT p.production_run_id::text, '; '   order by p.production_run_id::text  ) runs
-,string_agg(distinct orchards.orchard_code, '; '   order by orchards.orchard_code )orchards
-,min(pr.started_at) started_at
-,max(pr.completed_at) completed_at
-,string_agg(distinct date_part('week'::text, pr.started_at)::text, '; '   order by date_part('week'::text, pr.started_at)::text ) as pack_weeks
-,EXISTS (
+    run_attrib as (
         SELECT
-            qc_samples.id
-        FROM
-            qc_samples
-        WHERE
-             qc_samples.production_run_id=  pr.id) has_qc_defect
-from
-production_run_stats p
-join production_runs pr on pr.id=p.production_run_id
-LEFT JOIN cultivars ON cultivars.id = pr.cultivar_id
-LEFT JOIN farms ON farms.id = pr.farm_id
-LEFT JOIN pucs ON pucs.id = pr.puc_id
-left JOIN orchards ON orchards.id = pr.orchard_id
-where  $X{IN, p.production_run_id, production_run_id}
-group by pr.id, pr.cultivar_id ,pr.farm_id ,cultivars.cultivar_name,farms.farm_code,pucs.puc_code
-)
-, packout_details as (
-select   production_runs.cultivar_id ,production_runs.farm_id ,   COALESCE(cultivars.cultivar_name, cultivar_groups.cultivar_group_code) AS cultivar,
-marketing_varieties.marketing_variety_code,
-grades.grade_code,basic_pack_codes.basic_pack_code as basic_pack,
-std_fruit_size_counts.size_count_value AS std_size,
-fruit_size_references.size_reference AS size_ref,
-fruit_actual_counts_for_packs.actual_count_for_pack AS actual_count,
-inventory_codes.inventory_code,
-sum(pallet_sequences.nett_weight::numeric(12,2)) AS nett_weight,
-sum(pallet_sequences.carton_quantity)carton_quantity,
-sum(standard_product_weights.nett_weight * pallet_sequences.carton_quantity::numeric) AS derived_nett_weight,
-string_agg(DISTINCT packhouses.plant_resource_code, '; '   order by packhouses.plant_resource_code) packhouses,
-COALESCE(cvv.marketing_variety_code,marketing_varieties.marketing_variety_code) as variety,
-target_market_groups.target_market_group_name                           AS packed_tm_group,
-commodities.code as commodity_code	,
-marks.mark_code,
-fn_party_role_name(pallet_sequences.marketing_org_party_role_id) AS marketing_org
-FROM pallet_sequences
-JOIN marks ON marks.id = pallet_sequences.mark_id
-join pallets on   pallet_sequences.pallet_id =pallets.id
-JOIN production_runs ON production_runs.id = pallet_sequences.production_run_id
-JOIN plant_resources packhouses ON packhouses.id = pallet_sequences.packhouse_resource_id
-JOIN plant_resources lines ON lines.id = pallet_sequences.production_line_id
-JOIN target_market_groups ON target_market_groups.id = pallet_sequences.packed_tm_group_id
-left JOIN farms ON farms.id = (( SELECT rmt_bins.farm_id
-                  FROM rmt_bins
-                  WHERE rmt_bins.production_run_tipped_id = production_runs.id
-LIMIT 1))
-JOIN cultivar_groups ON cultivar_groups.id = pallet_sequences.cultivar_group_id
-LEFT JOIN cultivars ON cultivars.id = pallet_sequences.cultivar_id
-LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
-LEFT JOIN standard_pack_codes ON standard_pack_codes.id = pallet_sequences.standard_pack_code_id
-LEFT JOIN standard_product_weights ON commodities.id = standard_product_weights.commodity_id AND standard_product_weights.standard_pack_id = standard_pack_codes.id
-JOIN marketing_varieties ON marketing_varieties.id = pallet_sequences.marketing_variety_id
-LEFT JOIN customer_varieties ON customer_varieties.id = pallet_sequences.customer_variety_id
-LEFT JOIN marketing_varieties cvv ON cvv.id = customer_varieties.variety_as_customer_variety_id
-JOIN grades ON grades.id = pallet_sequences.grade_id
-LEFT JOIN std_fruit_size_counts ON std_fruit_size_counts.id = pallet_sequences.std_fruit_size_count_id
-LEFT JOIN fruit_size_references ON fruit_size_references.id = pallet_sequences.fruit_size_reference_id
-LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = pallet_sequences.fruit_actual_counts_for_pack_id
-JOIN basic_pack_codes ON basic_pack_codes.id = pallet_sequences.basic_pack_code_id
-JOIN inventory_codes ON inventory_codes.id = pallet_sequences.inventory_code_id
-JOIN production_run_stats ON production_run_stats.production_run_id = pallet_sequences.production_run_id
-WHERE case when    $P{dispatched_only}   = true then pallets.load_id is not null else true end and $X{IN, pallet_sequences.production_run_id, production_run_id}
+            string_agg(DISTINCT p.production_run_id::text, '; '   order by p.production_run_id::text  ) runs
+             ,pr.cultivar_id ,pr.farm_id ,cultivars.cultivar_name,
+            string_agg(distinct farms.farm_code, '; '   order by farms.farm_code )farms,
+            string_agg(distinct pucs.puc_code, '; '   order by pucs.puc_code )pucs
+             ,string_agg(distinct orchards.orchard_code, '; '   order by orchards.orchard_code )orchards
+             ,min(pr.started_at) started_at
+             ,max(pr.completed_at) completed_at
+             ,string_agg(distinct date_part('week'::text, pr.started_at)::text, '; '   order by date_part('week'::text, pr.started_at)::text ) as pack_weeks
+             ,EXISTS (
+            SELECT
+                qc_samples.id
+            FROM
+                qc_samples
+            WHERE
+                qc_samples.production_run_id=  pr.id) has_qc_defect
+        from
+            production_run_stats p
+                join production_runs pr on pr.id=p.production_run_id
+                LEFT JOIN cultivars ON cultivars.id = pr.cultivar_id
+                LEFT JOIN farms ON farms.id = pr.farm_id
+                LEFT JOIN pucs ON pucs.id = pr.puc_id
+                left JOIN orchards ON orchards.id = pr.orchard_id
+        where $X{IN, p.production_run_id, production_run_id}
+        group by pr.id, pr.cultivar_id ,pr.farm_id ,cultivars.cultivar_name,farms.farm_code,pucs.puc_code
+    )
+   , packout_details as (
+    select
+        string_agg(DISTINCT production_runs.id::text, '; '   order by production_runs.id::text  ) runs,
+        production_runs.cultivar_id ,production_runs.farm_id ,   COALESCE(cultivars.cultivar_name, cultivar_groups.cultivar_group_code) AS cultivar,
+        marketing_varieties.marketing_variety_code,
+        grades.grade_code,basic_pack_codes.basic_pack_code as basic_pack,
+        std_fruit_size_counts.size_count_value AS std_size,
+        fruit_size_references.size_reference AS size_ref,
+        fruit_actual_counts_for_packs.actual_count_for_pack AS actual_count,
+        inventory_codes.inventory_code,
+        sum(pallet_sequences.nett_weight::numeric(12,2)) AS nett_weight,
+        sum(pallet_sequences.carton_quantity)carton_quantity,
+        sum(standard_product_weights.nett_weight * pallet_sequences.carton_quantity::numeric) AS derived_nett_weight,
+        string_agg(DISTINCT packhouses.plant_resource_code, '; '   order by packhouses.plant_resource_code) packhouses,
+        COALESCE(cvv.marketing_variety_code,marketing_varieties.marketing_variety_code) as variety,
+        target_market_groups.target_market_group_name                           AS packed_tm_group,
+        commodities.code as commodity_code	,
+        marks.mark_code,
+        fn_party_role_name(pallet_sequences.marketing_org_party_role_id) AS marketing_org,pallet_sequences.client_size_reference AS client_size_ref
+    FROM pallet_sequences
+             JOIN marks ON marks.id = pallet_sequences.mark_id
+             join pallets on   pallet_sequences.pallet_id =pallets.id
+             JOIN production_runs ON production_runs.id = pallet_sequences.production_run_id
+             JOIN plant_resources packhouses ON packhouses.id = pallet_sequences.packhouse_resource_id
+             JOIN plant_resources lines ON lines.id = pallet_sequences.production_line_id
+             JOIN target_market_groups ON target_market_groups.id = pallet_sequences.packed_tm_group_id
+             left JOIN farms ON farms.id = (( SELECT rmt_bins.farm_id
+                                              FROM rmt_bins
+                                              WHERE rmt_bins.production_run_tipped_id = production_runs.id
+    LIMIT 1))
+    JOIN cultivar_groups ON cultivar_groups.id = pallet_sequences.cultivar_group_id
+    LEFT JOIN cultivars ON cultivars.id = pallet_sequences.cultivar_id
+    LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
+    LEFT JOIN standard_pack_codes ON standard_pack_codes.id = pallet_sequences.standard_pack_code_id
+    LEFT JOIN standard_product_weights ON commodities.id = standard_product_weights.commodity_id AND standard_product_weights.standard_pack_id = standard_pack_codes.id
+    JOIN marketing_varieties ON marketing_varieties.id = pallet_sequences.marketing_variety_id
+    LEFT JOIN customer_varieties ON customer_varieties.id = pallet_sequences.customer_variety_id
+    LEFT JOIN marketing_varieties cvv ON cvv.id = customer_varieties.variety_as_customer_variety_id
+    JOIN grades ON grades.id = pallet_sequences.grade_id
+    LEFT JOIN std_fruit_size_counts ON std_fruit_size_counts.id = pallet_sequences.std_fruit_size_count_id
+    LEFT JOIN fruit_size_references ON fruit_size_references.id = pallet_sequences.fruit_size_reference_id
+    LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = pallet_sequences.fruit_actual_counts_for_pack_id
+    JOIN basic_pack_codes ON basic_pack_codes.id = pallet_sequences.basic_pack_code_id
+    JOIN inventory_codes ON inventory_codes.id = pallet_sequences.inventory_code_id
+    JOIN production_run_stats ON production_run_stats.production_run_id = pallet_sequences.production_run_id
+WHERE case when     $P{dispatched_only}  = true then pallets.load_id is not null else true end and  $X{IN, pallet_sequences.production_run_id, production_run_id}
 group by   production_runs.cultivar_id ,production_runs.farm_id ,   COALESCE(cultivars.cultivar_name, cultivar_groups.cultivar_group_code) ,
 marketing_varieties.marketing_variety_code,
 grades.grade_code,
@@ -133,7 +138,7 @@ inventory_codes.inventory_code
 ,cvv.marketing_variety_code
 ,target_market_groups.target_market_group_name,commodities.code
 ,marks.mark_code
-,pallet_sequences.marketing_org_party_role_id
+,pallet_sequences.marketing_org_party_role_id,pallet_sequences.client_size_reference
 ), output_r as (  SELECT
 cultivar_id ,
 farm_id ,
@@ -157,11 +162,14 @@ mark_code,
 marketing_org,
 null no_of_rebins,
 null total_rebin_weight,
-null rmt_class_code, 
-null rmt_class_id
+null rmt_class_code,
+null rmt_class_id,
+runs,
+client_size_ref
 FROM
 packout_details vpd
 GROUP BY
+runs,
 cultivar_id ,
 farm_id ,
 cultivar,
@@ -177,7 +185,7 @@ variety,
 packed_tm_group,
 commodity_code,
 mark_code,
-marketing_org
+marketing_org,client_size_ref
 UNION ALL
 select
 cultivar_id ,
@@ -203,10 +211,12 @@ NULL marketing_org,
 count(distinct vw_bins.id) AS no_of_rebins,
 sum(nett_weight::numeric(12,2)) AS total_rebin_weight,
 rmt_class_code,
-rmt_class_id
+rmt_class_id,
+string_agg(DISTINCT production_run_tipped_id::text, '; '   order by production_run_tipped_id::text  ) runs,
+'' as client_size_ref
 FROM
 public.vw_bins
-where not  ( scrapped =true) and $X{IN, production_run_rebin_id, production_run_id}
+where not  ( scrapped =true) and  $X{IN, production_run_rebin_id, production_run_id}
 GROUP BY
 cultivar_id ,
 farm_id ,
@@ -244,7 +254,7 @@ SELECT
                     roles
                 WHERE
                     name = 'IMPLEMENTATION_OWNER')
-            LIMIT 1) AS implementation_owner_party_role_id,
+                     LIMIT 1) AS implementation_owner_party_role_id,
 run_attrib.pack_weeks,
 output_r.packhouses,
 coalesce(bin_tipped.farms,run_attrib.farms) farms,
@@ -278,14 +288,15 @@ coalesce(bin_tipped.cultivars,run_attrib.cultivar_name)cultivars
 ,output_r.rmt_class_id as rebins_rmt_class
 ,no_of_rebins
 ,total_rebin_weight
-,bin_tipped.container_type_code,
-run_attrib.has_qc_defect
+,bin_tipped.container_type_code
+,run_attrib.has_qc_defect
+,client_size_ref
 FROM run_attrib
-full join bin_tipped on bin_tipped.farm_id=run_attrib.farm_id and bin_tipped.cultivar_id=run_attrib.cultivar_id
-full join output_r on run_attrib.farm_id=output_r.farm_id and run_attrib.cultivar_id=output_r.cultivar_id
+    full join bin_tipped on bin_tipped.runs=run_attrib.runs
+    full join output_r on run_attrib.runs=output_r.runs
 ORDER BY
-record_type,
-grade_code,std_size,inventory_code]]>
+    record_type,
+    grade_code,std_size,inventory_code]]>
 	</queryString>
 	<field name="implementation_owner_name" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="implementation_owner_name"/>
@@ -445,6 +456,7 @@ grade_code,std_size,inventory_code]]>
 		<property name="com.jaspersoft.studio.field.name" value="has_qc_defect"/>
 		<property name="com.jaspersoft.studio.field.label" value="has_qc_defect"/>
 	</field>
+	<field name="client_size_ref" class="java.lang.String"/>
 	<variable name="nett_weight_1" class="java.lang.Double" resetType="Group" resetGroup="grade_code" calculation="Sum">
 		<variableExpression><![CDATA[$P{use_packed_weight} ?$F{nett_weight}:$F{derived_nett_weight}]]></variableExpression>
 	</variable>
@@ -479,11 +491,11 @@ grade_code,std_size,inventory_code]]>
 				<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				<printWhenExpression><![CDATA[$F{rebins_rmt_class}==null]]></printWhenExpression>
 				<textField isBlankWhenNull="true">
-					<reportElement x="310" y="0" width="44" height="13" uuid="984f2188-bb8b-4c59-b27b-e7dfec964bec">
+					<reportElement x="362" y="0" width="44" height="13" uuid="984f2188-bb8b-4c59-b27b-e7dfec964bec">
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
-						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					</reportElement>
 					<box>
 						<topPen lineWidth="1.0"/>
@@ -495,11 +507,11 @@ grade_code,std_size,inventory_code]]>
 					<textFieldExpression><![CDATA[$V{ctn_qty_1}]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement x="354" y="0" width="52" height="13" uuid="54d6ab53-f21b-41e1-91fa-bb70e3282554">
+					<reportElement x="403" y="0" width="52" height="13" uuid="54d6ab53-f21b-41e1-91fa-bb70e3282554">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					</reportElement>
 					<box>
 						<topPen lineWidth="1.0"/>
@@ -511,7 +523,7 @@ grade_code,std_size,inventory_code]]>
 					<textFieldExpression><![CDATA[$V{nett_weight1}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="406" y="0" width="40" height="13" uuid="b4615a44-d6a5-4e2e-9146-5e9a00d9dffc">
+					<reportElement x="450" y="0" width="40" height="13" uuid="b4615a44-d6a5-4e2e-9146-5e9a00d9dffc">
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 						<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1006,19 +1018,6 @@ grade_code,std_size,inventory_code]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{pack_weeks}]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement x="0" y="1" width="92" height="83" uuid="8ca27480-6cb1-4412-b4fd-191270a29d4e">
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<imageExpression><![CDATA["../logos/" +$P{client_code}  + "_logo.png"]]></imageExpression>
-			</image>
 			<subreport>
 				<reportElement x="445" y="1" width="110" height="80" uuid="904aa406-1e18-4bc6-90df-d3954de51788">
 					<property name="local_mesure_unitheight" value="pixel"/>
@@ -1053,6 +1052,19 @@ grade_code,std_size,inventory_code]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{farms}]]></textFieldExpression>
 			</textField>
+			<image>
+				<reportElement x="5" y="6" width="92" height="83" uuid="09f47262-7161-461d-a741-13b5fdd0c63b">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<imageExpression><![CDATA["../logos/" +$P{client_code}  + "_logo.png"]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<columnHeader>
@@ -1118,9 +1130,10 @@ grade_code,std_size,inventory_code]]>
 				<text><![CDATA[Variety]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="41" y="29" width="37" height="13" uuid="54f5c68e-d73e-4b68-b174-c37ca222c750">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				<reportElement x="38" y="29" width="25" height="13" uuid="54f5c68e-d73e-4b68-b174-c37ca222c750">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="8"/>
@@ -1128,19 +1141,20 @@ grade_code,std_size,inventory_code]]>
 				<text><![CDATA[Grade]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="80" y="29" width="37" height="13" uuid="edf7d97b-5444-49f5-9981-0bae0ac562a6">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				<reportElement x="64" y="29" width="37" height="13" uuid="edf7d97b-5444-49f5-9981-0bae0ac562a6">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Left" verticalAlignment="Bottom">
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Pack]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="119" y="29" width="37" height="13" uuid="20344a4d-eb3e-4e7f-9500-00a2b9d87c64">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				<reportElement x="101" y="29" width="30" height="13" uuid="20344a4d-eb3e-4e7f-9500-00a2b9d87c64">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font size="8"/>
@@ -1148,22 +1162,22 @@ grade_code,std_size,inventory_code]]>
 				<text><![CDATA[Mark]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="158" y="29" width="37" height="13" uuid="cf3dbf9e-d0c0-4488-a892-9f04ddf301e0">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				<reportElement x="132" y="29" width="37" height="13" uuid="cf3dbf9e-d0c0-4488-a892-9f04ddf301e0">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Left" verticalAlignment="Bottom">
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Orgzn]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="197" y="29" width="25" height="13" uuid="d361aec9-292a-4fc2-87af-035a831211ee">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<reportElement x="202" y="29" width="20" height="13" uuid="d361aec9-292a-4fc2-87af-035a831211ee">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Left" verticalAlignment="Bottom">
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[TM]]></text>
@@ -1190,8 +1204,7 @@ grade_code,std_size,inventory_code]]>
 				<text><![CDATA[Count]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="319" y="29" width="35" height="13" uuid="88f7c273-3f29-42e5-9213-637ac42e5649">
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				<reportElement x="362" y="29" width="35" height="13" uuid="88f7c273-3f29-42e5-9213-637ac42e5649">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -1201,9 +1214,8 @@ grade_code,std_size,inventory_code]]>
 				<text><![CDATA[Qty]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="360" y="29" width="45" height="13" uuid="ad087b0a-4d84-4e80-adc7-d55b1b49f299">
+				<reportElement x="403" y="29" width="45" height="13" uuid="ad087b0a-4d84-4e80-adc7-d55b1b49f299">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
@@ -1212,10 +1224,10 @@ grade_code,std_size,inventory_code]]>
 				<text><![CDATA[Kgs]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="407" y="29" width="38" height="13" uuid="87570555-9f5e-406a-be77-e3c2134fb56b">
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				<reportElement x="450" y="29" width="38" height="13" uuid="87570555-9f5e-406a-be77-e3c2134fb56b">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<font size="8"/>
@@ -1223,9 +1235,10 @@ grade_code,std_size,inventory_code]]>
 				<text><![CDATA[%]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="450" y="29" width="25" height="13" uuid="f1496fc8-a21c-41ce-ac2b-7a735c2d0763">
+				<reportElement x="490" y="29" width="25" height="13" uuid="f1496fc8-a21c-41ce-ac2b-7a735c2d0763">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<font size="8"/>
@@ -1233,7 +1246,7 @@ grade_code,std_size,inventory_code]]>
 				<text><![CDATA[Qty]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="490" y="29" width="45" height="13" uuid="671a5c4e-b6d9-4d1e-b75b-37d3bb602c2d">
+				<reportElement x="530" y="29" width="15" height="13" uuid="671a5c4e-b6d9-4d1e-b75b-37d3bb602c2d">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -1243,9 +1256,9 @@ grade_code,std_size,inventory_code]]>
 				<text><![CDATA[Kgs]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="537" y="29" width="25" height="13" uuid="562fe6e4-d359-4408-a5e1-d49c437db3ea">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<reportElement x="547" y="29" width="15" height="13" uuid="562fe6e4-d359-4408-a5e1-d49c437db3ea">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Bottom">
@@ -1284,10 +1297,20 @@ grade_code,std_size,inventory_code]]>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 			</line>
+			<staticText>
+				<reportElement x="312" y="29" width="50" height="13" uuid="f2636dbd-69c2-4d97-bef2-3aa4661777ba">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Client Size ref]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="14">
+		<band height="18">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<printWhenExpression><![CDATA[$F{rebins_rmt_class}==null]]></printWhenExpression>
 			<textField isBlankWhenNull="true">
@@ -1304,9 +1327,9 @@ grade_code,std_size,inventory_code]]>
 				<textFieldExpression><![CDATA[$F{variety}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="41" y="0" width="37" height="13" uuid="68d9dba2-ee13-4af7-8874-76162446681a">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<reportElement x="38" y="0" width="25" height="13" uuid="68d9dba2-ee13-4af7-8874-76162446681a">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center">
 					<font size="8"/>
@@ -1314,21 +1337,23 @@ grade_code,std_size,inventory_code]]>
 				<textFieldExpression><![CDATA[$F{grade_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="80" y="0" width="37" height="13" uuid="9d1e64f0-679e-4c73-ab21-978f6941a804">
+				<reportElement x="64" y="0" width="37" height="13" uuid="9d1e64f0-679e-4c73-ab21-978f6941a804">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font size="8"/>
+					<paragraph firstLineIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{basic_pack}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="119" y="0" width="37" height="13" uuid="122bb03e-cd06-45fd-a991-87950e1eaf58">
+				<reportElement x="101" y="0" width="30" height="13" uuid="122bb03e-cd06-45fd-a991-87950e1eaf58">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement>
 					<font size="8"/>
@@ -1336,10 +1361,10 @@ grade_code,std_size,inventory_code]]>
 				<textFieldExpression><![CDATA[$F{mark_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="158" y="0" width="37" height="13" uuid="387b1292-79d5-490b-b36b-8f698794728d">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				<reportElement x="132" y="0" width="67" height="13" uuid="387b1292-79d5-490b-b36b-8f698794728d">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement>
 					<font size="8"/>
@@ -1347,12 +1372,12 @@ grade_code,std_size,inventory_code]]>
 				<textFieldExpression><![CDATA[$F{marketing_org}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="197" y="0" width="25" height="13" uuid="6b86a458-3fb1-429a-960d-a4641e47c302">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				<reportElement x="202" y="0" width="20" height="13" uuid="6b86a458-3fb1-429a-960d-a4641e47c302">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{packed_tm_group}]]></textFieldExpression>
@@ -1380,7 +1405,7 @@ grade_code,std_size,inventory_code]]>
 				<textFieldExpression><![CDATA[$F{actual_count}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="313" y="0" width="39" height="13" uuid="9d654891-6ab4-4919-b657-20db49efb009">
+				<reportElement x="362" y="0" width="39" height="13" uuid="9d654891-6ab4-4919-b657-20db49efb009">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1391,7 +1416,7 @@ grade_code,std_size,inventory_code]]>
 				<textFieldExpression><![CDATA[$F{carton_quantity}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="354" y="0" width="50" height="13" uuid="617d8375-a95d-4748-acd2-636c1acf2c6a">
+				<reportElement x="403" y="0" width="50" height="13" uuid="617d8375-a95d-4748-acd2-636c1acf2c6a">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1402,7 +1427,7 @@ grade_code,std_size,inventory_code]]>
 				<textFieldExpression><![CDATA[$P{use_packed_weight} ?$F{nett_weight}:$F{derived_nett_weight}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00#;#,##0.00#-" isBlankWhenNull="true">
-				<reportElement x="406" y="0" width="40" height="13" uuid="bcfb54d5-e026-4603-b3a0-43fe5385fc89">
+				<reportElement x="450" y="0" width="40" height="13" uuid="bcfb54d5-e026-4603-b3a0-43fe5385fc89">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1413,7 +1438,7 @@ grade_code,std_size,inventory_code]]>
 				<textFieldExpression><![CDATA[($P{use_packed_weight} ? ($F{nett_weight}/$F{total_bin_weight}) * 100 : ($F{derived_nett_weight}/$F{total_bin_weight}) * 100).setScale(2,RoundingMode.HALF_UP)]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="537" y="0" width="25" height="13" uuid="8ed5157a-aaa9-47c9-b846-25e84dce3c86">
+				<reportElement x="547" y="0" width="15" height="13" uuid="8ed5157a-aaa9-47c9-b846-25e84dce3c86">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1423,7 +1448,7 @@ grade_code,std_size,inventory_code]]>
 				</textElement>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="450" y="0" width="38" height="13" uuid="f20bb44f-4992-42d8-9d33-bcc584fdde4e">
+				<reportElement x="490" y="0" width="29" height="13" uuid="f20bb44f-4992-42d8-9d33-bcc584fdde4e">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -1433,7 +1458,7 @@ grade_code,std_size,inventory_code]]>
 				</textElement>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="490" y="1" width="45" height="13" uuid="922b8f2e-c87a-4a3c-a99d-bb51d1d9a97b">
+				<reportElement x="520" y="0" width="25" height="14" uuid="922b8f2e-c87a-4a3c-a99d-bb51d1d9a97b">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
@@ -1460,6 +1485,17 @@ grade_code,std_size,inventory_code]]>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{size_ref}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="315" y="0" width="47" height="13" uuid="c135accd-5a8f-4c83-a320-d5e5e77952a7">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{client_size_ref}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

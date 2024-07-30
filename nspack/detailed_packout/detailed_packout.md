@@ -74,19 +74,20 @@ Production | Runs | List Production Runs
 | Kilograms|Total nett weight of bins on a delivery  | sum(rmt_bins.nett_weight)|
 | Qty| The number of bins on a delivery | count of bins |
 ## Report detail
-| Label | Description | Source |
-| ----- | ----------- | ------ |
-| Variety|Fruit variety  | the first of: customer marketing variety or `marketing_varieties.marketing_variety_code` that has a value |
-| Grade| Fruit grade | `grades.grade_code` |
-| Pack|Basic pack  | `basic_pack_codes.basic_pack_code` |
-| Mark|Mark code  | `marks.mark_code` |
-| Orgzn|Marketing organization| organizations.medium description of the marketing org selected on the production run |
-| TM| Packed target market | `target_market_groups.target_market_group_name` |
-| Inv|Inventory code  | `inventory_codes.inventory_code` |
-| Count|Actual count and size ref  | `fruit_actual_counts_for_packs.actual_count_for_pack`/`fruit_size_references.size_reference` |
-| Qty|Carton quantity  | sum(`pallet_sequences.carton_quantity`)|
-| Kgs|Packed weight  | if parameter 'use_packed_weight' is true `sum(pallet_sequences.nett_weight)` else `sum(standard_product_weights.nett_weight * pallet_sequences.carton_quantity)` |
-| %| Packed weight over total tipped bin weight percentage | if parameter 'use_packed_weight' is true `sum(pallet_sequences.nett_weight)/sum(rmt_bins.nett_weight)` else `sum(standard_product_weights.nett_weight * pallet_sequences.carton_quantity)/sum(rmt_bins.nett_weight)`  |
+| Label       | Description                                           | Source                                                                                                                                                                                                               |
+|-------------|-------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Variety     | Fruit variety                                         | the first of: customer marketing variety or `marketing_varieties.marketing_variety_code` that has a value                                                                                                            |
+| Grade       | Fruit grade                                           | `grades.grade_code`                                                                                                                                                                                                  |
+| Pack        | Basic pack                                            | `basic_pack_codes.basic_pack_code`                                                                                                                                                                                   |
+| Mark        | Mark code                                             | `marks.mark_code`                                                                                                                                                                                                    |
+| Orgzn       | Marketing organization                                | `organizations.medium description of the marketing org selected on the production run`                                                                                                                                |
+| TM          | Packed target market                                  | `target_market_groups.target_market_group_name`                                                                                                                                                                      |
+| Inv         | Inventory code                                        | `inventory_codes.inventory_code`                                                                                                                                                                                     |
+| Count       | Actual count and size ref                             | `fruit_actual_counts_for_packs.actual_count_for_pack`/`fruit_size_references.size_reference`                                                                                                                         |
+| Client Size | Client size ref                                       | `pallet_sequences.client_size_ref`                                                                                                                                            |
+| Qty         | Carton quantity                                       | sum(`pallet_sequences.carton_quantity`)                                                                                                                                                                              |
+| Kgs         | Packed weight                                         | if parameter 'use_packed_weight' is true `sum(pallet_sequences.nett_weight)` else `sum(standard_product_weights.nett_weight * pallet_sequences.carton_quantity)`                                                     |
+| %           | Packed weight over total tipped bin weight percentage | if parameter 'use_packed_weight' is true `sum(pallet_sequences.nett_weight)/sum(rmt_bins.nett_weight)` else `sum(standard_product_weights.nett_weight * pallet_sequences.carton_quantity)/sum(rmt_bins.nett_weight)` |
 ## Subreport: Rebinned Kgs
 | Label | Description | Source |
 | ----- | ----------- | ------ |

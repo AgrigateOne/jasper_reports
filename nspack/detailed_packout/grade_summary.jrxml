@@ -20,7 +20,7 @@
 	<parameter name="production_run_id" class="java.util.Collection" nestedType="java.lang.Integer"/>
 	<parameter name="dispatched_only" class="java.lang.Boolean"/>
 	<queryString language="SQL">
-		<![CDATA[ SELECT
+		<![CDATA[SELECT
 grade_code,
 sum(nett_weight) nett_weight,
 sum(derived_nett_weight) AS derived_nett_weight,
