@@ -4,7 +4,7 @@
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack_local"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="199"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="794"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -13,8 +13,10 @@
 	<parameter name="client" class="java.lang.String"/>
 	<parameter name="client_code" class="java.lang.String"/>
 	<queryString language="SQL">
-		<![CDATA[SELECT (a.id::text)as del_id,
-    a.id,j.rmt_delivery_id,
+		<![CDATA[SELECT
+    (a.id::text) AS del_id,
+    a.id,
+    j.rmt_delivery_id,
     fn_party_role_name (f.owner_party_role_id) AS farm_owner,
     f.farm_code,
     o.orchard_code,
@@ -32,41 +34,48 @@
     '' AS color_code,
     '' AS ripeness_code,
     '' AS bin_groups,
-    p.gap_code AS gap
-      ,'' AS rmt_product_code,count(j.id)bin_qty
-      ,j.bin_fullness ,c.container_material_type_code 
-
-,(SELECT pr.id
-FROM public.party_roles pr
-WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) AS implementation_owner_party_role_id
-,a.reference_number,rmt_codes.rmt_code
-,a.remarks
+    p.gap_code AS gap,
+    '' AS rmt_product_code,
+    count(j.id) bin_qty,
+    j.bin_fullness,
+    c.container_material_type_code,
+    (
+        SELECT
+            pr.id
+        FROM
+            public.party_roles pr
+        WHERE
+            pr.role_id = (
+                SELECT
+                    id
+                FROM
+                    roles
+                WHERE
+                    name = 'IMPLEMENTATION_OWNER')
+            LIMIT 1) AS implementation_owner_party_role_id,
+    a.reference_number,
+    rmt_codes.rmt_code,
+    a.remarks,
+    a.truck_registration_number
 FROM
     rmt_deliveries a
     LEFT JOIN rmt_delivery_destinations d ON d.id = a.rmt_delivery_destination_id
     LEFT JOIN seasons s ON a.season_id = s.id
-    /*LEFT JOIN public.rmt_bins j ON (a.id = j.rmt_delivery_id)
-    LEFT JOIN farms f ON f.id = j.farm_id
-    LEFT JOIN orchards o ON o.id = j.orchard_id
-    LEFT JOIN pucs p ON p.id = j.puc_id
-    LEFT JOIN rmt_container_material_types c ON (c.id = j.rmt_container_material_type_id)
-    LEFT JOIN public.cultivars i ON (i.id = j.cultivar_id)
-    LEFT JOIN public.commodities m ON m.id = i.commodity_id
-*/
-    --join fruit attributes from delivery and not rmt_bins
-LEFT JOIN public.rmt_bins j ON (a.id = j.rmt_delivery_id)
+    LEFT JOIN public.rmt_bins j ON (a.id = j.rmt_delivery_id)
     LEFT JOIN farms f ON f.id = a.farm_id
     LEFT JOIN orchards o ON o.id = a.orchard_id
     LEFT JOIN pucs p ON p.id = a.puc_id
     LEFT JOIN rmt_container_material_types c ON (c.id = j.rmt_container_material_type_id)
-  LEFT JOIN cultivars i ON i.id = j.cultivar_id
-     LEFT JOIN cultivar_groups ON cultivar_groups.id = COALESCE(j.cultivar_group_id, i.cultivar_group_id)
-     LEFT JOIN commodities m ON m.id = cultivar_groups.commodity_id
+    LEFT JOIN cultivars i ON i.id = j.cultivar_id
+    LEFT JOIN cultivar_groups ON cultivar_groups.id = COALESCE(j.cultivar_group_id, i.cultivar_group_id)
+    LEFT JOIN commodities m ON m.id = cultivar_groups.commodity_id
     LEFT JOIN rmt_codes ON rmt_codes.id = j.rmt_code_id
-    
-    where a.id=$P{delivery_id}
-group by     a.id,j.rmt_delivery_id,
-    fn_party_role_name (f.owner_party_role_id) ,
+WHERE
+    a.id = $P{delivery_id}
+GROUP BY
+    a.id,
+    j.rmt_delivery_id,
+    fn_party_role_name (f.owner_party_role_id),
     f.farm_code,
     p.gap_code,
     o.orchard_code,
@@ -77,9 +86,13 @@ group by     a.id,j.rmt_delivery_id,
     a.date_picked,
     to_char(a.date_picked, 'WW'),
     a.truck_registration_number,
-    i.description ,
-    m.code ,j.bin_fullness,rmt_codes.rmt_code,
-    d.delivery_destination_code,c.container_material_type_code]]>
+    i.description,
+    m.code,
+    j.bin_fullness,
+    rmt_codes.rmt_code,
+    d.delivery_destination_code,
+    c.container_material_type_code,
+    a.truck_registration_number]]>
 	</queryString>
 	<field name="del_id" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="del_id"/>
@@ -216,6 +229,11 @@ group by     a.id,j.rmt_delivery_id,
 		<property name="com.jaspersoft.studio.field.label" value="remarks"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="rmt_deliveries"/>
 	</field>
+	<field name="COLUMN_30" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="truck_registration_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="truck_registration_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="rmt_deliveries"/>
+	</field>
 	<variable name="bin_qty1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{bin_qty}]]></variableExpression>
 	</variable>
@@ -325,7 +343,7 @@ group by     a.id,j.rmt_delivery_id,
 		</band>
 	</title>
 	<pageHeader>
-		<band height="524" splitType="Stretch">
+		<band height="500" splitType="Stretch">
 			<staticText>
 				<reportElement x="0" y="0" width="23" height="20" uuid="a5498d95-8dbc-45e5-8eb2-86388e90e5f8"/>
 				<textElement>
@@ -458,33 +476,43 @@ group by     a.id,j.rmt_delivery_id,
 				<textFieldExpression><![CDATA[$F{bin_groups}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="252" width="110" height="20" uuid="f087dcf8-b858-4cb0-b255-b78f55936e77"/>
-				<textElement textAlignment="Right">
+				<reportElement x="0" y="252" width="148" height="20" uuid="f087dcf8-b858-4cb0-b255-b78f55936e77">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<font fontName="SansSerif" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[GGN:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="167" width="110" height="20" uuid="f511fb7a-98d7-4448-a362-e49075307e45"/>
-				<textElement textAlignment="Right">
+				<reportElement x="0" y="167" width="148" height="20" uuid="f511fb7a-98d7-4448-a362-e49075307e45">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<font fontName="SansSerif" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[VARIETY:]]></text>
+				<text><![CDATA[Variety:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="232" width="110" height="20" uuid="cbd32ccc-1442-4a28-871a-78b49e8b0237"/>
-				<textElement textAlignment="Right">
+				<reportElement x="0" y="232" width="148" height="20" uuid="cbd32ccc-1442-4a28-871a-78b49e8b0237">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<font fontName="SansSerif" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[PUC:]]></text>
+				<text><![CDATA[Puc:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="128" y="252" width="162" height="20" uuid="05df0631-2b2a-409b-bb9a-77df1ee9e6a1">
+				<reportElement x="148" y="252" width="132" height="20" uuid="05df0631-2b2a-409b-bb9a-77df1ee9e6a1">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font fontName="SansSerif" size="12" isBold="true"/>
+					<paragraph firstLineIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{gap}]]></textFieldExpression>
 			</textField>
@@ -495,32 +523,43 @@ group by     a.id,j.rmt_delivery_id,
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center">
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font fontName="SansSerif" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[GLOBALG.A.P Certified]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="128" y="147" width="162" height="20" uuid="b659fbad-3def-4ace-8be8-312267a05fc3"/>
-				<textElement>
+				<reportElement x="148" y="147" width="132" height="20" uuid="b659fbad-3def-4ace-8be8-312267a05fc3">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font fontName="SansSerif" size="12" isBold="true"/>
+					<paragraph firstLineIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{commodity_code}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="212" width="110" height="20" uuid="ee113091-aa43-45ee-a7cb-8f375938d834"/>
-				<textElement textAlignment="Right">
+				<reportElement x="0" y="212" width="148" height="20" uuid="ee113091-aa43-45ee-a7cb-8f375938d834">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<font fontName="SansSerif" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[ORCHARD:]]></text>
+				<text><![CDATA[Orchard:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="128" y="272" width="162" height="20" uuid="49e6974e-fcd9-4336-9159-b487e0c6b33e">
+				<reportElement x="148" y="272" width="132" height="20" uuid="49e6974e-fcd9-4336-9159-b487e0c6b33e">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font fontName="SansSerif" size="12" isBold="true"/>
+					<paragraph firstLineIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{farm_code}]]></textFieldExpression>
 			</textField>
@@ -539,35 +578,49 @@ group by     a.id,j.rmt_delivery_id,
 				<textFieldExpression><![CDATA[$F{qty_damaged_bins}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="128" y="232" width="162" height="20" uuid="4ebf0623-cbf6-4bc7-8c61-3a9a65994e98">
+				<reportElement x="148" y="232" width="132" height="20" uuid="4ebf0623-cbf6-4bc7-8c61-3a9a65994e98">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font fontName="SansSerif" size="12" isBold="true"/>
+					<paragraph firstLineIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{puc_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="128" y="212" width="162" height="20" uuid="237e8e03-e290-4f89-9c30-f5f4ff22462a"/>
-				<textElement>
+				<reportElement x="148" y="212" width="132" height="20" uuid="237e8e03-e290-4f89-9c30-f5f4ff22462a">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font fontName="SansSerif" size="12" isBold="true"/>
+					<paragraph firstLineIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{orchard_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="128" y="167" width="162" height="20" uuid="6b4930bb-3fec-4a41-abf5-6acdb8818e7e"/>
-				<textElement>
+				<reportElement x="148" y="167" width="132" height="20" uuid="6b4930bb-3fec-4a41-abf5-6acdb8818e7e">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font fontName="SansSerif" size="12" isBold="true"/>
+					<paragraph firstLineIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{variety_description}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="147" width="110" height="20" uuid="985b03c5-a93c-49b7-96ae-5a632c1ea1b3"/>
-				<textElement textAlignment="Right">
+				<reportElement x="0" y="147" width="148" height="20" uuid="985b03c5-a93c-49b7-96ae-5a632c1ea1b3"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<font fontName="SansSerif" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[COMMODITY:]]></text>
+				<text><![CDATA[Commodity:]]></text>
 			</staticText>
 			<componentElement>
 				<reportElement x="210" y="10" width="100" height="120" uuid="49b0c4c2-5169-4511-8017-21690e8cee3a">
@@ -598,14 +651,15 @@ group by     a.id,j.rmt_delivery_id,
 				<textFieldExpression><![CDATA[$F{reference_number}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="272" width="110" height="20" uuid="0e1140cf-2636-4b82-bb09-49201a5f776c">
+				<reportElement x="0" y="272" width="148" height="20" uuid="0e1140cf-2636-4b82-bb09-49201a5f776c">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right">
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<font fontName="SansSerif" size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[FARM:]]></text>
+				<text><![CDATA[Farm:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="20" width="40" height="20" uuid="d37c537b-4429-4ab8-a56d-e20b5195e343">
@@ -618,15 +672,22 @@ group by     a.id,j.rmt_delivery_id,
 				<text><![CDATA[FARM:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="128" y="190" width="162" height="20" uuid="fa2087a1-c722-4472-a605-8ba5fc17b8f6"/>
-				<textElement>
+				<reportElement x="148" y="190" width="132" height="20" uuid="fa2087a1-c722-4472-a605-8ba5fc17b8f6">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font fontName="SansSerif" size="12" isBold="true"/>
+					<paragraph firstLineIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{rmt_code}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="190" width="110" height="20" uuid="52cbaf2e-07d8-40e0-95f8-6262a574ae64"/>
-				<textElement textAlignment="Right">
+				<reportElement x="0" y="190" width="148" height="20" uuid="52cbaf2e-07d8-40e0-95f8-6262a574ae64">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
 					<font fontName="SansSerif" size="12" isBold="true"/>
 				</textElement>
 				<text><![CDATA[RMT Code:]]></text>
@@ -651,6 +712,34 @@ group by     a.id,j.rmt_delivery_id,
 					<font fontName="SansSerif" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{remarks}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="312" width="148" height="20" uuid="5d3bb7b7-5ad5-4b46-baae-2d76dbfd34ca">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<printWhenExpression><![CDATA[$F{truck_registration_number}!=null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vehicle Registration:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="148" y="312" width="132" height="20" uuid="96e89829-966f-4723-9656-835c43ee4254">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+					<printWhenExpression><![CDATA[$F{truck_registration_number}!=null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+					<paragraph firstLineIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{truck_registration_number}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>

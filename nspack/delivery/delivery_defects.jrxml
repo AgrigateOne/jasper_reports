@@ -10,7 +10,7 @@
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<parameter name="delivery_id" class="java.lang.Integer"/>
 	<queryString language="SQL">
-		<![CDATA[select fruit_defects.short_description , qc_defect_measurements.qty_class_2,qc_defect_measurements.qty_class_3  
+		<![CDATA[ select fruit_defects.short_description , qc_defect_measurements.qty_class_2,qc_defect_measurements.qty_class_3
 from qc_defect_measurements
 left join qc_tests on qc_defect_measurements.qc_test_id =qc_tests.id
 left join fruit_defects on qc_defect_measurements.fruit_defect_id =fruit_defects.id
