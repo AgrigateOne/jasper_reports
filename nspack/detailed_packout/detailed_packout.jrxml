@@ -1053,9 +1053,9 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{farms}]]></textFieldExpression>
 			</textField>
 			<image>
-				<reportElement x="5" y="6" width="92" height="83" uuid="09f47262-7161-461d-a741-13b5fdd0c63b">
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				<reportElement x="0" y="0" width="92" height="83" uuid="09f47262-7161-461d-a741-13b5fdd0c63b">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<box>
 					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
