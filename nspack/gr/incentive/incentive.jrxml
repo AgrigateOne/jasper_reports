@@ -4,7 +4,7 @@
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="UD live"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
 	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
@@ -20,27 +20,40 @@
 	<queryString language="SQL">
 		<![CDATA[WITH base_sql AS (
     SELECT
-    	fn_party_role_name((SELECT pr.id
-		FROM public.party_roles pr
-		WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1)) AS implementation_owner_name,
+        wage_levels.description AS wage_level_description,
         contract_workers.personnel_number AS personnel_barcode_number,
+        --cartons.id carton_id,
+        --cartons.carton_label_id,
         s.id AS shift_id,
+        --cartons.contract_worker_id,
         contract_workers.first_name || ' ' || contract_workers.surname AS party_name,
+        --shift_exceptions.id AS shift_exception_id,
         s.start_date_time,
         s.end_date_time,
+        --carton_labels.created_at,
         day_night_or_custom AS shift_type_code,
         s.shift_type_id,
-        count(carton_labels.id) AS carton_qty,
-        sum(fruit_actual_counts_for_packs.actual_count_for_pack) fruit_qty_cwi,
-        sum(fruit_actual_counts_for_packs.actual_count_for_pack*coalesce(t.cost,0)) fruit_rand_cwi,
+        --cartons.packhouse_resource_id AS carton_packhouse_resource,
+        --shift_types.plant_resource_id,
+        --s.running_hours AS shift_running_hours,
+        --shift_exceptions.running_hours AS shift_exception_running_hours,
+        count(carton_labels.id) AS total_cartons,
+        sum(fruit_actual_counts_for_packs.actual_count_for_pack) total_fruit,
         contract_workers.id AS cw_id,
         COALESCE(shift_exceptions.running_hours, s.running_hours, ((EXTRACT(EPOCH FROM end_date_time) - EXTRACT(EPOCH FROM start_date_time)) / 60 / 60)) AS running_hours,
-       MAX(t.inv_codes) as inv_codes,
-        t.cost as fruit_item_incentive_rate,
-        count(contract_workers.id) over (partition by s.id) as packers_shift
+        wage_levels.wage_level,
+        packing_methods.packing_method_code,
+        packing_methods.actual_count_reduction_factor,
+        1500 AS require_pack_hour,
+        9 AS std_hours_per_day,
+        1.1 AS incentive_factor,
+        sum(wage_levels.wage_level) over (partition by s.id) as wage_level_shift,
+        count(contract_workers.id) over (partition by s.id) as packers_shift,
+	    rank() OVER (PARTITION BY contract_workers.id ORDER BY packing_method_code) AS cw_packing_method_rank
     FROM
         cartons
          JOIN carton_labels ON carton_labels.id = cartons.carton_label_id
+        left join   standard_pack_codes on carton_labels.standard_pack_code_id=standard_pack_codes.id
         LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = carton_labels.fruit_actual_counts_for_pack_id
         LEFT JOIN (
             SELECT
@@ -49,75 +62,127 @@
                 plant_resource_id,
                 shifts.shift_type_id,
                 shifts.id,
-                day_night_or_custom ,
+                day_night_or_custom,
                 shifts.running_hours
             FROM
                 public.shifts
                 JOIN shift_types ON shifts.shift_type_id = shift_types.id) AS s ON carton_labels.created_at BETWEEN s.start_date_time
                 AND s.end_date_time
                 AND s.plant_resource_id = carton_labels.production_line_id
+        LEFT JOIN packing_methods ON carton_labels.packing_method_id = packing_methods.id
         LEFT JOIN public.contract_workers ON (carton_labels.contract_worker_id = contract_workers.id)
-        LEFT JOIN public.shift_exceptions ON (contract_workers.id = shift_exceptions.contract_worker_id) AND (s.id = shift_exceptions.shift_id)LEFT JOIN cultivar_groups ON cultivar_groups.id = carton_labels.cultivar_group_id
-        LEFT  JOIN(
-			            select commodity_id,
-						inventory_codes.id as inventory_code_id,
-						coalesce(inventory_codes_packing_costs.packing_cost,inventory_codes.fruit_item_incentive_rate) as cost,
-			            string_agg(distinct inventory_codes.inventory_code,',' order by inventory_codes.inventory_code) as inv_codes
-						from inventory_codes
-						left join inventory_codes_packing_costs on inventory_codes_packing_costs.inventory_code_id = inventory_codes.id
-			            group by inventory_codes.id,inventory_codes_packing_costs.packing_cost,inventory_codes.fruit_item_incentive_rate,commodity_id
-                   ) AS t ON
-		          CASE WHEN t.commodity_id IS NOT NULL THEN t.inventory_code_id = carton_labels.inventory_code_id AND t.commodity_id = cultivar_groups.commodity_id
-		          ELSE t.inventory_code_id = carton_labels.inventory_code_id END
-  where s.id= $P{shift_id} AND  cartons.scrapped is not true AND  cartons.is_virtual is not true
-        GROUP BY
+        LEFT JOIN public.shift_exceptions ON (contract_workers.id = shift_exceptions.contract_worker_id)
+            AND (s.id = shift_exceptions.shift_id)
+        LEFT JOIN wage_levels ON contract_workers.wage_level_id = wage_levels.id
+    WHERE
+           s.id=$P{shift_id} and standard_pack_codes.bin=false AND  cartons.scrapped is not true AND  cartons.is_virtual is not true
+    GROUP BY
         s.id,
-        t.cost,
         day_night_or_custom,
         s.shift_type_id,
         s.start_date_time,
         s.end_date_time,
+        wage_levels.wage_level,
+        wage_levels.description ,
         contract_workers.id,
         COALESCE(shift_exceptions.running_hours, s.running_hours, ((EXTRACT(EPOCH FROM end_date_time) - EXTRACT(EPOCH FROM start_date_time)) / 60 / 60)),
+        s.start_date_time,
+        packing_methods.packing_method_code,
+        packing_methods.actual_count_reduction_factor
+    ORDER BY
+        contract_workers.id DESC,
         s.start_date_time
-    ORDER BY contract_workers.id DESC, s.start_date_time
 ),
 calc_sql AS (
     SELECT
-        base_sql.implementation_owner_name,
         base_sql.start_date_time,
+        CASE WHEN base_sql.running_hours = 0 THEN
+            0::int
+        ELSE
+            (base_sql.total_fruit / base_sql.running_hours)::int
+        END AS fruitphour,
+        CAST(base_sql.wage_level / base_sql.std_hours_per_day / base_sql.require_pack_hour * base_sql.incentive_factor AS dec (11, 3)) AS rp1000f,
         base_sql.end_date_time,
         base_sql.cw_id,
-        base_sql.fruit_qty_cwi,
+        base_sql.total_fruit,
         base_sql.running_hours,
+        base_sql.wage_level,
+        base_sql.wage_level_description,
         base_sql.party_name,
         base_sql.personnel_barcode_number,
-        base_sql.carton_qty,
-        base_sql.fruit_item_incentive_rate,
-        base_sql.shift_type_code,
-        base_sql.inv_codes,
-        base_sql.fruit_rand_cwi,
-        sum(fruit_qty_cwi) over (partition by cw_id) total_fruit_cwi,
-        sum(fruit_rand_cwi) over (partition by cw_id) total_fruit_rand_cwi,
-    	sum(carton_qty) over (partition by cw_id) total_carton_cwi,
-        sum(fruit_qty_cwi) over () total_fruit_shift,
-    	sum(carton_qty) over () total_carton_shift,
-    	sum(fruit_rand_cwi) over () total_fruit_rand_shift,
-        rank() OVER (PARTITION BY base_sql.cw_id ORDER BY base_sql.fruit_item_incentive_rate) AS cw_rank,
+        base_sql.total_cartons,
+        base_sql.std_hours_per_day,
+        base_sql.packing_method_code,
+        base_sql.actual_count_reduction_factor,
+        base_sql.incentive_factor,
+        base_sql.require_pack_hour,
+        shift_type_code,
+        sum(base_sql.total_fruit * actual_count_reduction_factor) OVER (PARTITION BY base_sql.cw_id) AS reduced_fruit_for_work_day,
+        base_sql.require_pack_hour * base_sql.running_hours require_for_work_day,
+        rank() OVER (PARTITION BY base_sql.cw_id ORDER BY base_sql.packing_method_code) AS cw_rank,
         base_sql.shift_id,
+        base_sql.wage_level_shift,
         base_sql.packers_shift,
-        count(*) over (partition by base_sql.cw_id,base_sql.shift_id) cw_cnt
+        count(*) over (partition by cw_id,shift_id) cw_cnt,
+        (select sum(wage_level) from base_sql where cw_packing_method_rank = 1) as total_wage_level
     FROM
         base_sql
+),
+calc_sql2 AS (
+    SELECT
+        calc_sql.*,
+        calc_sql.wage_level / calc_sql.std_hours_per_day / calc_sql.require_pack_hour * calc_sql.incentive_factor * (calc_sql.reduced_fruit_for_work_day - calc_sql.require_for_work_day) incentive
+
+        FROM
+        calc_sql
+    ORDER BY
+        incentive DESC
 )
-select calc_sql.*,
+SELECT
+    cw_id,
+    total_fruit,
+    running_hours,
+    wage_level,
+    wage_level_description,
+    party_name,
+    personnel_barcode_number,
+    total_cartons,
+    std_hours_per_day,
+    packing_method_code,
+    actual_count_reduction_factor,
+    incentive_factor,
+    require_pack_hour,
+    reduced_fruit_for_work_day,
+    require_for_work_day,
+    CASE WHEN incentive < 0 THEN
+        0
+    ELSE
+        incentive
+    END incentive,
+    start_date_time,
+    fruitphour,
+    rp1000f,
+    shift_type_code,
+    end_date_time,
     CASE WHEN cw_rank = 1 THEN
         TRUE
     ELSE
         FALSE
-    END cw_rank_boolean
+    END cw_rank,
+    sum(total_fruit) over (partition by shift_id) shift_fruit,
+    sum(total_cartons) over (partition by shift_id) shift_cartons,
+sum(CASE WHEN incentive < 0 THEN
+        0
+    ELSE
+        incentive
+    END/cw_cnt) over (partition by shift_id) shift_incentive,
+    shift_id,
+    wage_level_shift,
+    packers_shift,
+    total_wage_level
 FROM
-    calc_sql order by cw_id,calc_sql.cw_rank;]]>
+    calc_sql2
+    order by fruitphour desc;]]>
 	</queryString>
 	<field name="cw_id" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.name" value="cw_id"/>
@@ -567,7 +632,7 @@ FROM
 				<text><![CDATA[No data found for shift:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="300" y="0" width="90" height="30" uuid="74e98389-b3da-446a-86e2-05a3c823b561"/>
+				<reportElement x="300" y="0" width="100" height="30" uuid="74e98389-b3da-446a-86e2-05a3c823b561"/>
 				<textElement>
 					<font size="24"/>
 				</textElement>
