@@ -1063,7 +1063,8 @@ ORDER BY
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<imageExpression><![CDATA["../logos/" +$P{client_code}  + "_logo.png"]]></imageExpression>
+				<imageExpression><![CDATA["../logos/" +$P{client_code}  + "_logo.png"
+]]></imageExpression>
 			</image>
 		</band>
 	</title>
@@ -1312,6 +1313,7 @@ ORDER BY
 	<detail>
 		<band height="18">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.spreadsheet.SpreadsheetLayout"/>
 			<printWhenExpression><![CDATA[$F{rebins_rmt_class}==null]]></printWhenExpression>
 			<textField isBlankWhenNull="true">
 				<reportElement x="0" y="0" width="37" height="13" uuid="a2876b5f-c946-48ef-be3f-1b9612f4e8c9">
@@ -1501,6 +1503,7 @@ ORDER BY
 	</detail>
 	<summary>
 		<band height="142">
+			<property name="com.jaspersoft.studio.layout"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
 				<reportElement x="5" y="0" width="100" height="15" uuid="f6852b76-02ad-4314-8c7b-773a7b844abc">
@@ -1558,55 +1561,6 @@ ORDER BY
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 			</line>
-			<frame>
-				<reportElement positionType="Float" x="0" y="30" width="564" height="35" uuid="b1f06e81-f1d4-44d5-adc9-3c85b160d0ad">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<staticText>
-					<reportElement x="5" y="1" width="120" height="15" uuid="399a9c4d-32ed-4c4d-83c8-b82868d672fc">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<property name="com.jaspersoft.studio.unit.y" value="px"/>
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
-						<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					</reportElement>
-					<textElement verticalAlignment="Middle">
-						<font size="11" isBold="true" isUnderline="false"/>
-					</textElement>
-					<text><![CDATA[Counts Summary]]></text>
-				</staticText>
-				<subreport>
-					<reportElement x="141" y="16" width="195" height="2" uuid="8d59542f-2139-4b8b-875d-a2ba83d991da">
-						<property name="com.jaspersoft.studio.unit.height" value="px"/>
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
-						<property name="com.jaspersoft.studio.unit.x" value="px"/>
-						<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					</reportElement>
-					<subreportParameter name="dispatched_only">
-						<subreportParameterExpression><![CDATA[$P{dispatched_only}]]></subreportParameterExpression>
-					</subreportParameter>
-					<subreportParameter name="production_run_id">
-						<subreportParameterExpression><![CDATA[$P{production_run_id}]]></subreportParameterExpression>
-					</subreportParameter>
-					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-					<subreportExpression><![CDATA["counts_summary.jasper"]]></subreportExpression>
-				</subreport>
-			</frame>
-			<line>
-				<reportElement x="0" y="116" width="565" height="1" uuid="474208a2-7081-4d0b-922c-d4428ca7c356">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-			</line>
 			<subreport>
 				<reportElement positionType="Float" x="0" y="100" width="566" height="8" uuid="8fd9b457-550e-4549-99d3-1c59c0404e05">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -1624,6 +1578,43 @@ ORDER BY
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA["qc_defect.jasper"]]></subreportExpression>
 			</subreport>
+			<frame>
+				<reportElement positionType="Float" x="-1" y="30" width="562" height="20" uuid="f511cc87-acc9-4579-bdbe-69a1e1f2ef34"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<staticText>
+					<reportElement positionType="Float" x="5" y="1" width="120" height="15" uuid="4a9845c4-0a28-46d5-a9d9-b513ff72ab03">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font size="11" isBold="true" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[Counts Summary]]></text>
+				</staticText>
+				<subreport overflowType="Stretch">
+					<reportElement x="165" y="11" width="195" height="4" uuid="119ff146-6539-4a7a-bbaa-77cfa8a5f962">
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<subreportParameter name="dispatched_only">
+						<subreportParameterExpression><![CDATA[$P{dispatched_only}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="production_run_id">
+						<subreportParameterExpression><![CDATA[$P{production_run_id}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA["counts_summary.jasper"]]></subreportExpression>
+				</subreport>
+			</frame>
 		</band>
 	</summary>
 </jasperReport>
