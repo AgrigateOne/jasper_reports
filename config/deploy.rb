@@ -1,8 +1,8 @@
 # config valid for current version and patch releases of Capistrano
-lock '~> 3.16.0'
+# lock '~> 3.16.0'
 
 set :application, 'jasper_reports'
-set :repo_url, 'git@github.com:NoSoft-SA/jasper_reports.git'
+set :repo_url, 'git@github.com:AgrigateOne/jasper_reports.git'
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
