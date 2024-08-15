@@ -41,7 +41,7 @@ FROM
     LEFT JOIN standard_pack_codes ON carton_labels.standard_pack_code_id = standard_pack_codes.id
 WHERE
     shifts.id = $P{sub_shift_id}
-    AND standard_pack_codes.bin = FALSE
+    AND standard_pack_codes.bin = FALSE AND    cartons.scrapped is not true AND  cartons.is_virtual is not true
 GROUP BY
     marketing_varieties.marketing_variety_code
 ORDER BY
