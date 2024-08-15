@@ -17,16 +17,37 @@
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
 	<parameter name="sub_shift_id" class="java.lang.Integer"/>
 	<queryString language="SQL">
-		<![CDATA[select  marketing_varieties.marketing_variety_code,count(carton_labels.*)
-FROM        cartons
-     JOIN carton_labels ON carton_labels.id = cartons.carton_label_id
+		<![CDATA[SELECT
+    marketing_varieties.marketing_variety_code,
+    count(carton_labels.*)
+FROM
+    cartons
+    JOIN carton_labels ON carton_labels.id = cartons.carton_label_id
     LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = carton_labels.fruit_actual_counts_for_pack_id
-    LEFT JOIN public.shifts ON carton_labels.created_at BETWEEN shifts.start_date_time
-        AND shifts.end_date_time
+    LEFT JOIN (
+        SELECT
+            shifts.end_date_time,
+            shifts.start_date_time,
+            plant_resource_id,
+            shifts.shift_type_id,
+            shifts.id,
+            day_night_or_custom,
+            shifts.running_hours
+        FROM
+            public.shifts
+            JOIN shift_types ON shifts.shift_type_id = shift_types.id) AS shifts ON carton_labels.created_at BETWEEN shifts.start_date_time AND shifts.end_date_time
+        AND shifts.plant_resource_id = carton_labels.production_line_id
     JOIN marketing_varieties ON marketing_varieties.id = carton_labels.marketing_variety_id
-   left join standard_pack_codes on carton_labels.standard_pack_code_id =standard_pack_codes.id
-where shifts.id=$P{sub_shift_id} and  standard_pack_codes.bin=false GROUP BY   marketing_varieties.marketing_variety_code
-ORDER BY  count(carton_labels.*) desc;]]>
+    LEFT JOIN standard_pack_codes ON carton_labels.standard_pack_code_id = standard_pack_codes.id
+WHERE
+    shifts.id = $ P {sub_shift_id}
+    AND standard_pack_codes.bin = FALSE
+GROUP BY
+    marketing_varieties.marketing_variety_code
+ORDER BY
+    count(carton_labels.*) DESC;
+
+]]>
 	</queryString>
 	<field name="count" class="java.lang.Long"/>
 	<field name="marketing_variety_code" class="java.lang.String"/>

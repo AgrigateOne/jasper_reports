@@ -54,7 +54,7 @@
         cartons
          JOIN carton_labels ON carton_labels.id = cartons.carton_label_id
         left join   standard_pack_codes on carton_labels.standard_pack_code_id=standard_pack_codes.id
-        LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = carton_labels.fruit_actual_counts_for_pack_id
+        LEFT JOIN  fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = carton_labels.fruit_actual_counts_for_pack_id
         LEFT JOIN (
             SELECT
                 shifts.end_date_time,
