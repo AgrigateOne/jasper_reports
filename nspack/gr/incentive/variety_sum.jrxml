@@ -40,7 +40,7 @@ FROM
     JOIN marketing_varieties ON marketing_varieties.id = carton_labels.marketing_variety_id
     LEFT JOIN standard_pack_codes ON carton_labels.standard_pack_code_id = standard_pack_codes.id
 WHERE
-    shifts.id = $ P {sub_shift_id}
+    shifts.id = $P{sub_shift_id}
     AND standard_pack_codes.bin = FALSE
 GROUP BY
     marketing_varieties.marketing_variety_code
