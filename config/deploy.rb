@@ -3,6 +3,7 @@
 
 set :application, 'jasper_reports'
 set :repo_url, 'git@github.com:AgrigateOne/jasper_reports.git'
+set :chruby_ruby, 'ruby-3.1.2'
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
