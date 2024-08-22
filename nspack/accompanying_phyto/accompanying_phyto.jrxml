@@ -76,13 +76,11 @@ WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LI
 FROM public.party_roles pr
 WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'CUSTOMER_CONTACT_PERSON') LIMIT 1) AS packhouse_contact_person_party_role_id,
 'Daff_Seq_No' as daff_seq_no,
---COALESCE(destination_countries.description,p.final_destination)  as importing_country,
--- destination_countries.description  as importing_country,
 (SELECT destination_countries.description
  FROM pallets cp
  join govt_inspection_pallets gcp ON gcp.pallet_id = cp.id
  JOIN destination_countries ON destination_countries.id = gcp.destination_country_id
- WHERE $X{IN,cp.id, pallet_ids} LIMIT 1) AS importing_country,
+ WHERE $X{IN,cp.id, pallet_ids} AND gcp.govt_inspection_sheet_id = govt_inspection_sheets.id LIMIT 1) AS importing_country,
 packhouse_contact.first_name phc_first_name,
 packhouse_contact.surname as phc_surname,
 packhouse_contact.contact_method_code as phc_contact, 
@@ -97,7 +95,6 @@ COALESCE(p.depot,$P{default_phyto_inspection_depot}) depot ,
  from vw_pallet_sequence_flat p
 LEFT JOIN govt_inspection_pallets ON govt_inspection_pallets.id = p.last_govt_inspection_pallet_id
 LEFT JOIN govt_inspection_sheets ON govt_inspection_sheets.id = govt_inspection_pallets.govt_inspection_sheet_id
--- LEFT JOIN destination_countries ON destination_countries.id = govt_inspection_pallets.destination_country_id
 left join inspectors on inspectors.id= govt_inspection_sheets.inspector_id
 left join party_roles on inspectors.inspector_party_role_id= party_roles.id
 left join parties on party_roles.party_id=parties.id
