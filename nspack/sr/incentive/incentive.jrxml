@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
@@ -30,16 +30,18 @@
         day_night_or_custom AS shift_type_code,
         s.shift_type_id,
         count(carton_labels.id) AS carton_qty,
-        sum(fruit_actual_counts_for_packs.actual_count_for_pack) fruit_qty_cwi,
-        sum(fruit_actual_counts_for_packs.actual_count_for_pack*coalesce(t.cost,0)) fruit_rand_cwi,
+        sum(fruit_actual_counts_for_packs.actual_count_for_pack) quantity_fruit_packed,
+        sum(fruit_actual_counts_for_packs.actual_count_for_pack * coalesce(t.inv_cost, 0)) cost_of_quantity_fruit_packed,
         contract_workers.id AS cw_id,
-        COALESCE(shift_exceptions.running_hours, s.running_hours, ((EXTRACT(EPOCH FROM end_date_time) - EXTRACT(EPOCH FROM start_date_time)) / 60 / 60)) AS running_hours,
-       MAX(t.inv_codes) as inv_codes,
-        t.cost as fruit_item_incentive_rate,
-        count(contract_workers.id) over (partition by s.id) as packers_shift
+        COALESCE(shift_exceptions.running_hours, s.running_hours,((EXTRACT(EPOCH FROM end_date_time) - EXTRACT(EPOCH FROM start_date_time)) / 60 / 60)) AS running_hours,
+        MAX(t.inv_codes) AS inv_codes,
+        t.inv_cost AS fruit_item_incentive_rate,
+        t.packing_cost AS inv_packing_cost,
+        t.fruit_item_incentive_rate AS inv_fruit_item_incentive_rate,
+        count(contract_workers.id) OVER (PARTITION BY s.id) AS packers_shift
     FROM
         cartons
-         JOIN carton_labels ON carton_labels.id = cartons.carton_label_id
+        JOIN carton_labels ON carton_labels.id = cartons.carton_label_id
         LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = carton_labels.fruit_actual_counts_for_pack_id
         LEFT JOIN (
             SELECT
@@ -48,99 +50,205 @@
                 plant_resource_id,
                 shifts.shift_type_id,
                 shifts.id,
-                day_night_or_custom ,
+                day_night_or_custom,
                 shifts.running_hours
             FROM
                 public.shifts
-                JOIN shift_types ON shifts.shift_type_id = shift_types.id) AS s ON carton_labels.created_at BETWEEN s.start_date_time
-                AND s.end_date_time
+                JOIN shift_types ON shifts.shift_type_id = shift_types.id) AS s ON carton_labels.created_at BETWEEN s.start_date_time AND s.end_date_time
                 AND s.plant_resource_id = carton_labels.production_line_id
         LEFT JOIN public.contract_workers ON (carton_labels.contract_worker_id = contract_workers.id)
         LEFT JOIN public.shift_exceptions ON (contract_workers.id = shift_exceptions.contract_worker_id)
-            AND (s.id = shift_exceptions.shift_id)LEFT JOIN cultivar_groups ON cultivar_groups.id = carton_labels.cultivar_group_id
-         LEFT  JOIN(
-			            select commodity_id,
-						inventory_codes.id as inventory_code_id,
-						coalesce(inventory_codes_packing_costs.packing_cost,inventory_codes.fruit_item_incentive_rate) as cost,
-			            string_agg(distinct inventory_codes.inventory_code,',' order by inventory_codes.inventory_code) as inv_codes
-						from inventory_codes
-						left join inventory_codes_packing_costs on inventory_codes_packing_costs.inventory_code_id = inventory_codes.id
-			            group by inventory_codes.id,inventory_codes_packing_costs.packing_cost,inventory_codes.fruit_item_incentive_rate,commodity_id
-                   ) AS t ON
-		          CASE WHEN t.commodity_id IS NOT NULL THEN t.inventory_code_id = carton_labels.inventory_code_id AND t.commodity_id = cultivar_groups.commodity_id
-		          ELSE t.inventory_code_id = carton_labels.inventory_code_id END
-  where s.id= $P{shift_id}
+            AND (s.id = shift_exceptions.shift_id)
+        LEFT JOIN cultivar_groups ON cultivar_groups.id = carton_labels.cultivar_group_id
+        LEFT JOIN (
+            SELECT
+                commodity_id,
+                inventory_codes.id AS inventory_code_id,
+                inventory_codes_packing_costs.packing_cost,
+                inventory_codes.fruit_item_incentive_rate,
+                coalesce(inventory_codes_packing_costs.packing_cost, inventory_codes.fruit_item_incentive_rate) AS inv_cost,
+                string_agg(DISTINCT inventory_codes.inventory_code, ',' ORDER BY inventory_codes.inventory_code) AS inv_codes
+            FROM
+                inventory_codes
+                LEFT JOIN inventory_codes_packing_costs ON inventory_codes_packing_costs.inventory_code_id = inventory_codes.id
+            GROUP BY
+                inventory_codes.id,
+                inventory_codes_packing_costs.packing_cost,
+                inventory_codes.fruit_item_incentive_rate,
+                commodity_id) AS t ON CASE WHEN t.commodity_id IS NOT NULL THEN
+                t.inventory_code_id = carton_labels.inventory_code_id
+                AND t.commodity_id = cultivar_groups.commodity_id
+            ELSE
+                t.inventory_code_id = carton_labels.inventory_code_id
+            END
+        WHERE
+            s.id = $P{shift_id}
         GROUP BY
-        s.id,
-        t.cost,
-        day_night_or_custom,
-        s.shift_type_id,
-        s.start_date_time,
-        s.end_date_time,
-        contract_workers.id,
-        COALESCE(shift_exceptions.running_hours, s.running_hours, ((EXTRACT(EPOCH FROM end_date_time) - EXTRACT(EPOCH FROM start_date_time)) / 60 / 60)),
-        s.start_date_time
-    ORDER BY contract_workers.id DESC, s.start_date_time
+            s.id,
+            t.inv_cost,
+            day_night_or_custom,
+            s.shift_type_id,
+            s.start_date_time,
+            s.end_date_time,
+            contract_workers.id,
+            COALESCE(shift_exceptions.running_hours, s.running_hours,((EXTRACT(EPOCH FROM end_date_time) - EXTRACT(EPOCH FROM start_date_time)) / 60 / 60)),
+            s.start_date_time,
+            t.packing_cost,
+            t.fruit_item_incentive_rate
+        ORDER BY
+            contract_workers.id DESC,
+            s.start_date_time
 ),
 calc_sql AS (
     SELECT
         base_sql.start_date_time,
         base_sql.end_date_time,
         base_sql.cw_id,
-        base_sql.fruit_qty_cwi,
+        base_sql.quantity_fruit_packed,
         base_sql.running_hours,
         base_sql.party_name,
         base_sql.personnel_barcode_number,
         base_sql.carton_qty,
         base_sql.fruit_item_incentive_rate,
+        base_sql.inv_packing_cost,
+        base_sql.inv_fruit_item_incentive_rate,
         base_sql.shift_type_code,
         base_sql.inv_codes,
-        base_sql.fruit_rand_cwi,
-        sum(fruit_qty_cwi) over (partition by cw_id) total_fruit_cwi,
-        sum(fruit_rand_cwi) over (partition by cw_id) total_fruit_rand_cwi,
-    	sum(carton_qty) over (partition by cw_id) total_carton_cwi,
-        sum(fruit_qty_cwi) over () total_fruit_shift,
-    	sum(carton_qty) over () total_carton_shift,
-    	sum(fruit_rand_cwi) over () total_fruit_rand_shift,
+        base_sql.cost_of_quantity_fruit_packed,
+        sum(quantity_fruit_packed) OVER (PARTITION BY cw_id) total_fruit_packed_cw,
+        sum(cost_of_quantity_fruit_packed) OVER (PARTITION BY cw_id) total_cost_of_quantity_fruit_packed,
+        sum(carton_qty) OVER (PARTITION BY cw_id) total_ctns_packed_cw,
+        sum(quantity_fruit_packed) OVER () total_fruit_shift,
+        sum(carton_qty) OVER () total_carton_shift,
+        sum(cost_of_quantity_fruit_packed) OVER () shift_total_cost_of_fruit_packed,
         rank() OVER (PARTITION BY base_sql.cw_id ORDER BY base_sql.fruit_item_incentive_rate) AS cw_rank,
         base_sql.shift_id,
         base_sql.packers_shift,
-        count(*) over (partition by base_sql.cw_id,base_sql.shift_id) cw_cnt      
-    FROM
-        base_sql
+        count(*) OVER (PARTITION BY base_sql.cw_id,
+            base_sql.shift_id) cw_cnt
+    FROM base_sql
 )
-select calc_sql.*,
+SELECT
+    calc_sql.*,
     CASE WHEN cw_rank = 1 THEN
         TRUE
     ELSE
         FALSE
     END cw_rank_boolean
 FROM
-    calc_sql order by cw_id,calc_sql.cw_rank;]]>
+    calc_sql
+ORDER BY
+    cw_id,
+    calc_sql.cw_rank;]]>
 	</queryString>
-	<field name="party_name" class="java.lang.String"/>
-	<field name="start_date_time" class="java.sql.Timestamp"/>
-	<field name="running_hours" class="java.lang.Double"/>
-	<field name="personnel_barcode_number" class="java.lang.String"/>
-	<field name="cw_id" class="java.lang.Integer"/>
-	<field name="shift_type_code" class="java.lang.String"/>
-	<field name="end_date_time" class="java.sql.Timestamp"/>
-	<field name="cw_rank" class="java.lang.Long"/>
-	<field name="shift_id" class="java.lang.Integer"/>
-	<field name="packers_shift" class="java.lang.Long"/>
-	<field name="fruit_qty_cwi" class="java.lang.Long"/>
-	<field name="carton_qty" class="java.lang.Long"/>
-	<field name="fruit_item_incentive_rate" class="java.math.BigDecimal"/>
-	<field name="inv_codes" class="java.lang.String"/>
-	<field name="total_fruit_rand_cwi" class="java.math.BigDecimal"/>
-	<field name="total_carton_cwi" class="java.math.BigDecimal"/>
-	<field name="cw_cnt" class="java.lang.Long"/>
-	<field name="total_fruit_rand_shift" class="java.math.BigDecimal"/>
-	<field name="total_fruit_cwi" class="java.math.BigDecimal"/>
-	<field name="total_fruit_shift" class="java.math.BigDecimal"/>
-	<field name="total_carton_shift" class="java.math.BigDecimal"/>
-	<field name="cw_rank_boolean" class="java.lang.Boolean"/>
-	<field name="fruit_rand_cwi" class="java.math.BigDecimal"/>
+	<field name="start_date_time" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="start_date_time"/>
+		<property name="com.jaspersoft.studio.field.label" value="start_date_time"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="shifts"/>
+	</field>
+	<field name="end_date_time" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="end_date_time"/>
+		<property name="com.jaspersoft.studio.field.label" value="end_date_time"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="shifts"/>
+	</field>
+	<field name="cw_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="cw_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="cw_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="contract_workers"/>
+	</field>
+	<field name="quantity_fruit_packed" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="quantity_fruit_packed"/>
+		<property name="com.jaspersoft.studio.field.label" value="quantity_fruit_packed"/>
+	</field>
+	<field name="running_hours" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="running_hours"/>
+		<property name="com.jaspersoft.studio.field.label" value="running_hours"/>
+	</field>
+	<field name="party_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="party_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="party_name"/>
+	</field>
+	<field name="personnel_barcode_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="personnel_barcode_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="personnel_barcode_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="contract_workers"/>
+	</field>
+	<field name="carton_qty" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="carton_qty"/>
+		<property name="com.jaspersoft.studio.field.label" value="carton_qty"/>
+	</field>
+	<field name="fruit_item_incentive_rate" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="fruit_item_incentive_rate"/>
+		<property name="com.jaspersoft.studio.field.label" value="fruit_item_incentive_rate"/>
+	</field>
+	<field name="inv_packing_cost" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="inv_packing_cost"/>
+		<property name="com.jaspersoft.studio.field.label" value="inv_packing_cost"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="inventory_codes_packing_costs"/>
+	</field>
+	<field name="inv_fruit_item_incentive_rate" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="inv_fruit_item_incentive_rate"/>
+		<property name="com.jaspersoft.studio.field.label" value="inv_fruit_item_incentive_rate"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="inventory_codes"/>
+	</field>
+	<field name="shift_type_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="shift_type_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="shift_type_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="shift_types"/>
+	</field>
+	<field name="inv_codes" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="inv_codes"/>
+		<property name="com.jaspersoft.studio.field.label" value="inv_codes"/>
+	</field>
+	<field name="cost_of_quantity_fruit_packed" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="cost_of_quantity_fruit_packed"/>
+		<property name="com.jaspersoft.studio.field.label" value="cost_of_quantity_fruit_packed"/>
+	</field>
+	<field name="total_fruit_packed_cw" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total_fruit_packed_cw"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_fruit_packed_cw"/>
+	</field>
+	<field name="total_cost_of_quantity_fruit_packed" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total_cost_of_quantity_fruit_packed"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_cost_of_quantity_fruit_packed"/>
+	</field>
+	<field name="total_ctns_packed_cw" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total_ctns_packed_cw"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_ctns_packed_cw"/>
+	</field>
+	<field name="total_fruit_shift" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total_fruit_shift"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_fruit_shift"/>
+	</field>
+	<field name="total_carton_shift" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="total_carton_shift"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_carton_shift"/>
+	</field>
+	<field name="shift_total_cost_of_fruit_packed" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="shift_total_cost_of_fruit_packed"/>
+		<property name="com.jaspersoft.studio.field.label" value="shift_total_cost_of_fruit_packed"/>
+	</field>
+	<field name="cw_rank" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="cw_rank"/>
+		<property name="com.jaspersoft.studio.field.label" value="cw_rank"/>
+	</field>
+	<field name="shift_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="shift_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="shift_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="shifts"/>
+	</field>
+	<field name="packers_shift" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="packers_shift"/>
+		<property name="com.jaspersoft.studio.field.label" value="packers_shift"/>
+	</field>
+	<field name="cw_cnt" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="cw_cnt"/>
+		<property name="com.jaspersoft.studio.field.label" value="cw_cnt"/>
+	</field>
+	<field name="cw_rank_boolean" class="java.lang.Boolean">
+		<property name="com.jaspersoft.studio.field.name" value="cw_rank_boolean"/>
+		<property name="com.jaspersoft.studio.field.label" value="cw_rank_boolean"/>
+	</field>
 	<variable name="cw_id1" class="java.lang.Integer" calculation="DistinctCount">
 		<variableExpression><![CDATA[$F{cw_id}]]></variableExpression>
 	</variable>
@@ -296,7 +404,7 @@ FROM
 					<printWhenExpression><![CDATA[$F{cw_rank_boolean}]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{total_fruit_cwi}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cost_of_quantity_fruit_packed}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="188" y="0" width="110" height="15" uuid="e737738c-f322-46eb-853e-6dbd43e8bd0e"/>
@@ -307,7 +415,7 @@ FROM
 					<printWhenExpression><![CDATA[$F{cw_rank_boolean}]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{total_fruit_rand_cwi}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{total_cost_of_quantity_fruit_packed}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
 				<reportElement x="466" y="0" width="47" height="15" uuid="d0f19b2a-bfce-4e8b-8397-315fdd94e84c">
@@ -321,17 +429,17 @@ FROM
 					<printWhenExpression><![CDATA[$F{cw_rank_boolean}]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{total_carton_cwi}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{total_ctns_packed_cw}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="376" y="0" width="42" height="15" uuid="47595efc-74d0-4561-827c-1b9bca8e2d60"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{fruit_qty_cwi}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{quantity_fruit_packed}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
 				<reportElement x="576" y="0" width="53" height="15" uuid="afdb5bfd-7103-4c45-8757-df719ab63d6d"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{fruit_rand_cwi}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cost_of_quantity_fruit_packed}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -366,7 +474,7 @@ FROM
 			<textField pattern="###0.00;###0.00-">
 				<reportElement x="665" y="0" width="53" height="15" uuid="36c7f42b-d107-4804-a89b-90378b263092"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{total_fruit_rand_shift}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{shift_total_cost_of_fruit_packed}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="1" y="0" width="798" height="1" uuid="13efb243-d9f4-490c-b993-83cc02721d4a">
