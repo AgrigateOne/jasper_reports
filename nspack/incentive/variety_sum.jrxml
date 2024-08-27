@@ -30,6 +30,8 @@
 				JOIN marketing_varieties ON marketing_varieties.id = carton_labels.marketing_variety_id
 				WHERE
 				s.id=$P{sub_shift_id} and standard_pack_codes.bin=false
+                AND cartons.scrapped IS NOT TRUE
+                AND cartons.is_virtual IS NOT TRUE
 				GROUP BY marketing_varieties.marketing_variety_code
 				ORDER BY  count(carton_labels.*) desc;]]>
 	</queryString>
