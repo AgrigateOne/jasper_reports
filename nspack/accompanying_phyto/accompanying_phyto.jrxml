@@ -19,7 +19,6 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<parameter name="from_depot" class="java.lang.String"/>
 	<parameter name="pallet_ids" class="java.util.Collection"/>
 	<parameter name="use_load_numbers_for_phyto_report" class="java.lang.Boolean"/>
 	<parameter name="default_exporter" class="java.lang.Integer"/>
@@ -1201,7 +1200,7 @@ Address:]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{blocks}]]></textFieldExpression>
 			</textField>
-			<textField textAdjust="ScaleFont"   isBlankWhenNull="true">
+			<textField textAdjust="ScaleFont" isBlankWhenNull="true">
 				<reportElement stretchType="ContainerHeight" x="529" y="0" width="43" height="35" uuid="4d057aa4-f90b-470c-87ec-374ecc2bfff9">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>

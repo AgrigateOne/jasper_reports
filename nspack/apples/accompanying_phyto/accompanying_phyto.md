@@ -16,21 +16,21 @@ The report can be generated:
 
 
 ## Report header
-| Label | Description | Source |
-| ----- | ----------- | ------ |
-| Document No / Series no | | '00' followed by the load `id` |
-| Commodity | The commodity of all fruit on the report | Commodity `description` |
+| Label | Description | Source                                                                                                                                    |
+| ----- | ----------- |-------------------------------------------------------------------------------------------------------------------------------------------|
+| Document No / Series no | | '00' followed by the load `id`                                                                                                            |
+| Commodity | The commodity of all fruit on the report | Commodity `description`                                                                                                                   |
 | Importing | Importing country | the first of: destination country on the govt inspection sheet's `description or final destination selected on a load that has a value. ) |
-| Exporting Company & contact details: | Info related to the exporter | Organizations (medium description), contact method tel and contact method - cell |
-| Producer's Address: | subreport  | `producer_address.jasper`  using delivery address of implementation owner |
-| Magestrial District |The district in which the depot is located or the place where the phyto inspection takes place| `depots.magisterial_district` |
-|Inspection Depot | name of depot | passed in 'install depot'|
-|Packhouse Code |The packhouse code where the fruit was packed | depot selected on load`ph.packhouse_code`|
-|Packhouse Person's Contact details |Info related to the packhouse contact person |person `first and last name,contact method tel and contact method` - cell|
-|Daff seq no | | |
-|Inspection date |The date on which the Dalrrd phyto inspector inspects the pallets on this document |manually filled in by the inspector |
-|Inspector no |The inspector's code |manually filled in by the inspector|
-|Contact Details & No | The inspector's contact |manually filled in by the inspector |
+| Exporting Company & contact details: | Info related to the exporter | Organizations (medium description), contact method tel and contact method - cell                                                          |
+| Producer's Address: | subreport  | `producer_address.jasper`  using delivery address of implementation owner                                                                 |
+| Magestrial District |The district in which the depot is located or the place where the phyto inspection takes place| `depots.magisterial_district`                                                                                                             |
+|Inspection Depot | name of depot | 'sites.site_code'   from the load |                                                                                                        |
+|Packhouse Code |The packhouse code where the fruit was packed | depot selected on load`ph.packhouse_code`                                                                                                 |
+|Packhouse Person's Contact details |Info related to the packhouse contact person | person `first and last name,contact method tel and contact method` - cell                                                                 |
+|Daff seq no | |                                                                                                                                           |
+|Inspection date |The date on which the Dalrrd phyto inspector inspects the pallets on this document | manually filled in by the inspector                                                                                                       |
+|Inspector no |The inspector's code | manually filled in by the inspector                                                                                                       |
+|Contact Details & No | The inspector's contact | manually filled in by the inspector                                                                                                       |
 ## Subreport: puc_summary
 | Label | Description | Source |
 | ----- | ----------- | ------ |
