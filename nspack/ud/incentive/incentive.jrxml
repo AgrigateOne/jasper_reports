@@ -4,7 +4,7 @@
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="UD live"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
 	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
@@ -338,7 +338,7 @@ FROM
 		<band splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="119" splitType="Stretch">
+		<band height="120" splitType="Stretch">
 			<line>
 				<reportElement x="1" y="87" width="798" height="1" uuid="5a34193e-cfe0-4370-bbc4-c4c5decf103f">
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -354,62 +354,66 @@ FROM
 				</reportElement>
 			</line>
 			<staticText>
-				<reportElement style="Column header" x="334" y="89" width="74" height="30" forecolor="#000000" uuid="994518c1-7571-4434-bbf8-99a73e8ecbbc"/>
-				<textElement>
+				<reportElement style="Column header" x="326" y="89" width="74" height="30" forecolor="#000000" uuid="994518c1-7571-4434-bbf8-99a73e8ecbbc"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Total Fruit]]></text>
+				<text><![CDATA[Total 
+Fruit]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="408" y="89" width="43" height="30" forecolor="#000000" uuid="40af268d-0a12-4376-913a-11232d68f904">
+				<reportElement style="Column header" x="400" y="89" width="43" height="30" forecolor="#000000" uuid="40af268d-0a12-4376-913a-11232d68f904">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement verticalAlignment="Bottom">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Running Hours]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="1" y="89" width="67" height="30" uuid="305867e5-a2e5-4f2b-a6cb-6a46e3005b89"/>
-				<textElement>
+				<textElement verticalAlignment="Bottom">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[PNo]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="298" y="89" width="36" height="30" uuid="00c02650-20e0-4cb8-9cf5-740132cd6884"/>
-				<textElement>
+				<reportElement x="280" y="89" width="46" height="30" uuid="00c02650-20e0-4cb8-9cf5-740132cd6884"/>
+				<textElement verticalAlignment="Bottom">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Total Cartons]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="451" y="89" width="78" height="30" uuid="7a312de7-3db2-4b5a-9789-5078a2896971"/>
-				<textElement textAlignment="Right"/>
-				<text><![CDATA[Fruit per Hour]]></text>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<text><![CDATA[Fruit 
+per Hour]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="576" y="89" width="47" height="30" uuid="318b5f86-2b5f-482d-9e3d-541a1d729d79"/>
-				<textElement textAlignment="Right"/>
+				<reportElement x="600" y="89" width="47" height="30" uuid="318b5f86-2b5f-482d-9e3d-541a1d729d79"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
 				<text><![CDATA[Basic Wage]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="736" y="89" width="63" height="30" uuid="07ffafdb-14c7-417d-bf61-8711933a835a"/>
-				<textElement textAlignment="Right"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
 				<text><![CDATA[Total Earnings]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="68" y="89" width="120" height="30" uuid="6a9424ce-1390-4108-99e8-ed956c24c933"/>
+				<textElement verticalAlignment="Bottom"/>
 				<text><![CDATA[Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="683" y="89" width="53" height="30" uuid="4207fc67-7b55-43fa-94ce-2560746370f6"/>
-				<textElement textAlignment="Right"/>
+				<reportElement x="670" y="90" width="53" height="30" uuid="4207fc67-7b55-43fa-94ce-2560746370f6"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
 				<text><![CDATA[Incentive]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="188" y="89" width="110" height="30" uuid="15635740-bbde-443d-aa1e-d183c382bdeb"/>
+				<reportElement x="200" y="89" width="62" height="30" uuid="15635740-bbde-443d-aa1e-d183c382bdeb"/>
+				<textElement verticalAlignment="Bottom"/>
 				<text><![CDATA[Shift D/N]]></text>
 			</staticText>
 			<staticText>
@@ -459,7 +463,7 @@ FROM
 				<reportElement x="529" y="89" width="47" height="30" uuid="fdee7a68-1f2f-49f6-a6ab-1806ed94d3ff">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
 				<text><![CDATA[Packing Method]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
@@ -480,21 +484,22 @@ FROM
 				<textFieldExpression><![CDATA[$F{personnel_barcode_number}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="68" y="0" width="120" height="15" uuid="7c6c77c6-242c-41fe-b29c-e6a3002c405c"/>
+				<reportElement x="68" y="0" width="132" height="15" uuid="7c6c77c6-242c-41fe-b29c-e6a3002c405c"/>
 				<textFieldExpression><![CDATA[$F{party_name}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="298" y="0" width="36" height="15" uuid="f83a63e0-000b-46a1-b35f-5f7818f68111"/>
+				<reportElement x="260" y="-1" width="46" height="15" uuid="f83a63e0-000b-46a1-b35f-5f7818f68111"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{total_cartons}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="334" y="0" width="74" height="15" uuid="d87d3b26-8bf5-456c-aff4-50a1e729fc6b"/>
+				<reportElement x="306" y="0" width="74" height="15" uuid="d87d3b26-8bf5-456c-aff4-50a1e729fc6b"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{total_fruit}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-				<reportElement x="576" y="0" width="47" height="15" uuid="ac6917aa-924d-45b4-a92c-8260b7e836f6">
+				<reportElement x="600" y="0" width="47" height="15" uuid="ac6917aa-924d-45b4-a92c-8260b7e836f6">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<printWhenExpression><![CDATA[$F{cw_rank}]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right">
@@ -503,24 +508,26 @@ FROM
 				<textFieldExpression><![CDATA[$F{wage_level}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="188" y="0" width="110" height="15" uuid="e737738c-f322-46eb-853e-6dbd43e8bd0e"/>
+				<reportElement x="200" y="-1" width="62" height="15" uuid="e737738c-f322-46eb-853e-6dbd43e8bd0e"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{shift_type_code}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-				<reportElement x="408" y="0" width="43" height="15" uuid="395f9724-525c-4d6b-8dc1-dfcd109ebde2">
+				<reportElement x="400" y="-1" width="43" height="15" uuid="395f9724-525c-4d6b-8dc1-dfcd109ebde2">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
 				</reportElement>
-				<textElement textAlignment="Right"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{running_hours}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="451" y="0" width="78" height="15" uuid="9114b226-c7e8-44f4-aa30-d38e62ba93eb"/>
+				<reportElement x="443" y="0" width="57" height="15" uuid="9114b226-c7e8-44f4-aa30-d38e62ba93eb"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{fruitphour}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-				<reportElement x="683" y="0" width="53" height="15" uuid="89b64826-d22a-443a-8bec-94b00adb10c6">
+				<reportElement x="670" y="0" width="53" height="15" uuid="89b64826-d22a-443a-8bec-94b00adb10c6">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<printWhenExpression><![CDATA[$F{cw_rank}]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right"/>
