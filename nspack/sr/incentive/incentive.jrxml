@@ -30,7 +30,7 @@
         day_night_or_custom AS shift_type_code,
         s.shift_type_id,
         count(carton_labels.id) AS carton_qty,
-        sum(fruit_actual_counts_for_packs.actual_count_for_pack) quantity_fruit_packed,
+        sum(fruit_actual_counts_for_packs.actual_count_for_pack) quantity_fruit_packed_per_inv,
         sum(fruit_actual_counts_for_packs.actual_count_for_pack * coalesce(t.inv_cost, 0)) cost_of_quantity_fruit_packed,
         contract_workers.id AS cw_id,
         COALESCE(shift_exceptions.running_hours, s.running_hours,((EXTRACT(EPOCH FROM end_date_time) - EXTRACT(EPOCH FROM start_date_time)) / 60 / 60)) AS running_hours,
@@ -104,7 +104,7 @@ calc_sql AS (
         base_sql.start_date_time,
         base_sql.end_date_time,
         base_sql.cw_id,
-        base_sql.quantity_fruit_packed,
+        base_sql.quantity_fruit_packed_per_inv,
         base_sql.running_hours,
         base_sql.party_name,
         base_sql.personnel_barcode_number,
@@ -115,10 +115,10 @@ calc_sql AS (
         base_sql.shift_type_code,
         base_sql.inv_codes,
         base_sql.cost_of_quantity_fruit_packed,
-        sum(quantity_fruit_packed) OVER (PARTITION BY cw_id) total_fruit_packed_cw,
+        sum(quantity_fruit_packed_per_inv) OVER (PARTITION BY cw_id) total_fruit_packed_cw,
         sum(cost_of_quantity_fruit_packed) OVER (PARTITION BY cw_id) total_cost_of_quantity_fruit_packed,
         sum(carton_qty) OVER (PARTITION BY cw_id) total_ctns_packed_cw,
-        sum(quantity_fruit_packed) OVER () total_fruit_shift,
+        sum(quantity_fruit_packed_per_inv) OVER () total_fruit_shift,
         sum(carton_qty) OVER () total_carton_shift,
         sum(cost_of_quantity_fruit_packed) OVER () shift_total_cost_of_fruit_packed,
         rank() OVER (PARTITION BY base_sql.cw_id ORDER BY base_sql.fruit_item_incentive_rate) AS cw_rank,
@@ -156,9 +156,9 @@ ORDER BY
 		<property name="com.jaspersoft.studio.field.label" value="cw_id"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="contract_workers"/>
 	</field>
-	<field name="quantity_fruit_packed" class="java.lang.Long">
-		<property name="com.jaspersoft.studio.field.name" value="quantity_fruit_packed"/>
-		<property name="com.jaspersoft.studio.field.label" value="quantity_fruit_packed"/>
+	<field name="quantity_fruit_packed_per_inv" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="quantity_fruit_packed_per_inv"/>
+		<property name="com.jaspersoft.studio.field.label" value="quantity_fruit_packed_per_inv"/>
 	</field>
 	<field name="running_hours" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="running_hours"/>
@@ -404,7 +404,7 @@ ORDER BY
 					<printWhenExpression><![CDATA[$F{cw_rank_boolean}]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{cost_of_quantity_fruit_packed}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{total_fruit_packed_cw}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="188" y="0" width="110" height="15" uuid="e737738c-f322-46eb-853e-6dbd43e8bd0e"/>
@@ -434,7 +434,7 @@ ORDER BY
 			<textField isBlankWhenNull="true">
 				<reportElement x="376" y="0" width="42" height="15" uuid="47595efc-74d0-4561-827c-1b9bca8e2d60"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{quantity_fruit_packed}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{quantity_fruit_packed_per_inv}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
 				<reportElement x="576" y="0" width="53" height="15" uuid="afdb5bfd-7103-4c45-8757-df719ab63d6d"/>
