@@ -59,7 +59,8 @@
                 AND s.end_date_time
                 AND s.plant_resource_id = carton_labels.production_line_id
         LEFT JOIN public.contract_workers ON (carton_labels.contract_worker_id = contract_workers.id)
-        LEFT JOIN public.shift_exceptions ON (contract_workers.id = shift_exceptions.contract_worker_id) AND (s.id = shift_exceptions.shift_id)LEFT JOIN cultivar_groups ON cultivar_groups.id = carton_labels.cultivar_group_id
+        LEFT JOIN public.shift_exceptions ON (contract_workers.id = shift_exceptions.contract_worker_id) AND (s.id = shift_exceptions.shift_id)
+        LEFT JOIN cultivar_groups ON cultivar_groups.id = carton_labels.cultivar_group_id
         LEFT  JOIN(
 			            select commodity_id,
 						inventory_codes.id as inventory_code_id,
@@ -230,7 +231,7 @@ FROM
 		<band splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="119" splitType="Stretch">
+		<band height="120" splitType="Stretch">
 			<line>
 				<reportElement x="1" y="87" width="798" height="1" uuid="5a34193e-cfe0-4370-bbc4-c4c5decf103f">
 					<property name="local_mesure_unitwidth" value="pixel"/>
@@ -246,7 +247,7 @@ FROM
 				</reportElement>
 			</line>
 			<staticText>
-				<reportElement style="Column header" x="419" y="89" width="40" height="30" forecolor="#000000" uuid="994518c1-7571-4434-bbf8-99a73e8ecbbc"/>
+				<reportElement style="Column header" x="480" y="89" width="40" height="30" forecolor="#000000" uuid="994518c1-7571-4434-bbf8-99a73e8ecbbc"/>
 				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
@@ -315,7 +316,7 @@ FROM
 				<textFieldExpression><![CDATA[$F{shift_type_code}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="466" y="89" width="47" height="30" uuid="fdee7a68-1f2f-49f6-a6ab-1806ed94d3ff">
+				<reportElement x="540" y="90" width="47" height="30" uuid="fdee7a68-1f2f-49f6-a6ab-1806ed94d3ff">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right"/>
@@ -331,21 +332,25 @@ FROM
 				<text><![CDATA[Shift ID:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="340" y="89" width="36" height="30" uuid="d032bb1b-be48-43c2-b13d-3a76e115e68c"/>
+				<reportElement x="350" y="89" width="36" height="30" uuid="d032bb1b-be48-43c2-b13d-3a76e115e68c"/>
 				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Total Cartons]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Column header" x="376" y="89" width="42" height="30" forecolor="#000000" uuid="38599196-b84c-4582-92cf-49a0c5422c02"/>
+				<reportElement style="Column header" x="410" y="90" width="42" height="30" forecolor="#000000" uuid="38599196-b84c-4582-92cf-49a0c5422c02">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Right">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Fruit Qty]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="576" y="89" width="53" height="30" uuid="ee3775b3-91c4-46f1-bd6d-5f05bf0be997"/>
+				<reportElement x="600" y="89" width="53" height="30" uuid="ee3775b3-91c4-46f1-bd6d-5f05bf0be997">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Right"/>
 				<text><![CDATA[Cost]]></text>
 			</staticText>
@@ -376,7 +381,8 @@ FROM
 				<textFieldExpression><![CDATA[$F{carton_qty}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="419" y="0" width="40" height="15" uuid="d87d3b26-8bf5-456c-aff4-50a1e729fc6b">
+				<reportElement x="480" y="0" width="40" height="15" uuid="d87d3b26-8bf5-456c-aff4-50a1e729fc6b">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<printWhenExpression><![CDATA[$F{cw_rank_boolean}]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right"/>
@@ -394,26 +400,31 @@ FROM
 				<textFieldExpression><![CDATA[$F{total_fruit_rand_cwi}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="466" y="0" width="47" height="15" uuid="d0f19b2a-bfce-4e8b-8397-315fdd94e84c">
+				<reportElement x="540" y="0" width="47" height="15" uuid="d0f19b2a-bfce-4e8b-8397-315fdd94e84c">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{inv_codes}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="340" y="0" width="36" height="15" uuid="22194ec0-e85e-487c-8ed1-be87fa521e14">
+				<reportElement x="353" y="0" width="36" height="15" uuid="22194ec0-e85e-487c-8ed1-be87fa521e14">
 					<printWhenExpression><![CDATA[$F{cw_rank_boolean}]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{total_carton_cwi}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="376" y="0" width="42" height="15" uuid="47595efc-74d0-4561-827c-1b9bca8e2d60"/>
+				<reportElement x="410" y="0" width="42" height="15" uuid="47595efc-74d0-4561-827c-1b9bca8e2d60">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{fruit_qty_cwi}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-				<reportElement x="576" y="0" width="53" height="15" uuid="afdb5bfd-7103-4c45-8757-df719ab63d6d"/>
+				<reportElement x="600" y="0" width="53" height="15" uuid="afdb5bfd-7103-4c45-8757-df719ab63d6d">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{fruit_rand_cwi}]]></textFieldExpression>
 			</textField>
