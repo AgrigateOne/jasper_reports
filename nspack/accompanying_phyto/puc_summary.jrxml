@@ -14,7 +14,7 @@
 		<![CDATA[SELECT intake ,
   string_agg(DISTINCT puc, ', ') AS pucs,
   SUM(carton_quantity) AS ctns,
-  COUNT( DISTINCT pallet_number) AS plts
+  COUNT(DISTINCT pallet_number) AS plts
 FROM (SELECT COALESCE(CASE
   WHEN NOT govt_inspection_passed THEN consignment_note_number || 'F'::text
   WHEN govt_inspection_passed THEN consignment_note_number
