@@ -857,13 +857,6 @@ per Hour]]></text>
 				<reportElement x="1" y="7" width="67" height="18" uuid="09a115f2-feaf-4179-8f25-e384b70afdd3"/>
 				<text><![CDATA[Page:]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="210" y="11" width="90" height="30" uuid="74e98389-b3da-446a-86e2-05a3c823b561"/>
-				<textElement>
-					<font size="24"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{shift_id}]]></textFieldExpression>
-			</textField>
 		</band>
 	</pageFooter>
 	<summary>
