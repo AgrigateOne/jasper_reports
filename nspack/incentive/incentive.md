@@ -62,18 +62,17 @@ Production | Shifts | List Shifts
 
 ## Example
 ```
-total_earnings   = incentive + cost
-               
-incentive        = bonus_fruit * inv_cost
-                 = (reduced_fruit_qty - shift_running_hours_target) * inv_cost
-                 = ((quantity_fruit_packed_per_inv * actual_count_reduction_factor) - (running_hours/std_hours_per_day * shift_packing_target)) * inv_cost
-                 = ((quantity_fruit_packed_per_inv * actual_count_reduction_factor) - (running_hours/std_hours_per_day * (fruit_per_hour_packing_target * running_hours))) * inv_cost
-                 = ((14000 * actual_count_reduction_factor) - (running_hours/std_hours_per_day * (fruit_per_hour_packing_target * running_hours))) * inv_cost
-                 = ((14000 * 1.0) - (8/9 * (1500 * 8))) * 0.017
-                 = 56.666666667
-                 
- cost            = (running_hours/std_hours_per_day * shift_packing_target) * inv_cost
+total_earnings = incentive + cost
 
+incentive    = bonus_fruit * inv_cost
+			 = (reduced_fruit_qty - shift_running_hours_target) * inv_cost
+			 = ((quantity_fruit_packed_per_inv * actual_count_reduction_factor) - (running_hours/std_hours_per_day * shift_packing_target)) * inv_cost
+			 = ((quantity_fruit_packed_per_inv * actual_count_reduction_factor) - (running_hours/std_hours_per_day * (fruit_per_hour_packing_target * running_hours))) * inv_cost
+			 = ((14000 * actual_count_reduction_factor) - (running_hours/std_hours_per_day * (fruit_per_hour_packing_target * running_hours))) * inv_cost
+			 = ((14000 * 1.0) - (8/9 * (1500 * 8))) * 0.017
+			 = 56.666666667
+ 
+#2
 quantity_fruit_packed_per_inv    = 14000
 fruit_per_hour_packing_target    = 1500
 incentive rate                   = 0.017
@@ -82,9 +81,20 @@ shift_packing_target             = running hours * fruit_per_hour_packing_target
 shift_running_hours_target       = 8/9 * 12000 = 10 667
 bonus_fruit                      = 14000 - 10667 = 3333
 incentive paid                   = 3333 x 0,017 = R56.66
-
 cost                             = (reduced_fruit_qty-bonus_fruit) * inv_cost = 10667 x inv_cost
 
+#3
+quantity_fruit_packed_per_inv    = 29532
+fruit_per_hour_packing_target    = 1500
+inv_cost                         = 0.017
+inv_cost                         = coalesce(inventory_codes_packing_costs.packing_cost, inventory_codes.fruit_item_incentive_rate)
+reduced_fruit_qty                = quantity_fruit_packed_per_inv * actual_count_reduction_factor                      = 29532 * 1.1
+shift_packing_target             = fruit_per_hour_packing_target * running_hours                                      = 1500 * 8hrs                      = 12000
+shift_running_hours_target       = running_hours/std_hours_per_day * shift_packing_target                             = 8/9 * 12 000                     = 10 667
+bonus_fruit                      = reduced_fruit_qty - shift_running_hours_target                                     = 29 532 - 10 667                   = 18 865
+incentive                        = (reduced_fruit_qty - shift_running_hours_target) * inv_cost                        = (29 532 - 10 667) * 0.017         = 320.705
+cost                             = (reduced_fruit_qty -(reduced_fruit_qty - shift_running_hours_target)) * inv_cost   = (29 532 -(29 532 -10 667)) * 0.017 = 181.339
+total earnings                   = incentive + cost                                                                   = 320.705 + 181.339                  = 502.044
 
 
 ```
