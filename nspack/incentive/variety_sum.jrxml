@@ -9,7 +9,8 @@
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="960"/>
 	<parameter name="sub_shift_id" class="java.lang.Integer"/>
 	<queryString language="SQL">
-		<![CDATA[ SELECT marketing_varieties.marketing_variety_code,count(carton_labels.*)
+		<![CDATA[
+		SELECT marketing_varieties.marketing_variety_code,count(carton_labels.*)
 				FROM
 				cartons
 				JOIN carton_labels ON carton_labels.id = cartons.carton_label_id

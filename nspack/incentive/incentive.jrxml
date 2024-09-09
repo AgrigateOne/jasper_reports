@@ -25,7 +25,7 @@ quantity_fruit_packed_per_inv    = 14000
 fruit_per_hour_packing_target    = 1500
 incentive rate                   = 0.017
 shift_packing_target             = running hours * fruit_per_hour_packing_target
- =  8hrs * 1500 = 12000
+                                 =  8hrs * 1500 = 12000
 shift_running_hours_target       = 8/9 * 12000 = 10 667
 bonus_fruit                      = 14000 - 10667 = 3333
 incentive paid                   = 3333 x 0,017 = R56.66
@@ -36,16 +36,17 @@ quantity_fruit_packed_per_inv    = 29532
 fruit_per_hour_packing_target    = 1500
 inv_cost                         = 0.017
 inv_cost                         = coalesce(inventory_codes_packing_costs.packing_cost, inventory_codes.fruit_item_incentive_rate)
-reduced_fruit_qty                = quantity_fruit_packed_per_inv * actual_count_reduction_factor            = 29532 * 1.1
-shift_packing_target             = fruit_per_hour_packing_target * running_hours                             = 1500 * 8hrs = 12000
-shift_running_hours_target       = running_hours/std_hours_per_day * shift_packing_target                     = 8/9 * 12 000          = 10 667
-bonus_fruit                      = reduced_fruit_qty - shift_running_hours_target                            = 29532 - 10 667 = 18 865
-incentive                        = bonus_fruit * inv_cost                                                    = (29532-18865 )* 0.017 = 181.339
-cost                             = (reduced_fruit_qty-bonus_fruit) * inv_cost                                 = 29532 x inv_cost
-total earnings                   = incentive + (shift_running_hours_target * inv_cost)
+reduced_fruit_qty                = quantity_fruit_packed_per_inv * actual_count_reduction_factor                      = 29532 * 1.1
+shift_packing_target             = fruit_per_hour_packing_target * running_hours                                      = 1500 * 8hrs = 12000
+shift_running_hours_target       = running_hours/std_hours_per_day * shift_packing_target                             = 8/9 * 12 000          = 10 667
+bonus_fruit                      = reduced_fruit_qty - shift_running_hours_target                                     = 29532 - 10 667 = 18 865
+incentive                        = bonus_fruit * inv_cost                                                             = (29532-18865 )* 0.017 = 181.339
+cost                             = (reduced_fruit_qty -(reduced_fruit_qty - shift_running_hours_target)) * inv_cost   = (29532 -(29532 -10 667)) * 0.017
+total earnings                   = incentive + cost                                                                   =
 
 
-new_incentive = bonus_fruit * inv_cost
+
+incentive = bonus_fruit * inv_cost
  = (reduced_fruit_qty - shift_running_hours_target) * inv_cost
  = ((quantity_fruit_packed_per_inv * actual_count_reduction_factor) - (running_hours/std_hours_per_day * shift_packing_target)) * inv_cost
  = ((quantity_fruit_packed_per_inv * actual_count_reduction_factor) - (running_hours/std_hours_per_day * (fruit_per_hour_packing_target * running_hours))) * inv_cost
@@ -130,7 +131,7 @@ WITH base_sql AS (
                 inv.inventory_code_id = carton_labels.inventory_code_id
             END
         WHERE
-            s.id = 143
+            s.id = $P{shift_id}
             AND standard_pack_codes.bin = FALSE
             AND cartons.scrapped IS NOT TRUE
             AND cartons.is_virtual IS NOT TRUE
@@ -207,10 +208,7 @@ calc_sql2 AS (
         calc_sql.*,
         fruit_per_hour_packing_target * running_hours AS shift_packing_target,
 ((quantity_fruit_packed_per_inv * actual_count_reduction_factor) -(running_hours / std_hours_per_day *(fruit_per_hour_packing_target * running_hours))) * inv_cost AS incentive,
-        --(reduced_fruit_qty-bonus_fruit) * inv_cost AS cost,
-(reduced_fruit_qty -(reduced_fruit_qty - shift_running_hours_target)) * inv_cost AS
-        COST
-        --(incentive +((reduced_fruit_qty-(reduced_fruit_qty - shift_running_hours_target)) * inv_cost))::numeric(12, 2) AS total_earnings
+(reduced_fruit_qty -(reduced_fruit_qty - shift_running_hours_target)) * inv_cost AS COST
     FROM
         calc_sql
     ORDER BY
@@ -269,18 +267,15 @@ SELECT
     shift_packing_target::numeric(12, 2),
     shift_running_hours_target::numeric(12, 2),
     fruit_item_incentive_rate::numeric(12, 2),
-(reduced_fruit_qty - shift_running_hours_target)::numeric(12, 2) AS bonus_fruit,
+    (reduced_fruit_qty - shift_running_hours_target)::numeric(12, 2) AS bonus_fruit,
     CASE WHEN incentive < 0 THEN
         0
     ELSE
         incentive::numeric(12, 2)
     END incentive,
-    COST::numeric(12,
-        2)::numeric(12, 2),
-(incentive +
-        COST)::numeric(12, 2) AS earnings,
-    sum((incentive +
-        COST)::numeric(12, 2)) OVER (PARTITION BY cw_id) AS total_earnings
+    COST::numeric(12,2)::numeric(12, 2),
+    (incentive +COST)::numeric(12, 2) AS earnings,
+    sum((incentive +COST)::numeric(12, 2)) OVER (PARTITION BY cw_id) AS total_earnings
     FROM
         calc_sql2
     ORDER BY
