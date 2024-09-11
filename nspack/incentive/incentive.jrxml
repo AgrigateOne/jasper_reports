@@ -20,8 +20,7 @@
 		<defaultValueExpression><![CDATA["UD"]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
-		<![CDATA[
-WITH base_sql AS (
+		<![CDATA[WITH base_sql AS (
     SELECT
         wage_levels.description AS wage_level_description,
         contract_workers.personnel_number AS personnel_barcode_number,
@@ -837,7 +836,7 @@ per Hour]]></text>
 				<text><![CDATA[No Packers]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="370" y="0" width="65" height="15" uuid="e5219e47-35a6-4c3e-8ec2-6f758a8e7501">
+				<reportElement x="370" y="0" width="55" height="15" uuid="e5219e47-35a6-4c3e-8ec2-6f758a8e7501">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -845,7 +844,7 @@ per Hour]]></text>
 				<textFieldExpression><![CDATA[$F{shift_fruit}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-">
-				<reportElement x="450" y="0" width="43" height="15" uuid="b00634c8-d742-4dd3-b272-7928b4a24247">
+				<reportElement x="426" y="0" width="43" height="15" uuid="b00634c8-d742-4dd3-b272-7928b4a24247">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -868,7 +867,7 @@ per Hour]]></text>
 				</reportElement>
 			</line>
 			<textField evaluationTime="Auto" pattern="#,##0">
-				<reportElement x="495" y="0" width="65" height="15" uuid="65e379b8-c6d0-42f4-a5ee-967931c3c47d">
+				<reportElement x="470" y="0" width="55" height="15" uuid="65e379b8-c6d0-42f4-a5ee-967931c3c47d">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
