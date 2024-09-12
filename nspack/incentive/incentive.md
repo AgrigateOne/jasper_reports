@@ -56,33 +56,39 @@ Production | Shifts | List Shifts
 | fruit_per_hour_packing_target | commodities.fruit_per_hour_packing_target                                                       |                                                                                                                                                                          |
 | actual_count_reduction_factor | packing_methods.actual_count_reduction_factor                                                   |
 | shift_packing_target          | fruit_per_hour_packing_target * running_hours                                                   
-|required_fruit_to_reach_incentive | running_hours/std_hours_per_day *(fruit_per_hour_packing_target * running_hours)                                                                                                | 
+|required_fruit_to_reach_incentive | running_hours/std_hours_per_day * fruit_per_hour_packing_target                                 | 
 | actual_count_reduction_factor | packing_methods.actual_count_reduction_factor                                                   |
-
-
-
 
 
 ## Example
 ```
-total_earnings  = incentive + cost
+shift_fruit_packing_target         = running hours * fruit_per_hour_packing_target
+required_fruit_to_reach_incentive  = running_hours/std_hours_per_day *fruit_per_hour_packing_target
+incentive_fruit                    = total_fruit - required_fruit_to_reach_incentive
+cost                               = (total_fruit - incentive_fruit)* inv_cost
+incentive                          = incentive_fruit * inv_cost
+total_earnings                     = cost + incentive
 
+total_fruit                      = 14000
+fruit_per_hour_packing_target    = 1500
+incentive rate                   = 0.017
+running hours                    = 8
+shift_fruit_packing_target       =  8hrs * 1500 = 12000                                
+required_fruit_to_reach_incentive= 8/9 * 12000 = 10 667 
+incentive_fruit                  = 14000 - 10667 = 3333
+incentive paid                   = 3333 x 0,017 = R56.66
+total_earnings                   = incentive + cost
+
+#Query terms
 cost            = (reduced_fruit_qty-incentive_fruit) * inv_cost
                 = (14000 - 3333) * 0.017
                 = 181.339
                 
-incentive_fruit = (reduced_fruit_qty - required_fruit_to_reach_incentive)
-
-       shift_packing_target =  fruit_per_hour_packing_target * running_hours 
- shift_running_hours_target = running_hours / std_hours_per_day *(fruit_per_hour_packing_target * running_hours) 
-
-
 incentive    = incentive_fruit * inv_cost
 			 = (reduced_fruit_qty - required_fruit_to_reach_incentive) * inv_cost
 			 = ((quantity_fruit_packed_per_inv * actual_count_reduction_factor) - (running_hours/std_hours_per_day * shift_packing_target)) * inv_cost
 			 = ((quantity_fruit_packed_per_inv * actual_count_reduction_factor) - (running_hours/std_hours_per_day * (fruit_per_hour_packing_target * running_hours))) * inv_cost
 			 = ((quantity_fruit_packed_per_inv * actual_count_reduction_factor) -(running_hours / std_hours_per_day *(fruit_per_hour_packing_target * running_hours))) * inv_cost AS incentive,
-
 			 = ((14000 * actual_count_reduction_factor) - (running_hours/std_hours_per_day * (fruit_per_hour_packing_target * running_hours))) * inv_cost
 			 = ((14000 * 1.0) - (8/9 * (1500 * 8))) * 0.017
 			 = 56.666666667
@@ -90,18 +96,8 @@ incentive    = incentive_fruit * inv_cost
 			  =((14410 * 1.0) -(8.98 / 9 *(1500 * 8.98))) * 0.017 AS incentive,
 			 =((14410 * 1.0) - (8/9 * (1500 * 8))) * 0.017
 			 
-			 14410 - (8.98/9 * 1500)
 			 
 
-quantity_fruit_packed_per_inv    = 14000
-fruit_per_hour_packing_target    = 1500
-incentive rate                   = 0.017
-running hours                    = 8
-shift_fruit_packing_target       = running hours * fruit_per_hour_packing_target
-                                 =  8hrs * 1500 = 12000
-required_fruit_to_reach_incentive      = 8/9 * 12000 = 10 667 (shift_target)
-incentive_fruit                  = quantity_fruit_packed_per_inv - required_fruit_to_reach_incentive 
-                                 = 14000 - 10667 = 3333
-incentive paid                   = 3333 x 0,017 = R56.66
+
 
 ```
