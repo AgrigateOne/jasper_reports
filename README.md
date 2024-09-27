@@ -42,7 +42,7 @@ All clients will use the standard version of `report_two` (`nspack/report_two`) 
 * When a new report is added, it must also be defined in the `reports_list.yml` file in the root.
 * When a report's parameters change, the entry in the `reports_list.yml` file should be updated.
 
-## Reports Config
+## Reports List
 
 Attributes for every report in this repository must be kept up-to-date in this file (`reports_list.yml`).
 
@@ -82,6 +82,21 @@ default:
   get: field_name2
 ```
 This will return the first `field_name2` in `table_name` ordered by `field_name1`.
+
+Parameter types:
+
+| Collection? | Java class        | Report list type |
+| ----------- | ---------         | ---------------- |
+|     N       | java.lang.Integer | integer          |
+|     N       | java.lang.String  | string           |
+|     N       | java.lang.Boolean | boolean          |
+|     N       | java.sql.Date     | date             |
+|     N       | java.util.Date    | date             |
+|     N       | java.sql.Date     | datetime         |
+|     N       | java.util.Date    | datetime         |
+|     Y       | java.lang.Integer | intarray         |
+|     Y       | java.lang.String  | strarray         |
+
 
 ## Development
 

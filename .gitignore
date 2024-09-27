@@ -3,6 +3,7 @@
 *.svn
 log/*
 deploystats.sh
+deploystats.sh.bak
 # Temporary:
 # /pack_materials/
 /.metadata/
