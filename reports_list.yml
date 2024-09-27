@@ -1,0 +1,1213 @@
+---
+accompanying_phyto:
+  group: NSPack
+  caption: Accompanying Phyto
+  path: nspack/accompanying_phyto
+  params:
+    - name: load_id
+      datatype: integer
+      selection: sql1 - SELECT id FROM loads ORDER BY id DESC
+      default: 
+      required: true
+    - name: pallet_ids
+      datatype: intarray
+      default:
+      required: true
+    - name: default_exporter
+      datatype: integer
+      selection: method - for_select_party_roles, EXPORTER
+      default:
+      required: true
+    - name: default_phyto_inspection_depot
+      datatype: string
+      selection: sql2 - SELECT depot_code, id FROM depots ORDER BY depot_code
+      default: ADEPOT
+      required: true
+    - name: use_load_numbers_for_phyto_report
+      datatype: boolean
+      selection: 
+      default: false
+      required: true
+    - name: from_depot
+      datatype: string
+      selection: sql1 - SELECT site_code FROM sites ORDER BY site_code
+      default:
+        table: sites
+        order: id
+        get: site_code
+      required: true
+accompanying_phyto-apples:
+  group: NSPack
+  caption: Accompanying Phyto (APPLES)
+  path: nspack/apples/accompanying_phyto
+  params:
+    - name: load_id
+      datatype: integer
+      selection: sql1 - SELECT id FROM loads ORDER BY id DESC
+      default: 
+      required: true
+    - name: pallet_ids
+      datatype: intarray
+      default:
+      required: true
+    - name: default_exporter
+      datatype: integer
+      selection: method - for_select_party_roles, EXPORTER
+      default:
+      required: true
+    - name: default_phyto_inspection_depot
+      datatype: string
+      selection: sql2 - SELECT depot_code, id FROM depots ORDER BY depot_code
+      default: ADEPOT
+      required: true
+    - name: use_load_numbers_for_phyto_report
+      datatype: boolean
+      selection: 
+      default: false
+      required: true
+    - name: from_depot
+      datatype: string
+      selection: sql1 - SELECT site_code FROM sites ORDER BY site_code
+      default:
+        table: sites
+        order: id
+        get: site_code
+      required: true
+addendum:
+  group: NSPack
+  caption: Addendum
+  path: nspack/addendum
+  params:
+    - name: user
+      datatype: string
+      selection: 
+      default: Mr. Jasper Tester
+      required: true
+    - name: load_id
+      datatype: integer
+      selection: sql1 - SELECT id FROM loads ORDER BY id DESC
+      default: 
+      required: true
+    - name: place_of_issue
+      datatype: string
+      selection: 
+      default: CPT
+      required: true
+bin_assets:
+  group: NSPack
+  caption: Bin Assets
+  path: nspack/bin_assets
+  params:
+    - name: bin_asset_transaction_id
+      datatype: integer
+      default:
+      required: true
+bin_loads:
+  group: NSPack
+  caption: Bin Loads
+  path: nspack/bin_loads
+  params:
+    - name: bin_load_id
+      datatype: integer
+      selection: sql1 - SELECT id FROM bin_loads ORDER BY id DESC
+      default: 
+      required: true
+bin_ticket:
+  group: NSPack
+  caption: Bin Ticket
+  path: nspack/bin_ticket
+  params:
+    - name: bin_id
+      datatype: intarray
+      selection:
+      default:
+      required: true
+bin_tickets:
+  group: NSPack
+  caption: Bin Tickets
+  path: nspack/bin_tickets
+  params:
+    - name: delivery_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+    - name: paramuser
+      datatype: string
+      selection: 
+      default: Mr. J. Tester
+      required: true
+brc_dispatch_note:
+  group: NSPack
+  caption: BRC Dispatch Note
+  path: nspack/brc_dispatch_note
+  params:
+    - name: load_id
+      datatype: integer
+      selection: sql1 - SELECT id FROM loads ORDER BY id DESC
+      default:
+      required: true
+    - name: cartons_equals_pallets
+      datatype: boolean
+      selection: 
+      default: false
+      required: true
+buildup_inspection:
+  group: NSPack
+  caption: Buildup Inspection
+  path: nspack/buildup_inspection
+  params:
+    - name: load_id
+      datatype: integer
+      selection: sql1 - SELECT id FROM loads ORDER BY id DESC
+      default:
+      required: true
+carton_packout:
+  group: NSPack
+  caption: Carton Packout
+  path: nspack/carton_packout
+  params:
+    - name: production_run_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+    - name: client_code
+      datatype: string
+      selection: 
+      default: 
+      required: true
+container_loading:
+  group: NSPack
+  caption: Container Loading
+  path: nspack/container_loading
+  params:
+    - name: load_id
+      datatype: integer
+      selection: sql1 - SELECT id FROM loads ORDER BY id DESC
+      default:
+      required: true
+    - name: cartons_equals_pallets
+      datatype: boolean
+      selection: 
+      default: false
+      required: true
+container_mass_declaration:
+  group: NSPack
+  caption: Container Mass Declaration
+  path: nspack/container_mass_declaration
+  params:
+    - name: load_container_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+    - name: user_name
+      datatype: string
+      selection: 
+      default: Mr. J. Tester
+      required: true
+    - name: pallets_weighed
+      datatype: boolean
+      selection: 
+      default: false
+      required: true
+delivery:
+  group: NSPack
+  caption: Delivery
+  path: nspack/delivery
+  params:
+    - name: delivery_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+    - name: client_code
+      datatype: string
+      selection: 
+      default: 
+      required: true
+delivery_cost_invoice:
+  group: NSPack
+  caption: Delivery Cost Invoice
+  path: nspack/delivery_cost_invoice
+  params:
+    - name: batch_number
+      datatype: string
+      selection:
+      default:
+      required: true
+    - name: vat
+      datatype: string
+      selection:
+      default: 0.15
+      required: true
+delivery_tripsheet:
+  group: NSPack
+  caption: Delivery Tripsheet
+  path: nspack/delivery_tripsheet
+  params:
+    - name: vehicle_job_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+detailed_packout:
+  group: NSPack
+  caption: Detailed Packout
+  path: nspack/detailed_packout
+  params:
+    - name: production_run_id
+      datatype: intarray
+      selection:
+      default:
+      required: true
+    - name: carton_or_bin
+      datatype: string
+      selection: 
+      default: Carton
+      required: true
+    - name: use_packed_weight
+      datatype: boolean
+      selection: 
+      default: false
+      required: true
+    - name: use_derived_weight
+      datatype: boolean
+      selection: 
+      default: true
+      required: true
+    - name: dispatched_only
+      datatype: boolean
+      selection: 
+      default: true
+      required: true
+    - name: client_code
+      datatype: string
+      selection: 
+      default: 
+      required: true
+dispatch_note:
+  group: NSPack
+  caption: Dispatch Note
+  path: nspack/dispatch_note
+  params:
+    - name: load_id
+      datatype: integer
+      selection: sql1 - SELECT id FROM loads ORDER BY id DESC
+      default: 
+      required: true
+    - name: pallet_report
+      datatype: string
+      selection: 
+      default: detail
+      required: true
+    - name: for_picklist
+      datatype: boolean
+      selection: 
+      default: false
+      required: true
+    - name: cartons_equals_pallets
+      datatype: boolean
+      selection: 
+      default: false
+      required: true
+dispatch_note-gr:
+  group: NSPack
+  caption: Dispatch Note (GR)
+  path: nspack/gr/dispatch_note
+  params:
+    - name: load_id
+      datatype: integer
+      selection: sql1 - SELECT id FROM loads ORDER BY id DESC
+      default: 
+      required: true
+    - name: pallet_report
+      datatype: string
+      selection: 
+      default: detail
+      required: true
+    - name: for_picklist
+      datatype: boolean
+      selection: 
+      default: false
+      required: true
+    - name: cartons_equals_pallets
+      datatype: boolean
+      selection: 
+      default: false
+      required: true
+dispatch_note-snr:
+  group: NSPack
+  caption: Dispatch Note (SNR)
+  path: nspack/snr/dispatch_note
+  params:
+    - name: load_id
+      datatype: integer
+      selection: sql1 - SELECT id FROM loads ORDER BY id DESC
+      default: 
+      required: true
+    - name: pallet_report
+      datatype: string
+      selection: 
+      default: detail
+      required: true
+    - name: for_picklist
+      datatype: boolean
+      selection: 
+      default: false
+      required: true
+    - name: cartons_equals_pallets
+      datatype: boolean
+      selection: 
+      default: false
+      required: true
+dispatch_note-swf:
+  group: NSPack
+  caption: Dispatch Note (SWF)
+  path: nspack/swf/dispatch_note
+  params:
+    - name: load_id
+      datatype: integer
+      selection: sql1 - SELECT id FROM loads ORDER BY id DESC
+      default: 
+      required: true
+    - name: pallet_report
+      datatype: string
+      selection: 
+      default: detail
+      required: true
+    - name: for_picklist
+      datatype: boolean
+      selection: 
+      default: false
+      required: true
+    - name: cartons_equals_pallets
+      datatype: boolean
+      selection: 
+      default: false
+      required: true
+dispatch_picklist:
+  group: NSPack
+  caption: Dispatch Picklist
+  path: nspack/dispatch_picklist
+  params:
+    - name: load_id
+      datatype: integer
+      selection: sql1 - SELECT id FROM loads ORDER BY id DESC
+      default:
+      required: true
+    - name: pallet_report
+      datatype: string
+      selection: 
+      default: summary
+      required: true
+    - name: for_picklist
+      datatype: boolean
+      selection: 
+      default: false
+      required: true
+    - name: cartons_equals_pallets
+      datatype: boolean
+      selection: 
+      default: false
+      required: true
+export_certificate:
+  group: NSPack
+  caption: Export Certificate
+  path: nspack/export_certificate
+  params:
+    - name: load_id
+      datatype: integer
+      selection: sql1 - SELECT id FROM loads ORDER BY id DESC
+      default:
+      required: true
+export_intake-apples:
+  group: NSPack
+  caption: Export Intake (APPLES)
+  path: nspack/apples/export_intake
+  params:
+    - name: govt_inspection_sheet_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+    - name: inspection_passed
+      datatype: boolean
+      selection: 
+      default: true
+      required: true
+    - name: signee_caption
+      datatype: string
+      selection: 
+      default: Logistics
+      required: true
+govt_finding_sheet:
+  group: NSPack
+  caption: Govt Finding Sheet
+  path: nspack/govt_finding_sheet
+  params:
+    - name: govt_inspection_sheet_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+govt_finding_sheet-apples:
+  group: NSPack
+  caption: Govt Finding Sheet (APPLES)
+  path: nspack/apples/govt_finding_sheet
+  params:
+    - name: govt_inspection_sheet_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+govt_finding_sheet-citrus:
+  group: NSPack
+  caption: Govt Finding Sheet (CITRUS)
+  path: nspack/citrus/govt_finding_sheet
+  params:
+    - name: govt_inspection_sheet_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+govt_finding_sheet-melons:
+  group: NSPack
+  caption: Govt Finding Sheet (MELONS)
+  path: nspack/melons/govt_finding_sheet
+  params:
+    - name: govt_inspection_sheet_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+govt_inspection_report:
+  group: NSPack
+  caption: Govt Inspection Report
+  path: nspack/govt_inspection_report
+  params:
+    - name: govt_inspection_sheet_id
+      datatype: integer
+      selection: sql1 - SELECT id FROM govt_inspection_sheets ORDER BY id DESC
+      default:
+      required: true
+    - name: inspection_passed
+      datatype: boolean
+      selection:
+      default: true
+      required: true
+    - name: signee_caption
+      datatype: string
+      selection:
+      default: Packhouse manager
+      required: true
+govt_inspection_report-apples:
+  group: NSPack
+  caption: Govt Inspection Report (APPLES)
+  path: nspack/apples/govt_inspection_report
+  params:
+    - name: govt_inspection_sheet_id
+      datatype: integer
+      selection: sql1 - SELECT id FROM govt_inspection_sheets ORDER BY id DESC
+      default:
+      required: true
+    - name: inspection_passed
+      datatype: boolean
+      selection:
+      default: true
+      required: true
+    - name: signee_caption
+      datatype: string
+      selection:
+      default: Packhouse manager
+      required: true
+govt_inspection_report-sr:
+  group: NSPack
+  caption: Govt Inspection Report (SR)
+  path: nspack/sr/govt_inspection_report
+  params:
+    - name: govt_inspection_sheet_id
+      datatype: integer
+      selection: sql1 - SELECT id FROM govt_inspection_sheets ORDER BY id DESC
+      default:
+      required: true
+    - name: inspection_passed
+      datatype: boolean
+      selection:
+      default: true
+      required: true
+    - name: signee_caption
+      datatype: string
+      selection:
+      default: Packhouse manager
+      required: true
+govt_inspection_report_ls:
+  group: NSPack
+  caption: Govt Inspection Report (LANDSCAPE)
+  path: nspack/govt_inspection_report_ls
+  params:
+    - name: govt_inspection_sheet_id
+      datatype: integer
+      selection: sql1 - SELECT id FROM govt_inspection_sheets ORDER BY id DESC
+      default:
+      required: true
+    - name: inspection_passed
+      datatype: boolean
+      selection:
+      default: true
+      required: true
+    - name: signee_caption
+      datatype: string
+      selection:
+      default: Packhouse manager
+      required: true
+grower_grading_summary:
+  group: NSPack
+  caption: Grower Grading Summary
+  path: nspack/grower_grading_summary
+  params:
+    - name: grower_grading_pool_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+incentive:
+  group: NSPack
+  caption: Incentive
+  path: nspack/incentive
+  params:
+    - name: shift_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+incentive-gr:
+  group: NSPack
+  caption: Incentive (GR)
+  path: nspack/gr/incentive
+  params:
+    - name: shift_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+incentive-snr:
+  group: NSPack
+  caption: Incentive (SNR)
+  path: nspack/snr/incentive
+  params:
+    - name: shift_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+incentive-sr:
+  group: NSPack
+  caption: Incentive (SR)
+  path: nspack/sr/incentive
+  params:
+    - name: shift_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+incentive_count:
+  group: NSPack
+  caption: Incentive Count
+  path: nspack/incentive_count
+  params:
+    - name: shift_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+incentive_count-sr:
+  group: NSPack
+  caption: Incentive Count (SR)
+  path: nspack/sr/incentive_count
+  params:
+    - name: shift_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+incentive_cultivar_group:
+  group: NSPack
+  caption: Incentive Cultivar Group
+  path: nspack/incentive_cultivar_group
+  params:
+    - name: shift_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+incentive_plt:
+  group: NSPack
+  caption: Incentive Palletizer
+  path: nspack/incentive_plt
+  params:
+    - name: shift_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+incentive_plt-sr:
+  group: NSPack
+  caption: Incentive Palletizer (SR)
+  path: nspack/sr/incentive_plt
+  params:
+    - name: shift_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+interwarehouse:
+  group: NSPack
+  caption: Interwarehouse
+  path: nspack/interwarehouse
+  params:
+    - name: vehicle_job_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+issue_bins:
+  group: NSPack
+  caption: Issue Bins
+  path: nspack/issue_bins
+  params:
+    - name: bin_asset_transaction_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+landscape_location_barcode:
+  group: NSPack
+  caption: Landscape Location Barcode
+  path: nspack/landscape_location_barcode
+  params:
+    - name: location_ids
+      datatype: intarray
+      selection:
+      default:
+      required: true
+location_barcode:
+  group: NSPack
+  caption: Location Barcode
+  path: nspack/location_barcode
+  params:
+    - name: location_ids
+      datatype: intarray
+      selection:
+      default:
+      required: true
+packer_summary:
+  group: NSPack
+  caption: Packer Summary
+  path: nspack/packer_summary
+  params:
+    - name: shift_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+    - name: FromDateTime
+      datatype: datetime
+      default:
+      required: true
+    - name: ToDateTime
+      datatype: datetime
+      default:
+      required: true
+    - name: WorkerIds
+      datatype: intarray
+      selection:
+      default:
+      required: true
+    - name: user_name
+      datatype: string
+      selection:
+      default: Mr. J. Tester
+      required: true
+packer_summary-sr:
+  group: NSPack
+  caption: Packer Summary (SR)
+  path: nspack/sr/packer_summary
+  params:
+    - name: FromDateTime
+      datatype: datetime
+      default:
+      required: true
+    - name: ToDateTime
+      datatype: datetime
+      default:
+      required: true
+    - name: WorkerIds
+      datatype: intarray
+      selection:
+      default:
+      required: true
+packer_summary_count-sr:
+  group: NSPack
+  caption: Packer Summary Count (SR)
+  path: nspack/sr/packer_summary_count
+  params:
+    - name: FromDateTime
+      datatype: datetime
+      default:
+      required: true
+    - name: ToDateTime
+      datatype: datetime
+      default:
+      required: true
+    - name: WorkerIds
+      datatype: intarray
+      selection:
+      default:
+      required: true
+pack_out:
+  group: NSPack
+  caption: Pack Out
+  path: nspack/pack_out
+  params:
+    - name: production_run_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+    - name: carton_or_bin
+      datatype: string
+      selection: 
+      default: Carton
+      required: true
+    - name: use_packed_weight
+      datatype: boolean
+      selection: 
+      default: false
+      required: true
+    - name: use_derived_weight
+      datatype: boolean
+      selection: 
+      default: true
+      required: true
+    - name: dispatched_only
+      datatype: boolean
+      selection: 
+      default: true
+      required: true
+packout_runs:
+  group: NSPack
+  caption: Packout Runs
+  path: nspack/packout_runs
+  params:
+    - name: production_run_id
+      datatype: intarray
+      selection:
+      default:
+      required: true
+    - name: carton_or_bin
+      datatype: string
+      selection: 
+      default: Carton
+      required: true
+    - name: use_packed_weight
+      datatype: boolean
+      selection: 
+      default: false
+      required: true
+    - name: dispatched_only
+      datatype: boolean
+      selection: 
+      default: true
+      required: true
+    - name: client_code
+      datatype: string
+      selection: 
+      default: 
+      required: true
+packout_summary:
+  group: NSPack
+  caption: Packout Summary
+  path: nspack/packout_summary
+  params:
+    - name: line
+      datatype: integer
+      selection: sql2 - SELECT p.plant_resource_code, p.id FROM plant_resources p JOIN plant_resource_types t ON t.id = p.plant_resource_type_id WHERE t.plant_resource_type_code = 'LINE' ORDER BY p.plant_resource_code
+      default: 
+      required: false
+    - name: FromDate
+      datatype: date
+      default:
+      required: true
+    - name: ToDate
+      datatype: date
+      default:
+      required: true
+    - name: detail_level
+      datatype: string
+      selection: array - Detail,Summary
+      default: 
+      required: true
+    - name: dispatched_only
+      datatype: boolean
+      selection: 
+      default: false
+      required: true
+    - name: puc
+      datatype: string
+      selection: 
+      default: 
+      required: false
+    - name: orchard
+      datatype: string
+      selection: 
+      default: 
+      required: false
+    - name: cultivar
+      datatype: string
+      selection: 
+      default: 
+      required: false
+palletizer_summary-sr:
+  group: NSPack
+  caption: Palletizer Summary (SR)
+  path: nspack/sr/palletizer_summary
+  params:
+    - name: FromDateTime
+      datatype: datetime
+      default:
+      required: true
+    - name: ToDateTime
+      datatype: datetime
+      default:
+      required: true
+    - name: WorkerIds
+      datatype: intarray
+      selection:
+      default:
+      required: true
+ps_grower_grading:
+  group: NSPack
+  caption: PS Grower Grading
+  path: nspack/ps_grower_grading
+  params:
+    - name: presort_grading_pool_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+qc_measurements:
+  group: NSPack
+  caption: QC Measurements
+  path: nspack/qc_measurements
+  params:
+    - name: qc_sample_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+rebin_summary-sr:
+  group: NSPack
+  caption: Rebin Summary (SR)
+  path: nspack/sr/rebin_summary
+receive_bins:
+  group: NSPack
+  caption: Receive Bins
+  path: nspack/receive_bins
+  params:
+    - name: bin_asset_transaction_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+run_products:
+  group: NSPack
+  caption: Run Products
+  path: nspack/run_products
+  params:
+    - name: production_run_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+    - name: run_products_report_title
+      datatype: string
+      selection:
+      default: Products packed
+      required: true
+run_setup_products:
+  group: NSPack
+  caption: Run Setup Products
+  path: nspack/run_setup_products
+  params:
+    - name: production_run_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+    - name: run_products_report_title
+      datatype: string
+      selection:
+      default: Products packed
+      required: true
+single_pallet_barcode:
+  group: NSPack
+  caption: Single Pallet Barcode
+  path: nspack/single_pallet_barcode
+  params:
+    - name: pallet_number
+      datatype: string
+      selection:
+      default:
+      required: true
+    - name: repack_date
+      datatype: string
+      selection:
+      default:
+      required: true
+consumption_report:
+  group: PackMaterial
+  caption: Consumption Report
+  path: pack_materials/consumption_report
+  params:
+    - name: mr_bulk_stock_adjustment_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+    - name: client_code
+      datatype: string
+      selection: 
+      default: kr
+      required: true
+credit_note:
+  group: PackMaterial
+  caption: Credit Note
+  path: pack_materials/credit_note
+  params:
+    - name: mr_goods_returned_note_id
+      datatype: integer
+      selection:
+      default: 
+      required: true
+    - name: client_code
+      datatype: string
+      selection: 
+      default: kr
+      required: true
+daily_over_supplies:
+  group: PackMaterial
+  caption: Daily Over Supplies
+  path: pack_materials/daily_over_supplies
+  params:
+    - name: delivery_id
+      datatype: integer
+      selection:
+      default: 
+      required: true
+    - name: client_code
+      datatype: string
+      selection: 
+      default: kr
+      required: true
+delivery_purchase_invoice:
+  group: PackMaterial
+  caption: Delivery Purchase Invoice
+  path: pack_materials/delivery_purchase_invoice
+  params:
+    - name: delivery_id
+      datatype: integer
+      selection:
+      default: 
+      required: true
+    - name: client_code
+      datatype: string
+      selection: 
+      default: kr
+      required: true
+delivery_received_note:
+  group: PackMaterial
+  caption: Delivery Received Note
+  path: pack_materials/delivery_received_note
+  params:
+    - name: delivery_id
+      datatype: integer
+      selection:
+      default: 
+      required: true
+    - name: client_code
+      datatype: string
+      selection: 
+      default: kr
+      required: true
+goods_returned_note:
+  group: PackMaterial
+  caption: Goods Returned Note
+  path: pack_materials/goods_returned_note
+  params:
+    - name: delivery_id
+      datatype: integer
+      selection:
+      default: 
+      required: true
+preliminary_report:
+  group: PackMaterial
+  caption: Preliminary Report
+  path: pack_materials/preliminary_report
+  params:
+    - name: mr_bulk_stock_adjustment_id
+      datatype: integer
+      selection:
+      default: 
+      required: true
+    - name: client_code
+      datatype: string
+      selection: 
+      default: kr
+      required: true
+print_credit_note:
+  group: PackMaterial
+  caption: Print Credit Note
+  path: pack_materials/print_credit_note
+  params:
+    - name: mr_goods_returned_note_id
+      datatype: integer
+      selection:
+      default: 
+      required: true
+    - name: client_code
+      datatype: string
+      selection: 
+      default: kr
+      required: true
+print_purchase_order:
+  group: PackMaterial
+  caption: Print Purchase Order
+  path: pack_materials/print_purchase_order
+  params:
+    - name: mr_purchase_order_id
+      datatype: integer
+      selection:
+      default: 
+      required: true
+    - name: client_code
+      datatype: string
+      selection: 
+      default: kr
+      required: true
+sales_invoice:
+  group: PackMaterial
+  caption: Sales Invoice
+  path: pack_materials/sales_invoice
+  params:
+    - name: delivery_id
+      datatype: integer
+      selection:
+      default: 
+      required: true
+    - name: client_code
+      datatype: string
+      selection: 
+      default: kr
+      required: true
+sales_order:
+  group: PackMaterial
+  caption: Sales Order
+  path: pack_materials/sales_order
+  params:
+    - name: mr_sales_order_id
+      datatype: integer
+      selection:
+      default: 
+      required: true
+    - name: client_code
+      datatype: string
+      selection: 
+      default: kr
+      required: true
+sales_order_waybill:
+  group: PackMaterial
+  caption: Sales Order Waybill
+  path: pack_materials/sales_order_waybill
+  params:
+    - name: mr_sales_order_id
+      datatype: integer
+      selection:
+      default: 
+      required: true
+    - name: client_code
+      datatype: string
+      selection: 
+      default: kr
+      required: true
+sales_return:
+  group: PackMaterial
+  caption: Sales Return
+  path: pack_materials/sales_return
+  params:
+    - name: mr_sales_return_id
+      datatype: integer
+      selection:
+      default: 
+      required: true
+    - name: client_code
+      datatype: string
+      selection: 
+      default: kr
+      required: true
+signed_off_report:
+  group: PackMaterial
+  caption: Signed Off Report
+  path: pack_materials/signed_off_report
+  params:
+    - name: mr_bulk_stock_adjustment_id
+      datatype: integer
+      selection:
+      default: 
+      required: true
+    - name: client_code
+      datatype: string
+      selection: 
+      default: kr
+      required: true
+stock_adjustment_sheet:
+  group: PackMaterial
+  caption: Stock Adjustment Sheet
+  path: pack_materials/stock_adjustment_sheet
+  params:
+    - name: mr_bulk_stock_adjustment_id
+      datatype: integer
+      selection:
+      default: 
+      required: true
+    - name: client_code
+      datatype: string
+      selection: 
+      default: kr
+      required: true
+tripsheet:
+  group: PackMaterial
+  caption: Tripsheet
+  path: pack_materials/tripsheet
+  params:
+    - name: vehicle_job_id
+      datatype: integer
+      selection:
+      default: 
+      required: true
+    - name: client_code
+      datatype: string
+      selection: 
+      default: kr
+      required: true
+waybill_note:
+  group: PackMaterial
+  caption: Waybill Note
+  path: pack_materials/waybill_note
+  params:
+    - name: delivery_id
+      datatype: integer
+      selection:
+      default: 
+      required: true
