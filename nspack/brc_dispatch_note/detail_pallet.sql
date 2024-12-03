@@ -12,7 +12,7 @@ group by pallets.pallet_number,pallet_sequences.pallet_sequence_number
 SELECT DISTINCT
     p.id AS p_id, ps.id AS ps_id,pucs.gap_code_valid_from,pucs.gap_code_valid_until,
     CASE WHEN pucs.gap_code IS NULL THEN NULL
-    WHEN pucs.gap_code IS NOT NULL AND current_date BETWEEN pucs.gap_code_valid_until AND pucs.gap_code_valid_from THEN
+    WHEN pucs.gap_code IS NOT NULL AND current_date BETWEEN pucs.gap_code_valid_from AND pucs.gap_code_valid_until THEN
     pucs.gap_code
     ELSE
     'EXPIRED'
