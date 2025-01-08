@@ -472,6 +472,16 @@ govt_finding_sheet-citrus:
       selection:
       default:
       required: true
+govt_finding_sheet-grapes:
+  group: NSPack
+  caption: Govt Finding Sheet (GRAPES)
+  path: nspack/grapes/govt_finding_sheet
+  params:
+    - name: govt_inspection_sheet_id
+      datatype: integer
+      selection:
+      default:
+      required: true
 govt_finding_sheet-melons:
   group: NSPack
   caption: Govt Finding Sheet (MELONS)
