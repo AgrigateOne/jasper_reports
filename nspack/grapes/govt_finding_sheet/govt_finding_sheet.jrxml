@@ -193,10 +193,10 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font size="6" isBold="true"/>
+					<font fontName="SansSerif" size="6" isBold="true"/>
 					<paragraph leftIndent="3"/>
 				</textElement>
-				<text><![CDATA[*MARK APPLICABLE OPTION WITH A "√"]]></text>
+				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="70" width="234" height="17" uuid="205e0d96-fe9c-4c4c-b6ed-9d148a3be4de">
@@ -697,6 +697,22 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				</textElement>
 				<text><![CDATA[]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="9" y="53" width="126" height="16" uuid="139fedd1-ed3b-4be4-b9fb-767a43b763c8"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[*MARK APPLICABLE OPTION WITH A]]></text>
+			</staticText>
+			<image>
+				<reportElement x="137" y="57" width="7" height="7" uuid="5287f41a-4179-45fe-a869-8d2dac319cf0">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA["../../images/checkmark.svg"]]></imageExpression>
+			</image>
 		</band>
 	</pageHeader>
 	<columnHeader>
