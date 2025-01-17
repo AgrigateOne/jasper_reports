@@ -83,7 +83,7 @@ depots.depot_code,
 fn_party_role_name(loads.billing_client_party_role_id) AS billing_party,
 fn_party_role_name(loads.consignee_party_role_id) AS consignee_party,
 fn_party_role_name(loads.customer_party_role_id) AS customer_party,
-vw_pallet_sequence_flat.consignment_note_number AS dispatch_consignment_note_number, 
+string_agg(distinct vw_pallet_sequence_flat.consignment_note_number::TEXT, ', ') AS dispatch_consignment_note_number,
 exp_org.medium_description AS exporter_org_med,
 load_vehicles.vehicle_number,
 load_vehicles.driver_name,
@@ -180,8 +180,7 @@ vw_pallet_sequence_flat.basic_pack,
 vw_pallet_sequence_flat.size_ref,
 vw_pallet_sequence_flat.actual_count,
 vw_pallet_sequence_flat.grade,
-vw_pallet_sequence_flat.packed_tm_group,
-vw_pallet_sequence_flat.consignment_note_number]]>
+vw_pallet_sequence_flat.packed_tm_group]]>
 	</queryString>
 	<field name="customer_reference" class="java.lang.String"/>
 	<field name="booking_reference" class="java.lang.String"/>
@@ -672,42 +671,42 @@ vw_pallet_sequence_flat.consignment_note_number]]>
 				<reportElement x="0" y="1" width="555" height="1" uuid="d9599272-d130-46ba-9d15-2183e3b3bb7a"/>
 			</line>
 			<staticText>
-				<reportElement x="313" y="2" width="77" height="13" uuid="fae9c34f-fc85-4312-b486-dad474b00f24"/>
+				<reportElement x="343" y="2" width="77" height="13" uuid="fae9c34f-fc85-4312-b486-dad474b00f24"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Order Number:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="393" y="2" width="42" height="13" uuid="ee201418-a365-43ed-afc7-7d7cf2043576"/>
+				<reportElement x="422" y="2" width="42" height="13" uuid="ee201418-a365-43ed-afc7-7d7cf2043576"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{order_number}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="495" y="2" width="60" height="13" uuid="69dcf885-3536-4534-b0e4-b50389e7a465"/>
+				<reportElement x="515" y="2" width="60" height="13" uuid="69dcf885-3536-4534-b0e4-b50389e7a465"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{load_id}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="446" y="2" width="49" height="13" uuid="e975b093-e946-4f2d-9e68-a15d275cb435"/>
+				<reportElement x="466" y="2" width="49" height="13" uuid="e975b093-e946-4f2d-9e68-a15d275cb435"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Load Order:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="192" y="2" width="121" height="13" uuid="b34663db-e097-4c7b-92b6-fd99df80408d"/>
+				<reportElement stretchType="RelativeToBandHeight" x="113" y="2" width="121" height="13" uuid="b34663db-e097-4c7b-92b6-fd99df80408d"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{dispatch_consignment_note_number}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="151" y="2" width="41" height="13" uuid="ad485c40-637f-44f2-aa25-9e5977822b4e"/>
+				<reportElement x="72" y="2" width="41" height="13" uuid="ad485c40-637f-44f2-aa25-9e5977822b4e"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
