@@ -49,7 +49,7 @@ Dispatch Picklist  contains a detailed listing of all pallets on a load.
 | Temp rhine |Carrying container temperature on the sea  - hidden when parameter 'for_picklist' is true | `load_containers.container_temperature_rhine` |
 | Temp rhine 2 | Carrying container temperature on the sea   - hidden when parameter 'for_picklist' is true| `load_containers.container_temperature_rhine` |
 | Load ID | Load id | `loads.id` |
-| Cons No |Dispatch consignment note number  | `DN' + `loads.id` |
+| Cons No |Dispatch consignment note number  | `govt_inspection_sheet.consignment_note_number` |
 | Order number | Order number | `loads.order_number` |
 | Load Order |Load id  | `loads.id` |
 ## Subreport: Pallet Detail
