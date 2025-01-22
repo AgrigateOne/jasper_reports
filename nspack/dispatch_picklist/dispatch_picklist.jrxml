@@ -104,7 +104,7 @@ pod_port.port_code AS port_name,
 pol_port.port_code AS depart_port_name,
 loads.customer_party_role_id,
 loads.exporter_party_role_id,
-vw_pallet_sequence_flat.consignment_note_number AS dispatch_consignment_note_number, 
+string_agg(distinct vw_pallet_sequence_flat.consignment_note_number::TEXT, ',') AS dispatch_consignment_note_number, 
 string_agg(distinct vw_pallet_sequence_flat.commodity,',')commodity,
 string_agg(distinct vw_pallet_sequence_flat.marketing_variety,',')marketing_variety,
 string_agg(distinct vw_pallet_sequence_flat.mark,',')mark,
@@ -190,8 +190,7 @@ load_voyages.memo_pad ,
 pod_port.port_code ,
 pol_port.port_code ,
 loads.customer_party_role_id,
-loads.exporter_party_role_id,
-vw_pallet_sequence_flat.consignment_note_number
+loads.exporter_party_role_id
 ,vw_pallet_sequence_flat.pallet_number
 ,vw_pallet_sequence_flat.location ,pallet_holdovers.buildup_remarks,holdover_quantity,
 vw_pallet_sequence_flat.inspected,vw_pallet_sequence_flat.govt_inspection_passed
@@ -879,42 +878,42 @@ order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number
 				</reportElement>
 			</line>
 			<staticText>
-				<reportElement x="313" y="2" width="77" height="13" uuid="fae9c34f-fc85-4312-b486-dad474b00f24"/>
+				<reportElement x="523" y="2" width="77" height="13" uuid="fae9c34f-fc85-4312-b486-dad474b00f24"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Order Number:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="393" y="2" width="42" height="13" uuid="ee201418-a365-43ed-afc7-7d7cf2043576"/>
+				<reportElement x="600" y="2" width="42" height="13" uuid="ee201418-a365-43ed-afc7-7d7cf2043576"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{order_number}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="495" y="2" width="60" height="13" uuid="69dcf885-3536-4534-b0e4-b50389e7a465"/>
+				<reportElement x="710" y="2" width="60" height="13" uuid="69dcf885-3536-4534-b0e4-b50389e7a465"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{load_id}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="446" y="2" width="49" height="13" uuid="e975b093-e946-4f2d-9e68-a15d275cb435"/>
+				<reportElement x="660" y="2" width="49" height="13" uuid="e975b093-e946-4f2d-9e68-a15d275cb435"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Load Order:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="192" y="2" width="121" height="13" uuid="b34663db-e097-4c7b-92b6-fd99df80408d"/>
+				<reportElement stretchType="RelativeToBandHeight" x="113" y="2" width="121" height="13" uuid="b34663db-e097-4c7b-92b6-fd99df80408d"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{dispatch_consignment_note_number}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="151" y="2" width="41" height="13" uuid="ad485c40-637f-44f2-aa25-9e5977822b4e"/>
+				<reportElement x="72" y="2" width="41" height="13" uuid="ad485c40-637f-44f2-aa25-9e5977822b4e"/>
 				<textElement>
 					<font size="8" isBold="false"/>
 				</textElement>
