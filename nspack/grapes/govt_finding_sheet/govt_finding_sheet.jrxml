@@ -1520,6 +1520,15 @@ R  - Reject]]></text>
 				</box>
 				<text><![CDATA[]]></text>
 			</staticText>
+			<line>
+				<reportElement x="238" y="13" width="341" height="2" uuid="b292f91c-7f61-47d5-82f3-a9fd92822450"/>
+			</line>
+			<line>
+				<reportElement x="238" y="26" width="341" height="2" uuid="379509de-63d2-4a59-98a6-b44207af76e4"/>
+			</line>
+			<line>
+				<reportElement x="238" y="39" width="341" height="2" uuid="e5c20068-1e9a-4ac3-aae2-d76d8c9cd3aa"/>
+			</line>
 		</band>
 	</detail>
 	<columnFooter>
