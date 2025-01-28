@@ -97,7 +97,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				<textElement verticalAlignment="Middle">
 					<font size="7" isBold="true"/>
 				</textElement>
-				<text><![CDATA[*MARK APPLICABLE OPTION WITH A "v"]]></text>
+				<text><![CDATA[*MARK APPLICABLE OPTION WITH A]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="80" width="212" height="14" uuid="205e0d96-fe9c-4c4c-b6ed-9d148a3be4de"/>
@@ -485,6 +485,15 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{inspection_point}]]></textFieldExpression>
 			</textField>
+			<image>
+				<reportElement x="143" y="70" width="7" height="7" uuid="e3fd0e11-c05d-4a25-9771-1e8064c06e88">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA["/home/reaaz/no_soft/jasper_reports/nspack/images/checkmark.svg"]]></imageExpression>
+			</image>
 		</band>
 	</pageHeader>
 	<columnHeader>

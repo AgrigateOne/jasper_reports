@@ -175,7 +175,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" size="7" isBold="true"/>
 				</textElement>
-				<text><![CDATA[*MARK APPLICABLE OPTION WITH A "√"]]></text>
+				<text><![CDATA[*MARK APPLICABLE OPTION WITH A]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="80" width="192" height="20" uuid="205e0d96-fe9c-4c4c-b6ed-9d148a3be4de">
@@ -740,6 +740,15 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[Calendar.getInstance().getTime()]]></textFieldExpression>
 			</textField>
+			<image>
+				<reportElement x="145" y="70" width="7" height="7" uuid="30d5776d-bb15-4848-aa0e-436d61f47786">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA["/home/reaaz/no_soft/jasper_reports/nspack/images/checkmark.svg"]]></imageExpression>
+			</image>
 		</band>
 	</pageHeader>
 	<columnHeader>
