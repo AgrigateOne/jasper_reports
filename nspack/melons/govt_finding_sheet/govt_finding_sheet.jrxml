@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="finding_sheet" language="groovy" printOrder="Horizontal" pageWidth="595" pageHeight="842" columnWidth="579" leftMargin="8" rightMargin="8" topMargin="8" bottomMargin="8" uuid="3e015a3f-e95b-45af-822d-5984fdad92cf">
 	<property name="ireport.zoom" value="1.7715610000000015"/>
 	<property name="ireport.x" value="0"/>
@@ -13,7 +13,7 @@
 	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="SR_nspack.xml"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ubp NSpack"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="206"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="787"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
@@ -492,7 +492,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<imageExpression><![CDATA["/home/reaaz/no_soft/jasper_reports/nspack/images/checkmark.svg"]]></imageExpression>
+				<imageExpression><![CDATA["../../images/checkmark.svg"]]></imageExpression>
 			</image>
 		</band>
 	</pageHeader>
