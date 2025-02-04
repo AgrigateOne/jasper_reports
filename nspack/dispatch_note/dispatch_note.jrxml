@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_consignment" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ubp NSpack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="74"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="919"/>
@@ -101,11 +101,12 @@ loads.edi_file_name as file_name,
 pod_port.port_code AS port_name,
 pol_port.port_code AS depart_port_name,
 loads.customer_party_role_id,
-loads.exporter_party_role_id,pcs.pucs,coalesce(cargo_temperatures.temperature_code ,'')cargo_temp,coalesce(multi_load_id,loads.id )multi_load_id
+loads.exporter_party_role_id,pcs.pucs,coalesce(cargo_temperatures.temperature_code ,'')cargo_temp,coalesce(multi_load_id,loads.id )multi_load_id,
+temp_tail AS temp_tale
 FROM loads
-join 
-(select  pallets.load_id ,string_agg(distinct coalesce(marketingpuc.puc_code ,pucs.puc_code),',') pucs
-from pallets  
+JOIN pallets pl ON pl.load_id = loads.id
+join (select  pallets.load_id ,string_agg(distinct coalesce(marketingpuc.puc_code ,pucs.puc_code),',') pucs
+from pallets 
 join pallet_sequences ps on ps.pallet_id=pallets.id 
 join pucs on ps.puc_id=pucs.id 
 left JOIN pucs marketingpuc ON marketingpuc.id = ps.marketing_puc_id 
@@ -408,6 +409,7 @@ where loads.id = $P{load_id}]]>
 		<property name="com.jaspersoft.studio.field.label" value="multi_load_id"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="loads"/>
 	</field>
+	<field name="temp_tale" class="java.lang.String"/>
 	<group name="load_id">
 		<groupExpression><![CDATA[$F{load_id}]]></groupExpression>
 		<groupHeader>
@@ -1122,6 +1124,28 @@ where loads.id = $P{load_id}]]>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{verified_gross_weight}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="206" y="208" width="66" height="13" uuid="9bf451f2-832d-4afb-93a4-cb04531dc0e5">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[TempTale:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="272" y="208" width="121" height="13" uuid="e33153b3-3dc6-43a4-aacc-9b8025eac175">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{temp_tale}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
