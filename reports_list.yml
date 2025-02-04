@@ -836,6 +836,36 @@ packout_runs:
       selection: 
       default: 
       required: true
+packout_runs_mix:
+  group: NSPack
+  caption: Packout Runs (Mix)
+  path: nspack/packout_runs_mix
+  params:
+    - name: production_run_id
+      datatype: intarray
+      selection:
+      default:
+      required: true
+    - name: carton_or_bin
+      datatype: string
+      selection: 
+      default: Carton
+      required: true
+    - name: use_packed_weight
+      datatype: boolean
+      selection: 
+      default: false
+      required: true
+    - name: dispatched_only
+      datatype: boolean
+      selection: 
+      default: true
+      required: true
+    - name: client_code
+      datatype: string
+      selection: 
+      default: 
+      required: true
 packout_summary:
   group: NSPack
   caption: Packout Summary
