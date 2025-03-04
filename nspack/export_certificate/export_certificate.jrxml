@@ -804,7 +804,7 @@ vessel_code,exporter_certificate_code,commodities.code,mv.description,commoditie
 				<text><![CDATA[CARTONS]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="209" y="1" width="149" height="12" uuid="4fc7c380-1a34-4603-bb0d-ebab86e2292a"/>
+				<reportElement x="203" y="1" width="155" height="12" uuid="4fc7c380-1a34-4603-bb0d-ebab86e2292a"/>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font fontName="SansSerif" size="9" isBold="true"/>
 				</textElement>
