@@ -26,7 +26,7 @@
     commodities.code                                                        AS commodity,
     cultivars.cultivar_name                                                 AS cultivar,
     target_market_groups.target_market_group_name                           AS packed_tm_group,
-    fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack) AS size_ref,
+    fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack) AS size,
     p.phc,
     grades.grade_code                                                       AS grade,
     fn_party_role_name(govt_inspection_sheets.exporter_party_role_id) AS exporter,
@@ -55,7 +55,7 @@ LEFT JOIN fruit_size_references ON fruit_size_references.id = ps.fruit_size_refe
 LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = ps.fruit_actual_counts_for_pack_id
 LEFT JOIN inspectors ON inspectors.id = govt_inspection_sheets.inspector_id
 LEFT JOIN standard_pack_codes ON standard_pack_codes.id = ps.standard_pack_code_id
-LEFT JOIN standard_product_weights ON standard_product_weights.commodity_id = commodities.id
+LEFT JOIN standard_product_weights ON standard_product_weights.commodity_id = commodities.id AND standard_product_weights.standard_pack_id = standard_pack_codes.id
 WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 	</queryString>
 	<field name="row_number" class="java.lang.Long">
@@ -96,10 +96,9 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 		<property name="com.jaspersoft.studio.field.label" value="packed_tm_group"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="target_market_groups"/>
 	</field>
-	<field name="size_ref" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="size_ref"/>
-		<property name="com.jaspersoft.studio.field.label" value="size_ref"/>
-		<property name="com.jaspersoft.studio.field.tree.path" value="fruit_size_references"/>
+	<field name="size" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="size"/>
+		<property name="com.jaspersoft.studio.field.label" value="size"/>
 	</field>
 	<field name="phc" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="phc"/>
@@ -1521,7 +1520,7 @@ R  - Reject]]></text>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{size_ref}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{size}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement mode="Opaque" x="211" y="0" width="23" height="26" uuid="247fa074-ba35-4784-b5bd-5731df012924">
