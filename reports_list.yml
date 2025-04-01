@@ -527,6 +527,16 @@ govt_finding_sheet-melons:
       selection:
       default:
       required: true
+govt_finding_sheet-avocados:
+  group: NSPack
+  caption: Govt Finding Sheet (AVOCADOS)
+  path: nspack/avos/govt_finding_sheet
+  params:
+    - name: govt_inspection_sheet_id
+      datatype: integer
+      selection:
+      default:
+      required: true
 govt_inspection_report:
   group: NSPack
   caption: Govt Inspection Report
