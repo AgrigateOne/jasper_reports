@@ -1032,7 +1032,7 @@ ORDER BY
 					<subreportParameterExpression><![CDATA[$F{implementation_owner_party_role_id}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["../shared/party_role_address.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA["../../shared/party_role_address.jasper"]]></subreportExpression>
 			</subreport>
 			<staticText>
 				<reportElement x="2" y="117" width="58" height="13" uuid="be2b9798-7584-49bc-b062-61adb60f87ab">
@@ -1066,7 +1066,7 @@ ORDER BY
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<imageExpression><![CDATA["../logos/" +$P{client_code}  + "_logo.png"]]></imageExpression>
+				<imageExpression><![CDATA["../../logos/" +$P{client_code}  + "_logo.png"]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="327" y="100" width="50" height="13" uuid="119c833b-5cd3-4a97-86f2-5e9048ef1aa5">
