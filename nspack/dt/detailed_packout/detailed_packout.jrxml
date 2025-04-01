@@ -57,8 +57,8 @@
     run_attrib as (
         SELECT
             string_agg(DISTINCT p.production_run_id::text, '; '   order by p.production_run_id::text  ) runs,
-            STRING_AGG(DISTINCT pucs.gap_code::TEXT, ', ' ORDER BY pucs.gap_code::TEXT) AS ggn
-             ,pr.cultivar_id ,pr.farm_id ,cultivars.cultivar_name,
+            STRING_AGG(DISTINCT pucs.gap_code::TEXT, ', ' ORDER BY pucs.gap_code::TEXT) AS ggn,
+             pr.cultivar_id ,pr.farm_id ,cultivars.cultivar_name,
             string_agg(distinct farms.farm_code, '; '   order by farms.farm_code )farms,
             string_agg(distinct pucs.puc_code, '; '   order by pucs.puc_code )pucs
              ,string_agg(distinct orchards.orchard_code, '; '   order by orchards.orchard_code )orchards
