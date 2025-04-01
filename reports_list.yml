@@ -287,9 +287,9 @@ detailed_packout:
       selection: 
       default: 
       required: true
-detailed_packout/dt:
+detailed_packout-dt:
   group: NSPack
-  caption: Detailed Packout(dt)
+  caption: Detailed Packout (dt)
   path: nspack/dt/detailed_packout
   params:
     - name: production_run_id
