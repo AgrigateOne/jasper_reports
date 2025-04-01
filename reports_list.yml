@@ -287,6 +287,41 @@ detailed_packout:
       selection: 
       default: 
       required: true
+detailed_packout-dt:
+  group: NSPack
+  caption: Detailed Packout (dt)
+  path: nspack/dt/detailed_packout
+  params:
+    - name: production_run_id
+      datatype: intarray
+      selection:
+      default:
+      required: true
+    - name: carton_or_bin
+      datatype: string
+      selection: 
+      default: Carton
+      required: true
+    - name: use_packed_weight
+      datatype: boolean
+      selection: 
+      default: false
+      required: true
+    - name: use_derived_weight
+      datatype: boolean
+      selection: 
+      default: true
+      required: true
+    - name: dispatched_only
+      datatype: boolean
+      selection: 
+      default: true
+      required: true
+    - name: client_code
+      datatype: string
+      selection: 
+      default: 
+      required: true
 dispatch_note:
   group: NSPack
   caption: Dispatch Note
