@@ -259,17 +259,17 @@ ORDER BY
 				<textFieldExpression><![CDATA[$P{scartons_equals_pallets} ? "Bins" : "Plts"]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="152" y="0" width="34" height="13" uuid="d2df65a4-653c-4d53-a800-7a6b5666255e"/>
+				<reportElement x="149" y="0" width="34" height="13" uuid="d2df65a4-653c-4d53-a800-7a6b5666255e"/>
 				<textElement textAlignment="Center"/>
 				<text><![CDATA[CST]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="187" y="1" width="24" height="13" uuid="244c8c2a-36bc-40bb-bd85-7f164e792fc5"/>
+				<reportElement x="181" y="1" width="24" height="13" uuid="244c8c2a-36bc-40bb-bd85-7f164e792fc5"/>
 				<textElement textAlignment="Center"/>
 				<text><![CDATA[TR]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="200" y="1" width="34" height="13" uuid="42ca3059-8989-4a8a-a647-540c858af5a3"/>
+				<reportElement x="202" y="1" width="34" height="13" uuid="42ca3059-8989-4a8a-a647-540c858af5a3"/>
 				<textElement textAlignment="Center"/>
 				<text><![CDATA[TC]]></text>
 			</staticText>
@@ -342,17 +342,17 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{ctn_qty}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="152" y="0" width="34" height="13" uuid="277fbb92-601a-4dd3-915b-6444d3fc8884"/>
+				<reportElement x="149" y="0" width="34" height="13" uuid="277fbb92-601a-4dd3-915b-6444d3fc8884"/>
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{target_customer}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="187" y="1" width="24" height="13" uuid="ce49baa0-3ad3-4fb8-987f-e71ec8af5cd6"/>
+				<reportElement x="181" y="1" width="24" height="13" uuid="ce49baa0-3ad3-4fb8-987f-e71ec8af5cd6"/>
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{target_market_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="210" y="1" width="34" height="13" uuid="e707861c-e7be-4f88-b7b0-a2ea7c7f1a83"/>
+				<reportElement x="206" y="1" width="34" height="13" uuid="e707861c-e7be-4f88-b7b0-a2ea7c7f1a83"/>
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{target_country}]]></textFieldExpression>
 			</textField>
