@@ -546,7 +546,7 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="49" splitType="Stretch">
+		<band height="17" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isBlankWhenNull="true">
 				<reportElement x="246" y="0" width="25" height="12" uuid="de9932c2-c446-4757-b958-d0584900efba">
@@ -767,7 +767,7 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 				</textElement>
 				<textFieldExpression><![CDATA[$F{target_country}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="223" y="0" width="25" height="12" uuid="83cc11ba-4d9a-4df8-a5f9-0ec9d2512e4e">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
