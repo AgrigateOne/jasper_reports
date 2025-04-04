@@ -39,6 +39,7 @@ The report can be generated as:
 | Vehicle Wgt |Vehicle of loeaded weight  - hidden when parameter 'for_picklist' is true  | `load_vehicles.vehicle_weight_out` |
 | Shipping line | Shipping line name  | `organizations.medium_description` of the shipping line on the load |
 | Temp Settings | Container code and cargo temperature  - hidden when parameter 'for_picklist' is true | `load_containers.internal_container_code`  + `cargo_temperatures.temperature_code`|
+| Temp Tale | Temp Tale | `pallets.temp_tail'|
 | Cust Order | Customer Order number | `loads.customer_order_number` |
 | Port name | Port of discharge | pod voyage_ports.port_code |
 | PO file | PO document name | `loads.edi_file_name` |

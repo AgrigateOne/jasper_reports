@@ -114,11 +114,11 @@ loads.customer_party_role_id,
 coalesce(load_containers.internal_container_code,'') || '  ' ||coalesce(cargo_temperatures.temperature_code ,'')  as cargo_temp_setting,
 loads.exporter_party_role_id,pcs.pucs,coalesce(cargo_temperatures.temperature_code ,'')cargo_temp,coalesce(multi_load_id,loads.id )multi_load_id,
 pcs.gap_code,
-temp_tail AS temp_tale
+temp_tale
 FROM loads
-JOIN pallets pl ON pl.load_id = loads.id
 join (select  pallets.load_id ,string_agg(distinct coalesce(marketingpuc.puc_code ,pucs.puc_code),',') pucs,
-string_agg(DISTINCT pucs.gap_code::text, '; '::text ORDER BY pucs.gap_code::text) gap_code
+string_agg(DISTINCT pucs.gap_code::text, '; '::text ORDER BY pucs.gap_code::text) gap_code,
+STRING_AGG(distinct pallets.temp_tail, ', ' ORDER BY pallets.temp_tail) AS temp_tale
 from pallets
 join pallet_sequences ps on ps.pallet_id=pallets.id 
 join pucs on ps.puc_id=pucs.id 
