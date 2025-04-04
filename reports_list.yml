@@ -447,6 +447,31 @@ dispatch_picklist:
       selection: 
       default: false
       required: true
+dispatch_picklist-snr:
+  group: NSPack
+  caption: Dispatch Picklist (SNR)
+  path: nspack/snr/dispatch_picklist
+  params:
+    - name: load_id
+      datatype: integer
+      selection: sql1 - SELECT id FROM loads ORDER BY id DESC
+      default:
+      required: true
+    - name: pallet_report
+      datatype: string
+      selection: 
+      default: summary
+      required: true
+    - name: for_picklist
+      datatype: boolean
+      selection: 
+      default: false
+      required: true
+    - name: cartons_equals_pallets
+      datatype: boolean
+      selection: 
+      default: false
+      required: true
 export_certificate:
   group: NSPack
   caption: Export Certificate

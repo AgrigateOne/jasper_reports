@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_consignment_landscape" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ubp NSpack"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="74"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="919"/>
@@ -113,11 +113,12 @@ pol_port.port_code AS depart_port_name,
 loads.customer_party_role_id,
 coalesce(load_containers.internal_container_code,'') || '  ' ||coalesce(cargo_temperatures.temperature_code ,'')  as cargo_temp_setting,
 loads.exporter_party_role_id,pcs.pucs,coalesce(cargo_temperatures.temperature_code ,'')cargo_temp,coalesce(multi_load_id,loads.id )multi_load_id,
-pcs.gap_code
+pcs.gap_code,
+temp_tale
 FROM loads
-join 
-(select  pallets.load_id ,string_agg(distinct coalesce(marketingpuc.puc_code ,pucs.puc_code),',') pucs,
-string_agg(DISTINCT pucs.gap_code::text, '; '::text ORDER BY pucs.gap_code::text) gap_code
+join (select  pallets.load_id ,string_agg(distinct coalesce(marketingpuc.puc_code ,pucs.puc_code),',') pucs,
+string_agg(DISTINCT pucs.gap_code::text, '; '::text ORDER BY pucs.gap_code::text) gap_code,
+STRING_AGG(distinct pallets.temp_tail, ', ' ORDER BY pallets.temp_tail) AS temp_tale
 from pallets
 join pallet_sequences ps on ps.pallet_id=pallets.id 
 join pucs on ps.puc_id=pucs.id 
@@ -429,6 +430,7 @@ where loads.id = $P{load_id}]]>
 		<property name="com.jaspersoft.studio.field.name" value="gap_code"/>
 		<property name="com.jaspersoft.studio.field.label" value="gap_code"/>
 	</field>
+	<field name="temp_tale" class="java.lang.String"/>
 	<group name="load_id" keepTogether="true">
 		<groupExpression><![CDATA[$F{load_id}]]></groupExpression>
 		<groupHeader>
@@ -1277,6 +1279,28 @@ where loads.id = $P{load_id}]]>
 				</textElement>
 				<text><![CDATA[GLOBALG.AP Certified]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="340" y="240" width="66" height="13" uuid="c9ebeaae-0838-4922-a42d-e62007004169">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Temp Tale:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="410" y="240" width="171" height="13" uuid="31610bf5-a9de-4e57-a345-df41da66e20a">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[!$P{for_picklist}]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{temp_tale}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<pageHeader>

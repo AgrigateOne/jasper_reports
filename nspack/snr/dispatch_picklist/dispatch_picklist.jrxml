@@ -1,0 +1,1195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_picklist" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="30" uuid="802f21d1-65ea-4983-bbbb-7be9f5ee30a6">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ubp NSpack"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="113"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="879"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.awt.ignore.missing.font" value="true"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/home/user/rubymine_projects/packhouse/jasper_resources/dispatch/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="load_id" class="java.lang.Integer"/>
+	<parameter name="pallet_report" class="java.lang.String">
+		<defaultValueExpression><![CDATA["summary"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="for_picklist" class="java.lang.Boolean"/>
+	<parameter name="cartons_equals_pallets" class="java.lang.Boolean"/>
+	<parameter name="hide_dispatch_summary_gross" class="java.lang.Boolean"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT
+sum(vw_pallet_sequence_flat.carton_quantity) AS ctn_qty,
+fn_party_role_name((SELECT pr.id
+FROM public.party_roles pr
+WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1)) AS implementation_owner_name,
+(SELECT pr.id
+FROM public.party_roles pr
+WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) AS implementation_owner_party_role_id,
+loads.customer_reference,
+load_voyages.booking_reference,
+loads.exporter_certificate_code,
+load_voyages.memo_pad,
+load_voyages.voyage_id,
+voyages.vessel_id,
+voyages.voyage_code AS voyage_description,
+voyages.voyage_code,
+voyages.voyage_number,
+vessels.vessel_code,
+0 AS owner_party_role_id,
+'NOTYET' AS shipline_code,
+fn_party_role_name(shipping_line_party_role_id) AS shipping_line_party_role_name,
+'NOTYET' AS shipping_agent_party_role_name,
+fn_party_role_name(shipper_party_role_id) AS shipper_party_role_name,
+fn_party_role_name(loads.exporter_party_role_id) AS export_party_role_name,
+'NOTYET' AS vessel_owner_party_role_name,
+loads.id AS load_id,
+load_containers.container_code,
+load_containers.internal_container_code AS container_setting ,
+load_containers.container_vents,
+load_containers.container_seal_code,
+load_containers.container_temperature_rhine,
+load_containers.container_temperature_rhine2,
+NULL AS cto_consec_code ,
+container_stack_types.stack_type_code,
+load_containers.internal_container_code,
+0 AS order_id,
+loads.order_number,
+'NOTYET' AS customer_memo_pad,
+fn_party_role_name(loads.customer_party_role_id) AS customer_contact_name,
+cust_pr.party_id AS customer_party_id,
+loads.customer_order_number,
+loads.shipped_at AS shipped_date_time,
+loads.id AS load_number,
+fn_party_role_name(load_vehicles.haulier_party_role_id) AS haulier_party_name,
+depots.depot_code,
+fn_party_role_name(loads.billing_client_party_role_id) AS billing_party,
+fn_party_role_name(loads.consignee_party_role_id) AS consignee_party,
+fn_party_role_name(loads.customer_party_role_id) AS customer_party,
+exp_org.medium_description AS exporter_org_med,
+load_vehicles.vehicle_number,
+load_vehicles.driver_name,
+load_vehicles.driver_cell_number,
+load_vehicles.vehicle_weight_out,
+load_voyages.memo_pad AS remarks,
+NULL AS file_name,
+pod_port.port_code AS port_name,
+pol_port.port_code AS depart_port_name,
+loads.customer_party_role_id,
+loads.exporter_party_role_id,
+string_agg(distinct vw_pallet_sequence_flat.consignment_note_number::TEXT, ',') AS dispatch_consignment_note_number, 
+string_agg(distinct vw_pallet_sequence_flat.commodity,',')commodity,
+string_agg(distinct vw_pallet_sequence_flat.marketing_variety,',')marketing_variety,
+string_agg(distinct vw_pallet_sequence_flat.mark,',')mark,
+string_agg(distinct vw_pallet_sequence_flat.std_pack ,',')std_pack,
+string_agg(distinct vw_pallet_sequence_flat.edi_size_count,',')size_ref,
+string_agg(distinct vw_pallet_sequence_flat.actual_count::text,',')actual_count,
+string_agg(distinct vw_pallet_sequence_flat.grade,',')grade,
+string_agg(distinct vw_pallet_sequence_flat.packed_tm_group,',')packed_tm_group,
+vw_pallet_sequence_flat.pallet_number
+,vw_pallet_sequence_flat.location ,
+pallet_holdovers.buildup_remarks,holdover_quantity ,
+  CASE
+     WHEN vw_pallet_sequence_flat.inspected THEN
+                    CASE WHEN vw_pallet_sequence_flat.govt_inspection_passed THEN 'PASSED'
+                    ELSE 'FAILED'
+                    END
+					ELSE 'UNINSPECTED' END AS inspected_result
+from  public.vw_pallet_sequence_flat 
+join loads on  loads.id=vw_pallet_sequence_flat.load_id
+left join load_voyages on load_voyages.load_id=vw_pallet_sequence_flat.load_id
+left join voyages on voyages.id=load_voyages.voyage_id
+JOIN destination_cities ON destination_cities.id = loads.final_destination_id
+JOIN voyage_ports pol_voyage_ports ON pol_voyage_ports.id = loads.pol_voyage_port_id
+JOIN voyage_ports pod_voyage_ports ON pod_voyage_ports.id = loads.pod_voyage_port_id
+JOIN ports pol_port ON pol_port.id = pol_voyage_ports.port_id
+JOIN ports pod_port ON pod_port.id = pod_voyage_ports.port_id
+LEFT JOIN vessels ON voyages.vessel_id = vessels.id
+LEFT JOIN load_vehicles ON load_vehicles.id = loads.load_vehicle_id
+LEFT JOIN load_containers ON load_containers.id = load_vehicles.load_container_id
+LEFT JOIN container_stack_types ON container_stack_types.id = load_containers.stack_type_id
+left join depots on depots.id=loads.depot_id
+LEFT JOIN party_roles cust_pr ON cust_pr.id = loads.customer_party_role_id
+LEFT JOIN party_roles exp_pr ON exp_pr.id = loads.exporter_party_role_id
+LEFT JOIN organizations exp_org ON exp_org.party_id = exp_pr.party_id
+left join pallet_holdovers on  vw_pallet_sequence_flat.pallet_id =pallet_holdovers.pallet_id 
+where vw_pallet_sequence_flat.load_id=  $P{load_id} 
+group by 
+fn_party_role_name((SELECT pr.id
+FROM public.party_roles pr
+WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1)) ,
+(SELECT pr.id
+FROM public.party_roles pr
+WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1) ,
+loads.customer_reference,
+load_voyages.booking_reference,
+loads.exporter_certificate_code,
+load_voyages.memo_pad,
+load_voyages.voyage_id,
+voyages.vessel_id,
+voyages.voyage_code ,
+voyages.voyage_code,
+voyages.voyage_number,
+vessels.vessel_code,
+fn_party_role_name(shipping_line_party_role_id) ,
+fn_party_role_name(shipper_party_role_id) ,
+fn_party_role_name(loads.exporter_party_role_id) ,
+load_containers.container_code,
+load_containers.internal_container_code,
+load_containers.container_vents,
+load_containers.container_seal_code,
+load_containers.container_temperature_rhine,
+load_containers.container_temperature_rhine2,
+container_stack_types.stack_type_code,
+load_containers.internal_container_code,
+loads.order_number,
+fn_party_role_name(loads.customer_party_role_id) ,
+cust_pr.party_id ,
+loads.customer_order_number,
+loads.shipped_at ,
+loads.id,
+fn_party_role_name(load_vehicles.haulier_party_role_id) ,
+depots.depot_code,
+fn_party_role_name(loads.billing_client_party_role_id) ,
+fn_party_role_name(loads.consignee_party_role_id),
+fn_party_role_name(loads.customer_party_role_id) ,
+'DN' || CAST(loads.id AS text) , 
+exp_org.medium_description ,
+load_vehicles.vehicle_number,
+load_vehicles.driver_name,
+load_vehicles.driver_cell_number,
+load_vehicles.vehicle_weight_out,
+load_voyages.memo_pad ,
+pod_port.port_code ,
+pol_port.port_code ,
+loads.customer_party_role_id,
+loads.exporter_party_role_id
+,vw_pallet_sequence_flat.pallet_number
+,vw_pallet_sequence_flat.location ,pallet_holdovers.buildup_remarks,holdover_quantity,
+vw_pallet_sequence_flat.inspected,vw_pallet_sequence_flat.govt_inspection_passed
+order by vw_pallet_sequence_flat.location ,vw_pallet_sequence_flat.pallet_number]]>
+	</queryString>
+	<field name="ctn_qty" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="ctn_qty"/>
+		<property name="com.jaspersoft.studio.field.label" value="ctn_qty"/>
+	</field>
+	<field name="implementation_owner_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="implementation_owner_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="implementation_owner_name"/>
+	</field>
+	<field name="implementation_owner_party_role_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="implementation_owner_party_role_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="implementation_owner_party_role_id"/>
+	</field>
+	<field name="customer_reference" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="customer_reference"/>
+		<property name="com.jaspersoft.studio.field.label" value="customer_reference"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="loads"/>
+	</field>
+	<field name="booking_reference" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="booking_reference"/>
+		<property name="com.jaspersoft.studio.field.label" value="booking_reference"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_voyages"/>
+	</field>
+	<field name="exporter_certificate_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="exporter_certificate_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="exporter_certificate_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="loads"/>
+	</field>
+	<field name="memo_pad" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="memo_pad"/>
+		<property name="com.jaspersoft.studio.field.label" value="memo_pad"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_voyages"/>
+	</field>
+	<field name="voyage_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="voyage_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="voyage_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_voyages"/>
+	</field>
+	<field name="vessel_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="vessel_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="vessel_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="voyages"/>
+	</field>
+	<field name="voyage_description" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="voyage_description"/>
+		<property name="com.jaspersoft.studio.field.label" value="voyage_description"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="voyages"/>
+	</field>
+	<field name="voyage_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="voyage_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="voyage_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="voyages"/>
+	</field>
+	<field name="voyage_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="voyage_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="voyage_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="voyages"/>
+	</field>
+	<field name="vessel_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="vessel_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="vessel_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vessels"/>
+	</field>
+	<field name="owner_party_role_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="owner_party_role_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="owner_party_role_id"/>
+	</field>
+	<field name="shipline_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="shipline_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="shipline_code"/>
+	</field>
+	<field name="shipping_line_party_role_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="shipping_line_party_role_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="shipping_line_party_role_name"/>
+	</field>
+	<field name="shipping_agent_party_role_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="shipping_agent_party_role_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="shipping_agent_party_role_name"/>
+	</field>
+	<field name="shipper_party_role_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="shipper_party_role_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="shipper_party_role_name"/>
+	</field>
+	<field name="export_party_role_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="export_party_role_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="export_party_role_name"/>
+	</field>
+	<field name="vessel_owner_party_role_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="vessel_owner_party_role_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="vessel_owner_party_role_name"/>
+	</field>
+	<field name="load_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="load_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="load_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="loads"/>
+	</field>
+	<field name="container_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="container_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="container_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_containers"/>
+	</field>
+	<field name="container_setting" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="container_setting"/>
+		<property name="com.jaspersoft.studio.field.label" value="container_setting"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_containers"/>
+	</field>
+	<field name="container_vents" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="container_vents"/>
+		<property name="com.jaspersoft.studio.field.label" value="container_vents"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_containers"/>
+	</field>
+	<field name="container_seal_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="container_seal_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="container_seal_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_containers"/>
+	</field>
+	<field name="container_temperature_rhine" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="container_temperature_rhine"/>
+		<property name="com.jaspersoft.studio.field.label" value="container_temperature_rhine"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_containers"/>
+	</field>
+	<field name="container_temperature_rhine2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="container_temperature_rhine2"/>
+		<property name="com.jaspersoft.studio.field.label" value="container_temperature_rhine2"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_containers"/>
+	</field>
+	<field name="cto_consec_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="cto_consec_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="cto_consec_code"/>
+	</field>
+	<field name="stack_type_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="stack_type_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="stack_type_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="container_stack_types"/>
+	</field>
+	<field name="internal_container_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="internal_container_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="internal_container_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_containers"/>
+	</field>
+	<field name="order_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="order_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="order_id"/>
+	</field>
+	<field name="order_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="order_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="order_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="loads"/>
+	</field>
+	<field name="customer_memo_pad" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="customer_memo_pad"/>
+		<property name="com.jaspersoft.studio.field.label" value="customer_memo_pad"/>
+	</field>
+	<field name="customer_contact_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="customer_contact_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="customer_contact_name"/>
+	</field>
+	<field name="customer_party_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="customer_party_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="customer_party_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="party_roles"/>
+	</field>
+	<field name="customer_order_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="customer_order_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="customer_order_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="loads"/>
+	</field>
+	<field name="shipped_date_time" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="shipped_date_time"/>
+		<property name="com.jaspersoft.studio.field.label" value="shipped_date_time"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="loads"/>
+	</field>
+	<field name="load_number" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="load_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="load_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="loads"/>
+	</field>
+	<field name="haulier_party_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="haulier_party_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="haulier_party_name"/>
+	</field>
+	<field name="depot_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="depot_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="depot_code"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="depots"/>
+	</field>
+	<field name="billing_party" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="billing_party"/>
+		<property name="com.jaspersoft.studio.field.label" value="billing_party"/>
+	</field>
+	<field name="consignee_party" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="consignee_party"/>
+		<property name="com.jaspersoft.studio.field.label" value="consignee_party"/>
+	</field>
+	<field name="customer_party" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="customer_party"/>
+		<property name="com.jaspersoft.studio.field.label" value="customer_party"/>
+	</field>
+	<field name="exporter_org_med" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="exporter_org_med"/>
+		<property name="com.jaspersoft.studio.field.label" value="exporter_org_med"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="organizations"/>
+	</field>
+	<field name="vehicle_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="vehicle_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="vehicle_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_vehicles"/>
+	</field>
+	<field name="driver_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="driver_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="driver_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_vehicles"/>
+	</field>
+	<field name="driver_cell_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="driver_cell_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="driver_cell_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_vehicles"/>
+	</field>
+	<field name="vehicle_weight_out" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="vehicle_weight_out"/>
+		<property name="com.jaspersoft.studio.field.label" value="vehicle_weight_out"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_vehicles"/>
+	</field>
+	<field name="remarks" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="remarks"/>
+		<property name="com.jaspersoft.studio.field.label" value="remarks"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="load_voyages"/>
+	</field>
+	<field name="file_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="file_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="file_name"/>
+	</field>
+	<field name="port_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="port_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="port_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ports"/>
+	</field>
+	<field name="depart_port_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="depart_port_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="depart_port_name"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ports"/>
+	</field>
+	<field name="customer_party_role_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="customer_party_role_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="customer_party_role_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="loads"/>
+	</field>
+	<field name="exporter_party_role_id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="exporter_party_role_id"/>
+		<property name="com.jaspersoft.studio.field.label" value="exporter_party_role_id"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="loads"/>
+	</field>
+	<field name="dispatch_consignment_note_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="dispatch_consignment_note_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="dispatch_consignment_note_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="commodity" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="commodity"/>
+		<property name="com.jaspersoft.studio.field.label" value="commodity"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="marketing_variety" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="marketing_variety"/>
+		<property name="com.jaspersoft.studio.field.label" value="marketing_variety"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="mark" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="mark"/>
+		<property name="com.jaspersoft.studio.field.label" value="mark"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="std_pack" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="std_pack"/>
+		<property name="com.jaspersoft.studio.field.label" value="std_pack"/>
+	</field>
+	<field name="size_ref" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="size_ref"/>
+		<property name="com.jaspersoft.studio.field.label" value="size_ref"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="actual_count" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="actual_count"/>
+		<property name="com.jaspersoft.studio.field.label" value="actual_count"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="grade" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="grade"/>
+		<property name="com.jaspersoft.studio.field.label" value="grade"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="packed_tm_group" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="packed_tm_group"/>
+		<property name="com.jaspersoft.studio.field.label" value="packed_tm_group"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="pallet_number" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="pallet_number"/>
+		<property name="com.jaspersoft.studio.field.label" value="pallet_number"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="location" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="location"/>
+		<property name="com.jaspersoft.studio.field.label" value="location"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="vw_pallet_sequence_flat"/>
+	</field>
+	<field name="buildup_remarks" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="buildup_remarks"/>
+		<property name="com.jaspersoft.studio.field.label" value="buildup_remarks"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pallet_holdovers"/>
+	</field>
+	<field name="holdover_quantity" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="holdover_quantity"/>
+		<property name="com.jaspersoft.studio.field.label" value="holdover_quantity"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pallet_holdovers"/>
+	</field>
+	<field name="inspected_result" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="inspected_result"/>
+		<property name="com.jaspersoft.studio.field.label" value="inspected_result"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="113" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField isBlankWhenNull="true">
+				<reportElement x="690" y="30" width="110" height="13" uuid="818fab86-ea78-49d9-b385-2373b50ca2d5"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{customer_order_number}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="5" y="30" width="65" height="13" uuid="868560cf-517d-468b-bd41-40754abb0adf"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Customer:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="79" y="30" width="150" height="13" uuid="7e91ed80-cd9e-435a-8c22-d19a069aa97d"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{customer_contact_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="630" y="30" width="57" height="13" uuid="18b674ac-9548-456f-9a23-514b38546147"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Cust Order:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy h.mm a">
+				<reportElement x="393" y="-50" width="131" height="20" uuid="c1dd3991-3d9b-4436-8076-40f2c1127d94"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="630" y="70" width="57" height="13" uuid="c6c0b016-68b1-45b3-a141-feaa0d8d2b9a"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Receive Depot:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="690" y="70" width="110" height="13" uuid="d118e85e-1bd9-4912-b064-f197c7bbf230"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{depot_code}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="720" y="0" width="56" height="20" uuid="8bbcd5a5-fda6-4c89-ae76-b193a2c8e55a"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="777" y="0" width="18" height="20" uuid="c15c9a20-83c0-429b-8d74-54a1f9124af1">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy h.mm a">
+				<reportElement x="48" y="0" width="74" height="13" uuid="df4f6480-059c-4919-b0fd-aa3b8a700b98"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="5" y="0" width="41" height="12" isPrintWhenDetailOverflows="true" uuid="a56e0c34-2bc4-43c0-8141-305420aaa298"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Print Date:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="29" width="800" height="1" uuid="6fc4d8bd-3226-452f-93a3-2c780ffafc6b">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<textField>
+				<reportElement x="457" y="30" width="112" height="13" uuid="6c251326-4a79-4e22-9edf-8fc2ecba228c"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{exporter_org_med}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="400" y="30" width="54" height="13" uuid="23d17353-c12f-4d4e-acaa-6252be99dcc0"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Exporter:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="457" y="43" width="112" height="13" uuid="876e2141-5775-4f50-b765-51133b66a41f"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{billing_party}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="400" y="43" width="54" height="13" uuid="6631e84c-45d7-4596-b024-3816e182c6c5"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Billing client:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="457" y="57" width="112" height="13" uuid="064eba7f-d4d2-49a6-99d3-3b507bc6a8c5"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{customer_party}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="400" y="57" width="54" height="13" uuid="493c7865-edba-47dd-8258-2de8db013414"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Customer:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="457" y="70" width="112" height="13" uuid="53cf85a2-1ba6-4545-b829-872fabd502f9"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{consignee_party}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="400" y="70" width="54" height="13" uuid="2b5d75cc-c43f-4bdf-8a8d-7b5102b47f78"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Consignee:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="630" y="43" width="57" height="13" uuid="262a9f00-1104-4c48-9c1e-61b9655325de"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Port Name:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="229" y="43" width="57" height="13" uuid="4bfebe7a-c26c-436a-b2b6-3373e556cce8"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Voyage no:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="43" width="65" height="13" uuid="7ae644bb-1fd2-46ab-9775-1662e38447b7"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Shipper:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="229" y="30" width="57" height="13" uuid="458cff24-978e-4626-b21b-33068eca41d6"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Export Party:]]></text>
+			</staticText>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement x="79" y="43" width="150" height="13" uuid="3cb19ece-6e6f-434b-b274-fb244fded92b"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{shipper_party_role_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="288" y="30" width="110" height="13" uuid="059225d3-105e-4c1a-a78e-94446165fef4"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{export_party_role_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="79" y="57" width="150" height="13" uuid="ea97e593-8c15-4fb2-b6f8-2cdcaf309a2b"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{booking_reference}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="5" y="57" width="65" height="13" uuid="41c8e148-71e3-4fde-b3c9-742ee35c6366"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Booking Ref:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="229" y="57" width="57" height="13" uuid="89f5f6a2-25a9-479c-9dcc-f1fc9ab6e205"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Vessel:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="288" y="57" width="110" height="13" uuid="7920f6dc-cc4d-4466-b017-43eedfcce149"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{vessel_code}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="288" y="43" width="110" height="13" uuid="18e321c3-9167-452a-b6d1-c96d257a7636"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{voyage_number}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="690" y="43" width="110" height="13" uuid="d0b00771-5207-4511-8bce-1ab00390d74a"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{port_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="690" y="57" width="110" height="13" uuid="6c87201f-6f5c-49c6-9685-34608d98a3dc"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{depart_port_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="630" y="57" width="57" height="13" uuid="84360773-537c-4cfa-bb25-65f121e3b139"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Depart Port:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement key="" x="5" y="13" width="96" height="13" uuid="f2eced94-a786-4686-8ff7-bc9eeb64043e"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NS Pack]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="330" y="-3" width="175" height="26" uuid="4a864b43-2183-4d30-8a03-63772df42db7">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitbarWidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.barWidth" value="px"/>
+					<property name="local_mesure_unitbarHeight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.barHeight" value="px"/>
+					<printWhenExpression><![CDATA[$P{for_picklist}]]></printWhenExpression>
+				</reportElement>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128" drawText="false" checksumRequired="false" barWidth="1" barHeight="20" evaluationGroup="">
+					<jr:codeExpression><![CDATA[$F{load_id}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
+			<staticText>
+				<reportElement x="130" y="2" width="155" height="13" uuid="359feca1-7622-4585-8aca-4105271d7040">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<printWhenExpression><![CDATA[$P{for_picklist}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Picklist]]></text>
+			</staticText>
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
+				<reportElement x="79" y="84" width="338" height="13" uuid="dd403948-df16-4c79-9183-fe6a4adf8d6e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{shipping_line_party_role_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="5" y="70" width="65" height="13" uuid="35ccc114-5f2f-40b3-b3a3-9ec2c36f04b1"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Customer Ref:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="79" y="70" width="321" height="13" uuid="560b80a0-33c2-497a-a9f7-080047d0ed80">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{customer_reference}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="5" y="84" width="65" height="13" uuid="ad778dc3-0daa-447b-9ca1-0c54e5efcb20">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Shipping line:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="5" y="97" width="65" height="13" uuid="01b303d7-a4c6-48ff-a4a0-d1fc8b9bdaad">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Remark:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="79" y="97" width="721" height="13" uuid="519bc4f2-f637-474b-af18-a0acb3942bd3">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{remarks}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="38" splitType="Stretch">
+			<textField>
+				<reportElement x="41" y="2" width="31" height="13" uuid="40bfa11a-7e33-4cd3-a6c8-3db1f0646a61"/>
+				<textElement>
+					<font size="8" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{load_id}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="5" y="2" width="34" height="13" uuid="fdcede6c-c0e5-438c-bc7d-5d93af21f8d8"/>
+				<textElement>
+					<font size="8" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Load ID:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="32" width="800" height="1" uuid="dc4d9cf4-a191-48ec-bacf-0a8b1edcc987">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="0" y="1" width="800" height="1" uuid="d9599272-d130-46ba-9d15-2183e3b3bb7a">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="523" y="2" width="77" height="13" uuid="fae9c34f-fc85-4312-b486-dad474b00f24"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Order Number:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="600" y="2" width="42" height="13" uuid="ee201418-a365-43ed-afc7-7d7cf2043576"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{order_number}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="710" y="2" width="60" height="13" uuid="69dcf885-3536-4534-b0e4-b50389e7a465"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{load_id}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="660" y="2" width="49" height="13" uuid="e975b093-e946-4f2d-9e68-a15d275cb435"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Load Order:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="113" y="2" width="121" height="13" uuid="b34663db-e097-4c7b-92b6-fd99df80408d"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dispatch_consignment_note_number}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="72" y="2" width="41" height="13" uuid="ad485c40-637f-44f2-aa25-9e5977822b4e"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Cons No:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="18" width="124" height="13" uuid="e55c4c6a-0fdd-45e1-a9f1-4c82f2a73ec7"/>
+				<textElement>
+					<font size="8" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Plt Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="230" y="15" width="28" height="13" uuid="f4b3f000-a70e-4ca9-b8d2-05f8aa7d9163"/>
+				<textElement>
+					<font size="8" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Com]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="258" y="15" width="28" height="13" uuid="67eb102e-4539-4baa-a511-fe72538a3b26"/>
+				<textElement>
+					<font size="8" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Var]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="286" y="15" width="36" height="13" uuid="a77cf0a7-7131-47d8-b647-b5e6d40ce7ac"/>
+				<textElement>
+					<font size="8" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Size ref]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="323" y="15" width="47" height="13" uuid="08bae30f-5c4e-45df-a1eb-cf7aade46494"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Mark]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="370" y="15" width="46" height="13" uuid="e16d167c-42c0-4613-8b7d-b1cd2a296e6f"/>
+				<textElement>
+					<font size="8" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Pack]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="417" y="15" width="34" height="13" uuid="9bc29c79-a356-424b-9b82-5a1b3461e99e"/>
+				<textElement>
+					<font size="8" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Actl Cnt]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="465" y="15" width="60" height="13" uuid="ec7c8f18-2b10-48cf-b0dd-2ba3919a1c4f">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Inspection]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="526" y="15" width="35" height="13" uuid="7a2dd6da-906c-4d1a-85d3-2fed66cebb6c">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[TR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="131" y="15" width="98" height="13" uuid="37d53d80-2836-478d-bea5-faba5ebf47f8"/>
+				<textElement>
+					<font size="8" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Location]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="635" y="15" width="40" height="13" uuid="1295891f-21ee-4c91-8aff-c78f8caf9af0">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Hold Over]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="680" y="15" width="115" height="13" uuid="d3002cbc-5225-4692-87bc-22bf079666e4">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Build Up Remarks]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="610" y="15" width="25" height="13" uuid="3da262e2-8417-492d-9b3c-f494b51c1cca">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<printWhenExpression><![CDATA[!$P{cartons_equals_pallets}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Ctns]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="570" y="15" width="35" height="13" uuid="c54b721a-9c4f-47c0-9b53-0deb41db1a08">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Grade]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="16">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField isBlankWhenNull="true">
+				<reportElement x="230" y="2" width="28" height="12" uuid="13f599b1-da4e-43c8-8d91-707e9604c01e">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{commodity}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="258" y="2" width="28" height="12" uuid="084070bc-8048-487f-88bf-ab64ead55129">
+					<property name="local_mesure_unitheight" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{marketing_variety}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="286" y="2" width="36" height="12" uuid="9f715caf-1c75-49d2-868a-5c0d1d12adbe">
+					<property name="local_mesure_unitheight" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{size_ref}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="323" y="2" width="47" height="12" uuid="468c9cb9-9b68-44e8-9a49-535fc3caca5b">
+					<property name="local_mesure_unitheight" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{mark}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="370" y="2" width="47" height="12" uuid="ae2a39b6-30cf-46a3-8e11-f29ae11ad310">
+					<property name="local_mesure_unitheight" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{std_pack}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="417" y="2" width="40" height="12" uuid="4e8de1d6-4f03-496b-8d34-d79bbda046da">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{actual_count}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="454" y="2" width="80" height="12" uuid="dc8eb549-a88b-4e24-af90-a4da48a610c5">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{inspected_result}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="534" y="2" width="35" height="12" uuid="1f42d759-2bdf-4161-8fdf-2f6370956b6f">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{packed_tm_group}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="130" y="2" width="100" height="12" uuid="c93324a8-4605-419b-931b-9c28805a4b76">
+					<property name="local_mesure_unitheight" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{location}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="635" y="2" width="40" height="12" uuid="f46df3e7-647c-4666-9e1c-e2761b2fe33f">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{holdover_quantity}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="680" y="2" width="115" height="12" uuid="c0132064-e2e0-49a4-addd-48a3cefe1eba">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{buildup_remarks}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.##" isBlankWhenNull="true">
+				<reportElement x="610" y="2" width="33" height="12" uuid="add7ba95-da51-4049-b519-d8ceceedca4f">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<printWhenExpression><![CDATA[!$P{cartons_equals_pallets}]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ctn_qty}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="570" y="2" width="40" height="12" uuid="614119cc-8c07-41e5-84d5-16847a81f86f">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{grade}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="2" width="130" height="12" uuid="13b7c423-7404-43bd-9dc4-a63ce7473250">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pallet_number}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
