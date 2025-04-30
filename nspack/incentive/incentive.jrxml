@@ -764,12 +764,11 @@ D/N]]></text>
 				<textElement>
 					<font size="9"/>
 				</textElement>
-				<text><![CDATA[shift_fruit_packing_target             = running hours * fruit_per_hour_packing_target
-required_fruit_to_reach_incentive = running_hours/std_hours_per_day*fruit_per_hour_packing_target
-incentive_fruit                               = total_fruit - required_fruit_to_reach_incentive
-cost                                               = (total_fruit - incentive_fruit)* rate
-incentive                                       = incentive_fruit * rate
-total_earnings                               = cost + incentive
+				<text><![CDATA[shift_fruit_packing_target                  = running hours * fruit_per_hour_packing_target 
+required_fruit_to_reach_incentive   = running_hours / std_hours_per_day *(fruit_per_hour_packing_target * running_hours)
+incentive_fruit                                   = quantity_fruit_packed_per_inv - shift_packing_target
+incentive_per_hour                            = fruit_item_incentive_rate * (fruit_p_hour - fruit_per_hour_packing_target)) * actual_count_reduction_factor * incentive_factor
+total_incentive_shift                         = (fruit_item_incentive_rate * (fruit_p_hour - fruit_per_hour_packing_target)) * actual_count_reduction_factor * incentive_factor * running_hours
 ]]></text>
 			</staticText>
 			<staticText>
@@ -920,7 +919,9 @@ total_earnings                               = cost + incentive
 					<printWhenExpression><![CDATA[$F{incentive} != null]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{total_earnings}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{total_earnings} != null && $F{total_earnings}.doubleValue() >= 0 
+    ? $F{total_earnings} 
+    : 0]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
