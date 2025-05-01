@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="export_certificate" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="2feb80a9-cf2b-4ffa-aba7-8f4f0e675df4">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="live_kromco_nspack"/>
@@ -668,6 +668,16 @@ vessel_code,exporter_certificate_code,commodities.code,mv.description,commoditie
 					</textElement>
 					<text><![CDATA[TOTAL CARTONS]]></text>
 				</staticText>
+				<textField>
+					<reportElement x="121" y="0" width="237" height="12" uuid="4fc7c380-1a34-4603-bb0d-ebab86e2292a">
+						<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Top">
+						<font fontName="SansSerif" size="9" isBold="true"/>
+						<paragraph firstLineIndent="2"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{marketing_variety_description}]]></textFieldExpression>
+				</textField>
 			</band>
 		</groupFooter>
 	</group>
@@ -804,18 +814,11 @@ vessel_code,exporter_certificate_code,commodities.code,mv.description,commoditie
 				<text><![CDATA[CARTONS]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="209" y="1" width="149" height="12" uuid="4fc7c380-1a34-4603-bb0d-ebab86e2292a"/>
-				<textElement textAlignment="Left" verticalAlignment="Bottom">
-					<font fontName="SansSerif" size="9" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{marketing_variety_description}]]></textFieldExpression>
-			</textField>
-			<textField>
 				<reportElement x="121" y="1" width="82" height="12" uuid="7705e38d-cc72-49c4-8058-01c61c304607">
 					<property name="com.jaspersoft.studio.unit.firstLineIndent" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Left" verticalAlignment="Bottom">
+				<textElement textAlignment="Left" verticalAlignment="Top">
 					<font size="9" isBold="true"/>
 					<paragraph firstLineIndent="2"/>
 				</textElement>

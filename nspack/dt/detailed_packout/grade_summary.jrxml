@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_summary" language="groovy" pageWidth="344" pageHeight="130" columnWidth="344" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cba47b92-bbda-40d5-b5d7-7f12c9f0b664">
+	<property name="ireport.zoom" value="3.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack_badlands"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="267"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="726"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="production_run_id" class="java.util.Collection" nestedType="java.lang.Integer"/>
+	<parameter name="dispatched_only" class="java.lang.Boolean"/>
+	<queryString language="SQL">
+		<![CDATA[ SELECT
+grade_code,
+sum(nett_weight) nett_weight,
+sum(derived_nett_weight) AS derived_nett_weight,
+ROUND(sum(weight_percentage),2) weight_percentage,sum(carton_quantity) carton_quantity
+FROM
+          (
+			with bin_tipped as (
+				select pr.cultivar_id ,pr.farm_id 
+				,sum(b.nett_weight::numeric(12,2)) AS total_bin_weight
+				FROM  production_runs pr
+				left join rmt_bins b on pr.id=b.production_run_tipped_id
+				LEFT JOIN cultivar_groups ON cultivar_groups.id = b.cultivar_group_id
+				LEFT JOIN cultivars ON cultivars.id = b.cultivar_id
+				left JOIN orchards ON orchards.id = b.orchard_id
+				LEFT JOIN farms ON farms.id = b.farm_id
+				Left join pucs on b.puc_id = pucs.id 
+               WHERE not  ( b.scrapped =true) and $X{IN, pr.id , production_run_id}
+				group by pr.cultivar_id ,pr.farm_id
+				)
+			select   
+			grades.grade_code,
+			sum(pallet_sequences.nett_weight::numeric(12,2)) AS nett_weight,
+			sum(pallet_sequences.carton_quantity)carton_quantity,
+			sum(standard_product_weights.nett_weight * pallet_sequences.carton_quantity::numeric) AS derived_nett_weight,
+		    (sum(pallet_sequences.nett_weight::numeric(12,2))/max(bin_tipped.total_bin_weight)) * 100 as weight_percentage
+			FROM pallet_sequences
+			join pallets on   pallet_sequences.pallet_id =pallets.id
+			JOIN production_runs ON production_runs.id = pallet_sequences.production_run_id
+			JOIN grades ON grades.id = pallet_sequences.grade_id
+			JOIN cultivar_groups ON cultivar_groups.id = pallet_sequences.cultivar_group_id
+			LEFT JOIN cultivars ON cultivars.id = pallet_sequences.cultivar_id
+			LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
+			LEFT JOIN standard_pack_codes ON standard_pack_codes.id = pallet_sequences.standard_pack_code_id
+			LEFT JOIN standard_product_weights ON commodities.id = standard_product_weights.commodity_id AND standard_product_weights.standard_pack_id = standard_pack_codes.id
+			JOIN bin_tipped on bin_tipped.farm_id=production_runs.farm_id and production_runs.cultivar_id=bin_tipped.cultivar_id
+             WHERE case when    $P{dispatched_only}   = true then pallets.load_id is not null else true end and $X{IN, pallet_sequences.production_run_id, production_run_id}
+			group by   
+			grades.grade_code
+		  ) vpd
+GROUP BY
+grade_code
+
+UNION ALL
+(
+			with bin_tipped as (
+				select pr.cultivar_id ,pr.farm_id 
+				,sum(b.nett_weight::numeric(12,2)) AS total_bin_weight
+				FROM  production_runs pr
+				left join rmt_bins b on pr.id=b.production_run_tipped_id
+				LEFT JOIN cultivar_groups ON cultivar_groups.id = b.cultivar_group_id
+				LEFT JOIN cultivars ON cultivars.id = b.cultivar_id
+				left JOIN orchards ON orchards.id = b.orchard_id
+				LEFT JOIN farms ON farms.id = b.farm_id
+				Left join pucs on b.puc_id = pucs.id
+              WHERE not  ( b.scrapped =true)  and $X{IN, pr.id , production_run_id}
+				group by pr.cultivar_id ,pr.farm_id
+				)
+select
+rmt_class_code,
+sum(nett_weight) nett_weight,
+sum(nett_weight) AS derived_nett_weight,
+(sum(nett_weight)/max(bin_tipped.total_bin_weight)) * 100 as weight_percentage,
+count(*) carton_quantity
+FROM
+public.vw_bins
+JOIN bin_tipped on bin_tipped.farm_id=vw_bins.farm_id and vw_bins.cultivar_id=bin_tipped.cultivar_id
+where not  ( scrapped =true) and $X{IN, production_run_rebin_id, production_run_id}
+GROUP BY
+rmt_class_code
+)]]>
+	</queryString>
+	<field name="grade_code" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="grade_code"/>
+		<property name="com.jaspersoft.studio.field.label" value="grade_code"/>
+	</field>
+	<field name="nett_weight" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="nett_weight"/>
+		<property name="com.jaspersoft.studio.field.label" value="nett_weight"/>
+	</field>
+	<field name="derived_nett_weight" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="derived_nett_weight"/>
+		<property name="com.jaspersoft.studio.field.label" value="derived_nett_weight"/>
+	</field>
+	<field name="weight_percentage" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="weight_percentage"/>
+		<property name="com.jaspersoft.studio.field.label" value="weight_percentage"/>
+	</field>
+	<field name="carton_quantity" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="carton_quantity"/>
+		<property name="com.jaspersoft.studio.field.label" value="carton_quantity"/>
+	</field>
+	<variable name="nett_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{nett_weight}]]></variableExpression>
+	</variable>
+	<variable name="weight_percentage" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{weight_percentage}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="14" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="1" y="1" width="48" height="13" uuid="da5d9292-dba0-4c6e-ba22-142cff0c3eab">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Grade]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="12" width="200" height="1" uuid="61532689-4367-431b-b5dd-9185f38ce957">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="149" y="1" width="49" height="13" uuid="d88ef14d-4b61-4dfe-a569-48d6da5c48c1">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[%]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="-1" width="60" height="13" uuid="4e1a6260-75f0-4611-8625-029ea50730af">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Kgs]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="12" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField isBlankWhenNull="true">
+				<reportElement x="1" y="1" width="48" height="11" uuid="b4b41068-d50c-4edc-b706-6bb573b95427">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{grade_code}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="150" y="1" width="49" height="11" uuid="620a1348-318a-4336-9eca-d4d2a1234296">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitx" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{weight_percentage}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="80" y="1" width="60" height="11" uuid="814e04ec-4f8f-4c9f-8cdb-c2da9656d625">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nett_weight}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="12" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<line>
+				<reportElement x="0" y="1" width="200" height="1" uuid="620dd30c-e871-4498-8ff4-472e4cef0b61">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+			</line>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="150" y="1" width="49" height="11" uuid="e09dc5b0-92a7-43d5-8c37-9430a596293e">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{weight_percentage}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="false">
+				<reportElement x="70" y="1" width="70" height="11" uuid="473d10d1-a46b-4106-ad00-9d9b5077481e">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{nett_1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

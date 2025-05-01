@@ -287,6 +287,41 @@ detailed_packout:
       selection: 
       default: 
       required: true
+detailed_packout-dt:
+  group: NSPack
+  caption: Detailed Packout (dt)
+  path: nspack/dt/detailed_packout
+  params:
+    - name: production_run_id
+      datatype: intarray
+      selection:
+      default:
+      required: true
+    - name: carton_or_bin
+      datatype: string
+      selection: 
+      default: Carton
+      required: true
+    - name: use_packed_weight
+      datatype: boolean
+      selection: 
+      default: false
+      required: true
+    - name: use_derived_weight
+      datatype: boolean
+      selection: 
+      default: true
+      required: true
+    - name: dispatched_only
+      datatype: boolean
+      selection: 
+      default: true
+      required: true
+    - name: client_code
+      datatype: string
+      selection: 
+      default: 
+      required: true
 dispatch_note:
   group: NSPack
   caption: Dispatch Note
@@ -412,6 +447,31 @@ dispatch_picklist:
       selection: 
       default: false
       required: true
+dispatch_picklist-snr:
+  group: NSPack
+  caption: Dispatch Picklist (SNR)
+  path: nspack/snr/dispatch_picklist
+  params:
+    - name: load_id
+      datatype: integer
+      selection: sql1 - SELECT id FROM loads ORDER BY id DESC
+      default:
+      required: true
+    - name: pallet_report
+      datatype: string
+      selection: 
+      default: summary
+      required: true
+    - name: for_picklist
+      datatype: boolean
+      selection: 
+      default: false
+      required: true
+    - name: cartons_equals_pallets
+      datatype: boolean
+      selection: 
+      default: false
+      required: true
 export_certificate:
   group: NSPack
   caption: Export Certificate
@@ -486,6 +546,16 @@ govt_finding_sheet-melons:
   group: NSPack
   caption: Govt Finding Sheet (MELONS)
   path: nspack/melons/govt_finding_sheet
+  params:
+    - name: govt_inspection_sheet_id
+      datatype: integer
+      selection:
+      default:
+      required: true
+govt_finding_sheet-avocados:
+  group: NSPack
+  caption: Govt Finding Sheet (AVOCADOS)
+  path: nspack/avos/govt_finding_sheet
   params:
     - name: govt_inspection_sheet_id
       datatype: integer

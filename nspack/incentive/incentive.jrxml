@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
@@ -170,7 +170,7 @@ calc_sql2 AS (
     SELECT
         calc_sql.*,
         fruit_per_hour_packing_target * running_hours AS shift_packing_target,
-((quantity_fruit_packed_per_inv * actual_count_reduction_factor) -(running_hours / std_hours_per_day *(fruit_per_hour_packing_target * running_hours))) * inv_cost AS incentive,
+(calc_sql.fruit_item_incentive_rate * (fruit_p_hour - fruit_per_hour_packing_target)) * actual_count_reduction_factor * incentive_factor AS incentive,
 (reduced_fruit_qty -(reduced_fruit_qty - required_fruit_to_reach_incentive)) * inv_cost AS COST
     FROM
         calc_sql
@@ -579,15 +579,6 @@ per Hour]]></text>
 				<text><![CDATA[Inv]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="749" y="121" width="50" height="29" uuid="07ffafdb-14c7-417d-bf61-8711933a835a">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
-				<text><![CDATA[Total Earnings]]></text>
-			</staticText>
-			<staticText>
 				<reportElement x="51" y="121" width="120" height="29" uuid="6a9424ce-1390-4108-99e8-ed956c24c933">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -597,7 +588,7 @@ per Hour]]></text>
 				<text><![CDATA[Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="696" y="121" width="49" height="29" uuid="4207fc67-7b55-43fa-94ce-2560746370f6">
+				<reportElement x="643" y="121" width="49" height="29" uuid="4207fc67-7b55-43fa-94ce-2560746370f6">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -725,14 +716,6 @@ D/N]]></text>
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Fruit Qty]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="640" y="121" width="50" height="29" uuid="29efea2e-c0ae-490e-b11b-78063f1e88e4">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
-				<text><![CDATA[Cost]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="521" y="121" width="55" height="28" uuid="1e10a0ad-8516-4149-bd07-2610ee5e6b61">
@@ -863,23 +846,13 @@ total_earnings                               = cost + incentive
 				<textFieldExpression><![CDATA[$F{fruit_p_hour}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-				<reportElement x="696" y="2" width="49" height="15" uuid="89b64826-d22a-443a-8bec-94b00adb10c6">
+				<reportElement x="640" y="0" width="49" height="15" uuid="89b64826-d22a-443a-8bec-94b00adb10c6">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<printWhenExpression><![CDATA[$F{incentive} > 0]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{incentive}]]></textFieldExpression>
-			</textField>
-			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-				<reportElement x="749" y="2" width="50" height="15" uuid="f649e1e0-faf7-4a25-a141-9bceafed2ba8">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<printWhenExpression><![CDATA[$F{cw_rank_boolean}]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{total_earnings}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="226" y="2" width="30" height="15" uuid="d5ea4f7c-a808-4691-a944-cb72e40bcd67">
@@ -898,15 +871,6 @@ total_earnings                               = cost + incentive
 				</reportElement>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{quantity_fruit_packed_per_inv}]]></textFieldExpression>
-			</textField>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="640" y="2" width="50" height="15" uuid="7a2cab27-9781-40de-86f6-6bd51345ce4b">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{cost}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
 				<reportElement x="521" y="2" width="55" height="15" uuid="c2ea508a-2a22-423f-9723-e8f44d730f7f">
