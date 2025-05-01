@@ -84,7 +84,7 @@ GROUP BY
     s.season_code,
     a.date_delivered,
     a.date_picked,
-    to_char(a.date_picked, 'WW'),
+    date_part('week'::text, a.date_picked),
     a.truck_registration_number,
     i.description,
     m.code,
