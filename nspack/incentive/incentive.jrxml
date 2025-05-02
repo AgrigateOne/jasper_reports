@@ -821,7 +821,7 @@ Total Incentive Shift          = (Fruit Item Incentive Rate x (Fruit per Hour - 
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{total_ctns_packed_cw}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.###;(#,##0.###-)" isBlankWhenNull="true">
+			<textField pattern="###0.##;###0.##-" isBlankWhenNull="true">
 				<reportElement x="371" y="1" width="45" height="15" uuid="d87d3b26-8bf5-456c-aff4-50a1e729fc6b">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -883,7 +883,7 @@ Total Incentive Shift          = (Fruit Item Incentive Rate x (Fruit per Hour - 
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{quantity_fruit_packed_per_inv}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.###;(#,##0.###-)" isBlankWhenNull="false">
+			<textField pattern="###0.##;###0.##-" isBlankWhenNull="false">
 				<reportElement x="521" y="1" width="55" height="15" uuid="c2ea508a-2a22-423f-9723-e8f44d730f7f">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
