@@ -250,6 +250,7 @@ SELECT
     FROM
         calc_sql2
     ORDER BY
+        (quantity_fruit_packed_per_inv - shift_packing_target)::numeric(11, 2) DESC,    
         cw_id,
         cw_rank;]]>
 	</queryString>
@@ -730,21 +731,21 @@ D/N]]></text>
 				<text><![CDATA[Incentive Fruit]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="339" y="42" width="140" height="13" uuid="d8d01079-0170-46ed-b200-94b479153765">
+				<reportElement x="339" y="28" width="140" height="13" uuid="d8d01079-0170-46ed-b200-94b479153765">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font size="9"/>
 				</textElement>
-				<text><![CDATA[fruit_per_hour_packing_target:
+				<text><![CDATA[Fruit per Hour Target:
 
 
 
 ]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="479" y="42" width="60" height="13" uuid="cdc9f0fa-912a-4b56-9cc4-a9d239482d81">
+				<reportElement x="479" y="28" width="60" height="13" uuid="cdc9f0fa-912a-4b56-9cc4-a9d239482d81">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -755,31 +756,31 @@ D/N]]></text>
 				<textFieldExpression><![CDATA[$F{fruit_per_hour_packing_target}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="339" y="55" width="460" height="65" uuid="ce79e395-5234-49ca-ba67-39da9cf09d52">
+				<reportElement x="304" y="46" width="494" height="75" uuid="ce79e395-5234-49ca-ba67-39da9cf09d52">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
 				<textElement>
-					<font size="9"/>
+					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<text><![CDATA[shift_fruit_packing_target                  = running hours * fruit_per_hour_packing_target 
-required_fruit_to_reach_incentive   = running_hours / std_hours_per_day *(fruit_per_hour_packing_target * running_hours)
-incentive_fruit                                   = quantity_fruit_packed_per_inv - shift_packing_target
-incentive_per_hour                            = fruit_item_incentive_rate * (fruit_p_hour - fruit_per_hour_packing_target)) * actual_count_reduction_factor * incentive_factor
-total_incentive_shift                         = (fruit_item_incentive_rate * (fruit_p_hour - fruit_per_hour_packing_target)) * actual_count_reduction_factor * incentive_factor * running_hours
+				<text><![CDATA[Fruit Target Shift             = Running Hours * Fruit per Hour Target 
+Req. Fruit to reach Incentive  = Running Hours / STD Hours per Day x (Fruit per Hour Target x Running Hours)
+Incentive Fruit                = QTY Fruit packed per Inv - Fruit Target Shift
+Incentive per Hour             = Fruit Item Incentive Rate x (Fruit per Hour - Fruit per Hour Target)) x Actual Count Reduction Factor x Incentive Factor
+Total Incentive Shift          = (Fruit Item Incentive Rate x (Fruit per Hour - Fruit per Hour Target)) x Actual Count Reduction Factor x Incentive Factor x Running Hours
 ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="570" y="42" width="125" height="13" uuid="9cc82864-a76c-43db-8318-2a0dbfc41f0d">
+				<reportElement x="570" y="28" width="125" height="13" uuid="9cc82864-a76c-43db-8318-2a0dbfc41f0d">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font size="9"/>
 				</textElement>
-				<text><![CDATA[std_hours_per_day: 9
+				<text><![CDATA[STD Hours per Day: 9
 ]]></text>
 			</staticText>
 			<staticText>
@@ -796,22 +797,22 @@ total_incentive_shift                         = (fruit_item_incentive_rate * (fr
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="22" splitType="Stretch">
+		<band height="20" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isBlankWhenNull="true">
-				<reportElement x="1" y="0" width="49" height="15" uuid="a9189391-1447-48de-a8eb-80c2d63b45d0"/>
+				<reportElement x="1" y="1" width="49" height="15" uuid="a9189391-1447-48de-a8eb-80c2d63b45d0"/>
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{personnel_barcode_number}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="61" y="0" width="109" height="15" uuid="7c6c77c6-242c-41fe-b29c-e6a3002c405c">
+				<reportElement x="61" y="1" width="109" height="15" uuid="7c6c77c6-242c-41fe-b29c-e6a3002c405c">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{contract_worker}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="264" y="2" width="40" height="15" uuid="f83a63e0-000b-46a1-b35f-5f7818f68111">
+				<reportElement x="264" y="1" width="40" height="15" uuid="f83a63e0-000b-46a1-b35f-5f7818f68111">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -820,8 +821,8 @@ total_incentive_shift                         = (fruit_item_incentive_rate * (fr
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{total_ctns_packed_cw}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="371" y="2" width="45" height="15" uuid="d87d3b26-8bf5-456c-aff4-50a1e729fc6b">
+			<textField pattern="#,##0.###;(#,##0.###-)" isBlankWhenNull="true">
+				<reportElement x="371" y="1" width="45" height="15" uuid="d87d3b26-8bf5-456c-aff4-50a1e729fc6b">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -831,7 +832,7 @@ total_incentive_shift                         = (fruit_item_incentive_rate * (fr
 				<textFieldExpression><![CDATA[$F{shift_packing_target}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="172" y="0" width="25" height="15" uuid="e737738c-f322-46eb-853e-6dbd43e8bd0e">
+				<reportElement x="172" y="1" width="25" height="15" uuid="e737738c-f322-46eb-853e-6dbd43e8bd0e">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -839,7 +840,7 @@ total_incentive_shift                         = (fruit_item_incentive_rate * (fr
 				<textFieldExpression><![CDATA[$F{shift_type_code}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-				<reportElement x="421" y="2" width="43" height="15" uuid="395f9724-525c-4d6b-8dc1-dfcd109ebde2">
+				<reportElement x="421" y="1" width="43" height="15" uuid="395f9724-525c-4d6b-8dc1-dfcd109ebde2">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -848,7 +849,7 @@ total_incentive_shift                         = (fruit_item_incentive_rate * (fr
 				<textFieldExpression><![CDATA[$F{running_hours}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="471" y="2" width="45" height="15" uuid="9114b226-c7e8-44f4-aa30-d38e62ba93eb">
+				<reportElement x="471" y="1" width="45" height="15" uuid="9114b226-c7e8-44f4-aa30-d38e62ba93eb">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -856,7 +857,7 @@ total_incentive_shift                         = (fruit_item_incentive_rate * (fr
 				<textFieldExpression><![CDATA[$F{fruit_p_hour}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-" isBlankWhenNull="false">
-				<reportElement x="640" y="0" width="49" height="15" uuid="89b64826-d22a-443a-8bec-94b00adb10c6">
+				<reportElement x="640" y="1" width="49" height="15" uuid="89b64826-d22a-443a-8bec-94b00adb10c6">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<printWhenExpression><![CDATA[$F{incentive} != null]]></printWhenExpression>
@@ -865,7 +866,7 @@ total_incentive_shift                         = (fruit_item_incentive_rate * (fr
 				<textFieldExpression><![CDATA[$F{incentive}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="226" y="2" width="30" height="15" uuid="d5ea4f7c-a808-4691-a944-cb72e40bcd67">
+				<reportElement x="226" y="1" width="30" height="15" uuid="d5ea4f7c-a808-4691-a944-cb72e40bcd67">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -874,7 +875,7 @@ total_incentive_shift                         = (fruit_item_incentive_rate * (fr
 				<textFieldExpression><![CDATA[$F{carton_qty}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="315" y="2" width="40" height="15" uuid="f784096b-c532-4b9f-ae93-8c226cb2e0f0">
+				<reportElement x="315" y="1" width="40" height="15" uuid="f784096b-c532-4b9f-ae93-8c226cb2e0f0">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -882,8 +883,8 @@ total_incentive_shift                         = (fruit_item_incentive_rate * (fr
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{quantity_fruit_packed_per_inv}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
-				<reportElement x="521" y="2" width="55" height="15" uuid="c2ea508a-2a22-423f-9723-e8f44d730f7f">
+			<textField pattern="#,##0.###;(#,##0.###-)" isBlankWhenNull="false">
+				<reportElement x="521" y="1" width="55" height="15" uuid="c2ea508a-2a22-423f-9723-e8f44d730f7f">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -893,7 +894,7 @@ total_incentive_shift                         = (fruit_item_incentive_rate * (fr
 				<textFieldExpression><![CDATA[$F{incentive_fruit}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-				<reportElement x="200" y="2" width="25" height="15" uuid="ac6917aa-924d-45b4-a92c-8260b7e836f6">
+				<reportElement x="200" y="1" width="25" height="15" uuid="ac6917aa-924d-45b4-a92c-8260b7e836f6">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -903,7 +904,7 @@ total_incentive_shift                         = (fruit_item_incentive_rate * (fr
 				<textFieldExpression><![CDATA[$F{inv_codes}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="574" y="2" width="55" height="15" uuid="587f3533-a31c-439c-ada6-7c5339456fb7">
+				<reportElement x="574" y="1" width="55" height="15" uuid="587f3533-a31c-439c-ada6-7c5339456fb7">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -913,7 +914,7 @@ total_incentive_shift                         = (fruit_item_incentive_rate * (fr
 				<textFieldExpression><![CDATA[$F{packing_method_code}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-" isBlankWhenNull="false">
-				<reportElement x="710" y="2" width="49" height="15" uuid="ac7a042e-17c1-4529-b222-4461fc751177">
+				<reportElement x="710" y="1" width="49" height="15" uuid="ac7a042e-17c1-4529-b222-4461fc751177">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<printWhenExpression><![CDATA[$F{incentive} != null]]></printWhenExpression>
