@@ -784,10 +784,11 @@ Total Incentive Shift          = (Fruit Item Incentive Rate x (Fruit per Hour - 
 ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="699" y="120" width="75" height="37" uuid="9f82dc0c-4551-46f3-98e2-2e18239da45d">
+				<reportElement x="699" y="121" width="75" height="29" uuid="9f82dc0c-4551-46f3-98e2-2e18239da45d">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10"/>
