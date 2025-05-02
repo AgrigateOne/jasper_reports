@@ -756,7 +756,7 @@ D/N]]></text>
 				<textFieldExpression><![CDATA[$F{fruit_per_hour_packing_target}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="304" y="46" width="494" height="75" uuid="ce79e395-5234-49ca-ba67-39da9cf09d52">
+				<reportElement x="339" y="46" width="459" height="75" uuid="ce79e395-5234-49ca-ba67-39da9cf09d52">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
