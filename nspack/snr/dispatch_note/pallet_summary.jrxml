@@ -13,51 +13,64 @@
 	<parameter name="load_id" class="java.lang.Integer"/>
 	<parameter name="scartons_equals_pallets" class="java.lang.Boolean"/>
 	<queryString language="SQL">
-		<![CDATA[SELECT fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack) AS edi_size_count,
+		<![CDATA[SELECT
+  fn_edi_size_count (standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack) AS edi_size_count,
   pallet_sequences.sell_by_code,
-  fruit_size_references.size_reference AS  size_count_code ,
+  fruit_size_references.size_reference AS size_count_code,
   grades.grade_code,
-  fn_party_role_org_code( pallet_sequences.marketing_org_party_role_id) AS organization_code,
+  fn_party_role_org_code (pallet_sequences.marketing_org_party_role_id) AS organization_code,
   target_market_groups.target_market_group_name AS target_market_code,
   SUM(pallet_sequences.carton_quantity) AS ctn_qty,
-  SUM(CAST(pallet_sequences.carton_quantity AS numeric(5,1)) / CAST(pallets.carton_quantity AS numeric(5,1))) AS plt_qty,
- SUM(CAST(pallets.nett_weight AS numeric(7,2))) AS nett_weight,
+  SUM(CAST(pallet_sequences.carton_quantity AS numeric(5, 1)) / CAST(pallets.carton_quantity AS numeric(5, 1))) AS plt_qty,
+  SUM(CAST(pallets.nett_weight AS numeric(7, 2))) AS nett_weight,
   inventory_codes.inventory_code,
   pallet_bases.pallet_base_code AS edi_out_pallet_base,
   commodities.code AS commodity_code,
-  COALESCE(cvv.marketing_variety_code, marketing_varieties.marketing_variety_code) as variety_short_long,
-   target_market_groups.target_market_group_name AS target_market_code,
-   target_markets.target_market_name AS target_country,
-   STRING_AGG(DISTINCT fn_party_role_name(pallet_sequences.target_customer_party_role_id)::text, '; ') AS target_customer,
-   standard_pack_codes.standard_pack_code AS old_pack_code,
+  COALESCE(cvv.marketing_variety_code, marketing_varieties.marketing_variety_code) AS variety_short_long,
+  target_market_groups.target_market_group_name AS target_market_code,
+  target_markets.target_market_name AS target_country,
+  destination_regions.destination_region_name AS target_region,
+  standard_pack_codes.standard_pack_code AS old_pack_code,
   marks.mark_code AS brand_code,
-  organizations.long_description AS org_long
-,pallets.gross_weight
-,(select sum(gross_weight) from pallets p where p.load_id=pallets.load_id) load_gross_weight
-,pallets.load_id
-FROM pallets
-JOIN pallet_sequences ON pallet_sequences.pallet_id = pallets.id
-LEFT JOIN cultivar_groups ON cultivar_groups.id = pallet_sequences.cultivar_group_id
-LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
-JOIN marketing_varieties ON marketing_varieties.id = pallet_sequences.marketing_variety_id
-LEFT JOIN customer_varieties ON customer_varieties.id = pallet_sequences.customer_variety_id
-LEFT JOIN marketing_varieties cvv ON cvv.id = customer_varieties.variety_as_customer_variety_id
-LEFT JOIN standard_pack_codes ON standard_pack_codes.id = pallet_sequences.standard_pack_code_id
-JOIN marks ON marks.id = pallet_sequences.mark_id
-JOIN target_market_groups ON target_market_groups.id = pallet_sequences.packed_tm_group_id
-JOIN grades ON grades.id = pallet_sequences.grade_id
-JOIN basic_pack_codes ON basic_pack_codes.id = pallet_sequences.basic_pack_code_id
-LEFT JOIN fruit_size_references ON fruit_size_references.id = pallet_sequences.fruit_size_reference_id
-LEFT JOIN party_roles ON party_roles.id = pallet_sequences.marketing_org_party_role_id
-LEFT JOIN organizations ON organizations.party_id = party_roles.party_id
-LEFT JOIN inventory_codes ON inventory_codes.id = pallet_sequences.inventory_code_id
-LEFT JOIN pallet_formats ON pallet_formats.id = pallets.pallet_format_id
-LEFT JOIN pallet_bases ON pallet_bases.id = pallet_formats.pallet_base_id
-LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = pallet_sequences.fruit_actual_counts_for_pack_id
-LEFT JOIN target_markets ON target_markets.id = pallet_sequences.target_market_id
-WHERE pallets.load_id = $P{load_id}
-
-GROUP BY fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack), 
+  organizations.long_description AS org_long,
+  pallets.gross_weight,
+  (
+    SELECT
+      sum(gross_weight)
+    FROM
+      pallets p
+    WHERE
+      p.load_id = pallets.load_id) load_gross_weight,
+  pallets.load_id
+FROM
+  pallets
+  JOIN pallet_sequences ON pallet_sequences.pallet_id = pallets.id
+  LEFT JOIN cultivar_groups ON cultivar_groups.id = pallet_sequences.cultivar_group_id
+  LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
+  JOIN marketing_varieties ON marketing_varieties.id = pallet_sequences.marketing_variety_id
+  LEFT JOIN customer_varieties ON customer_varieties.id = pallet_sequences.customer_variety_id
+  LEFT JOIN marketing_varieties cvv ON cvv.id = customer_varieties.variety_as_customer_variety_id
+  LEFT JOIN standard_pack_codes ON standard_pack_codes.id = pallet_sequences.standard_pack_code_id
+  JOIN marks ON marks.id = pallet_sequences.mark_id
+  JOIN target_market_groups ON target_market_groups.id = pallet_sequences.packed_tm_group_id
+  JOIN grades ON grades.id = pallet_sequences.grade_id
+  JOIN basic_pack_codes ON basic_pack_codes.id = pallet_sequences.basic_pack_code_id
+  LEFT JOIN fruit_size_references ON fruit_size_references.id = pallet_sequences.fruit_size_reference_id
+  LEFT JOIN party_roles ON party_roles.id = pallet_sequences.marketing_org_party_role_id
+  LEFT JOIN organizations ON organizations.party_id = party_roles.party_id
+  LEFT JOIN inventory_codes ON inventory_codes.id = pallet_sequences.inventory_code_id
+  LEFT JOIN pallet_formats ON pallet_formats.id = pallets.pallet_format_id
+  LEFT JOIN pallet_bases ON pallet_bases.id = pallet_formats.pallet_base_id
+  LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = pallet_sequences.fruit_actual_counts_for_pack_id
+  LEFT JOIN target_markets ON target_markets.id = pallet_sequences.target_market_id
+  LEFT JOIN loads ON loads.id = pallets.load_id
+  LEFT JOIN destination_cities ON destination_cities.id = loads.final_destination_id
+  LEFT JOIN destination_countries ON destination_countries.id = destination_cities.destination_country_id
+  LEFT JOIN destination_regions ON destination_regions.id = destination_countries.destination_region_id
+WHERE
+  pallets.load_id = $P{load_id}
+GROUP BY
+  fn_edi_size_count (standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack),
   pallet_sequences.sell_by_code,
   fruit_size_references.size_reference,
   grades.grade_code,
@@ -67,12 +80,13 @@ GROUP BY fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities
   pallet_bases.pallet_base_code,
   commodities.code,
   COALESCE(cvv.marketing_variety_code, marketing_varieties.marketing_variety_code),
-   standard_pack_codes.standard_pack_code,
+  standard_pack_codes.standard_pack_code,
   marks.mark_code,
   pallet_sequences.marketing_org_party_role_id,
-  organizations.long_description
-,pallets.gross_weight
-,pallets.load_id
+  organizations.long_description,
+  pallets.gross_weight,
+  pallets.load_id,
+  destination_regions.destination_region_name
 ORDER BY
   commodities.code,
   COALESCE(cvv.marketing_variety_code, marketing_varieties.marketing_variety_code),
@@ -171,7 +185,7 @@ ORDER BY
 		<property name="com.jaspersoft.studio.field.tree.path" value="pallets"/>
 	</field>
 	<field name="target_country" class="java.lang.String"/>
-	<field name="target_customer" class="java.lang.String"/>
+	<field name="target_region" class="java.lang.String"/>
 	<variable name="ctn_qty_1" class="java.lang.Number" calculation="Sum">
 		<variableExpression><![CDATA[$F{ctn_qty}]]></variableExpression>
 	</variable>
@@ -261,17 +275,17 @@ ORDER BY
 			<staticText>
 				<reportElement x="149" y="0" width="34" height="13" uuid="d2df65a4-653c-4d53-a800-7a6b5666255e"/>
 				<textElement textAlignment="Center"/>
-				<text><![CDATA[CST]]></text>
+				<text><![CDATA[TM]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="181" y="1" width="24" height="13" uuid="244c8c2a-36bc-40bb-bd85-7f164e792fc5"/>
 				<textElement textAlignment="Center"/>
-				<text><![CDATA[TR]]></text>
+				<text><![CDATA[TC]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="202" y="1" width="34" height="13" uuid="42ca3059-8989-4a8a-a647-540c858af5a3"/>
 				<textElement textAlignment="Center"/>
-				<text><![CDATA[TC]]></text>
+				<text><![CDATA[TR]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -342,19 +356,19 @@ ORDER BY
 				<textFieldExpression><![CDATA[$F{ctn_qty}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="149" y="0" width="34" height="13" uuid="277fbb92-601a-4dd3-915b-6444d3fc8884"/>
-				<textElement textAlignment="Center"/>
-				<textFieldExpression><![CDATA[$F{target_customer}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="181" y="1" width="24" height="13" uuid="ce49baa0-3ad3-4fb8-987f-e71ec8af5cd6"/>
+				<reportElement x="182" y="0" width="24" height="13" uuid="ce49baa0-3ad3-4fb8-987f-e71ec8af5cd6"/>
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{target_market_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="206" y="1" width="34" height="13" uuid="e707861c-e7be-4f88-b7b0-a2ea7c7f1a83"/>
+				<reportElement x="150" y="-1" width="34" height="13" uuid="e707861c-e7be-4f88-b7b0-a2ea7c7f1a83"/>
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{target_country}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="203" y="1" width="34" height="13" uuid="277fbb92-601a-4dd3-915b-6444d3fc8884"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{target_region}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
