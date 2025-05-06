@@ -23,34 +23,41 @@
 	<parameter name="load_id" class="java.lang.Integer"/>
 	<parameter name="scartons_equals_pallets" class="java.lang.Boolean"/>
 	<queryString language="SQL">
-		<![CDATA[WITH plt_qty as  (
-	 select   pallets.pallet_number,pallet_sequences.pallet_sequence_number,
-	count(distinct pallets.id) as plt_qty,
-   rank() OVER (PARTITION BY pallets.pallet_number ORDER BY pallet_sequences.pallet_sequence_number) AS rank
-FROM pallets
-JOIN pallet_sequences ON pallet_sequences.pallet_id = pallets.id
-WHERE pallets.load_id = $P{load_id}
- group by pallets.pallet_number,pallet_sequences.pallet_sequence_number
+		<![CDATA[WITH plt_qty AS (
+  SELECT
+    pallets.pallet_number,
+    pallet_sequences.pallet_sequence_number,
+    count(DISTINCT pallets.id) AS plt_qty,
+    rank() OVER (PARTITION BY pallets.pallet_number ORDER BY pallet_sequences.pallet_sequence_number) AS rank
+  FROM
+    pallets
+    JOIN pallet_sequences ON pallet_sequences.pallet_id = pallets.id
+  WHERE
+    pallets.load_id = $P{load_id}
+  GROUP BY
+    pallets.pallet_number,
+    pallet_sequences.pallet_sequence_number
 )
-select fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack) AS edi_size_count,
+SELECT
+  fn_edi_size_count (standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack) AS edi_size_count,
   pallets.pallet_number,
-  sum(pallet_sequences.carton_quantity)carton_quantity,
-  fn_party_role_org_code(pallet_sequences.marketing_org_party_role_id) AS organization_code, -- ? OK?
+  sum(pallet_sequences.carton_quantity) carton_quantity,
+  fn_party_role_org_code (pallet_sequences.marketing_org_party_role_id) AS organization_code, -- ? OK?
   commodities.code AS commodity_code,
-  coalesce(cvv.marketing_variety_code, marketing_varieties.marketing_variety_code) as variety_short_long,
+  coalesce(cvv.marketing_variety_code, marketing_varieties.marketing_variety_code) AS variety_short_long,
   grades.grade_code,
   fruit_size_references.size_reference AS size_count_code,
-   standard_pack_codes.standard_pack_code AS old_pack_code,
+  standard_pack_codes.standard_pack_code AS old_pack_code,
   marks.mark_code AS brand_code,
   pallet_sequences.pick_ref AS pick_reference,
   pallet_sequences.pick_ref AS encrypt_pick_ref,
   inventory_codes.inventory_code,
-   target_market_groups.target_market_group_name AS target_market_code,
-   target_markets.target_market_name AS target_country,
-   STRING_AGG(DISTINCT fn_party_role_name(pallet_sequences.target_customer_party_role_id)::text, '; ') AS target_customers,
-    plt_qty.plt_qty,
-       rank() OVER (PARTITION BY pallets.pallet_number ORDER BY pallet_sequences.pallet_sequence_number) AS rank,
-     coalesce(marketingpuc.puc_code ,pucs.puc_code) AS puc,
+  target_market_groups.target_market_group_name AS target_market_code,
+  target_markets.target_market_name AS target_country,
+  destination_regions.destination_region_name AS target_region,
+  plt_qty.plt_qty,
+  rank() OVER (PARTITION BY pallets.pallet_number ORDER BY pallet_sequences.pallet_sequence_number) AS rank,
+  coalesce(marketingpuc.puc_code, pucs.puc_code) AS puc,
   cargo_temperatures.temperature_code AS temp_tail,
   pallet_sequences.product_chars AS pt_product_characteristics,
   fruit_actual_counts_for_packs.actual_count_for_pack AS actual_size_count_code,
@@ -59,70 +66,94 @@ select fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.u
   pallet_bases.pallet_base_code AS edi_out_pallet_base,
   organizations.long_description AS org_long,
   pallets.phc AS line_phc,
- sum( pallets.nett_weight)nett_weight
-,pallets.gross_weight
-,(select sum(gross_weight)  from pallets p where p.load_id=pallets.load_id) load_gross_weight
-,sum(pallet_sequences.nett_weight) as seq_nett_weight,
-pallet_sequences.phyto_data
-,floor(fn_calc_age_days(max(pallets.id), COALESCE(pallets.govt_reinspection_at, pallets.govt_first_inspection_at), COALESCE(pallets.shipped_at, pallets.scrapped_at))) AS inspection_age
-,STRING_AGG(DISTINCT pallet_sequences.pick_ref::TEXT,'; ') AS pick_references
-,orchards.orchard_code AS orchard
-FROM pallets
-JOIN pallet_sequences ON pallet_sequences.pallet_id = pallets.id
-LEFT JOIN plt_qty on plt_qty.pallet_number = pallets.pallet_number and plt_qty.rank = 1 and plt_qty.pallet_sequence_number = pallet_sequences.pallet_sequence_number
-LEFT JOIN cultivar_groups ON cultivar_groups.id = pallet_sequences.cultivar_group_id
-LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
-JOIN marketing_varieties ON marketing_varieties.id = pallet_sequences.marketing_variety_id
-LEFT JOIN customer_varieties ON customer_varieties.id = pallet_sequences.customer_variety_id
-LEFT JOIN marketing_varieties cvv ON cvv.id = customer_varieties.variety_as_customer_variety_id
-JOIN marks ON marks.id = pallet_sequences.mark_id
-JOIN target_market_groups ON target_market_groups.id = pallet_sequences.packed_tm_group_id
-JOIN grades ON grades.id = pallet_sequences.grade_id
-JOIN basic_pack_codes ON basic_pack_codes.id = pallet_sequences.basic_pack_code_id
- LEFT JOIN standard_pack_codes ON standard_pack_codes.id = pallet_sequences.standard_pack_code_id
-LEFT JOIN fruit_size_references ON fruit_size_references.id = pallet_sequences.fruit_size_reference_id
-LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = pallet_sequences.fruit_actual_counts_for_pack_id
-LEFT JOIN party_roles ON party_roles.id = pallet_sequences.marketing_org_party_role_id
-LEFT JOIN organizations ON organizations.party_id = party_roles.party_id
-LEFT JOIN inventory_codes ON inventory_codes.id = pallet_sequences.inventory_code_id
-left JOIN pucs ON pucs.id = pallet_sequences.puc_id
-left JOIN pucs marketingpuc ON marketingpuc.id = pallet_sequences.marketing_puc_id
-LEFT JOIN loads ON loads.id = pallets.load_id
-LEFT JOIN load_vehicles ON load_vehicles.id = loads.load_vehicle_id
-LEFT JOIN load_containers ON load_containers.id = load_vehicles.load_container_id
-LEFT JOIN cargo_temperatures ON cargo_temperatures.id = load_containers.cargo_temperature_id
-LEFT JOIN pallet_formats ON pallet_formats.id = pallets.pallet_format_id
-LEFT JOIN pallet_bases ON pallet_bases.id = pallet_formats.pallet_base_id
-LEFT JOIN orchards ON orchards.id = pallet_sequences.orchard_id
-LEFT JOIN target_markets ON target_markets.id = pallet_sequences.target_market_id
- WHERE pallets.load_id = $P{load_id}
-group by pallets.pallet_number,pallets.load_id,
-  fn_party_role_org_code(pallet_sequences.marketing_org_party_role_id) , -- ? OK?
-  commodities.code ,
-  coalesce(cvv.marketing_variety_code, marketing_varieties.marketing_variety_code) ,
+  sum(pallets.nett_weight) nett_weight,
+  pallets.gross_weight,
+  (
+    SELECT
+      sum(gross_weight)
+    FROM
+      pallets p
+    WHERE
+      p.load_id = pallets.load_id) load_gross_weight,
+  sum(pallet_sequences.nett_weight) AS seq_nett_weight,
+  pallet_sequences.phyto_data,
+  floor(fn_calc_age_days (max(pallets.id), COALESCE(pallets.govt_reinspection_at, pallets.govt_first_inspection_at), COALESCE(pallets.shipped_at, pallets.scrapped_at))) AS inspection_age,
+  STRING_AGG(DISTINCT pallet_sequences.pick_ref::text, '; ') AS pick_references,
+  orchards.orchard_code AS orchard
+FROM
+  pallets
+  JOIN pallet_sequences ON pallet_sequences.pallet_id = pallets.id
+  LEFT JOIN plt_qty ON plt_qty.pallet_number = pallets.pallet_number
+    AND plt_qty.rank = 1
+    AND plt_qty.pallet_sequence_number = pallet_sequences.pallet_sequence_number
+  LEFT JOIN cultivar_groups ON cultivar_groups.id = pallet_sequences.cultivar_group_id
+  LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
+  JOIN marketing_varieties ON marketing_varieties.id = pallet_sequences.marketing_variety_id
+  LEFT JOIN customer_varieties ON customer_varieties.id = pallet_sequences.customer_variety_id
+  LEFT JOIN marketing_varieties cvv ON cvv.id = customer_varieties.variety_as_customer_variety_id
+  JOIN marks ON marks.id = pallet_sequences.mark_id
+  JOIN target_market_groups ON target_market_groups.id = pallet_sequences.packed_tm_group_id
+  JOIN grades ON grades.id = pallet_sequences.grade_id
+  JOIN basic_pack_codes ON basic_pack_codes.id = pallet_sequences.basic_pack_code_id
+  LEFT JOIN standard_pack_codes ON standard_pack_codes.id = pallet_sequences.standard_pack_code_id
+  LEFT JOIN fruit_size_references ON fruit_size_references.id = pallet_sequences.fruit_size_reference_id
+  LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = pallet_sequences.fruit_actual_counts_for_pack_id
+  LEFT JOIN party_roles ON party_roles.id = pallet_sequences.marketing_org_party_role_id
+  LEFT JOIN organizations ON organizations.party_id = party_roles.party_id
+  LEFT JOIN inventory_codes ON inventory_codes.id = pallet_sequences.inventory_code_id
+  LEFT JOIN pucs ON pucs.id = pallet_sequences.puc_id
+  LEFT JOIN pucs marketingpuc ON marketingpuc.id = pallet_sequences.marketing_puc_id
+  LEFT JOIN loads ON loads.id = pallets.load_id
+  LEFT JOIN load_vehicles ON load_vehicles.id = loads.load_vehicle_id
+  LEFT JOIN load_containers ON load_containers.id = load_vehicles.load_container_id
+  LEFT JOIN cargo_temperatures ON cargo_temperatures.id = load_containers.cargo_temperature_id
+  LEFT JOIN pallet_formats ON pallet_formats.id = pallets.pallet_format_id
+  LEFT JOIN pallet_bases ON pallet_bases.id = pallet_formats.pallet_base_id
+  LEFT JOIN orchards ON orchards.id = pallet_sequences.orchard_id
+  LEFT JOIN target_markets ON target_markets.id = pallet_sequences.target_market_id
+  LEFT JOIN destination_cities ON destination_cities.id = loads.final_destination_id
+  LEFT JOIN destination_countries ON destination_countries.id = destination_cities.destination_country_id
+  LEFT JOIN destination_regions ON destination_regions.id = destination_countries.destination_region_id
+WHERE
+  pallets.load_id = $P{load_id}
+GROUP BY
+  pallets.pallet_number,
+  pallets.load_id,
+  fn_party_role_org_code (pallet_sequences.marketing_org_party_role_id), -- ? OK?
+  commodities.code,
+  coalesce(cvv.marketing_variety_code, marketing_varieties.marketing_variety_code),
   grades.grade_code,
   fruit_size_references.size_reference,
-   standard_pack_codes.standard_pack_code,
-  marks.mark_code ,
+  standard_pack_codes.standard_pack_code,
+  marks.mark_code,
   pallet_sequences.pick_ref,
-  pallet_sequences.pick_ref ,
+  pallet_sequences.pick_ref,
   inventory_codes.inventory_code,
-  target_market_groups.target_market_group_name ,
-  coalesce(marketingpuc.puc_code ,pucs.puc_code) ,
+  target_market_groups.target_market_group_name,
+  coalesce(marketingpuc.puc_code, pucs.puc_code),
   cargo_temperatures.temperature_code,
-  pallet_sequences.product_chars ,
-  fruit_actual_counts_for_packs.actual_count_for_pack ,
+  pallet_sequences.product_chars,
+  fruit_actual_counts_for_packs.actual_count_for_pack,
   pallet_sequences.sell_by_code,
-  pallet_bases.pallet_base_code ,
-  organizations.long_description ,
-  pallets.phc ,
-pallets.gross_weight,plt_qty.plt_qty,pallet_sequences.pallet_sequence_number,
-pallet_sequences.phyto_data,  marketing_varieties.marketing_variety_code
-,fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack) 
-,pallets.govt_reinspection_at, pallets.govt_first_inspection_at,pallets.shipped_at, pallets.scrapped_at,
-orchards.orchard_code,target_markets.target_market_name
+  pallet_bases.pallet_base_code,
+  organizations.long_description,
+  pallets.phc,
+  pallets.gross_weight,
+  plt_qty.plt_qty,
+  pallet_sequences.pallet_sequence_number,
+  pallet_sequences.phyto_data,
+  marketing_varieties.marketing_variety_code,
+  fn_edi_size_count (standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack),
+  pallets.govt_reinspection_at,
+  pallets.govt_first_inspection_at,
+  pallets.shipped_at,
+  pallets.scrapped_at,
+  orchards.orchard_code,
+  target_markets.target_market_name,
+  destination_regions.destination_region_name
 ORDER BY
-pallets.pallet_number,pallet_sequences.pallet_sequence_number,
+  pallets.pallet_number,
+  pallet_sequences.pallet_sequence_number,
   commodities.code,
   marketing_varieties.marketing_variety_code,
   grades.grade_code,
@@ -287,7 +318,7 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 		<property name="com.jaspersoft.studio.field.tree.path" value="orchards"/>
 	</field>
 	<field name="target_country" class="java.lang.String"/>
-	<field name="target_customers" class="java.lang.String"/>
+	<field name="target_region" class="java.lang.String"/>
 	<variable name="ctn_qty_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{ctn_qty}]]></variableExpression>
 	</variable>
@@ -329,7 +360,7 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 				<text><![CDATA[Grade]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="169" y="0" width="25" height="13" uuid="33f7e29d-785e-4ea7-8756-82eeb686a57a">
+				<reportElement x="194" y="0" width="25" height="13" uuid="33f7e29d-785e-4ea7-8756-82eeb686a57a">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -337,7 +368,7 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[TR]]></text>
+				<text><![CDATA[TC]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="403" y="0" width="25" height="13" uuid="1df34564-fa14-4587-b4bd-26aa6a70f779">
@@ -522,26 +553,26 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 				<text><![CDATA[Orchard]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="196" y="0" width="25" height="13" uuid="12824c60-60f8-4c7d-8ad3-58f830ea2910">
-					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Left">
-					<font size="8"/>
-				</textElement>
-				<text><![CDATA[TC]]></text>
-			</staticText>
-			<staticText>
 				<reportElement x="221" y="0" width="25" height="13" uuid="64e355c3-5c6b-4e84-bbac-0fc19e546228">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Left">
+				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[CST]]></text>
+				<text><![CDATA[TR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="167" y="0" width="25" height="13" uuid="12824c60-60f8-4c7d-8ad3-58f830ea2910">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[TM]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
@@ -569,7 +600,7 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 				<textFieldExpression><![CDATA[$F{edi_size_count}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="169" y="0" width="25" height="12" uuid="0eae09a3-de76-406a-889b-960d0d9447e4">
+				<reportElement x="195" y="0" width="25" height="12" uuid="0eae09a3-de76-406a-889b-960d0d9447e4">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -757,30 +788,30 @@ pallets.pallet_number,pallet_sequences.pallet_sequence_number,
 				</textElement>
 				<textFieldExpression><![CDATA[$F{orchard}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="197" y="0" width="25" height="12" uuid="b73d0d99-63ec-4572-8a40-f921363be320">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-				</reportElement>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{target_country}]]></textFieldExpression>
-			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="223" y="0" width="25" height="12" uuid="83cc11ba-4d9a-4df8-a5f9-0ec9d2512e4e">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{target_customers}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{target_region}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="167" y="0" width="25" height="12" uuid="b73d0d99-63ec-4572-8a40-f921363be320">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{target_country}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<summary>
-		<band height="21" splitType="Stretch">
+		<band height="22" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField pattern="#,###.###;(#,###.###-)" isBlankWhenNull="true">
 				<reportElement x="578" y="3" width="25" height="13" uuid="eafb0fde-cf16-4785-bf1c-2e291259339a">

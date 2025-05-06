@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="210" pageHeight="205" columnWidth="210" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cfe44653-e3bf-48f8-8773-306d8c01ff40">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="live_kromco_nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="ubp NSpack"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="287"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="702"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -17,35 +17,38 @@
 	<parameter name="load_id" class="java.lang.Integer"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT
-    grades.grade_code,
-   target_market_groups.target_market_group_name AS  target_market_code ,
- fn_edi_size_count(
-	  standard_pack_codes.use_size_ref_for_edi,
-	  commodities.use_size_ref_for_edi,
-	 fruit_size_references.edi_out_code, 
-	 fruit_size_references.size_reference,
-	 fruit_actual_counts_for_packs.actual_count_for_pack
-   ) AS edi_size_count,
- SUM(CAST(pallet_sequences.carton_quantity AS numeric(5,1)) / CAST(pallets.carton_quantity AS numeric(5,1))) AS plt_qty
-FROM loads
-JOIN pallets ON pallets.load_id = loads.id
-JOIN pallet_sequences ON pallet_sequences.pallet_id = pallets.id
-LEFT JOIN fruit_size_references ON fruit_size_references.id = pallet_sequences.fruit_size_reference_id
-LEFT JOIN cultivar_groups ON cultivar_groups.id = pallet_sequences.cultivar_group_id
-LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
-JOIN grades ON grades.id = pallet_sequences.grade_id
-LEFT JOIN standard_pack_codes ON standard_pack_codes.id = pallet_sequences.standard_pack_code_id
-LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = pallet_sequences.fruit_actual_counts_for_pack_id
-JOIN target_market_groups ON target_market_groups.id = pallet_sequences.packed_tm_group_id
-WHERE loads.id = $P{load_id}
-GROUP BY  commodities.code,target_market_groups.target_market_group_name,
- grades.grade_code,  fruit_size_references.size_reference,
-standard_pack_codes.standard_pack_code, fruit_actual_counts_for_packs.actual_count_for_pack,pallets.load_id, 
-fn_edi_size_count(standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack) 
-ORDER BY  commodities.code,
- grades.grade_code,
- standard_pack_codes.standard_pack_code ,
- fruit_actual_counts_for_packs.actual_count_for_pack,target_market_groups.target_market_group_name]]>
+  grades.grade_code,
+  target_markets.target_market_name AS target_market_code,
+  fn_edi_size_count (standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack) AS edi_size_count,
+  SUM(CAST(pallet_sequences.carton_quantity AS numeric(5, 1)) / CAST(pallets.carton_quantity AS numeric(5, 1))) AS plt_qty
+FROM
+  loads
+  JOIN pallets ON pallets.load_id = loads.id
+  JOIN pallet_sequences ON pallet_sequences.pallet_id = pallets.id
+  LEFT JOIN fruit_size_references ON fruit_size_references.id = pallet_sequences.fruit_size_reference_id
+  LEFT JOIN cultivar_groups ON cultivar_groups.id = pallet_sequences.cultivar_group_id
+  LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
+  JOIN grades ON grades.id = pallet_sequences.grade_id
+  LEFT JOIN standard_pack_codes ON standard_pack_codes.id = pallet_sequences.standard_pack_code_id
+  LEFT JOIN fruit_actual_counts_for_packs ON fruit_actual_counts_for_packs.id = pallet_sequences.fruit_actual_counts_for_pack_id
+  LEFT JOIN target_markets ON target_markets.id = pallet_sequences.target_market_id
+WHERE
+  loads.id = $P{load_id}
+GROUP BY
+  commodities.code,
+  target_markets.target_market_name,
+  grades.grade_code,
+  fruit_size_references.size_reference,
+  standard_pack_codes.standard_pack_code,
+  fruit_actual_counts_for_packs.actual_count_for_pack,
+  pallets.load_id,
+  fn_edi_size_count (standard_pack_codes.use_size_ref_for_edi, commodities.use_size_ref_for_edi, fruit_size_references.edi_out_code, fruit_size_references.size_reference, fruit_actual_counts_for_packs.actual_count_for_pack)
+ORDER BY
+  commodities.code,
+  grades.grade_code,
+  standard_pack_codes.standard_pack_code,
+  fruit_actual_counts_for_packs.actual_count_for_pack,
+  target_markets.target_market_name]]>
 	</queryString>
 	<field name="grade_code" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="grade_code"/>
