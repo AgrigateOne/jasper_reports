@@ -733,7 +733,7 @@ pallet_sequences.pallet_number,pallet_sequences.pallet_sequence_number]]>
 				<textFieldExpression><![CDATA[$F{commodity_code}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="645" y="0" width="90" height="12" uuid="0804e167-2e0e-453b-b9d4-cb0d10a06dab">
+				<reportElement x="648" y="0" width="102" height="12" uuid="0804e167-2e0e-453b-b9d4-cb0d10a06dab">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -743,7 +743,7 @@ pallet_sequences.pallet_number,pallet_sequences.pallet_sequence_number]]>
 					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Bottom">
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{pallet_number}]]></textFieldExpression>
