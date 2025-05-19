@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="auto_palletizer_queue" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6935ef4e-1dc1-4855-be2a-436148780d6e">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack_dt"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<queryString>
+		<![CDATA[SELECT
+    ROUND((count(DISTINCT a.carton_label_id)::numeric / SUM(COUNT(DISTINCT a.carton_label_id)) OVER ()) * 100, 2) AS carton_percentage,
+    COUNT(DISTINCT a.carton_label_id) AS cartons,
+    ROUND((count(a.id)::numeric / SUM(count(a.id)) OVER ()) * 100, 2) AS scan_percentage,
+    count(a.id) AS no_of_scans,
+    string_agg(DISTINCT lines.plant_resource_code, ', ') AS lines,
+    string_agg(DISTINCT pr.run_batch_number, ', ') AS run_batch_numbers,
+    (
+        WITH grouped_ids AS (
+            SELECT
+                id,
+                id - ROW_NUMBER() OVER (ORDER BY id) AS grp
+            FROM
+                production_runs
+        ),
+        ranges AS (
+            SELECT
+                MIN(id) AS start_id,
+                MAX(id) AS end_id
+            FROM
+                grouped_ids
+            GROUP BY
+                grp
+            ORDER BY
+                start_id
+        )
+        SELECT
+            STRING_AGG(
+                CASE
+                    WHEN start_id = end_id THEN start_id::TEXT
+                    ELSE start_id::TEXT || '-' || end_id::TEXT
+                END,
+                ', '
+            ) AS runs
+        FROM
+            ranges
+    ) as run_ids,
+    a.status,
+    fn_party_role_name(
+        (SELECT pr.id FROM public.party_roles pr WHERE pr.role_id = (SELECT id FROM roles WHERE name = 'IMPLEMENTATION_OWNER') LIMIT 1)
+    ) AS implementation_owner_name
+FROM
+    auto_palletizer_queued_cartons a
+    LEFT JOIN UNNEST(a.palletizing_queue_plant_resource_ids) unnested(plant_resource_id) ON TRUE
+    LEFT JOIN carton_labels cl ON cl.id = a.carton_label_id
+    LEFT JOIN production_runs pr ON pr.id = cl.production_run_id
+    LEFT JOIN plant_resources lines ON lines.id = pr.production_line_id
+    LEFT JOIN plant_resources p ON p.id = unnested.plant_resource_id
+    LEFT JOIN plant_resource_types pt ON p.plant_resource_type_id = pt.id
+    LEFT JOIN palletizer_queue_products ps ON a.palletizer_queue_product_id = ps.id
+WHERE pt.plant_resource_type_code = 'AUTO_PALLETIZER_QUEUE'
+GROUP BY
+    a.status,
+    pt.plant_resource_type_code]]>
+	</queryString>
+	<field name="carton_percentage" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="carton_percentage"/>
+		<property name="com.jaspersoft.studio.field.label" value="carton_percentage"/>
+	</field>
+	<field name="cartons" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="cartons"/>
+		<property name="com.jaspersoft.studio.field.label" value="cartons"/>
+	</field>
+	<field name="scan_percentage" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="scan_percentage"/>
+		<property name="com.jaspersoft.studio.field.label" value="scan_percentage"/>
+	</field>
+	<field name="no_of_scans" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="no_of_scans"/>
+		<property name="com.jaspersoft.studio.field.label" value="no_of_scans"/>
+	</field>
+	<field name="lines" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="lines"/>
+		<property name="com.jaspersoft.studio.field.label" value="lines"/>
+	</field>
+	<field name="run_batch_numbers" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="run_batch_numbers"/>
+		<property name="com.jaspersoft.studio.field.label" value="run_batch_numbers"/>
+	</field>
+	<field name="run_ids" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="run_ids"/>
+		<property name="com.jaspersoft.studio.field.label" value="run_ids"/>
+	</field>
+	<field name="status" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="status"/>
+		<property name="com.jaspersoft.studio.field.label" value="status"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="auto_palletizer_queued_cartons"/>
+	</field>
+	<field name="implementation_owner_name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="implementation_owner_name"/>
+		<property name="com.jaspersoft.studio.field.label" value="implementation_owner_name"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="490" splitType="Stretch">
+			<textField>
+				<reportElement x="-20" y="49" width="550" height="441" uuid="d63e48e6-30d2-4d10-8f1d-3938edafe66e"/>
+				<textFieldExpression><![CDATA[$F{run_ids}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
