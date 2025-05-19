@@ -172,10 +172,15 @@ calc_sql2 AS (
         calc_sql.*,
         ROUND(fruit_per_hour_packing_target * running_hours, 0) AS shift_packing_target,
 (calc_sql.fruit_item_incentive_rate * (fruit_p_hour - fruit_per_hour_packing_target)) * actual_count_reduction_factor * incentive_factor AS incentive,
-SUM((calc_sql.fruit_item_incentive_rate * 
-     (fruit_p_hour - fruit_per_hour_packing_target)) * 
-     actual_count_reduction_factor * 
-     incentive_factor) OVER () AS incentive_total,
+SUM(
+  GREATEST(
+    COALESCE(calc_sql.fruit_item_incentive_rate, 0) *
+    (COALESCE(fruit_p_hour, 0) - COALESCE(fruit_per_hour_packing_target, 0)) *
+    COALESCE(actual_count_reduction_factor, 0) *
+    COALESCE(incentive_factor, 0),
+    0
+  )
+) OVER () AS incentive_total,
 (reduced_fruit_qty -(reduced_fruit_qty - required_fruit_to_reach_incentive)) * inv_cost AS COST
     FROM
         calc_sql
