@@ -6,7 +6,7 @@
 	<property name="ireport.y" value="0"/>
 	<property name="ireport.jasperserver.reportUnit" value="/FG/dispatch_consignment"/>
 	<property name="ireport.jasperserver.url" value="http://172.16.16.44:80/jasperserver/services/repository"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack_gr_latest"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack_dt_latest"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
@@ -441,7 +441,7 @@ pallet_sequences.pallet_number,pallet_sequences.pallet_sequence_number]]>
 				<text><![CDATA[Grade]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="370" y="0" width="25" height="12" uuid="33f7e29d-785e-4ea7-8756-82eeb686a57a">
+				<reportElement x="373" y="0" width="25" height="12" uuid="33f7e29d-785e-4ea7-8756-82eeb686a57a">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -518,7 +518,7 @@ pallet_sequences.pallet_number,pallet_sequences.pallet_sequence_number]]>
 				<text><![CDATA[Mark]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="300" y="0" width="33" height="12" uuid="cd902a99-0472-4d5f-baea-4d25f140c924">
+				<reportElement x="296" y="0" width="40" height="12" uuid="cd902a99-0472-4d5f-baea-4d25f140c924">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
@@ -526,7 +526,7 @@ pallet_sequences.pallet_number,pallet_sequences.pallet_sequence_number]]>
 				<textElement textAlignment="Center">
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[Nett]]></text>
+				<text><![CDATA[Ctn Nett]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="645" y="0" width="90" height="12" uuid="139c2eb7-34a0-4179-9b52-0397d983e785">
@@ -547,15 +547,15 @@ pallet_sequences.pallet_number,pallet_sequences.pallet_sequence_number]]>
 				<text><![CDATA[Pallet Barcode]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="335" y="0" width="31" height="12" uuid="7224d875-64b4-466d-aed0-85006952e8f5">
+				<reportElement x="337" y="0" width="36" height="12" uuid="7224d875-64b4-466d-aed0-85006952e8f5">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center">
+				<textElement textAlignment="Left">
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[Gross]]></text>
+				<text><![CDATA[Plt Gross]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="560" y="1" width="35" height="12" uuid="8849a077-2613-4c31-8a90-deedac2d3589">
@@ -664,7 +664,7 @@ pallet_sequences.pallet_number,pallet_sequences.pallet_sequence_number]]>
 				<textFieldExpression><![CDATA[$F{edi_size_count}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="370" y="0" width="25" height="12" uuid="0eae09a3-de76-406a-889b-960d0d9447e4">
+				<reportElement x="373" y="0" width="25" height="12" uuid="0eae09a3-de76-406a-889b-960d0d9447e4">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
