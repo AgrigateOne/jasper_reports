@@ -4,7 +4,7 @@
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack_uni"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack_gr_latest1"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="247"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="744"/>
@@ -916,14 +916,13 @@ Total Incentive Shift = (Fruit Item Incentive Rate x (Fruit per Hour - Fruit per
 				</textElement>
 				<textFieldExpression><![CDATA[$F{inv_codes}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="574" y="1" width="55" height="15" uuid="587f3533-a31c-439c-ada6-7c5339456fb7">
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement x="570" y="1" width="55" height="15" uuid="587f3533-a31c-439c-ada6-7c5339456fb7">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<printWhenExpression><![CDATA[$F{incentive_fruit} > 0]]></printWhenExpression>
 				</reportElement>
-				<textElement textAlignment="Center"/>
+				<textElement textAlignment="Center" verticalAlignment="Top"/>
 				<textFieldExpression><![CDATA[$F{packing_method_code}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-" isBlankWhenNull="false">
