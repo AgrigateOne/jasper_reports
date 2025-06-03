@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dispatch_summary" language="groovy" pageWidth="344" pageHeight="130" columnWidth="344" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cba47b92-bbda-40d5-b5d7-7f12c9f0b664">
 	<property name="ireport.zoom" value="3.0"/>
 	<property name="ireport.x" value="0"/>
@@ -20,7 +20,7 @@
 	<parameter name="production_run_id" class="java.util.Collection" nestedType="java.lang.Integer"/>
 	<parameter name="dispatched_only" class="java.lang.Boolean"/>
 	<queryString language="SQL">
-		<![CDATA[ SELECT
+		<![CDATA[SELECT
 grade_code,
 sum(nett_weight) nett_weight,
 sum(derived_nett_weight) AS derived_nett_weight,
@@ -28,7 +28,7 @@ ROUND(sum(weight_percentage),2) weight_percentage,sum(carton_quantity) carton_qu
 FROM
           (
 			with bin_tipped as (
-				select pr.cultivar_id ,pr.farm_id 
+				select b.cultivar_id ,pr.farm_id 
 				,sum(b.nett_weight::numeric(12,2)) AS total_bin_weight
 				FROM  production_runs pr
 				left join rmt_bins b on pr.id=b.production_run_tipped_id
@@ -38,7 +38,7 @@ FROM
 				LEFT JOIN farms ON farms.id = b.farm_id
 				Left join pucs on b.puc_id = pucs.id 
                WHERE not  ( b.scrapped =true) and $X{IN, pr.id , production_run_id}
-				group by pr.cultivar_id ,pr.farm_id
+				group by b.cultivar_id ,pr.farm_id
 				)
 			select   
 			grades.grade_code,
@@ -66,7 +66,7 @@ grade_code
 UNION ALL
 (
 			with bin_tipped as (
-				select pr.cultivar_id ,pr.farm_id 
+				select b.cultivar_id ,pr.farm_id 
 				,sum(b.nett_weight::numeric(12,2)) AS total_bin_weight
 				FROM  production_runs pr
 				left join rmt_bins b on pr.id=b.production_run_tipped_id
@@ -76,7 +76,7 @@ UNION ALL
 				LEFT JOIN farms ON farms.id = b.farm_id
 				Left join pucs on b.puc_id = pucs.id
               WHERE not  ( b.scrapped =true)  and $X{IN, pr.id , production_run_id}
-				group by pr.cultivar_id ,pr.farm_id
+				group by b.cultivar_id ,pr.farm_id
 				)
 select
 rmt_class_code,

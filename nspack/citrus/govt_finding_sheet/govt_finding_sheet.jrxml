@@ -16,7 +16,7 @@
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack_gr_latest"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String">
 		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
@@ -232,7 +232,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				<text><![CDATA[SIGNATURE:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="141" width="158" height="16" uuid="40dc5405-7786-4090-8825-b23d804ae998">
+				<reportElement x="0" y="141" width="154" height="16" uuid="40dc5405-7786-4090-8825-b23d804ae998">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
 				</reportElement>
@@ -637,7 +637,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 				<text><![CDATA[Class]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="0" width="158" height="84" uuid="189fd7f9-dd8f-459e-a22b-02554bca1d18"/>
+				<reportElement x="0" y="0" width="154" height="84" uuid="189fd7f9-dd8f-459e-a22b-02554bca1d18"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -689,7 +689,7 @@ WHERE  govt_inspection_sheets.id= $P{govt_inspection_sheet_id}]]>
 R  - Reject]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="158" y="0" width="33" height="84" uuid="8ae6ebf3-1cd5-4407-b243-44bd87e45165">
+				<reportElement x="154" y="0" width="37" height="84" uuid="8ae6ebf3-1cd5-4407-b243-44bd87e45165">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -1216,7 +1216,7 @@ Country /Target Market]]></text>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="0" width="158" height="53" uuid="52dd8c53-98ab-46a1-a520-d59a138caa53"/>
+				<reportElement x="0" y="0" width="154" height="53" uuid="52dd8c53-98ab-46a1-a520-d59a138caa53"/>
 				<box leftPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -1230,7 +1230,7 @@ Country /Target Market]]></text>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<componentElement>
-				<reportElement x="13" y="13" width="125" height="40" uuid="cd81ec3d-26dd-494c-909f-78c1a4eefaa3">
+				<reportElement x="9" y="13" width="125" height="40" uuid="cd81ec3d-26dd-494c-909f-78c1a4eefaa3">
 					<printWhenExpression><![CDATA[new Boolean($F{seq_no}.intValue()==1)]]></printWhenExpression>
 				</reportElement>
 				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="SSCC18" drawText="false" checksumRequired="false" barHeight="50">
@@ -1247,7 +1247,7 @@ Country /Target Market]]></text>
 				<textFieldExpression><![CDATA[$F{pallet_number}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="138" y="1" width="20" height="24" uuid="0abd17e3-5075-4ddd-aec4-6bba62c9acc0"/>
+				<reportElement x="133" y="1" width="20" height="24" uuid="0abd17e3-5075-4ddd-aec4-6bba62c9acc0"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
@@ -1282,7 +1282,7 @@ Country /Target Market]]></text>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="158" y="0" width="33" height="53" uuid="9cc29508-35d9-407c-9ccd-e49794858ea9">
+				<reportElement x="154" y="0" width="37" height="53" uuid="9cc29508-35d9-407c-9ccd-e49794858ea9">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<box>
@@ -1334,7 +1334,7 @@ Country /Target Market]]></text>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="158" y="1" width="33" height="52" uuid="d3c9d8a0-09fa-4bc7-8fa2-005335e2c776"/>
+				<reportElement x="154" y="0" width="37" height="52" uuid="d3c9d8a0-09fa-4bc7-8fa2-005335e2c776"/>
 				<textElement textAlignment="Left" rotation="None">
 					<font size="8"/>
 					<paragraph leftIndent="2"/>

@@ -4,7 +4,7 @@
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack_uni"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="247"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="744"/>
@@ -39,7 +39,7 @@
         packing_methods.actual_count_reduction_factor,
         commodities.fruit_per_hour_packing_target,
         9 AS std_hours_per_day,
-        1.1 AS incentive_factor,
+        cultivar_groups.incentive_factor AS incentive_factor,
         sum(wage_levels.wage_level) OVER (PARTITION BY s.id) AS wage_level_shift,
         count(contract_workers.id) OVER (PARTITION BY s.id) AS packers_shift,
         rank() OVER (PARTITION BY contract_workers.id ORDER BY packing_method_code) AS cw_packing_method_rank,
@@ -113,7 +113,8 @@
             packing_methods.actual_count_reduction_factor,
             commodities.fruit_per_hour_packing_target,
             inv.inv_cost,
-            inv.fruit_item_incentive_rate
+            inv.fruit_item_incentive_rate,
+            cultivar_groups.incentive_factor
         ORDER BY
             contract_workers.id DESC,
             s.start_date_time
@@ -169,8 +170,17 @@ FROM
 calc_sql2 AS (
     SELECT
         calc_sql.*,
-        fruit_per_hour_packing_target * running_hours AS shift_packing_target,
+        ROUND(fruit_per_hour_packing_target * running_hours, 0) AS shift_packing_target,
 (calc_sql.fruit_item_incentive_rate * (fruit_p_hour - fruit_per_hour_packing_target)) * actual_count_reduction_factor * incentive_factor AS incentive,
+SUM(
+  GREATEST(
+    COALESCE(calc_sql.fruit_item_incentive_rate, 0) *
+    (COALESCE(fruit_p_hour, 0) - COALESCE(fruit_per_hour_packing_target, 0)) *
+    COALESCE(actual_count_reduction_factor, 0) *
+    COALESCE(incentive_factor, 0),
+    0
+  )
+) OVER () AS incentive_total,
 (reduced_fruit_qty -(reduced_fruit_qty - required_fruit_to_reach_incentive)) * inv_cost AS COST
     FROM
         calc_sql
@@ -231,7 +241,8 @@ SELECT
     required_fruit_to_reach_incentive::numeric(12, 2),
     fruit_item_incentive_rate::numeric(12, 2),
     inv_cost::numeric(12, 2) AS rate,
-    (reduced_fruit_qty - required_fruit_to_reach_incentive)::numeric(12, 2) AS incentive_fruit,
+    (quantity_fruit_packed_per_inv - shift_packing_target)::numeric(12, 2) AS incentive_fruit,
+    incentive_total::numeric(12, 2),
     CASE WHEN incentive < 0 THEN
         0
     ELSE
@@ -245,10 +256,12 @@ SELECT
                         COST
                     END / cw_cnt) OVER (PARTITION BY shift_id))::numeric(12, 2) shift_cost,
     (incentive +COST)::numeric(12, 2) AS earnings,
-    sum((incentive +COST)::numeric(12, 2)) OVER (PARTITION BY cw_id) AS total_earnings
+    (fruit_item_incentive_rate * (fruit_p_hour - fruit_per_hour_packing_target)) * actual_count_reduction_factor * incentive_factor * running_hours AS total_earnings,
+    running_hours * incentive_total AS incentive_shift_total
     FROM
         calc_sql2
     ORDER BY
+        (quantity_fruit_packed_per_inv - shift_packing_target)::numeric(11, 2) DESC,    
         cw_id,
         cw_rank;]]>
 	</queryString>
@@ -463,6 +476,8 @@ SELECT
 		<property name="com.jaspersoft.studio.field.name" value="total_earnings"/>
 		<property name="com.jaspersoft.studio.field.label" value="total_earnings"/>
 	</field>
+	<field name="incentive_total" class="java.math.BigDecimal"/>
+	<field name="incentive_shift_total" class="java.math.BigDecimal"/>
 	<variable name="total_cartons_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{carton_qty}]]></variableExpression>
 	</variable>
@@ -498,7 +513,7 @@ SELECT
 		<band splitType="Stretch"/>
 	</title>
 	<pageHeader>
-		<band height="155" splitType="Stretch">
+		<band height="157" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<line>
 				<reportElement x="1" y="152" width="798" height="1" uuid="5a34193e-cfe0-4370-bbc4-c4c5decf103f">
@@ -516,16 +531,17 @@ SELECT
 				</reportElement>
 			</line>
 			<staticText>
-				<reportElement style="Column header" x="371" y="121" width="45" height="28" forecolor="#000000" uuid="994518c1-7571-4434-bbf8-99a73e8ecbbc">
+				<reportElement style="Column header" x="371" y="121" width="45" height="32" forecolor="#000000" uuid="994518c1-7571-4434-bbf8-99a73e8ecbbc">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font fontName="SansSerif" size="10" isBold="false"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Total 
-Fruit]]></text>
+				<text><![CDATA[Fruit 
+Target
+Shift]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Column header" x="421" y="121" width="43" height="28" forecolor="#000000" uuid="40af268d-0a12-4376-913a-11232d68f904">
@@ -534,7 +550,7 @@ Fruit]]></text>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement verticalAlignment="Bottom">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Running Hours]]></text>
@@ -544,18 +560,18 @@ Fruit]]></text>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<textElement verticalAlignment="Bottom">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[PNo]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="264" y="121" width="45" height="28" uuid="00c02650-20e0-4cb8-9cf5-740132cd6884">
+				<reportElement x="269" y="121" width="45" height="28" uuid="00c02650-20e0-4cb8-9cf5-740132cd6884">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Total Ctns]]></text>
@@ -566,16 +582,16 @@ Fruit]]></text>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Fruit 
 per Hour]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="197" y="121" width="25" height="29" uuid="318b5f86-2b5f-482d-9e3d-541a1d729d79">
+				<reportElement x="201" y="121" width="25" height="29" uuid="318b5f86-2b5f-482d-9e3d-541a1d729d79">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Inv]]></text>
 			</staticText>
 			<staticText>
@@ -584,7 +600,7 @@ per Hour]]></text>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Name]]></text>
 			</staticText>
 			<staticText>
@@ -593,8 +609,8 @@ per Hour]]></text>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
-				<text><![CDATA[Incentive]]></text>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Incentive Per Hour]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="172" y="121" width="25" height="29" uuid="15635740-bbde-443d-aa1e-d183c382bdeb">
@@ -602,7 +618,7 @@ per Hour]]></text>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement verticalAlignment="Bottom"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Shift 
 D/N]]></text>
 			</staticText>
@@ -636,14 +652,14 @@ D/N]]></text>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom"/>
 				<text><![CDATA[From Date:]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="-2" y="100" width="67" height="18" uuid="08314734-8aac-47bf-abf6-4f4fec3b780e">
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom"/>
 				<text><![CDATA[To:]]></text>
 			</staticText>
 			<staticText>
@@ -651,7 +667,7 @@ D/N]]></text>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom"/>
 				<text><![CDATA[Shift Type:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
@@ -678,7 +694,7 @@ D/N]]></text>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Packing Method]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
@@ -694,7 +710,7 @@ D/N]]></text>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom"/>
 				<text><![CDATA[Shift ID:]]></text>
 			</staticText>
 			<staticText>
@@ -702,7 +718,7 @@ D/N]]></text>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Ctns]]></text>
@@ -712,7 +728,7 @@ D/N]]></text>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right" verticalAlignment="Bottom">
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="10" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Fruit Qty]]></text>
@@ -724,25 +740,25 @@ D/N]]></text>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Incentive Fruit]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="339" y="42" width="140" height="13" uuid="d8d01079-0170-46ed-b200-94b479153765">
+				<reportElement x="339" y="28" width="140" height="13" uuid="d8d01079-0170-46ed-b200-94b479153765">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font size="9"/>
 				</textElement>
-				<text><![CDATA[fruit_per_hour_packing_target:
+				<text><![CDATA[Fruit per Hour Target:
 
 
 
 ]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="479" y="42" width="60" height="13" uuid="cdc9f0fa-912a-4b56-9cc4-a9d239482d81">
+				<reportElement x="479" y="28" width="60" height="13" uuid="cdc9f0fa-912a-4b56-9cc4-a9d239482d81">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -753,55 +769,63 @@ D/N]]></text>
 				<textFieldExpression><![CDATA[$F{fruit_per_hour_packing_target}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="339" y="55" width="460" height="65" uuid="ce79e395-5234-49ca-ba67-39da9cf09d52">
+				<reportElement x="339" y="46" width="459" height="75" uuid="ce79e395-5234-49ca-ba67-39da9cf09d52">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<textElement>
-					<font size="9"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="8"/>
 				</textElement>
-				<text><![CDATA[shift_fruit_packing_target             = running hours * fruit_per_hour_packing_target
-required_fruit_to_reach_incentive = running_hours/std_hours_per_day*fruit_per_hour_packing_target
-incentive_fruit                               = total_fruit - required_fruit_to_reach_incentive
-cost                                               = (total_fruit - incentive_fruit)* rate
-incentive                                       = incentive_fruit * rate
-total_earnings                               = cost + incentive
+				<text><![CDATA[Fruit Target Shift = Running Hours * Fruit per Hour Target
+Incentive Fruit = QTY Fruit packed per Inv - Fruit Target Shift
+Incentive per Hour = Fruit Item Incentive Rate x (Fruit per Hour - Fruit per Hour Target)) x Actual Count Reduction Factor x Incentive Factor
+Total Incentive Shift = (Fruit Item Incentive Rate x (Fruit per Hour - Fruit per Hour Target)) x Actual Count Reduction Factor x Incentive Factor x Running Hours
 ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="570" y="42" width="125" height="13" uuid="9cc82864-a76c-43db-8318-2a0dbfc41f0d">
+				<reportElement x="570" y="28" width="125" height="13" uuid="9cc82864-a76c-43db-8318-2a0dbfc41f0d">
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Bottom">
 					<font size="9"/>
 				</textElement>
-				<text><![CDATA[std_hours_per_day: 9
-
-
-
+				<text><![CDATA[STD Hours per Day: 9
 ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="699" y="121" width="75" height="29" uuid="9f82dc0c-4551-46f3-98e2-2e18239da45d">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Total Incentive shift]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="22" splitType="Stretch">
+		<band height="20" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField isBlankWhenNull="true">
-				<reportElement x="1" y="0" width="49" height="15" uuid="a9189391-1447-48de-a8eb-80c2d63b45d0"/>
+				<reportElement x="1" y="1" width="49" height="15" uuid="a9189391-1447-48de-a8eb-80c2d63b45d0"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{personnel_barcode_number}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="61" y="0" width="109" height="15" uuid="7c6c77c6-242c-41fe-b29c-e6a3002c405c">
+				<reportElement x="61" y="1" width="109" height="15" uuid="7c6c77c6-242c-41fe-b29c-e6a3002c405c">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Left"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{contract_worker}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="264" y="2" width="40" height="15" uuid="f83a63e0-000b-46a1-b35f-5f7818f68111">
+				<reportElement x="264" y="1" width="40" height="15" uuid="f83a63e0-000b-46a1-b35f-5f7818f68111">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -810,18 +834,18 @@ total_earnings                               = cost + incentive
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{total_ctns_packed_cw}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="371" y="2" width="45" height="15" uuid="d87d3b26-8bf5-456c-aff4-50a1e729fc6b">
+			<textField pattern="###0.##;###0.##-" isBlankWhenNull="true">
+				<reportElement x="371" y="1" width="45" height="15" uuid="d87d3b26-8bf5-456c-aff4-50a1e729fc6b">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<printWhenExpression><![CDATA[$F{cw_rank_boolean}]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{total_fruit_packed_cw}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{shift_packing_target}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="172" y="0" width="25" height="15" uuid="e737738c-f322-46eb-853e-6dbd43e8bd0e">
+				<reportElement x="172" y="1" width="25" height="15" uuid="e737738c-f322-46eb-853e-6dbd43e8bd0e">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -829,7 +853,7 @@ total_earnings                               = cost + incentive
 				<textFieldExpression><![CDATA[$F{shift_type_code}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-				<reportElement x="421" y="2" width="43" height="15" uuid="395f9724-525c-4d6b-8dc1-dfcd109ebde2">
+				<reportElement x="421" y="1" width="43" height="15" uuid="395f9724-525c-4d6b-8dc1-dfcd109ebde2">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -838,24 +862,24 @@ total_earnings                               = cost + incentive
 				<textFieldExpression><![CDATA[$F{running_hours}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="471" y="2" width="45" height="15" uuid="9114b226-c7e8-44f4-aa30-d38e62ba93eb">
+				<reportElement x="471" y="1" width="45" height="15" uuid="9114b226-c7e8-44f4-aa30-d38e62ba93eb">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{fruit_p_hour}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-				<reportElement x="640" y="0" width="49" height="15" uuid="89b64826-d22a-443a-8bec-94b00adb10c6">
+			<textField pattern="###0.00;###0.00-" isBlankWhenNull="false">
+				<reportElement x="640" y="1" width="49" height="15" uuid="89b64826-d22a-443a-8bec-94b00adb10c6">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<printWhenExpression><![CDATA[$F{incentive} > 0]]></printWhenExpression>
+					<printWhenExpression><![CDATA[$F{incentive} != null]]></printWhenExpression>
 				</reportElement>
-				<textElement textAlignment="Right"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{incentive}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="226" y="2" width="30" height="15" uuid="d5ea4f7c-a808-4691-a944-cb72e40bcd67">
+				<reportElement x="226" y="1" width="30" height="15" uuid="d5ea4f7c-a808-4691-a944-cb72e40bcd67">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
@@ -864,26 +888,26 @@ total_earnings                               = cost + incentive
 				<textFieldExpression><![CDATA[$F{carton_qty}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="315" y="2" width="40" height="15" uuid="f784096b-c532-4b9f-ae93-8c226cb2e0f0">
+				<reportElement x="315" y="1" width="40" height="15" uuid="f784096b-c532-4b9f-ae93-8c226cb2e0f0">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{quantity_fruit_packed_per_inv}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="521" y="2" width="55" height="15" uuid="c2ea508a-2a22-423f-9723-e8f44d730f7f">
+			<textField pattern="###0.##;###0.##-" isBlankWhenNull="false">
+				<reportElement x="521" y="1" width="55" height="15" uuid="c2ea508a-2a22-423f-9723-e8f44d730f7f">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<printWhenExpression><![CDATA[$F{incentive_fruit} > 0]]></printWhenExpression>
+					<printWhenExpression><![CDATA[$F{incentive_fruit} != null]]></printWhenExpression>
 				</reportElement>
-				<textElement textAlignment="Right"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{incentive_fruit}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-" isBlankWhenNull="true">
-				<reportElement x="200" y="2" width="25" height="15" uuid="ac6917aa-924d-45b4-a92c-8260b7e836f6">
+				<reportElement x="200" y="1" width="25" height="15" uuid="ac6917aa-924d-45b4-a92c-8260b7e836f6">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
@@ -893,14 +917,25 @@ total_earnings                               = cost + incentive
 				<textFieldExpression><![CDATA[$F{inv_codes}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="574" y="2" width="55" height="15" uuid="587f3533-a31c-439c-ada6-7c5339456fb7">
+				<reportElement x="574" y="1" width="55" height="15" uuid="587f3533-a31c-439c-ada6-7c5339456fb7">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<printWhenExpression><![CDATA[$F{incentive_fruit} > 0]]></printWhenExpression>
 				</reportElement>
-				<textElement textAlignment="Right"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{packing_method_code}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;###0.00-" isBlankWhenNull="false">
+				<reportElement x="710" y="1" width="49" height="15" uuid="ac7a042e-17c1-4529-b222-4461fc751177">
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<printWhenExpression><![CDATA[$F{incentive} != null]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{total_earnings} != null && $F{total_earnings}.doubleValue() >= 0 
+    ? $F{total_earnings} 
+    : 0]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -937,7 +972,7 @@ total_earnings                               = cost + incentive
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="15" splitType="Stretch">
+		<band height="23" splitType="Stretch">
 			<textField>
 				<reportElement x="264" y="0" width="40" height="15" uuid="fd5685bf-4df5-4954-bbe5-284061dd9ceb">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -955,11 +990,11 @@ total_earnings                               = cost + incentive
 				<text><![CDATA[No Packers]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="371" y="0" width="55" height="15" uuid="e5219e47-35a6-4c3e-8ec2-6f758a8e7501">
+				<reportElement x="306" y="0" width="55" height="15" uuid="e5219e47-35a6-4c3e-8ec2-6f758a8e7501">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right"/>
+				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{shift_fruit}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-">
@@ -971,35 +1006,29 @@ total_earnings                               = cost + incentive
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{running_hours}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0.00;###0.00-">
-				<reportElement x="696" y="0" width="49" height="15" uuid="36c7f42b-d107-4804-a89b-90378b263092">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$V{total_incentive}]]></textFieldExpression>
-			</textField>
 			<line>
 				<reportElement x="1" y="0" width="798" height="1" uuid="13efb243-d9f4-490c-b993-83cc02721d4a">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 			</line>
-			<textField textAdjust="ScaleFont" evaluationTime="Auto" pattern="###0.00;###0.00-">
-				<reportElement x="640" y="0" width="55" height="15" uuid="65e379b8-c6d0-42f4-a5ee-967931c3c47d">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+			<textField pattern="###0.00;###0.00-">
+				<reportElement x="640" y="2" width="43" height="15" uuid="5d12e799-f14e-4844-93e6-adf58d87872f">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$V{total_cost}]]></textFieldExpression>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{incentive_total}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-">
-				<reportElement x="741" y="0" width="58" height="15" uuid="f3b0f47e-eab3-4b8c-bbc9-35bf10bbb289">
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				<reportElement x="719" y="2" width="43" height="15" uuid="c1c280d4-fc1a-422e-85c2-e5b5823df744">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$V{total_cost}+$V{total_incentive}]]></textFieldExpression>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{incentive_shift_total}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>
