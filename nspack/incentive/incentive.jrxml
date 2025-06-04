@@ -41,7 +41,6 @@
         9 AS std_hours_per_day,
         cultivar_groups.incentive_factor AS incentive_factor,
         sum(wage_levels.wage_level) OVER (PARTITION BY s.id) AS wage_level_shift,
-        count(contract_workers.id) OVER (PARTITION BY s.id) AS packers_shift,
         rank() OVER (PARTITION BY contract_workers.id ORDER BY packing_method_code) AS cw_packing_method_rank,
         inv.inv_cost,
         sum(fruit_actual_counts_for_packs.actual_count_for_pack * coalesce(inv.inv_cost, 0)) basic_cost,
@@ -97,7 +96,8 @@
             s.id = $P{shift_id}
             AND standard_pack_codes.bin = FALSE
             AND cartons.scrapped IS NOT TRUE
-            AND cartons.is_virtual IS NOT TRUE
+            AND cartons.is_virtual IS NOT true
+            AND s.day_night_or_custom = 'D'
         GROUP BY
             s.id,
             day_night_or_custom,
@@ -119,9 +119,17 @@
             contract_workers.id DESC,
             s.start_date_time
 ),
+unique_packers AS (
+    SELECT
+        shift_id,
+        COUNT(DISTINCT cw_id) AS packers_shift
+    FROM base_sql
+    GROUP BY shift_id
+		),
 calc_sql AS (
     SELECT
         base_sql.start_date_time,
+        unique_packers.packers_shift,
         CASE WHEN base_sql.running_hours = 0 THEN
             0::int
         ELSE
@@ -150,9 +158,7 @@ calc_sql AS (
         rank() OVER (PARTITION BY base_sql.cw_id ORDER BY base_sql.fruit_item_incentive_rate) AS cw_rank,
         base_sql.shift_id,
         base_sql.wage_level_shift,
-        base_sql.packers_shift,
-        count(*) OVER (PARTITION BY cw_id,
-            shift_id) cw_cnt,
+		count(*) OVER (PARTITION BY base_sql.cw_id, base_sql.shift_id) cw_cnt,
 (
         SELECT
             sum(wage_level)
@@ -166,6 +172,7 @@ sum(carton_qty) OVER () total_carton_shift,
 running_hours / std_hours_per_day *(fruit_per_hour_packing_target * running_hours) AS required_fruit_to_reach_incentive
 FROM
     base_sql
+    LEFT JOIN unique_packers ON base_sql.shift_id = unique_packers.shift_id
 ),
 calc_sql2 AS (
     SELECT
