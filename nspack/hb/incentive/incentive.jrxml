@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.18.1.final using JasperReports Library version 6.18.1-9d75d1969e774d4f179fb3be8401e98a0e6d1611  -->
+<!-- Created with Jaspersoft Studio version 6.14.0.final using JasperReports Library version 6.14.0-2ab0d8625be255bf609c78e1181801213e51db8f  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="incentive" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="15" bottomMargin="0" uuid="62ad7915-3776-4442-b009-50fb32874a14">
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
@@ -46,7 +46,7 @@
         packing_methods.actual_count_reduction_factor,
         1500 AS require_pack_hour,
         9 AS std_hours_per_day,
-        1.1 AS incentive_factor,
+        0.825 AS incentive_factor,
         sum(wage_levels.wage_level) over (partition by s.id) as wage_level_shift,
         count(contract_workers.id) over (partition by s.id) as packers_shift,
 	    rank() OVER (PARTITION BY contract_workers.id ORDER BY packing_method_code) AS cw_packing_method_rank
