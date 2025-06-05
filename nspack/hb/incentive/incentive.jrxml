@@ -46,7 +46,7 @@
         packing_methods.actual_count_reduction_factor,
         1500 AS require_pack_hour,
         9 AS std_hours_per_day,
-        0.825 AS incentive_factor,
+        0.52 AS incentive_factor,
         sum(wage_levels.wage_level) over (partition by s.id) as wage_level_shift,
         count(contract_workers.id) over (partition by s.id) as packers_shift,
 	    rank() OVER (PARTITION BY contract_workers.id ORDER BY packing_method_code) AS cw_packing_method_rank
