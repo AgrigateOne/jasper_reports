@@ -55,7 +55,7 @@ FROM
 			LEFT JOIN commodities ON commodities.id = cultivar_groups.commodity_id
 			LEFT JOIN standard_pack_codes ON standard_pack_codes.id = pallet_sequences.standard_pack_code_id
 			LEFT JOIN standard_product_weights ON commodities.id = standard_product_weights.commodity_id AND standard_product_weights.standard_pack_id = standard_pack_codes.id
-			JOIN bin_tipped on bin_tipped.farm_id=production_runs.farm_id and production_runs.cultivar_id=bin_tipped.cultivar_id
+			JOIN bin_tipped on bin_tipped.farm_id=production_runs.farm_id and bin_tipped.cultivar_id = pallet_sequences.cultivar_id
              WHERE case when    $P{dispatched_only}   = true then pallets.load_id is not null else true end and $X{IN, pallet_sequences.production_run_id, production_run_id}
 			group by   
 			grades.grade_code
