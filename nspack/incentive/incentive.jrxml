@@ -201,6 +201,7 @@ SELECT
         FALSE
     END cw_rank_boolean,
     sum(quantity_fruit_packed_per_inv) OVER (PARTITION BY shift_id) shift_fruit,
+    sum(quantity_fruit_packed_per_inv) OVER (PARTITION BY shift_id) / packers_shift as average_fruit,
         sum(carton_qty) OVER (PARTITION BY shift_id) shift_cartons,
 (sum(
                     CASE WHEN incentive < 0 THEN
@@ -485,6 +486,7 @@ SELECT
 	</field>
 	<field name="incentive_total" class="java.math.BigDecimal"/>
 	<field name="incentive_shift_total" class="java.math.BigDecimal"/>
+	<field name="average_fruit" class="java.lang.String"/>
 	<variable name="total_cartons_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{carton_qty}]]></variableExpression>
 	</variable>
@@ -1035,6 +1037,15 @@ Total Incentive Shift = (Fruit Item Incentive Rate x (Fruit per Hour - Fruit per
 				</reportElement>
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{incentive_shift_total}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;###0.00-">
+				<reportElement x="473" y="1" width="43" height="15" uuid="6d185556-58ee-4736-8f7a-668b6e16d218">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{average_fruit}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>
