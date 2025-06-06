@@ -4,7 +4,7 @@
 	<property name="ireport.zoom" value="1.4641000000000006"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack_uni"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nspack_gr_latest1"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="247"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="744"/>
@@ -41,7 +41,6 @@
         9 AS std_hours_per_day,
         cultivar_groups.incentive_factor AS incentive_factor,
         sum(wage_levels.wage_level) OVER (PARTITION BY s.id) AS wage_level_shift,
-        count(contract_workers.id) OVER (PARTITION BY s.id) AS packers_shift,
         rank() OVER (PARTITION BY contract_workers.id ORDER BY packing_method_code) AS cw_packing_method_rank,
         inv.inv_cost,
         sum(fruit_actual_counts_for_packs.actual_count_for_pack * coalesce(inv.inv_cost, 0)) basic_cost,
@@ -97,7 +96,8 @@
             s.id = $P{shift_id}
             AND standard_pack_codes.bin = FALSE
             AND cartons.scrapped IS NOT TRUE
-            AND cartons.is_virtual IS NOT TRUE
+            AND cartons.is_virtual IS NOT true
+            AND s.day_night_or_custom = 'D'
         GROUP BY
             s.id,
             day_night_or_custom,
@@ -119,9 +119,17 @@
             contract_workers.id DESC,
             s.start_date_time
 ),
+unique_packers AS (
+    SELECT
+        shift_id,
+        COUNT(DISTINCT cw_id) AS packers_shift
+    FROM base_sql
+    GROUP BY shift_id
+		),
 calc_sql AS (
     SELECT
         base_sql.start_date_time,
+        unique_packers.packers_shift,
         CASE WHEN base_sql.running_hours = 0 THEN
             0::int
         ELSE
@@ -150,9 +158,7 @@ calc_sql AS (
         rank() OVER (PARTITION BY base_sql.cw_id ORDER BY base_sql.fruit_item_incentive_rate) AS cw_rank,
         base_sql.shift_id,
         base_sql.wage_level_shift,
-        base_sql.packers_shift,
-        count(*) OVER (PARTITION BY cw_id,
-            shift_id) cw_cnt,
+		count(*) OVER (PARTITION BY base_sql.cw_id, base_sql.shift_id) cw_cnt,
 (
         SELECT
             sum(wage_level)
@@ -166,6 +172,7 @@ sum(carton_qty) OVER () total_carton_shift,
 running_hours / std_hours_per_day *(fruit_per_hour_packing_target * running_hours) AS required_fruit_to_reach_incentive
 FROM
     base_sql
+    LEFT JOIN unique_packers ON base_sql.shift_id = unique_packers.shift_id
 ),
 calc_sql2 AS (
     SELECT
@@ -194,6 +201,7 @@ SELECT
         FALSE
     END cw_rank_boolean,
     sum(quantity_fruit_packed_per_inv) OVER (PARTITION BY shift_id) shift_fruit,
+    sum(quantity_fruit_packed_per_inv) OVER (PARTITION BY shift_id) / packers_shift as average_fruit,
         sum(carton_qty) OVER (PARTITION BY shift_id) shift_cartons,
 (sum(
                     CASE WHEN incentive < 0 THEN
@@ -478,6 +486,7 @@ SELECT
 	</field>
 	<field name="incentive_total" class="java.math.BigDecimal"/>
 	<field name="incentive_shift_total" class="java.math.BigDecimal"/>
+	<field name="average_fruit" class="java.lang.String"/>
 	<variable name="total_cartons_1" class="java.lang.Long" calculation="Sum">
 		<variableExpression><![CDATA[$F{carton_qty}]]></variableExpression>
 	</variable>
@@ -916,14 +925,13 @@ Total Incentive Shift = (Fruit Item Incentive Rate x (Fruit per Hour - Fruit per
 				</textElement>
 				<textFieldExpression><![CDATA[$F{inv_codes}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="574" y="1" width="55" height="15" uuid="587f3533-a31c-439c-ada6-7c5339456fb7">
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement x="570" y="1" width="55" height="15" uuid="587f3533-a31c-439c-ada6-7c5339456fb7">
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
-					<printWhenExpression><![CDATA[$F{incentive_fruit} > 0]]></printWhenExpression>
 				</reportElement>
-				<textElement textAlignment="Center"/>
+				<textElement textAlignment="Center" verticalAlignment="Top"/>
 				<textFieldExpression><![CDATA[$F{packing_method_code}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00;###0.00-" isBlankWhenNull="false">
@@ -1029,6 +1037,15 @@ Total Incentive Shift = (Fruit Item Incentive Rate x (Fruit per Hour - Fruit per
 				</reportElement>
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{incentive_shift_total}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;###0.00-">
+				<reportElement x="473" y="1" width="43" height="15" uuid="6d185556-58ee-4736-8f7a-668b6e16d218">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{average_fruit}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>
